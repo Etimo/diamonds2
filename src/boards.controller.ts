@@ -1,9 +1,9 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get } from "@nestjs/common";
 
-@Controller('boards')
+@Controller("boards")
 export class BoardsController {
-    @Get()
-    findAll(): string {
-        return "Hello2";
-    }
+  @Get()
+  findAll(): string {
+    return "Hello2";
+  }
 }
