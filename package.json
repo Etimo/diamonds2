@@ -29,6 +29,7 @@
     "reflect-metadata": "^0.1.12",
     "rimraf": "^2.6.2",
     "rxjs": "^6.3.3",
+    "swagger-ui-express": "^4.0.2",
     "ts-loader": "^5.4.3"
   },
   "devDependencies": {

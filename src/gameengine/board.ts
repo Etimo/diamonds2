@@ -30,9 +30,14 @@ export class Board {
     return this.maxNumberOfCarryingDiamonds;
   }
 
-  getGameObjectsByType<T extends AbstractGameObject>(): T[] {
-    // return this.gameObjects.filter(g => g);
-    return [];
+  getGameObjectsByType<T extends AbstractGameObject>(t: new (...args: any[]) => T): T[] {
+    const res: T[] = [];
+    this.gameObjects.forEach(g => {
+      if (g instanceof t) {
+        res.push(g);
+      }
+    });
+    return res;
   }
 
   removeGameObject(gameObject: AbstractGameObject) {
