@@ -1,5 +1,4 @@
 import { IBoardBot } from "src/interfaces/board-bot.interface";
-import { IBoard } from "src/interfaces/board.interface";
 import { Board } from "../board";
 import { IPosition } from "src/interfaces/position.interface";
 
@@ -21,11 +20,13 @@ export abstract class AbstractGameObject {
 
   onGameObjectRemoved(board: Board) {}
 
-  getX(): number {
+  get x(): number {
     return this.position.x;
   }
 
-  getY(): number {
+  get y(): number {
     return this.position.y;
   }
+
+  abstract toChar();
 }
