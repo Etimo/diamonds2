@@ -9,15 +9,25 @@ export class Board {
   private bots: IBot[] = [];
   private gameObjects: AbstractGameObject[] = [];
   public readonly maxNumberOfCarryingDiamonds: number = 5;
+  private expirationTimers = {};
 
-  constructor(private config: BoardConfig, private gameObjectProviders: AbstractGameObjectProvider[]) {
+  constructor(private config: BoardConfig, private gameObjectProviders: AbstractGameObjectProvider[], private logger: any) {
     this.notifyProvidersBoardInitialized();
   }
 
   join(bot: IBot): boolean {
     // this.gameObjectProviders.forEach(p => p.onBotJoined(bot))
+    // this.notifyProvidersBoardBotJoined();
+    this.expirationTimers[bot.id] = this.getNewExpirationTimer(bot);
     const boardBot = {};
     return false;
+  }
+
+  private getNewExpirationTimer(bot: IBot) {
+    const id = setTimeout(_ => {
+      this.logger.debug("Purge bot", bot.id);
+    }, 100);
+    return id;
   }
 
   isCellEmpty(x: number, y: number): boolean {
@@ -106,14 +116,17 @@ export class Board {
   }
 
   private notifyProvidersGameObjectsRemoved(gameObjects: AbstractGameObject[]) {
+    this.logger.debug("notifyProvidersGameObjectsRemoved", JSON.stringify(gameObjects));
     this.gameObjectProviders.forEach(p => p.onGameObjectsRemoved(this, gameObjects));
   }
 
   private notifyProvidersGameObjectsAdded(gameObjects: AbstractGameObject[]) {
+    this.logger.debug("notifyProvidersGameObjectsAdded", JSON.stringify(gameObjects));
     this.gameObjectProviders.forEach(p => p.onGameObjectsAdded(this, gameObjects));
   }
 
   private notifyProvidersBoardInitialized() {
+    this.logger.debug("notifyProvidersBoardInitialized");
     this.gameObjectProviders.forEach(p => p.onBoardInitialized(this));
   }
 
@@ -131,6 +144,7 @@ export class Board {
         const gameObjects = this.gameObjects.filter(g => g.x === x && g.y === y);
         var existing = gameObjects.map(g => g.toChar()).join("").padEnd(cellSize, " ");
         line.push(existing);
+
       }
       line.push("┃");
       ret.push(line.join(""));

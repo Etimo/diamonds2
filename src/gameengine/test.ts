@@ -1,13 +1,34 @@
 import { Board } from './board';
 import { BoardConfig } from './board-config';
+import { IBoardBot } from 'src/interfaces/board-bot.interface';
+import { IBot } from 'src/interfaces/bot.interface';
+import log from '../logger';
+import { DiamondButtonProvider } from './gameobjects/diamond-button/diamond-button-provider';
+import { BaseProvider } from './gameobjects/base/base-provider';
+import { TeleportProvider } from './gameobjects/teleport/teleport-provider';
+import { BotProvider } from './gameobjects/bot/bot-provider';
+import { DiamondProvider } from './gameobjects/diamond/diamond-provider';
 
-const providers = [];
+log.debug("init");
+
+const providers = [
+    new DiamondButtonProvider(),
+    new BaseProvider(),
+    new DiamondProvider(),
+    new TeleportProvider(),
+    new BotProvider()
+];
 const config: BoardConfig = {
     diamondsGenerationRatio: 0.1,
     height: 10,
     width: 10,
-    minimumMoveDelayMs: 100,
+    minimumDelayBetweenMoves: 100,
     maxCarryingDiamonds: 5
 };
-const board = new Board(config, []);
+const board = new Board(config, providers, log);
+
+const bot1: IBot = {
+    id: "id1"
+}
+board.join(bot1);
 console.log(board.toString());

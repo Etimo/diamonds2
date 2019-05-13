@@ -14,9 +14,19 @@ export interface BoardBot {
 
 const BOT_AVATARS = "🤖🦁🐙🦑🦀🐌🐥🦞🐭🐹🐰🐶🐺🦊🐵🐸🙊🐯🦁🐮🐷🐻🐼🐲🐨🦄";
 
-export class BotGameObject extends AbstractGameObject {
+export class BotGameObject extends AbstractGameObject implements BoardBot {
+    protected type: string = "bot";
+
     toChar() {
-        return "🤖";
+        return "Q";
     }
+    base: IPosition;
+    position: IPosition;
+    diamonds: number;
+    timeJoined: Date;
+    millisecondsLeft: number;
+    score: number;
+    botId: string;
+    nextMoveAvailableAt: Date;
 
 }

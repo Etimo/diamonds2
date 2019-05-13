@@ -3,20 +3,21 @@ import { Board } from "../board";
 import { IPosition } from "src/interfaces/position.interface";
 
 export abstract class AbstractGameObject {
+  protected type: string = null;
   protected position: IPosition;
 
   constructor(position: IPosition) {
     this.position = position;
   }
 
-  onBotEntered(bot: IBoardBot, board: Board) {}
-  canBotEnter(bot: IBoardBot, board: Board): boolean {
+  onGameObjectEntered(gameObject: AbstractGameObject, board: Board) {}
+  canGameObjectEnter(gameObject: AbstractGameObject, board: Board): boolean {
     return true;
   }
-  canBotLeave(bot: IBoardBot, board: Board): boolean {
+  canGameObjectLeave(gameObject: AbstractGameObject, board: Board): boolean {
     return true;
   }
-  onBotLeft(bot: IBoardBot, board: Board) {}
+  onGameObjectLeft(gameObject: AbstractGameObject, board: Board) {}
 
   onGameObjectRemoved(board: Board) {}
 

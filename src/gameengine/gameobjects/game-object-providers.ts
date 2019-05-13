@@ -6,7 +6,7 @@ export abstract class AbstractGameObjectProvider {
     onBoardInitialized(board: Board) {}
     onBotJoined(bot: IBoardBot, board: Board) {}
     onBotFinished(bot: IBoardBot, board: Board) {}
-    onBoardNotified(board: Board) {}
+    onOtherEvent(board: Board, eventName: string, params: Object) {}
     onGameObjectsRemoved(board: Board, gameObjects: AbstractGameObject[]) {}
     onGameObjectsAdded(board: Board, gameObjects: AbstractGameObject[]) {}
   }

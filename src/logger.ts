@@ -42,7 +42,9 @@ prefix.apply(log.getLogger('critical'), {
   },
 });
 
-export default class CustomLogger implements LoggerService {
+export default log;
+
+export class CustomLogger implements LoggerService {
   log(message: string) {
     log.trace(message);
   }
@@ -59,3 +61,5 @@ export default class CustomLogger implements LoggerService {
     log.debug(message);
   }
 }
+
+
