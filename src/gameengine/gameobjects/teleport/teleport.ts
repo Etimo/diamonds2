@@ -1,7 +1,7 @@
 import { AbstractGameObject } from "../game-object";
 import { IBoardBot } from "src/interfaces/board-bot.interface";
 import { Board } from "../../board";
-import { IPosition } from "src/interfaces/position.interface";
+import { IPosition } from "src/common/interfaces/position.interface";
 import { BotGameObject } from "../bot/bot";
 
 export class TeleportGameObject extends AbstractGameObject {

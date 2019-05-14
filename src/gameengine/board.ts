@@ -2,7 +2,7 @@ import { IBoardBot } from "src/interfaces/board-bot.interface";
 import { AbstractGameObject } from "./gameobjects/game-object";
 import { IBot } from "src/interfaces/bot.interface";
 import { AbstractGameObjectProvider } from "./gameobjects/game-object-providers";
-import { IPosition } from "src/interfaces/position.interface";
+import { IPosition } from "src/common/interfaces/position.interface";
 import { BoardConfig } from "./board-config";
 
 export class Board {
@@ -10,6 +10,8 @@ export class Board {
   private gameObjects: AbstractGameObject[] = [];
   public readonly maxNumberOfCarryingDiamonds: number = 5;
   private expirationTimers = {};
+  private callbackLoopsRegistered = {};
+  private callbackLoopsId = {};
 
   constructor(private config: BoardConfig, private gameObjectProviders: AbstractGameObjectProvider[], private logger: any) {
     this.notifyProvidersBoardInitialized();
@@ -25,13 +27,30 @@ export class Board {
 
   private getNewExpirationTimer(bot: IBot) {
     const id = setTimeout(_ => {
+      // TODO: add lock
       this.logger.debug("Purge bot", bot.id);
-    }, 100);
+    }, 2000);
     return id;
   }
 
   isCellEmpty(x: number, y: number): boolean {
     return !this.gameObjects.some(g => g.x === x && g.y === y);
+  }
+
+  registerGameObjectForCallbackLoop(gameObject: AbstractGameObject, interval: number) {
+    if (!(interval in this.callbackLoopsRegistered)) {
+      // Setup new interval in callbackloops
+      const id = setInterval(_ => {
+        // TODO: add lock
+        this.logger.debug(`Callback loop triggered for interval ${interval}`);
+        this.callbackLoopsRegistered[interval].forEach((g: AbstractGameObject) => g.onGameObjectCallbackNotified(this));
+        console.log(this.toString());
+      }, interval);
+      this.callbackLoopsRegistered[interval] = [gameObject];
+      this.callbackLoopsId[interval] = id;
+    } else {
+      this.callbackLoopsRegistered[interval].push(gameObject);
+    }
   }
 
   /**
@@ -75,6 +94,37 @@ export class Board {
 
   getConfig(): BoardConfig {
     return this.config;
+  }
+
+  private getGameObjectOnPosition(p: IPosition): AbstractGameObject[] {
+    return this.gameObjects.filter(g => g.x === p.x && g.y === p.y)
+  }
+
+  private moveGameObject(gameObject: AbstractGameObject, dx: number, dy: number) {
+    const current = {x: gameObject.x, y: gameObject.y};
+    const dest = {x: gameObject.x + dx, y: gameObject.y + dy};
+    const gameObjectsDest = this.getGameObjectOnPosition(dest);
+    if (this.canGameObjectMoveTo(gameObject, dest)) {
+      const gameObjectsPrev = this.getGameObjectOnPosition(current);
+      this.logger.debug(JSON.stringify(gameObject), "left", current);
+      gameObjectsPrev.forEach(g => g.onGameObjectLeft(gameObject, this));
+      gameObject.position = dest;
+      this.logger.debug(JSON.stringify(gameObject), "entered", current, gameObjectsDest.length);
+      gameObjectsDest.forEach(g => g.onGameObjectEntered(gameObject, this));
+    }
+  }
+
+  moveGameObjectX(gameObject: AbstractGameObject, dx: number) {
+    this.moveGameObject(gameObject, dx, 0);
+  }
+
+  moveGameObjectY(gameObject: AbstractGameObject, dy: number) {
+    this.moveGameObject(gameObject, 0, dy);
+  }
+
+  private canGameObjectMoveTo(gameObject: AbstractGameObject, dest: IPosition): boolean {
+    const gameObjects = this.getGameObjectOnPosition(dest);
+    return !gameObjects.some(g => !g.canGameObjectEnter(gameObject, this));
   }
 
   get width() {

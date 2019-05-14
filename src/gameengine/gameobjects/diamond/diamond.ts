@@ -1,11 +1,12 @@
 import { AbstractGameObject } from "../game-object";
 import { IBoardBot } from "src/interfaces/board-bot.interface";
 import { Board } from "../../board";
-import { IPosition } from "src/interfaces/position.interface";
+import { IPosition } from "src/common/interfaces/position.interface";
 import { BotGameObject } from "../bot/bot";
+import { DummyBotGameObject } from "../dummy-bot/dummy-bot";
 
 export class DiamondGameObject extends AbstractGameObject {
-  protected type: string = "diamond";
+  public readonly type: string = "diamond";
 
   toChar() {
     return this.points === 1 ? "🔹" : "🔶";
@@ -19,10 +20,13 @@ export class DiamondGameObject extends AbstractGameObject {
    */
   onGameObjectEntered(gameObject: AbstractGameObject, board: Board) {
     if (gameObject instanceof BotGameObject) {
-      if (gameObject.diamonds + this.points <= board.getConfig().maxCarryingDiamonds) {
-        gameObject.diamonds += this.points;
+      const bot = gameObject as BotGameObject;
+      console.log("Diamond collision", bot.diamonds);
+      if (bot.diamonds + this.points <= board.getConfig().maxCarryingDiamonds) {
+        bot.diamonds += this.points;
         board.removeGameObject(this);
       }
+      console.log("Diamond collision after", bot.diamonds);
     }
   }
 }

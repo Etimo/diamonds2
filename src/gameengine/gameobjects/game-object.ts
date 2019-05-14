@@ -1,12 +1,15 @@
 import { IBoardBot } from "src/interfaces/board-bot.interface";
 import { Board } from "../board";
-import { IPosition } from "src/interfaces/position.interface";
+import { IPosition } from "src/common/interfaces/position.interface";
 
 export abstract class AbstractGameObject {
   protected type: string = null;
-  protected position: IPosition;
+  public position: IPosition;
+  private static nextId = 1;
+  private _id = AbstractGameObject.nextId++;
 
   constructor(position: IPosition) {
+    console.log("Init", this, position)
     this.position = position;
   }
 
@@ -18,7 +21,7 @@ export abstract class AbstractGameObject {
     return true;
   }
   onGameObjectLeft(gameObject: AbstractGameObject, board: Board) {}
-
+  onGameObjectCallbackNotified(board: Board) {}
   onGameObjectRemoved(board: Board) {}
 
   get x(): number {
@@ -27,6 +30,10 @@ export abstract class AbstractGameObject {
 
   get y(): number {
     return this.position.y;
+  }
+
+  get id(): number {
+    return this._id;
   }
 
   abstract toChar();

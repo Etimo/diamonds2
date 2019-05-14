@@ -4,7 +4,11 @@ import { AbstractGameObject } from "../game-object";
 import { DiamondButtonGameObject } from "./diamond-button";
 
 export class DiamondButtonProvider extends AbstractGameObjectProvider {
+    /**
+     * Listen for when game objects are removed and generate new button when needed.
+     */
     onGameObjectsRemoved(board: Board, gameObjects: AbstractGameObject[]) {
+        // Check number of diamonds on the board
         const existingButtons = board.getGameObjectsByType(DiamondButtonGameObject);
         if (existingButtons.length == 0) {
             this.generateNewButton(board);

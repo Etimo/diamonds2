@@ -8,6 +8,7 @@ import { BaseProvider } from './gameobjects/base/base-provider';
 import { TeleportProvider } from './gameobjects/teleport/teleport-provider';
 import { BotProvider } from './gameobjects/bot/bot-provider';
 import { DiamondProvider } from './gameobjects/diamond/diamond-provider';
+import { DummyBotProvider } from './gameobjects/dummy-bot/dummy-bot-provider';
 
 log.debug("init");
 
@@ -16,7 +17,8 @@ const providers = [
     new BaseProvider(),
     new DiamondProvider(),
     new TeleportProvider(),
-    new BotProvider()
+    new BotProvider(),
+    new DummyBotProvider()
 ];
 const config: BoardConfig = {
     diamondsGenerationRatio: 0.1,

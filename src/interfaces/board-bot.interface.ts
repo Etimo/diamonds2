@@ -1,4 +1,4 @@
-import { IPosition } from "./position.interface";
+import { IPosition } from "../common/interfaces/position.interface";
 
 export interface IBoardBot {
   base?: IPosition;

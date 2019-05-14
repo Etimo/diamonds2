@@ -1,4 +1,4 @@
-import { IPosition } from "src/interfaces/position.interface";
+import { IPosition } from "src/common/interfaces/position.interface";
 import { AbstractGameObject } from "../game-object";
 
 export interface BoardBot {
@@ -14,18 +14,18 @@ export interface BoardBot {
 
 const BOT_AVATARS = "🤖🦁🐙🦑🦀🐌🐥🦞🐭🐹🐰🐶🐺🦊🐵🐸🙊🐯🦁🐮🐷🐻🐼🐲🐨🦄";
 
-export class BotGameObject extends AbstractGameObject implements BoardBot {
-    protected type: string = "bot";
+export class BotGameObject extends AbstractGameObject {
+    public readonly type: string = "bot";
 
     toChar() {
         return "Q";
     }
+
     base: IPosition;
-    position: IPosition;
-    diamonds: number;
+    diamonds: number = 0;
     timeJoined: Date;
     millisecondsLeft: number;
-    score: number;
+    score: number = 0;
     botId: string;
     nextMoveAvailableAt: Date;
 

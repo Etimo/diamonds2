@@ -1,7 +1,5 @@
 import { AbstractGameObject } from "../game-object";
-import { IBoardBot } from "src/interfaces/board-bot.interface";
 import { Board } from "../../board";
-import { IPosition } from "src/interfaces/position.interface";
 import { DiamondGameObject } from "../diamond/diamond";
 import { BotGameObject } from "../bot/bot";
 
