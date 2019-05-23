@@ -27,6 +27,7 @@
     "@nestjs/swagger": "^3.0.2",
     "chalk": "^2.4.2",
     "fastify-swagger": "^2.3.2",
+    "live-mutex": "^0.1.1059",
     "loglevel": "^1.6.1",
     "loglevel-plugin-prefix": "^0.8.4",
     "reflect-metadata": "^0.1.12",

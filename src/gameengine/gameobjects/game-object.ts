@@ -3,26 +3,13 @@ import { Board } from "../board";
 import { IPosition } from "src/common/interfaces/position.interface";
 
 export abstract class AbstractGameObject {
-  protected type: string = null;
-  public position: IPosition;
   private static nextId = 1;
-  private _id = AbstractGameObject.nextId++;
+  private readonly _id = AbstractGameObject.nextId++;
 
-  constructor(position: IPosition) {
+  constructor(public position: IPosition) {
     console.log("Init", this, position)
     this.position = position;
   }
-
-  onGameObjectEntered(gameObject: AbstractGameObject, board: Board) {}
-  canGameObjectEnter(gameObject: AbstractGameObject, board: Board): boolean {
-    return true;
-  }
-  canGameObjectLeave(gameObject: AbstractGameObject, board: Board): boolean {
-    return true;
-  }
-  onGameObjectLeft(gameObject: AbstractGameObject, board: Board) {}
-  onGameObjectCallbackNotified(board: Board) {}
-  onGameObjectRemoved(board: Board) {}
 
   get x(): number {
     return this.position.x;
@@ -36,5 +23,13 @@ export abstract class AbstractGameObject {
     return this._id;
   }
 
-  abstract toChar();
+  canGameObjectEnter(gameObject: AbstractGameObject, board: Board): boolean { return true; }
+  onGameObjectEntered(gameObject: AbstractGameObject, board: Board) {}
+  canGameObjectLeave(gameObject: AbstractGameObject, board: Board): boolean { return true; }
+  onGameObjectLeft(gameObject: AbstractGameObject, board: Board) {}
+  onGameObjectCallbackNotified(board: Board, intervalMs: number) {}
+  onGameObjectRemoved(board: Board) {}
+  onEvent(board: Board, sender: AbstractGameObject, message: string, payload?: Object) {}
+
+  abstract toChar(): string;
 }

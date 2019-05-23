@@ -43,13 +43,25 @@ export class Board {
       const id = setInterval(_ => {
         // TODO: add lock
         this.logger.debug(`Callback loop triggered for interval ${interval}`);
-        this.callbackLoopsRegistered[interval].forEach((g: AbstractGameObject) => g.onGameObjectCallbackNotified(this));
+        this.callbackLoopsRegistered[interval].forEach((g: AbstractGameObject) => g.onGameObjectCallbackNotified(this, interval));
         console.log(this.toString());
       }, interval);
       this.callbackLoopsRegistered[interval] = [gameObject];
       this.callbackLoopsId[interval] = id;
     } else {
       this.callbackLoopsRegistered[interval].push(gameObject);
+    }
+  }
+
+  unregisterGameObjectFromCallbackLoop(gameObject: AbstractGameObject, interval: number) {
+    if (interval in this.callbackLoopsRegistered) {
+      // Remove from collection
+      this.callbackLoopsRegistered[interval] = this.callbackLoopsRegistered[interval].filter(g => g != gameObject);
+
+      // TODO: Stop interval timer if empty?
+      if (this.callbackLoopsRegistered[interval].length === 0) {
+        
+      }
     }
   }
 
@@ -80,6 +92,9 @@ export class Board {
     return null;
   }
 
+  /**
+   * Returns a random position on the board.
+   */
   getRandomPosition(): IPosition {
     return {
       x: Math.floor(Math.random() * this.config.width),
@@ -87,44 +102,8 @@ export class Board {
     };
   }
 
-  addGameObjects(gameObjects: AbstractGameObject[]) {
-    this.gameObjects.push(...gameObjects);
-    this.notifyProvidersGameObjectsAdded(gameObjects);
-  }
-
   getConfig(): BoardConfig {
     return this.config;
-  }
-
-  private getGameObjectOnPosition(p: IPosition): AbstractGameObject[] {
-    return this.gameObjects.filter(g => g.x === p.x && g.y === p.y)
-  }
-
-  private moveGameObject(gameObject: AbstractGameObject, dx: number, dy: number) {
-    const current = {x: gameObject.x, y: gameObject.y};
-    const dest = {x: gameObject.x + dx, y: gameObject.y + dy};
-    const gameObjectsDest = this.getGameObjectOnPosition(dest);
-    if (this.canGameObjectMoveTo(gameObject, dest)) {
-      const gameObjectsPrev = this.getGameObjectOnPosition(current);
-      this.logger.debug(JSON.stringify(gameObject), "left", current);
-      gameObjectsPrev.forEach(g => g.onGameObjectLeft(gameObject, this));
-      gameObject.position = dest;
-      this.logger.debug(JSON.stringify(gameObject), "entered", current, gameObjectsDest.length);
-      gameObjectsDest.forEach(g => g.onGameObjectEntered(gameObject, this));
-    }
-  }
-
-  moveGameObjectX(gameObject: AbstractGameObject, dx: number) {
-    this.moveGameObject(gameObject, dx, 0);
-  }
-
-  moveGameObjectY(gameObject: AbstractGameObject, dy: number) {
-    this.moveGameObject(gameObject, 0, dy);
-  }
-
-  private canGameObjectMoveTo(gameObject: AbstractGameObject, dest: IPosition): boolean {
-    const gameObjects = this.getGameObjectOnPosition(dest);
-    return !gameObjects.some(g => !g.canGameObjectEnter(gameObject, this));
   }
 
   get width() {
@@ -133,6 +112,54 @@ export class Board {
 
   get height() {
     return this.config.height;
+  }
+
+  addGameObjects(gameObjects: AbstractGameObject[]) {
+    this.gameObjects.push(...gameObjects);
+    this.notifyProvidersGameObjectsAdded(gameObjects);
+  }
+
+  getGameObjectOnPosition(p: IPosition): AbstractGameObject[] {
+    return this.gameObjects.filter(g => g.x === p.x && g.y === p.y);
+  }
+
+  trySetGameObjectPosition(gameObject: AbstractGameObject, dest: IPosition, skipLeaveCheck = false, skipEnterCheck = false): boolean {
+    // Check if we can leave the current position
+    if (!(skipLeaveCheck || this.canGameObjectLeave(gameObject, dest))) {
+      this.logger.debug("Not allowed to leave")
+      return false;
+    }
+
+    // Check if we can enter the new position
+    if (!(skipEnterCheck || this.canGameObjectEnter(gameObject, dest))) {
+      this.logger.debug("Not allowed to enter")
+      return false;
+    }
+
+    // Notfy game objects in current position that we are leaving to the new position
+    const gameObjectsPrev = this.getGameObjectOnPosition(gameObject.position);
+    this.logger.debug(JSON.stringify(gameObject), "left", gameObject.position);
+    gameObjectsPrev.forEach(g => g.onGameObjectLeft(gameObject, this));
+
+    // Update position of game object
+    gameObject.position = dest;
+
+    // Notify game objects in new position that we are entering the new position
+    const gameObjectsDest = this.getGameObjectOnPosition(dest);
+    this.logger.debug(JSON.stringify(gameObject), "entered", gameObject.position);
+    gameObjectsDest.forEach(g => g.onGameObjectEntered(gameObject, this));
+
+    return true;
+  }
+
+  canGameObjectEnter(gameObject: AbstractGameObject, dest: IPosition): boolean {
+    const gameObjects = this.getGameObjectOnPosition(dest);
+    return !gameObjects.some(g => !g.canGameObjectEnter(gameObject, this));
+  }
+
+  canGameObjectLeave(gameObject: AbstractGameObject, dest: IPosition): boolean {
+    const gameObjects = this.getGameObjectOnPosition(dest);
+    return !gameObjects.some(g => !g.canGameObjectLeave(gameObject, this));
   }
 
   /**
@@ -182,6 +209,11 @@ export class Board {
 
   private notifyProvidersBoardBotJoined() {
     this.gameObjectProviders.forEach(p => p.onBotJoined(null, this));
+  }
+
+  notifyGameObjectEvent(sender: AbstractGameObject, message: string, payload?: Object) {
+    this.logger.debug("notifyGameObjectEvent", JSON.stringify(sender), message, JSON.stringify(payload));
+    this.gameObjects.forEach(g => g.onEvent(this, sender, message, payload));
   }
 
   toString() {

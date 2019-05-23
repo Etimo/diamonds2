@@ -9,8 +9,11 @@ export class BaseGameObject extends AbstractGameObject {
         return "B";
     }
 
-    onGameObjectEntered(bot: BotGameObject, board: Board) {
-        bot.score += bot.diamonds;
-        bot.diamonds = 0;
+    onGameObjectEntered(gameObject: AbstractGameObject, board: Board) {
+        if (gameObject instanceof BotGameObject) {
+            const bot = gameObject as BotGameObject;
+            bot.score += bot.diamonds;
+            bot.diamonds = 0;
+        }
     }
 }

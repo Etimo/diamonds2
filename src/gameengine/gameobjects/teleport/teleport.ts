@@ -21,7 +21,12 @@ export class TeleportGameObject extends AbstractGameObject {
     const otherTeleport = teleports.find(
       t => t.pairId === this.pairId && t !== this,
     );
-    bot.position.x = otherTeleport.position.x;
-    bot.position.y = otherTeleport.position.y;
+
+    // Will cause max call stack exceeded since the other teleport will immediately change position back to here
+    //otherTeleport.position
+    if (board.trySetGameObjectPosition(bot, {x: 0, y: 0})) {
+      board.notifyGameObjectEvent(this, "TELEPORTED");
+    }
+
   }
 }
