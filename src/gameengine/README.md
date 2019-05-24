@@ -58,12 +58,12 @@ Available events:
 
 These are the game objects currently sort of implemented (not fully tested yet though :). They have a provider as well.
 
-* [Base](base/)
-* [Bot](bot/)
-* [Diamond](diamond/)
-* [Diamond button](diamond-button/)
-* [Dummy bot](dummy-bot/)
-* [Teleport](teleport/)
+* [Base](gameobjects/base/)
+* [Bot](gameobjects/bot/)
+* [Diamond](gameobjects/diamond/)
+* [Diamond button](gameobjects/diamond-button/)
+* [Dummy bot](gameobjects/dummy-bot/)
+* [Teleport](gameobjects/teleport/)
 
 
 ## Boards
