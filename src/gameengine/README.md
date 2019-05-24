@@ -16,6 +16,8 @@ Otherwise something like this from the project root:
 ./node_modules/.bin/ts-node src/gameengine/cli-example.ts
 ```
 
+This implementation outputs the board to the console and plays using an example bot.
+
 ## Game object providers
 
 Game object providers react to events around the board itself, such as when a board is initialized and when objects are added or removed.
@@ -52,3 +54,25 @@ Available events:
 * *onGameObjectRemoved* - This game object was removed from the board
 * *onEvent* - Some kind of other event was published from a game object
 
+## Boards
+
+A board is created using a configuration and a set of game object providers ("Features"). This makes it easy to create different boards with different features activated.
+
+```typescript
+const providers = [
+    new DiamondButtonProvider(),
+    new BaseProvider(),
+    new DiamondProvider(),
+    // new TeleportProvider(), // Skip teleports until fully implemented
+    new BotProvider(),
+    new DummyBotProvider()
+];
+const config: BoardConfig = {
+    diamondsGenerationRatio: 0.1,
+    height: 10,
+    width: 10,
+    minimumDelayBetweenMoves: 100,
+    maxCarryingDiamonds: 5
+};
+const board = new Board(config, providers, log);
+```
