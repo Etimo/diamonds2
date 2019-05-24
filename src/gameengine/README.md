@@ -54,6 +54,18 @@ Available events:
 * *onGameObjectRemoved* - This game object was removed from the board
 * *onEvent* - Some kind of other event was published from a game object
 
+### Available game objects
+
+These are the game objects currently sort of implemented (not fully tested yet though :). They have a provider as well.
+
+* [Base](base/)
+* [Bot](bot/)
+* [Diamond](diamond/)
+* [Diamond button](diamond-button/)
+* [Dummy bot](dummy-bot/)
+* [Teleport](teleport/)
+
+
 ## Boards
 
 A board is created using a configuration and a set of game object providers ("Features"). This makes it easy to create different boards with different features activated.
