@@ -63,9 +63,25 @@ const providers = [
     new DiamondButtonProvider(),
     new BaseProvider(),
     new DiamondProvider(),
-    // new TeleportProvider(), // Skip teleports until fully implemented
     new BotProvider(),
     new DummyBotProvider()
+];
+const config: BoardConfig = {
+    diamondsGenerationRatio: 0.1,
+    height: 10,
+    width: 10,
+    minimumDelayBetweenMoves: 100,
+    maxCarryingDiamonds: 5
+};
+const board = new Board(config, providers, log);
+```
+
+Perhaps a board with only bots and diamonds:
+```typescript
+const providers = [
+    new BaseProvider(),
+    new DiamondProvider(),
+    new BotProvider(),
 ];
 const config: BoardConfig = {
     diamondsGenerationRatio: 0.1,
