@@ -1,3 +1,8 @@
+SKIP ALL THIS FOR NOW! Just a boilerplate from creating a NestJS (http api) project!
+
+The interesting parts for discussion is the game engine WIP/POC:
+[Game engine README](src/gameengine/)
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
