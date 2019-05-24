@@ -16,7 +16,7 @@ const providers = [
     new DiamondButtonProvider(),
     new BaseProvider(),
     new DiamondProvider(),
-    new TeleportProvider(),
+    // new TeleportProvider(), // Skip teleports until fully implemented
     new BotProvider(),
     new DummyBotProvider()
 ];

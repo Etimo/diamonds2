@@ -6,7 +6,7 @@ import { TeleportGameObject } from "../teleport/teleport";
 
 export class DummyBotGameObject extends BotGameObject {
     onGameObjectCallbackNotified(board: Board, intervalMs: number) {
-        const diamonds = board.getGameObjectsByType(TeleportGameObject);
+        const diamonds = board.getGameObjectsByType(DiamondGameObject);
         if (diamonds.length > 0) {
             const goal = diamonds[0];
             let dx = goal.x - this.position.x;
@@ -31,11 +31,11 @@ export class DummyBotGameObject extends BotGameObject {
         }
     }
 
-    onEvent(board: Board, sender: AbstractGameObject, message: string, payload?: Object) {
-        switch (message) {
-            case "TELEPORTED":
-                board.unregisterGameObjectFromCallbackLoop(this, 1000);
-                break;
-        }
-    }
+    // onEvent(board: Board, sender: AbstractGameObject, message: string, payload?: Object) {
+    //     switch (message) {
+    //         case "TELEPORTED":
+    //             board.unregisterGameObjectFromCallbackLoop(this, 1000);
+    //             break;
+    //     }
+    // }
 }
