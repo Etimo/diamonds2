@@ -11,6 +11,7 @@ export class DiamondGameObject extends AbstractGameObject {
   toChar() {
     return this.points === 1 ? "🔹" : "🔶";
   }
+
   constructor(position: IPosition, private readonly points) {
     super(position);
   }
@@ -21,12 +22,10 @@ export class DiamondGameObject extends AbstractGameObject {
   onGameObjectEntered(gameObject: AbstractGameObject, board: Board) {
     if (gameObject instanceof BotGameObject) {
       const bot = gameObject as BotGameObject;
-      console.log("Diamond collision", bot.diamonds);
       if (bot.diamonds + this.points <= board.getConfig().maxCarryingDiamonds) {
         bot.diamonds += this.points;
         board.removeGameObject(this);
       }
-      console.log("Diamond collision after", bot.diamonds);
     }
   }
 }

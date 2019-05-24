@@ -7,7 +7,7 @@ export class DiamondProvider extends AbstractGameObjectProvider {
         this.generateDiamonds(board);
     }
 
-    onGameObjectsRemoved(board: Board, gameObjects: any) {
+    onGameObjectsRemoved(board: Board, _) {
         const diamonds = board.getGameObjectsByType(DiamondGameObject);
         const minLimit = board.width * board.height * 0.01;
         if (diamonds.length == 0) {
