@@ -1,6 +1,6 @@
-import { AbstractGameObjectProvider } from "../game-object-providers";
+import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
 import { Board } from "src/gameengine/board";
-import { AbstractGameObject } from "../game-object";
+import { AbstractGameObject } from "../abstract-game-object";
 import { TeleportGameObject } from "./teleport";
 
 export class TeleportProvider extends AbstractGameObjectProvider {

@@ -1,5 +1,5 @@
 import { IPosition } from "src/common/interfaces/position.interface";
-import { AbstractGameObject } from "../game-object";
+import { AbstractGameObject } from "../abstract-game-object";
 
 export interface BoardBot {
     base: IPosition;

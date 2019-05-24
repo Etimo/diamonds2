@@ -1,4 +1,4 @@
-import { AbstractGameObject } from "../game-object";
+import { AbstractGameObject } from "../abstract-game-object";
 import { Board } from "../../board";
 import { DiamondGameObject } from "../diamond/diamond";
 import { BotGameObject } from "../bot/bot";

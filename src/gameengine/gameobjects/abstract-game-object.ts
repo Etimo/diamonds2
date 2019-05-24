@@ -7,7 +7,6 @@ export abstract class AbstractGameObject {
   private readonly _id = AbstractGameObject.nextId++;
 
   constructor(public position: IPosition) {
-    console.log("Init", this, position)
     this.position = position;
   }
 

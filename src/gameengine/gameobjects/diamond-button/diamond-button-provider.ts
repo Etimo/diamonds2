@@ -1,6 +1,6 @@
-import { AbstractGameObjectProvider } from "../game-object-providers";
+import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
 import { Board } from "src/gameengine/board";
-import { AbstractGameObject } from "../game-object";
+import { AbstractGameObject } from "../abstract-game-object";
 import { DiamondButtonGameObject } from "./diamond-button";
 
 export class DiamondButtonProvider extends AbstractGameObjectProvider {
