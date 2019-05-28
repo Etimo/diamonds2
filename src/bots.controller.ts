@@ -6,7 +6,7 @@ import {
   Res,
   ConflictException,
 } from "@nestjs/common";
-import { ICreateBotInput } from "./interfaces/create-bot-input.interface";
+import { CreateBotDto } from "./interfaces/create-bot-input.interface";
 import { IBot } from "./interfaces/bot.interface";
 import { BotsService } from "./services/bots.service";
 import { ValidationException } from "./exceptions";
@@ -16,7 +16,7 @@ export class BotsController {
   constructor(private readonly botsService: BotsService) {}
 
   @Post()
-  async create(@Body() input: ICreateBotInput) {
+  async create(@Body() input: CreateBotDto) {
     return this.botsService.add(input);
   }
 

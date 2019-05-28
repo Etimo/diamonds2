@@ -17,7 +17,6 @@ async function bootstrap() {
     .setTitle("Diamonds")
     .setDescription("Diamonds API description")
     .setVersion("1.0")
-    .addTag("diamonds")
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup("docs", app, document);
