@@ -4,15 +4,15 @@ import { AbstractGameObject } from "../abstract-game-object";
 import { TeleportGameObject } from "./teleport";
 
 export class TeleportProvider extends AbstractGameObjectProvider {
-    onBoardInitialized(board: Board) {
-        this.generateTeleports(board);
-    }
+  onBoardInitialized(board: Board) {
+    this.generateTeleports(board);
+  }
 
-    private generateTeleports(board: Board) {
-        const pairId = "1";
-        board.addGameObjects([
-            new TeleportGameObject(board.getEmptyPosition(), pairId),
-            new TeleportGameObject(board.getEmptyPosition(), pairId)
-        ]);
-    }
+  private generateTeleports(board: Board) {
+    const pairId = "1";
+    board.addGameObjects([
+      new TeleportGameObject(board.getEmptyPosition(), pairId),
+      new TeleportGameObject(board.getEmptyPosition(), pairId),
+    ]);
+  }
 }

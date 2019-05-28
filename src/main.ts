@@ -4,7 +4,7 @@ import { AppModule } from "./app.module";
 import bodyParser = require("body-parser");
 import { ValidationExceptionFilter } from "./validation-exception.filter";
 
-import CustomLogger from './logger';
+import CustomLogger from "./logger";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {

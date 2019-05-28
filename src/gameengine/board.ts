@@ -13,7 +13,11 @@ export class Board {
   private callbackLoopsRegistered = {};
   private callbackLoopsId = {};
 
-  constructor(private config: BoardConfig, private gameObjectProviders: AbstractGameObjectProvider[], private logger: any) {
+  constructor(
+    private config: BoardConfig,
+    private gameObjectProviders: AbstractGameObjectProvider[],
+    private logger: any,
+  ) {
     this.notifyProvidersBoardInitialized();
   }
 
@@ -37,13 +41,19 @@ export class Board {
     return !this.gameObjects.some(g => g.x === x && g.y === y);
   }
 
-  registerGameObjectForCallbackLoop(gameObject: AbstractGameObject, interval: number) {
+  registerGameObjectForCallbackLoop(
+    gameObject: AbstractGameObject,
+    interval: number,
+  ) {
     if (!(interval in this.callbackLoopsRegistered)) {
       // Setup new interval in callbackloops
       const id = setInterval(_ => {
         // TODO: add lock
         this.logger.debug(`Callback loop triggered for interval ${interval}`);
-        this.callbackLoopsRegistered[interval].forEach((g: AbstractGameObject) => g.onGameObjectCallbackNotified(this, interval));
+        this.callbackLoopsRegistered[interval].forEach(
+          (g: AbstractGameObject) =>
+            g.onGameObjectCallbackNotified(this, interval),
+        );
         console.log(this.toString());
       }, interval);
       this.callbackLoopsRegistered[interval] = [gameObject];
@@ -53,39 +63,43 @@ export class Board {
     }
   }
 
-  unregisterGameObjectFromCallbackLoop(gameObject: AbstractGameObject, interval: number) {
+  unregisterGameObjectFromCallbackLoop(
+    gameObject: AbstractGameObject,
+    interval: number,
+  ) {
     if (interval in this.callbackLoopsRegistered) {
       // Remove from collection
-      this.callbackLoopsRegistered[interval] = this.callbackLoopsRegistered[interval].filter(g => g != gameObject);
+      this.callbackLoopsRegistered[interval] = this.callbackLoopsRegistered[
+        interval
+      ].filter(g => g != gameObject);
 
       // TODO: Stop interval timer if empty?
       if (this.callbackLoopsRegistered[interval].length === 0) {
-        
       }
     }
   }
 
   /**
-   * Returns a random position on the board that is considered empty. By empty, it means that there are 
+   * Returns a random position on the board that is considered empty. By empty, it means that there are
    * no game objects on the cell.
-   * 
+   *
    * @returns IPosition
    */
   getEmptyPosition(): IPosition {
     // Try random positions for some time
-    for(var i = 0; i < this.config.width * this.config.height; i++) {
-      const {x, y} = this.getRandomPosition();
+    for (var i = 0; i < this.config.width * this.config.height; i++) {
+      const { x, y } = this.getRandomPosition();
       if (this.isCellEmpty(x, y)) {
-        return {x, y};
+        return { x, y };
       }
     }
 
     // If not found, try more systematic so we dont get stuck in an endless loop
-    for(var i = 0; i < this.config.width * this.config.height; i++) {
+    for (var i = 0; i < this.config.width * this.config.height; i++) {
       const x = i % this.config.width;
       const y = Math.floor(i / this.config.height);
       if (this.isCellEmpty(x, y)) {
-        return {x, y};
+        return { x, y };
       }
     }
 
@@ -98,7 +112,7 @@ export class Board {
   getRandomPosition(): IPosition {
     return {
       x: Math.floor(Math.random() * this.config.width),
-      y: Math.floor(Math.random() * this.config.height)
+      y: Math.floor(Math.random() * this.config.height),
     };
   }
 
@@ -123,16 +137,21 @@ export class Board {
     return this.gameObjects.filter(g => g.x === p.x && g.y === p.y);
   }
 
-  trySetGameObjectPosition(gameObject: AbstractGameObject, dest: IPosition, skipLeaveCheck = false, skipEnterCheck = false): boolean {
+  trySetGameObjectPosition(
+    gameObject: AbstractGameObject,
+    dest: IPosition,
+    skipLeaveCheck = false,
+    skipEnterCheck = false,
+  ): boolean {
     // Check if we can leave the current position
     if (!(skipLeaveCheck || this.canGameObjectLeave(gameObject, dest))) {
-      this.logger.debug("Not allowed to leave")
+      this.logger.debug("Not allowed to leave");
       return false;
     }
 
     // Check if we can enter the new position
     if (!(skipEnterCheck || this.canGameObjectEnter(gameObject, dest))) {
-      this.logger.debug("Not allowed to enter")
+      this.logger.debug("Not allowed to enter");
       return false;
     }
 
@@ -146,7 +165,11 @@ export class Board {
 
     // Notify game objects in new position that we are entering the new position
     const gameObjectsDest = this.getGameObjectOnPosition(dest);
-    this.logger.debug(JSON.stringify(gameObject), "entered", gameObject.position);
+    this.logger.debug(
+      JSON.stringify(gameObject),
+      "entered",
+      gameObject.position,
+    );
     gameObjectsDest.forEach(g => g.onGameObjectEntered(gameObject, this));
 
     return true;
@@ -164,16 +187,18 @@ export class Board {
 
   /**
    * Get an array of all game objects matching the given type T.
-   * 
+   *
    * @returns T[] Array of game objects.
    */
-  getGameObjectsByType<T extends AbstractGameObject>(t: new (...args: any[]) => T): T[] {
+  getGameObjectsByType<T extends AbstractGameObject>(
+    t: new (...args: any[]) => T,
+  ): T[] {
     return this.gameObjects.filter(g => g instanceof t).map(g => g as T);
   }
 
   /**
    * Remove a specific game object from the board.
-   * 
+   *
    * @param gameObject The game object to remove.
    */
   removeGameObject(gameObject: AbstractGameObject) {
@@ -185,7 +210,9 @@ export class Board {
   /**
    * Remove all game objects of type T from the board.
    */
-  removeGameObjectsByType<T extends AbstractGameObject>(t: new (...args: any[]) => T) {
+  removeGameObjectsByType<T extends AbstractGameObject>(
+    t: new (...args: any[]) => T,
+  ) {
     this.gameObjects.forEach(g => g.onGameObjectRemoved(this));
     const removed = this.gameObjects.filter(g => !(g instanceof t));
     this.gameObjects = this.gameObjects.filter(g => g instanceof t);
@@ -193,13 +220,23 @@ export class Board {
   }
 
   private notifyProvidersGameObjectsRemoved(gameObjects: AbstractGameObject[]) {
-    this.logger.debug("notifyProvidersGameObjectsRemoved", JSON.stringify(gameObjects));
-    this.gameObjectProviders.forEach(p => p.onGameObjectsRemoved(this, gameObjects));
+    this.logger.debug(
+      "notifyProvidersGameObjectsRemoved",
+      JSON.stringify(gameObjects),
+    );
+    this.gameObjectProviders.forEach(p =>
+      p.onGameObjectsRemoved(this, gameObjects),
+    );
   }
 
   private notifyProvidersGameObjectsAdded(gameObjects: AbstractGameObject[]) {
-    this.logger.debug("notifyProvidersGameObjectsAdded", JSON.stringify(gameObjects));
-    this.gameObjectProviders.forEach(p => p.onGameObjectsAdded(this, gameObjects));
+    this.logger.debug(
+      "notifyProvidersGameObjectsAdded",
+      JSON.stringify(gameObjects),
+    );
+    this.gameObjectProviders.forEach(p =>
+      p.onGameObjectsAdded(this, gameObjects),
+    );
   }
 
   private notifyProvidersBoardInitialized() {
@@ -211,8 +248,17 @@ export class Board {
     this.gameObjectProviders.forEach(p => p.onBotJoined(null, this));
   }
 
-  notifyGameObjectEvent(sender: AbstractGameObject, message: string, payload?: Object) {
-    this.logger.debug("notifyGameObjectEvent", JSON.stringify(sender), message, JSON.stringify(payload));
+  notifyGameObjectEvent(
+    sender: AbstractGameObject,
+    message: string,
+    payload?: Object,
+  ) {
+    this.logger.debug(
+      "notifyGameObjectEvent",
+      JSON.stringify(sender),
+      message,
+      JSON.stringify(payload),
+    );
     this.gameObjects.forEach(g => g.onEvent(this, sender, message, payload));
   }
 
@@ -220,18 +266,22 @@ export class Board {
     const cellSize = 3;
     //"┓┗┛┏┃━"
     const ret = ["┏" + "".padEnd(this.width * cellSize, "━") + "┓"];
-    for(var y = 0; y < this.height; y++) {
+    for (var y = 0; y < this.height; y++) {
       const line = ["┃"];
-      for(var x = 0; x < this.width; x++) {
-        const gameObjects = this.gameObjects.filter(g => g.x === x && g.y === y);
-        var existing = gameObjects.map(g => g.toChar()).join("").padEnd(cellSize, " ");
+      for (var x = 0; x < this.width; x++) {
+        const gameObjects = this.gameObjects.filter(
+          g => g.x === x && g.y === y,
+        );
+        var existing = gameObjects
+          .map(g => g.toChar())
+          .join("")
+          .padEnd(cellSize, " ");
         line.push(existing);
-
       }
       line.push("┃");
       ret.push(line.join(""));
     }
-    ret.push("┗" + "".padEnd(this.width * cellSize, "━") + "┛")
+    ret.push("┗" + "".padEnd(this.width * cellSize, "━") + "┛");
     return ret.join("\n");
   }
 }

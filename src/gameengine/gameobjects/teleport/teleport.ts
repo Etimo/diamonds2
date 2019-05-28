@@ -24,9 +24,8 @@ export class TeleportGameObject extends AbstractGameObject {
 
     // Will cause max call stack exceeded since the other teleport will immediately change position back to here
     //otherTeleport.position
-    if (board.trySetGameObjectPosition(bot, {x: 0, y: 0})) {
+    if (board.trySetGameObjectPosition(bot, { x: 0, y: 0 })) {
       board.notifyGameObjectEvent(this, "TELEPORTED");
     }
-
   }
 }
