@@ -31,10 +31,10 @@
     "loglevel": "^1.6.1",
     "loglevel-plugin-prefix": "^0.8.4",
     "reflect-metadata": "^0.1.12",
-    "rimraf": "^2.6.2",
+    "rimraf": "^3.0.0",
     "rxjs": "^6.3.3",
     "swagger-ui-express": "^4.0.2",
-    "ts-loader": "^5.4.3"
+    "ts-loader": "6"
   },
   "devDependencies": {
     "@nestjs/testing": "^6.0.0",
@@ -44,16 +44,16 @@
     "@types/node": "^10.12.18",
     "@types/pino": "^5.8.7",
     "@types/supertest": "^2.0.7",
-    "husky": "^2.3.0",
+    "husky": "3",
     "jest": "^24.8.0",
     "nodemon": "^1.18.9",
     "precise-commits": "^1.0.2",
     "prettier": "^1.15.3",
-    "supertest": "^3.4.1",
+    "supertest": "^4.0.2",
     "ts-jest": "^24.0.2",
-    "ts-node": "^7.0.1",
+    "ts-node": "8",
     "tsconfig-paths": "^3.7.0",
-    "tslint": "5.12.1",
+    "tslint": "5.18.0",
     "typescript": "^3.2.4"
   },
   "husky": {
