@@ -1,3 +1,4 @@
 node_modules
 dist/
 nodemon-debug.json
+.DS_Store
