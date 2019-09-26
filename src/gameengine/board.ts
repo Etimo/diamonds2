@@ -1,4 +1,3 @@
-import { IBoardBot } from "src/interfaces/board-bot.interface";
 import { AbstractGameObject } from "./gameobjects/abstract-game-object";
 import { IBot } from "src/interfaces/bot.interface";
 import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";

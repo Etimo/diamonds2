@@ -2,21 +2,14 @@ import { BaseGameObject } from "./base";
 import { BotGameObject } from "../bot/bot";
 import { BaseProvider } from "./base-provider";
 import { Board } from "../../board";
+import createTestBoard from "../../util/test-board";
 
 let provider: BaseProvider;
 let board: Board;
 
 beforeAll(() => {
   provider = new BaseProvider();
-  board = new Board(
-    {
-      height: 10,
-      width: 10,
-      minimumDelayBetweenMoves: 100,
-    },
-    [],
-    console,
-  );
+  board = createTestBoard();
 });
 
 test("Creates base when bot joins", () => {
