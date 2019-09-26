@@ -42,4 +42,3 @@ board.join(bot1);
 setInterval(() => {
   console.log(terminalRenderer(board));
 }, 1000);
-
