@@ -6,17 +6,10 @@ import { HighscoresController } from "./controllers/highscore/highscores.control
 import { BoardsController } from "./controllers/boards/boards.controller";
 import { BotsController } from "./controllers/bots/bots.controller";
 import { CustomLogger } from "./logger";
-import { BoardsService } from "./services/board.service";
 
 @Module({
   controllers: [BotsController, BoardsController, HighscoresController],
   imports: [],
-  providers: [
-    CustomLogger,
-    BoardsService,
-    BotsService,
-    IdService,
-    ValidatorService,
-  ],
+  providers: [CustomLogger, BotsService, IdService, ValidatorService],
 })
 export class AppModule {}
