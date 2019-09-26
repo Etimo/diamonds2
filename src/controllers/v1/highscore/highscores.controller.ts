@@ -1,8 +1,8 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiUseTags } from "@nestjs/swagger";
-@ApiUseTags("Highscore")
-@Controller("api/highscore")
-export class HighscoreController {
+@ApiUseTags("Highscores")
+@Controller("api/highscores")
+export class HighscoresController {
   @Get()
   get() {}
 }

@@ -1,15 +1,15 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { HighscoreController } from "./highscore.controller";
+import { HighscoresController } from "./highscores.controller";
 
 describe("Highscore Controller", () => {
-  let controller: HighscoreController;
+  let controller: HighscoresController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [HighscoreController],
+      controllers: [HighscoresController],
     }).compile();
 
-    controller = module.get<HighscoreController>(HighscoreController);
+    controller = module.get<HighscoresController>(HighscoresController);
   });
 
   it("should be defined", () => {

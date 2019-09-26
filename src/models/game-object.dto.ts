@@ -1,10 +1,11 @@
 import { ApiModelProperty } from "@nestjs/swagger";
+import { PositionDto } from "./position.dto";
 
 export class GameObjectDto {
   @ApiModelProperty()
-  name: string;
+  type: string;
   @ApiModelProperty()
-  position: Position;
+  position: PositionDto;
   @ApiModelProperty()
-  isBlocking: boolean;
+  properties: object;
 }
