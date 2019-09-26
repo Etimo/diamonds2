@@ -164,7 +164,11 @@ export class Board {
 
     // Notfy game objects in current position that we are leaving to the new position
     const gameObjectsPrev = this.getGameObjectOnPosition(gameObject.position);
-    this.logger.debug(JSON.stringify(gameObject), "left", gameObject.position);
+    this.logger.debug(
+      JSON.stringify(gameObject),
+      "left",
+      JSON.stringify(gameObject.position),
+    );
     gameObjectsPrev.forEach(g => g.onGameObjectLeft(gameObject, this));
 
     // Update position of game object
@@ -175,7 +179,7 @@ export class Board {
     this.logger.debug(
       JSON.stringify(gameObject),
       "entered",
-      gameObject.position,
+      JSON.stringify(gameObject.position),
     );
     gameObjectsDest.forEach(g => g.onGameObjectEntered(gameObject, this));
 
