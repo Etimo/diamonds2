@@ -5,12 +5,6 @@ import { IPosition } from "src/common/interfaces/position.interface";
 import { BotGameObject } from "../bot/bot";
 
 export class TeleportGameObject extends AbstractGameObject {
-  protected type: string = "teleport";
-
-  toChar() {
-    return "O";
-  }
-
   constructor(position: IPosition, private readonly pairId: string) {
     super(position);
   }

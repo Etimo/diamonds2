@@ -12,19 +12,12 @@ export interface BoardBot {
   nextMoveAvailableAt: Date;
 }
 
-const BOT_AVATARS = "🤖🦁🐙🦑🦀🐌🐥🦞🐭🐹🐰🐶🐺🦊🐵🐸🙊🐯🦁🐮🐷🐻🐼🐲🐨🦄";
-
 export class BotGameObject extends AbstractGameObject {
-  public readonly type: string = "bot";
-
-  toChar() {
-    return "Q";
-  }
-
   base: IPosition;
   diamonds: number = 0;
   timeJoined: Date;
   millisecondsLeft: number;
+  inventorySize: number;
   score: number = 0;
   botId: string;
   nextMoveAvailableAt: Date;

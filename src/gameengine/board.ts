@@ -54,7 +54,6 @@ export class Board {
           (g: AbstractGameObject) =>
             g.onGameObjectCallbackNotified(this, interval),
         );
-        console.log(this.toString());
       }, interval);
       this.callbackLoopsRegistered[interval] = [gameObject];
       this.callbackLoopsId[interval] = id;
@@ -126,6 +125,14 @@ export class Board {
 
   get height() {
     return this.config.height;
+  }
+
+  getAllGameObjects(): AbstractGameObject[] {
+    return this.gameObjects;
+  }
+
+  getAllGameObjectProviders(): AbstractGameObjectProvider[] {
+    return this.gameObjectProviders;
   }
 
   addGameObjects(gameObjects: AbstractGameObject[]) {
@@ -260,28 +267,5 @@ export class Board {
       JSON.stringify(payload),
     );
     this.gameObjects.forEach(g => g.onEvent(this, sender, message, payload));
-  }
-
-  toString() {
-    const cellSize = 3;
-    //"┓┗┛┏┃━"
-    const ret = ["┏" + "".padEnd(this.width * cellSize, "━") + "┓"];
-    for (var y = 0; y < this.height; y++) {
-      const line = ["┃"];
-      for (var x = 0; x < this.width; x++) {
-        const gameObjects = this.gameObjects.filter(
-          g => g.x === x && g.y === y,
-        );
-        var existing = gameObjects
-          .map(g => g.toChar())
-          .join("")
-          .padEnd(cellSize, " ");
-        line.push(existing);
-      }
-      line.push("┃");
-      ret.push(line.join(""));
-    }
-    ret.push("┗" + "".padEnd(this.width * cellSize, "━") + "┛");
-    return ret.join("\n");
   }
 }

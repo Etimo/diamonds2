@@ -41,6 +41,4 @@ export abstract class AbstractGameObject {
     message: string,
     payload?: Object,
   ) {}
-
-  abstract toChar(): string;
 }

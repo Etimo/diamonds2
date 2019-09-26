@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { IBot } from "src/interfaces/bot.interface";
-import { ICreateBotInput } from "src/interfaces/create-bot-input.interface";
 import { IdService } from "./id-service.service";
 import { ValidatorService } from "./validator.service";
 import { ValidationException } from "src/exceptions";
@@ -14,7 +13,7 @@ export class BotsService {
     private readonly validatorService: ValidatorService,
   ) {}
 
-  add(input: ICreateBotInput): IBot {
+  add(input): IBot {
     if (!this.validatorService.isValidEmail(input.email)) {
       throw new ValidationException("Invalid email");
     }

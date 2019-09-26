@@ -6,12 +6,6 @@ import { BotGameObject } from "../bot/bot";
 import { DummyBotGameObject } from "../dummy-bot/dummy-bot";
 
 export class DiamondGameObject extends AbstractGameObject {
-  public readonly type: string = "diamond";
-
-  toChar() {
-    return this.points === 1 ? "🔹" : "🔶";
-  }
-
   constructor(position: IPosition, private readonly points) {
     super(position);
   }
@@ -22,7 +16,7 @@ export class DiamondGameObject extends AbstractGameObject {
   onGameObjectEntered(gameObject: AbstractGameObject, board: Board) {
     if (gameObject instanceof BotGameObject) {
       const bot = gameObject as BotGameObject;
-      if (bot.diamonds + this.points <= board.getConfig().maxCarryingDiamonds) {
+      if (bot.diamonds + this.points <= bot.inventorySize) {
         bot.diamonds += this.points;
         board.removeGameObject(this);
       }

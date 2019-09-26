@@ -4,12 +4,6 @@ import { DiamondGameObject } from "../diamond/diamond";
 import { BotGameObject } from "../bot/bot";
 
 export class DiamondButtonGameObject extends AbstractGameObject {
-  protected type: string = "diamondButton";
-
-  toChar() {
-    return "☐";
-  }
-
   /**
    * Clear all diamonds when a bot enters the cell of this button.
    */
