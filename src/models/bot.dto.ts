@@ -1,12 +1,12 @@
-import { BaseDto } from "./base.dto";
 import { ApiModelProperty } from "@nestjs/swagger";
+import { PositionDto } from "./position.dto";
 export class BotDto {
   @ApiModelProperty()
   name: string;
   @ApiModelProperty()
-  base: BaseDto;
+  base: PositionDto;
   @ApiModelProperty()
-  position: Position;
+  position: PositionDto;
   @ApiModelProperty()
   diamonds: number;
   @ApiModelProperty()
