@@ -10,7 +10,7 @@ const representation = {
   DummyBotGameObject: "Q",
 };
 
-const BOT_AVATARS = "🤖🦁🐙🦑🦀🐌🐥🦞🐭🐹🐰🐶🐺🦊🐵🐸🙊🐯🦁🐮🐷🐻🐼🐲🐨🦄";
+const BOT_AVATARS = "🤖🦁🐙🦑🦀🐥🦞🐭🐹🐰🐶🐺🦊🐵🐸🙊🐯🦁🐮🐷🐻🐼🐲🐨";
 
 export default function renderBoard(board: Board) {
   const cellSize = 3;
