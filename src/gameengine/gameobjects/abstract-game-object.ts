@@ -21,6 +21,10 @@ export abstract class AbstractGameObject {
     return this._id;
   }
 
+  get properties(): object {
+    return null;
+  }
+
   canGameObjectEnter(gameObject: AbstractGameObject, board: Board): boolean {
     return true;
   }

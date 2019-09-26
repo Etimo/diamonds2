@@ -21,4 +21,16 @@ export class BotGameObject extends AbstractGameObject {
   score: number = 0;
   botId: string;
   nextMoveAvailableAt: Date;
+
+  get properties() {
+    return {
+      diamonds: this.diamonds,
+      score: this.score,
+      nextMoveAvailableAt: this.nextMoveAvailableAt,
+      botId: this.botId,
+      inventorySize: this.inventorySize,
+      timeJoined: this.timeJoined,
+      base: this.base,
+    };
+  }
 }

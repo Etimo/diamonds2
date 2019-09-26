@@ -48,16 +48,19 @@ export default log;
 
 export class CustomLogger implements LoggerService {
   log(message: string) {
-    log.trace(message);
+    log.debug(message);
   }
   error(message: string, trace: string) {
     log.error(message);
+  }
+  trace(message: string) {
+    log.debug(message);
   }
   warn(message: string) {
     log.warn(message);
   }
   debug(message: string) {
-    log.warn(message);
+    log.debug(message);
   }
   verbose(message: string) {
     log.debug(message);

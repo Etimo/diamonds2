@@ -6,6 +6,8 @@ import { BoardConfig } from "./board-config";
 import { LoggerService } from "@nestjs/common";
 
 export class Board {
+  private static nextId = 1;
+  private readonly _id = `${Board.nextId++}`;
   private bots: IBot[] = [];
   private gameObjects: AbstractGameObject[] = [];
   public readonly maxNumberOfCarryingDiamonds: number = 5;
@@ -19,6 +21,10 @@ export class Board {
     private logger: any,
   ) {
     this.notifyProvidersBoardInitialized();
+  }
+
+  getId() {
+    return this._id;
   }
 
   join(bot: IBot): boolean {

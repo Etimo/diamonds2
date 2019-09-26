@@ -5,12 +5,14 @@ import bodyParser = require("body-parser");
 import { ValidationExceptionFilter } from "./validation-exception.filter";
 
 import { CustomLogger } from "./logger";
+import { ValidationPipe } from "@nestjs/common";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: new CustomLogger(),
   });
   app.use(bodyParser.json());
+  app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new ValidationExceptionFilter());
 
   const options = new DocumentBuilder()
