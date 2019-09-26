@@ -3,6 +3,7 @@ import { IBot } from "src/interfaces/bot.interface";
 import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
 import { IPosition } from "src/common/interfaces/position.interface";
 import { BoardConfig } from "./board-config";
+import { LoggerService } from "@nestjs/common";
 
 export class Board {
   private bots: IBot[] = [];
@@ -26,6 +27,10 @@ export class Board {
     this.expirationTimers[bot.id] = this.getNewExpirationTimer(bot);
     const boardBot = {};
     return false;
+  }
+
+  public move(bot: IBot, position: Position): boolean {
+    return true;
   }
 
   private getNewExpirationTimer(bot: IBot) {

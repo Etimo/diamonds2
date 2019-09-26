@@ -50,7 +50,7 @@ export class CustomLogger implements LoggerService {
   log(message: string) {
     log.trace(message);
   }
-  error(message: string) {
+  error(message: string, trace: string) {
     log.error(message);
   }
   warn(message: string) {

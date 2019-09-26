@@ -1,5 +1,4 @@
 import { Module } from "@nestjs/common";
-import { BoardsService } from "./services/boards.service";
 import { IdService } from "./services/id-service.service";
 import { ValidatorService } from "./services/validator.service";
 import { BotsService } from "./services/bots.service";
@@ -7,6 +6,9 @@ import { ExpiredBotsController } from "./controllers/v1/expired-bots/expired-bot
 import { HighscoreController } from "./controllers/v1/highscore/highscore.controller";
 import { BoardsController } from "./controllers/v1/boards/boards.controller";
 import { BotsController } from "./controllers/v1/bots/bots.controller";
+import { GameService } from "./services/v2/game/game.service";
+import { CustomLogger } from "./logger";
+import { BoardsService } from "./services/board/board.service";
 
 @Module({
   controllers: [
@@ -16,6 +18,13 @@ import { BotsController } from "./controllers/v1/bots/bots.controller";
     ExpiredBotsController,
   ],
   imports: [],
-  providers: [BoardsService, BotsService, IdService, ValidatorService],
+  providers: [
+    CustomLogger,
+    GameService,
+    BoardsService,
+    BotsService,
+    IdService,
+    ValidatorService,
+  ],
 })
 export class AppModule {}

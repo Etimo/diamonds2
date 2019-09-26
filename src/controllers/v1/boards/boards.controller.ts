@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Param } from "@nestjs/common";
 import { ApiUseTags, ApiCreatedResponse, ApiResponse } from "@nestjs/swagger";
-import { BoardDto } from "src/models/v1/board.dto";
+import { BoardDto } from "src/models/v2/board.dto";
 
 @ApiUseTags("Boards")
 @Controller("api/boards")
