@@ -5,16 +5,14 @@ import { BotsService } from "./services/bots.service";
 import { HighscoresController } from "./controllers/highscore/highscores.controller";
 import { BoardsController } from "./controllers/boards/boards.controller";
 import { BotsController } from "./controllers/bots/bots.controller";
-import { GameService } from "./services/v2/game/game.service";
 import { CustomLogger } from "./logger";
-import { BoardsService } from "./services/board/board.service";
+import { BoardsService } from "./services/board.service";
 
 @Module({
   controllers: [BotsController, BoardsController, HighscoresController],
   imports: [],
   providers: [
     CustomLogger,
-    GameService,
     BoardsService,
     BotsService,
     IdService,
