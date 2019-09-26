@@ -1,6 +1,6 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiUseTags, ApiResponse } from "@nestjs/swagger";
-import { HighscoreDto } from "src/models/v1/highscore.dto";
+import { HighscoreDto } from "src/models/highscore.dto";
 @ApiUseTags("Highscores")
 @Controller("api/Highscores")
 export class HighscoresController {

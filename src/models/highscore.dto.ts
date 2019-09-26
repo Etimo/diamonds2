@@ -3,8 +3,6 @@ import { SeasonDto } from "./season.dto";
 
 export class HighscoreDto {
   @ApiModelProperty()
-  id: string;
-  @ApiModelProperty()
   botName: string;
   @ApiModelProperty()
   score: number;
