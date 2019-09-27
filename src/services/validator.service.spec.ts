@@ -1,18 +1,19 @@
-import { Test, TestingModule } from "@nestjs/testing";
 import { ValidatorService } from "./validator.service";
 
+let service: ValidatorService;
+
 describe("ValidatorService", () => {
-  let service: ValidatorService;
-
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [ValidatorService],
-    }).compile();
-
-    service = module.get<ValidatorService>(ValidatorService);
+    service = new ValidatorService();
   });
 
-  it("should be defined", () => {
-    expect(service).toBeDefined();
+  describe("isValidEmail", () => {
+    it("should validate valid email", () => {
+      expect(service.isValidEmail("aa@bb.se")).toBeTruthy();
+    });
+
+    it("should not validate invalid email", () => {
+      expect(service.isValidEmail("aabb.se")).toBeFalsy();
+    });
   });
 });

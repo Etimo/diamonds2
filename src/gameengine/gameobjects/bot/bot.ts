@@ -1,24 +1,13 @@
 import { IPosition } from "src/common/interfaces/position.interface";
 import { AbstractGameObject } from "../abstract-game-object";
 
-export interface BoardBot {
-  base: IPosition;
-  position: IPosition;
-  diamonds: number;
-  timeJoined: Date;
-  millisecondsLeft: number;
-  score: number;
-  botId: string;
-  nextMoveAvailableAt: Date;
-}
-
 export class BotGameObject extends AbstractGameObject {
   base: IPosition;
-  diamonds: number = 0;
+  diamonds: number;
   timeJoined: Date;
-  millisecondsLeft: number;
+  expiresAt: Date;
   inventorySize: number;
-  score: number = 0;
+  score: number;
   name: string;
   nextMoveAvailableAt: Date;
 
@@ -29,6 +18,7 @@ export class BotGameObject extends AbstractGameObject {
       nextMoveAvailableAt: this.nextMoveAvailableAt,
       name: this.name,
       inventorySize: this.inventorySize,
+      millisecondsLeft: this.expiresAt.getTime() - new Date().getTime(),
       timeJoined: this.timeJoined,
       base: this.base,
     };

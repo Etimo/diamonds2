@@ -103,7 +103,7 @@ export class BoardsService {
       case MoveDirection.EAST:
         return { x: 1, y: 0 };
       default:
-        throw new Error();
+        throw Error();
     }
   }
 
@@ -119,6 +119,7 @@ export class BoardsService {
       minimumDelayBetweenMoves: board.getConfig().minimumDelayBetweenMoves,
       gameObjects: board.getAllGameObjects().map(g => {
         return <GameObjectDto>{
+          id: g.id,
           position: g.position,
           type: g.constructor.name,
           properties: g.properties,
@@ -138,6 +139,9 @@ export class BoardsService {
         generationRatio: 0.1,
         minRatioForGeneration: 0.01,
       }),
+      new DummyBotProvider({
+        inventorySize: 5,
+      }),
       new BotProvider({
         inventorySize: 5,
       }),
@@ -146,6 +150,7 @@ export class BoardsService {
       height: 10,
       width: 10,
       minimumDelayBetweenMoves: 100,
+      sessionLength: 60,
     };
     const board = new Board(config, providers, this.logger);
     this.boards.push(board);

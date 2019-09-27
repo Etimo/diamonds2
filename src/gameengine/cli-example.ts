@@ -23,12 +23,12 @@ const providers = [
   new BotProvider({
     inventorySize: 5,
   }),
-  new DummyBotProvider(),
 ];
 const config: BoardConfig = {
   height: 10,
   width: 10,
   minimumDelayBetweenMoves: 100,
+  sessionLength: 60,
 };
 const board = new Board(config, providers, log);
 
