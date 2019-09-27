@@ -69,6 +69,9 @@ export class BoardsService {
   ) {
     // Get board to move on
     const board = this.getBoardById(boardId);
+    if (!board) {
+      throw new NotFoundError("Board not found");
+    }
 
     // Get bot to move from board
     const bot = board.getBot(botToken);
@@ -76,11 +79,9 @@ export class BoardsService {
       throw new UnauthorizedError("Invalid botToken");
     }
 
-    if (board) {
-      board.move(bot, this.directionToDelta(direction));
-      return this.getAsDto(board);
-    }
-    throw new NotFoundError("Board not found");
+    // Perform move and return board
+    board.move(bot, this.directionToDelta(direction));
+    return this.getAsDto(board);
   }
 
   private getBoardById(id: string): Board {
