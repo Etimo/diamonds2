@@ -4,6 +4,7 @@ import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-p
 import { IPosition } from "src/common/interfaces/position.interface";
 import { BoardConfig } from "./board-config";
 import { BotGameObject } from "./gameobjects/bot/bot";
+import NotFoundError from "src/errors/not-found.error";
 
 export class Board {
   private static nextId = 1;
@@ -42,7 +43,17 @@ export class Board {
   }
 
   public move(bot: IBot, delta: IPosition): boolean {
-    return true;
+    const botGameObject = this.getGameObjectsByType(BotGameObject).find(
+      b => b.name === bot.name,
+    );
+    if (!botGameObject) {
+      throw new NotFoundError("Bot not on the board");
+    }
+    const position = botGameObject.position;
+    position.x = position.x + delta.x;
+    position.y = position.y + delta.y;
+
+    return this.trySetGameObjectPosition(botGameObject, position);
   }
 
   private createNewExpirationTimer(bot: IBot) {
@@ -53,7 +64,7 @@ export class Board {
         b => b.name === bot.name,
       );
       this.removeGameObject(botGameObject);
-    }, 2000);
+    }, 60000);
     return id;
   }
 

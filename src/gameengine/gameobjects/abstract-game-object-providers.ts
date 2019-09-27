@@ -1,6 +1,6 @@
 import { Board } from "../board";
 import { AbstractGameObject } from "./abstract-game-object";
-import { IBot } from "dist/src/interfaces/bot.interface";
+import { IBot } from "src/interfaces/bot.interface";
 
 export abstract class AbstractGameObjectProvider {
   onBoardInitialized(board: Board) {}
