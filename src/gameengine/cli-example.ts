@@ -1,6 +1,5 @@
 import { Board } from "./board";
 import { BoardConfig } from "./board-config";
-import { IBoardBot } from "src/interfaces/board-bot.interface";
 import { IBot } from "src/interfaces/bot.interface";
 import log from "../logger";
 import { DiamondButtonProvider } from "./gameobjects/diamond-button/diamond-button-provider";

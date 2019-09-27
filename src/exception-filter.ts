@@ -3,15 +3,11 @@ import {
   Catch,
   ArgumentsHost,
   HttpException,
-  HttpStatus,
   NotFoundException,
   InternalServerErrorException,
   ConflictException,
   UnauthorizedException,
 } from "@nestjs/common";
-import NotFoundError from "./errors/not-found.error";
-import ConflictError from "./errors/conflict.error";
-import UnauthorizedError from "./errors/unauthorized.error";
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {

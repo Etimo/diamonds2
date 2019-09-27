@@ -1,21 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { IBot } from "src/interfaces/bot.interface";
 import { IdService } from "./id.service";
-import { ValidatorService } from "./validator.service";
-import { ValidationException } from "src/exceptions";
 import { BotRegistrationDto } from "src/models/bot-registration.dto";
-import { BotsErrors } from "src/enums/bots-errors.enum";
-import { BotDto } from "src/models/bot.dto";
-import ConflictError from "src/errors/conflict.error";
+import ConflictError from "../errors/conflict.error";
 
 @Injectable()
 export class BotsService {
   private bots: IBot[] = [];
 
-  constructor(
-    private readonly idService: IdService,
-    private readonly validatorService: ValidatorService,
-  ) {}
+  constructor(private readonly idService: IdService) {}
 
   public async add(input: BotRegistrationDto): Promise<IBot> {
     if (this.emailExists(input.email) || this.nameExists(input.name)) {

@@ -103,7 +103,7 @@ export class BoardsService {
       case MoveDirection.EAST:
         return { x: 1, y: 0 };
       default:
-        throw ;
+        throw new Error();
     }
   }
 

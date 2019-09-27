@@ -1,5 +1,4 @@
 import { AbstractGameObject } from "../abstract-game-object";
-import { IBoardBot } from "src/interfaces/board-bot.interface";
 import { Board } from "../../board";
 import { IPosition } from "src/common/interfaces/position.interface";
 import { BotGameObject } from "../bot/bot";
