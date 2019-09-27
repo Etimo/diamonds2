@@ -9,6 +9,7 @@ import {
   HttpException,
   NotFoundException,
   ConflictException,
+  HttpCode,
 } from "@nestjs/common";
 import { ApiUseTags, ApiResponse } from "@nestjs/swagger";
 import { BotDto } from "src/models/bot.dto";
@@ -30,6 +31,7 @@ export class BotsController {
     status: 409,
     description: "The bot already exists.",
   })
+  @HttpCode(200)
   @Post()
   async create(@Body() botRegistration: BotRegistrationDto): Promise<IBot> {
     return await this.botService.add(botRegistration);

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Body } from "@nestjs/common";
+import { Controller, Get, Post, Param, Body, HttpCode } from "@nestjs/common";
 import { ApiUseTags, ApiCreatedResponse, ApiResponse } from "@nestjs/swagger";
 import { BoardDto } from "src/models/board.dto";
 import { BoardsService } from "src/services/board.service";
@@ -51,6 +51,7 @@ export class BoardsController {
     status: 409,
     description: "Board full",
   })
+  @HttpCode(200)
   @Post(":id/join")
   join(@Param("id") id: string, @Body() input: JoinInputDto) {
     return this.boardsService.join(id, input.botToken);
@@ -69,6 +70,7 @@ export class BoardsController {
     status: 404,
     description: "Board not found",
   })
+  @HttpCode(200)
   @Post(":id/move")
   move(@Param("id") id: string, @Body() input: MoveInputDto) {
     return this.boardsService.move(id, input.botToken, input.direction);
