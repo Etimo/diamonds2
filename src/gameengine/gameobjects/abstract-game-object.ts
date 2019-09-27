@@ -45,4 +45,8 @@ export abstract class AbstractGameObject {
     message: string,
     payload?: Object,
   ) {}
+
+  toLogString(): string {
+    return `${this.constructor.name} x: ${this.position.x} y: ${this.position.y}`;
+  }
 }

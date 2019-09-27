@@ -2,6 +2,7 @@ import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
 import { Board } from "src/gameengine/board";
 import { AbstractGameObject } from "../abstract-game-object";
 import { DiamondButtonGameObject } from "./diamond-button";
+import { DiamondGameObject } from "../diamond/diamond";
 
 export class DiamondButtonProvider extends AbstractGameObjectProvider {
   /**
@@ -13,6 +14,10 @@ export class DiamondButtonProvider extends AbstractGameObjectProvider {
     if (existingButtons.length == 0) {
       this.generateNewButton(board);
     }
+  }
+
+  onBoardInitialized(board: Board) {
+    this.generateNewButton(board);
   }
 
   private generateNewButton(board: Board) {

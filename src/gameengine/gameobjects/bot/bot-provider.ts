@@ -30,6 +30,7 @@ export class BotProvider extends AbstractGameObjectProvider {
     botGameObject.diamonds = 0;
     botGameObject.score = 0;
     botGameObject.inventorySize = this.config.inventorySize;
+    botGameObject.name = data.name;
     return botGameObject;
   }
 }

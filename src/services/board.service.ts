@@ -119,7 +119,6 @@ export class BoardsService {
         return <GameObjectDto>{
           position: g.position,
           type: g.constructor.name,
-          id: g.id,
           properties: g.properties,
         };
       }),

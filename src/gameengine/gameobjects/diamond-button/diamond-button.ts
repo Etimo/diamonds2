@@ -9,6 +9,7 @@ export class DiamondButtonGameObject extends AbstractGameObject {
    */
   onGameObjectEntered(gameObject: AbstractGameObject, board: Board) {
     if (gameObject instanceof BotGameObject) {
+      board.removeGameObjectsByType(DiamondButtonGameObject);
       board.removeGameObjectsByType(DiamondGameObject);
     }
   }

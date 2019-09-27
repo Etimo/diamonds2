@@ -3,7 +3,7 @@ import { IBot } from "src/interfaces/bot.interface";
 import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
 import { IPosition } from "src/common/interfaces/position.interface";
 import { BoardConfig } from "./board-config";
-import { LoggerService } from "@nestjs/common";
+import { BotGameObject } from "./gameobjects/bot/bot";
 
 export class Board {
   private static nextId = 1;
@@ -11,7 +11,6 @@ export class Board {
   private bots: Object = {};
   private gameObjects: AbstractGameObject[] = [];
   public readonly maxNumberOfCarryingDiamonds: number = 5;
-  private expirationTimers = {};
   private callbackLoopsRegistered = {};
   private callbackLoopsId = {};
 
@@ -32,8 +31,7 @@ export class Board {
     this.bots[bot.token] = bot;
 
     // Create expiration timer
-    this.expirationTimers[bot.token] = this.getNewExpirationTimer(bot);
-
+    this.createNewExpirationTimer(bot);
     // ...and notify all providers
     this.notifyProvidersBoardBotJoined(bot);
     return true;
@@ -47,10 +45,14 @@ export class Board {
     return true;
   }
 
-  private getNewExpirationTimer(bot: IBot) {
+  private createNewExpirationTimer(bot: IBot) {
     const id = setTimeout(_ => {
       // TODO: add lock
-      this.logger.debug("Purge bot", bot.token);
+      this.logger.debug(`Purge bot ${bot.name}`);
+      const botGameObject = this.getGameObjectsByType(BotGameObject).find(
+        b => b.name === bot.name,
+      );
+      this.removeGameObject(botGameObject);
     }, 2000);
     return id;
   }
@@ -250,18 +252,20 @@ export class Board {
 
   private notifyProvidersGameObjectsRemoved(gameObjects: AbstractGameObject[]) {
     this.logger.debug(
-      "notifyProvidersGameObjectsRemoved",
-      JSON.stringify(gameObjects),
+      `notifyProvidersGameObjectsRemoved ${this.getLogString(gameObjects)}`,
     );
     this.gameObjectProviders.forEach(p =>
       p.onGameObjectsRemoved(this, gameObjects),
     );
   }
 
+  getLogString(gameObjects: AbstractGameObject[]): string {
+    return JSON.stringify(gameObjects.map(g => g.toLogString()));
+  }
+
   private notifyProvidersGameObjectsAdded(gameObjects: AbstractGameObject[]) {
     this.logger.debug(
-      "notifyProvidersGameObjectsAdded",
-      JSON.stringify(gameObjects),
+      `notifyProvidersGameObjectsAdded ${this.getLogString(gameObjects)}`,
     );
     this.gameObjectProviders.forEach(p =>
       p.onGameObjectsAdded(this, gameObjects),
