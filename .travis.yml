@@ -6,7 +6,6 @@ sudo: required
 before_script:
   - yarn
 script:
-  - yarn run lint
   - yarn run test
   - yarn run build
 on:
