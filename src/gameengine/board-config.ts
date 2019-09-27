@@ -11,4 +11,8 @@ export interface BoardConfig {
    * The height of the board.
    */
   height: number;
+  /**
+   * Maximum number of seconds per session.
+   */
+  sessionLength: number;
 }

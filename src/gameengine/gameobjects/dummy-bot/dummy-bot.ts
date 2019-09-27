@@ -1,8 +1,6 @@
 import { BotGameObject } from "../bot/bot";
-import { AbstractGameObject } from "../abstract-game-object";
 import { Board } from "src/gameengine/board";
 import { DiamondGameObject } from "../diamond/diamond";
-import { TeleportGameObject } from "../teleport/teleport";
 
 export class DummyBotGameObject extends BotGameObject {
   onGameObjectCallbackNotified(board: Board, intervalMs: number) {
@@ -30,12 +28,4 @@ export class DummyBotGameObject extends BotGameObject {
       });
     }
   }
-
-  // onEvent(board: Board, sender: AbstractGameObject, message: string, payload?: Object) {
-  //     switch (message) {
-  //         case "TELEPORTED":
-  //             board.unregisterGameObjectFromCallbackLoop(this, 1000);
-  //             break;
-  //     }
-  // }
 }

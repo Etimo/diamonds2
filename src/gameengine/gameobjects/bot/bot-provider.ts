@@ -12,21 +12,26 @@ export interface Config {
 }
 
 export class BotProvider extends AbstractGameObjectProvider {
-  constructor(private config: Config) {
+  constructor(protected config: Config) {
     super();
   }
 
   onBotJoined(bot: IBot, board: Board) {
     // Add game object to board
     const base = board.getEmptyPosition();
-    const botGameObject = this.getInitializedBot(bot, base);
+    const botGameObject = this.getInitializedBot(bot, base, board);
     board.addGameObjects([botGameObject]);
   }
 
-  private getInitializedBot(data: IBot, base: IPosition) {
+  protected getInitializedBot(data: IBot, base: IPosition, board: Board) {
+    console.log("Hello");
     const botGameObject = new BotGameObject(base);
     botGameObject.base = base;
     botGameObject.timeJoined = new Date();
+    botGameObject.expiresAt = new Date(
+      botGameObject.timeJoined.getTime() +
+        board.getConfig().sessionLength * 1000,
+    );
     botGameObject.diamonds = 0;
     botGameObject.score = 0;
     botGameObject.inventorySize = this.config.inventorySize;

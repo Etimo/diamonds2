@@ -4,7 +4,7 @@ import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-p
 import { IPosition } from "src/common/interfaces/position.interface";
 import { BoardConfig } from "./board-config";
 import { BotGameObject } from "./gameobjects/bot/bot";
-import NotFoundError from "src/errors/not-found.error";
+import NotFoundError from "../errors/not-found.error";
 
 export class Board {
   private static nextId = 1;
@@ -64,7 +64,7 @@ export class Board {
         b => b.name === bot.name,
       );
       this.removeGameObject(botGameObject);
-    }, 60000);
+    }, this.config.sessionLength * 1000);
     return id;
   }
 
