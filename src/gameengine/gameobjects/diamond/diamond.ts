@@ -1,9 +1,7 @@
 import { AbstractGameObject } from "../abstract-game-object";
-import { IBoardBot } from "src/interfaces/board-bot.interface";
 import { Board } from "../../board";
 import { IPosition } from "src/common/interfaces/position.interface";
 import { BotGameObject } from "../bot/bot";
-import { DummyBotGameObject } from "../dummy-bot/dummy-bot";
 
 export class DiamondGameObject extends AbstractGameObject {
   constructor(position: IPosition, private readonly points) {

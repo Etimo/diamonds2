@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Param } from "@nestjs/common";
+import { Controller, Get, Post, Param, Body } from "@nestjs/common";
 import { ApiUseTags, ApiCreatedResponse, ApiResponse } from "@nestjs/swagger";
 import { BoardDto } from "src/models/board.dto";
 import { BoardsService } from "src/services/board.service";
 import { GameObjectDto } from "src/models/game-object.dto";
+import { JoinInputDto } from "src/models/join-input.dto";
+import { MoveInputDto } from "src/models/move-input.dto";
 
 @ApiUseTags("Boards")
 @Controller("api/boards")
@@ -40,7 +42,6 @@ export class BoardsController {
   @ApiResponse({
     status: 200,
     description: "Joined specific board",
-    type: BoardDto,
   })
   @ApiResponse({
     status: 404,
@@ -51,8 +52,8 @@ export class BoardsController {
     description: "Board full",
   })
   @Post(":id/join")
-  join(@Param("id") id: string): string {
-    return id + "Hello2";
+  join(@Param("id") id: string, @Body() input: JoinInputDto) {
+    return this.boardsService.join(id, input.botToken);
   }
 
   @ApiResponse({
@@ -69,7 +70,7 @@ export class BoardsController {
     description: "Board not found",
   })
   @Post(":id/move")
-  move(@Param("id") id: string): string {
-    return "Hello2";
+  move(@Param("id") id: string, @Body() input: MoveInputDto) {
+    return this.boardsService.move(id, input.botToken, input.direction);
   }
 }

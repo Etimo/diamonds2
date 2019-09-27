@@ -8,7 +8,7 @@ import { LoggerService } from "@nestjs/common";
 export class Board {
   private static nextId = 1;
   private readonly _id = `${Board.nextId++}`;
-  private bots: IBot[] = [];
+  private bots: Object = {};
   private gameObjects: AbstractGameObject[] = [];
   public readonly maxNumberOfCarryingDiamonds: number = 5;
   private expirationTimers = {};
@@ -28,21 +28,25 @@ export class Board {
   }
 
   join(bot: IBot): boolean {
-    // this.gameObjectProviders.forEach(p => p.onBotJoined(bot))
-    // this.notifyProvidersBoardBotJoined();
-    this.expirationTimers[bot.id] = this.getNewExpirationTimer(bot);
-    const boardBot = {};
-    return false;
+    // Add bot to board
+    this.bots[bot.token] = bot;
+
+    // Create expiration timer
+    this.expirationTimers[bot.token] = this.getNewExpirationTimer(bot);
+
+    // ...and notify all providers
+    this.notifyProvidersBoardBotJoined(bot);
+    return true;
   }
 
-  public move(bot: IBot, position: Position): boolean {
+  public move(bot: IBot, delta: IPosition): boolean {
     return true;
   }
 
   private getNewExpirationTimer(bot: IBot) {
     const id = setTimeout(_ => {
       // TODO: add lock
-      this.logger.debug("Purge bot", bot.id);
+      this.logger.debug("Purge bot", bot.token);
     }, 2000);
     return id;
   }
@@ -265,8 +269,8 @@ export class Board {
     this.gameObjectProviders.forEach(p => p.onBoardInitialized(this));
   }
 
-  private notifyProvidersBoardBotJoined() {
-    this.gameObjectProviders.forEach(p => p.onBotJoined(null, this));
+  private notifyProvidersBoardBotJoined(bot: IBot) {
+    this.gameObjectProviders.forEach(p => p.onBotJoined(bot, this));
   }
 
   notifyGameObjectEvent(

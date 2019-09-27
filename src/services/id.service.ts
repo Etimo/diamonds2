@@ -5,6 +5,7 @@ export class IdService {
   private counter = 1;
 
   next(): string {
-    return `${this.counter++}-${Math.random()}`;
+    return `${this.counter++}`;
+    // return `${this.counter++}-${Math.random()}`;
   }
 }

@@ -28,12 +28,11 @@ export class BotsService {
       id: this.idService.next().toString(),
     };
     this.bots.push(bot);
-    return bot;
+    return Promise.resolve(bot);
   }
 
   public async get(token: string): Promise<IBot> {
-    const bot = this.bots.find(b => b.token === token);
-    return bot;
+    return this.bots.find(b => b.token === token);
   }
 
   all(): IBot[] {

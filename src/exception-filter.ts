@@ -26,6 +26,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     const request = ctx.getRequest();
 
+    console.error(exception.stack, exception);
+
     const httpException: HttpException = this.mapException(exception);
     const status = httpException.getStatus();
 
@@ -33,6 +35,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
+      data: httpException.message,
     });
   }
 
@@ -40,6 +43,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const output = this.exceptionMap[exception.constructor.name];
     if (output) {
       return new output(exception.message);
+    } else if (exception instanceof HttpException) {
+      return exception;
     }
     return new InternalServerErrorException(exception.message);
   }

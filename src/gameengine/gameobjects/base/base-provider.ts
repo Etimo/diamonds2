@@ -1,6 +1,4 @@
 import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
-import { IPosition } from "src/common/interfaces/position.interface";
-import { IBoardBot } from "src/interfaces/board-bot.interface";
 import { Board } from "src/gameengine/board";
 import { BotGameObject } from "../bot/bot";
 import { AbstractGameObject } from "../abstract-game-object";

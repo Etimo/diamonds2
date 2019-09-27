@@ -12,12 +12,16 @@ import { AbstractGameObject } from "src/gameengine/gameobjects/abstract-game-obj
 import { BoardDto } from "src/models/board.dto";
 import { GameObjectDto } from "src/models/game-object.dto";
 import NotFoundError from "src/errors/not-found.error";
+import { BotsService } from "./bots.service";
+import UnauthorizedError from "src/errors/unauthorized.error";
+import { MoveDirection } from "src/enums/move-direction.enum";
+import { IPosition } from "src/common/interfaces/position.interface";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
   private boards: Board[] = [];
 
-  constructor(private logger: CustomLogger) {
+  constructor(private botsService: BotsService, private logger: CustomLogger) {
     this.createInMemoryBoard();
   }
 
@@ -45,9 +49,11 @@ export class BoardsService {
    * @param boardId
    * @param bot
    */
-  public join(boardId: string, bot: IBot): boolean {
-    // const botExists = this.botRepository.botExists(bot);
-    // if (!botExists) return error
+  public async join(boardId: string, botToken: string): Promise<boolean> {
+    const bot = await this.botsService.get(botToken);
+    if (!bot) {
+      throw new UnauthorizedError("Invalid botToken");
+    }
     const board = this.getBoardById(boardId);
     if (board) {
       board.join(bot);
@@ -56,23 +62,46 @@ export class BoardsService {
     throw new NotFoundError("Board not found");
   }
 
-  public move(
+  public async move(
     boardId: string,
-    bot: IBot,
-    position: Position,
-  ): AbstractGameObject[] {
-    // const botExists = this.botRepository.botExists(bot);
-    // if (!botExists) return error
+    botToken: string,
+    direction: MoveDirection,
+  ) {
+    // Get board to move on
     const board = this.getBoardById(boardId);
+
+    // Get bot to move from board
+    const bot = await this.botsService.get(botToken);
+    if (!bot) {
+      throw new UnauthorizedError("Invalid botToken");
+    }
+
     if (board) {
-      board.move(bot, position);
-      return board.getAllGameObjects();
+      board.move(bot, this.directionToDelta(direction));
+      return this.getAsDto(board);
     }
     throw new NotFoundError("Board not found");
   }
 
   private getBoardById(id: string): Board {
     return this.boards.find(b => b.getId() === id);
+  }
+
+  /**
+   * Convert a MoveDirection enum to a delta IPosition.
+   * @param direction
+   */
+  private directionToDelta(direction: MoveDirection): IPosition {
+    switch (direction) {
+      case MoveDirection.NORTH:
+        return { x: 0, y: -1 };
+      case MoveDirection.SOUTH:
+        return { x: 0, y: 1 };
+      case MoveDirection.WEST:
+        return { x: -1, y: 0 };
+      case MoveDirection.EAST:
+        return { x: 1, y: 0 };
+    }
   }
 
   /**
@@ -110,7 +139,6 @@ export class BoardsService {
       new BotProvider({
         inventorySize: 5,
       }),
-      new DummyBotProvider(),
     ];
     const config: BoardConfig = {
       height: 10,
