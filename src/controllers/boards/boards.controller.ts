@@ -34,8 +34,7 @@ export class BoardsController {
   })
   @Get(":id")
   public find(@Param("id") id: string): BoardDto {
-    const dto = this.boardsService.getById(id);
-    return dto;
+    return this.boardsService.getById(id);
   }
 
   @ApiResponse({

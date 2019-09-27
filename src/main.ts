@@ -1,4 +1,4 @@
-import { NestFactory } from "@nestjs/core";
+import { NestFactory, HttpAdapterHost } from "@nestjs/core";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
 import bodyParser = require("body-parser");
@@ -6,6 +6,7 @@ import { ValidationExceptionFilter } from "./validation-exception.filter";
 
 import { CustomLogger } from "./logger";
 import { ValidationPipe } from "@nestjs/common";
+import { AllExceptionsFilter } from "./exception-filter";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -13,7 +14,7 @@ async function bootstrap() {
   });
   app.use(bodyParser.json());
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalFilters(new ValidationExceptionFilter());
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   const options = new DocumentBuilder()
     .setTitle("Diamonds")

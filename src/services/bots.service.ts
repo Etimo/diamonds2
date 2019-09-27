@@ -1,11 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { IBot } from "src/interfaces/bot.interface";
-import { IdService } from "./id-service.service";
+import { IdService } from "./id.service";
 import { ValidatorService } from "./validator.service";
 import { ValidationException } from "src/exceptions";
 import { BotRegistrationDto } from "src/models/bot-registration.dto";
 import { BotsErrors } from "src/enums/bots-errors.enum";
 import { BotDto } from "src/models/bot.dto";
+import ConflictError from "src/errors/conflict.error";
 
 @Injectable()
 export class BotsService {
@@ -17,11 +18,8 @@ export class BotsService {
   ) {}
 
   public async add(input: BotRegistrationDto): Promise<IBot> {
-    if (!this.validatorService.isValidEmail(input.email)) {
-      throw new ValidationException(BotsErrors.InvalidEmail);
-    }
     if (this.emailExists(input.email) || this.nameExists(input.name)) {
-      throw new ValidationException(BotsErrors.AlreadyExists);
+      throw new ConflictError("Email and/or name already exists");
     }
     const bot = {
       token: this.idService.next().toString(),

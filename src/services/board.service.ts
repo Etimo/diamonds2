@@ -11,6 +11,7 @@ import { IBot } from "src/interfaces/bot.interface";
 import { AbstractGameObject } from "src/gameengine/gameobjects/abstract-game-object";
 import { BoardDto } from "src/models/board.dto";
 import { GameObjectDto } from "src/models/game-object.dto";
+import NotFoundError from "src/errors/not-found.error";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
@@ -36,7 +37,7 @@ export class BoardsService {
     if (board) {
       return this.getAsDto(board);
     }
-    throw new NotFoundException("Board not found");
+    throw new NotFoundError("Board not found");
   }
 
   /**
@@ -52,7 +53,7 @@ export class BoardsService {
       board.join(bot);
       return true;
     }
-    throw new NotFoundException("Board not found");
+    throw new NotFoundError("Board not found");
   }
 
   public move(
@@ -67,7 +68,7 @@ export class BoardsService {
       board.move(bot, position);
       return board.getAllGameObjects();
     }
-    throw new NotFoundException("Board not found");
+    throw new NotFoundError("Board not found");
   }
 
   private getBoardById(id: string): Board {

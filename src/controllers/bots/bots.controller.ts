@@ -8,6 +8,7 @@ import {
   HttpStatus,
   HttpException,
   NotFoundException,
+  ConflictException,
 } from "@nestjs/common";
 import { ApiUseTags, ApiResponse } from "@nestjs/swagger";
 import { BotDto } from "src/models/bot.dto";
@@ -31,19 +32,7 @@ export class BotsController {
   })
   @Post()
   async create(@Body() botRegistration: BotRegistrationDto): Promise<IBot> {
-    try {
-      const bot = await this.botService.add(botRegistration);
-      if (!bot) {
-        throw new NotFoundException();
-      } else {
-        return bot;
-      }
-    } catch (error) {
-      if (this.isValidationError(error)) {
-        this.throwValidationError(error);
-      }
-      throw error;
-    }
+    return await this.botService.add(botRegistration);
   }
 
   @ApiResponse({
@@ -57,34 +46,6 @@ export class BotsController {
   })
   @Get(":token")
   async findAll(@Param("token") token: string): Promise<IBot> {
-    const bot = await this.botService.get(token);
-    if (!bot) {
-      throw new NotFoundException();
-    }
-    return bot;
-  }
-
-  private isValidationError(error: Error) {
-    return error instanceof ValidationException;
-  }
-  private throwValidationError(error: ValidationException) {
-    if (error.message === BotsErrors.AlreadyExists) {
-      throw new HttpException(
-        {
-          status: HttpStatus.CONFLICT,
-          error: "A bot with this email is already registered",
-        },
-        HttpStatus.CONFLICT,
-      );
-    }
-    if (error.message === BotsErrors.InvalidEmail) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: "Invalid input",
-        },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    return await this.botService.get(token);
   }
 }
