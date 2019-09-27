@@ -39,6 +39,10 @@ export class Board {
     return true;
   }
 
+  getBot(token: string): IBot {
+    return this.bots[token];
+  }
+
   public move(bot: IBot, delta: IPosition): boolean {
     return true;
   }

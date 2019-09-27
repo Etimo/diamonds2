@@ -71,7 +71,7 @@ export class BoardsService {
     const board = this.getBoardById(boardId);
 
     // Get bot to move from board
-    const bot = await this.botsService.get(botToken);
+    const bot = board.getBot(botToken);
     if (!bot) {
       throw new UnauthorizedError("Invalid botToken");
     }
