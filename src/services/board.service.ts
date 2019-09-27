@@ -139,9 +139,9 @@ export class BoardsService {
         generationRatio: 0.1,
         minRatioForGeneration: 0.01,
       }),
-      new DummyBotProvider({
-        inventorySize: 5,
-      }),
+      // new DummyBotProvider({
+      //   inventorySize: 5,
+      // }),
       new BotProvider({
         inventorySize: 5,
       }),
