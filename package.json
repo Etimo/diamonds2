@@ -29,7 +29,6 @@
     "class-transformer": "^0.2.3",
     "class-validator": "^0.10.1",
     "fastify-swagger": "^2.3.2",
-    "live-mutex": "^0.1.1059",
     "loglevel": "^1.6.1",
     "loglevel-plugin-prefix": "^0.8.4",
     "reflect-metadata": "^0.1.12",
