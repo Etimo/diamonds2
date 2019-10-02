@@ -15,6 +15,7 @@ import { MoveDirection } from "src/enums/move-direction.enum";
 import { IPosition } from "src/common/interfaces/position.interface";
 import * as async from "async";
 import { IBot } from "src/interfaces/bot.interface";
+import { OperationQueueMoveEvent, OperationQueueEvent, OperationQueueJoinEvent } from 'src/models/operation-queue.event';
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
@@ -50,17 +51,35 @@ export class BoardsService {
    * @param boardId
    * @param bot
    */
-  public async join(boardId: string, botToken: string): Promise<boolean> {
+  public async join(boardId: string, botToken: string) {
     const bot = await this.botsService.get(botToken);
     if (!bot) {
       throw new UnauthorizedError("Invalid botToken");
     }
     const board = this.getBoardById(boardId);
-    if (board) {
-      board.join(bot);
-      return true;
+    if (!board) {
+      throw new NotFoundError("Board not found");
     }
-    throw new NotFoundError("Board not found");
+
+    // Queue join
+    const event = new OperationQueueJoinEvent(
+      bot,
+      board
+    );
+    return new Promise((resolve, reject) => {
+      this.opQueue.push(
+        event,
+        (res, err) => {
+          console.log(res, err);
+          if (err) {
+            reject(err);
+          } else {
+            console.log(bot.name, "join done", res);
+            resolve(this.getAsDto(board));
+          }
+        },
+      );
+    });
   }
 
   public async move(
@@ -80,29 +99,26 @@ export class BoardsService {
       throw new UnauthorizedError("Invalid botToken");
     }
 
-    // Perform move and return board
+    // Queue move
+    const event = new OperationQueueMoveEvent(
+      bot,
+      board,
+      this.directionToDelta(direction),
+    );
     return new Promise((resolve, reject) => {
       this.opQueue.push(
-        {
-          queuedAt: new Date(),
-          bot: bot,
-          board: board,
-          operation: "move",
-          direction: this.directionToDelta(direction),
-        },
+        event,
         (res, err) => {
           console.log(res, err);
           if (err) {
             reject(err);
           } else {
-            console.log(bot.name, "moved done", res);
-            resolve(res);
+            console.log(bot.name, "move done", res);
+            resolve(this.getAsDto(board));
           }
         },
       );
     });
-    // return board.move(bot, this.directionToDelta(direction));
-    // return this.getAsDto(board);
   }
 
   private getBoardById(id: string): Board {
@@ -117,7 +133,7 @@ export class BoardsService {
   private setupOperationQueue() {
     // Move queue
     const sleep = m => new Promise(r => setTimeout(r, m));
-    this.opQueue = async.queue(async (t, cb) => {
+    this.opQueue = async.queue(async (t: OperationQueueEvent, cb) => {
       // console.log("Operation queue task received", t);
       const board: Board = t["board2"];
       const bot: IBot = t["bot"];
@@ -134,7 +150,8 @@ export class BoardsService {
         "ms",
       );
       try {
-        const res = board.move(bot, direction);
+        const res = t.run();
+        cb(res);
       } catch (e) {
         cb(null, e);
       }
