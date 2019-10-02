@@ -5,7 +5,6 @@ import { IPosition } from "src/common/interfaces/position.interface";
 import { BoardConfig } from "./board-config";
 import { BotGameObject } from "./gameobjects/bot/bot";
 import NotFoundError from "../errors/not-found.error";
-import * as async from "async";
 
 export class Board {
   private static nextId = 1;
@@ -15,42 +14,13 @@ export class Board {
   public readonly maxNumberOfCarryingDiamonds: number = 5;
   private callbackLoopsRegistered = {};
   private callbackLoopsId = {};
-  private opQueue;
 
   constructor(
     private config: BoardConfig,
     private gameObjectProviders: AbstractGameObjectProvider[],
     private logger: any,
   ) {
-    this.setupOperationQueue();
     this.notifyProvidersBoardInitialized();
-  }
-
-  /**
-   * The board uses an operation queue to handle multiple requests to operate on the board.
-   * All operations on the board are queued and handled one after another.
-   * Currently all move commands are handled using this queue.
-   */
-  private setupOperationQueue() {
-    // Move queue
-    const sleep = m => new Promise(r => setTimeout(r, m));
-    this.opQueue = async.queue(async (t, cb) => {
-      // console.log("Operation queue task received", t);
-      const botGameObject: BotGameObject = t["bot"];
-      const position: IPosition = t["position"];
-      const queuedAt: Date = t["queuedAt"];
-
-      // Simulate slow operations
-      // console.log(botGameObject.name, "before sleep");
-      // await sleep(3000);
-      // console.log(botGameObject.name, "after sleep");
-      console.log(
-        "Current queue time:",
-        new Date().getTime() - queuedAt.getTime(),
-        "ms",
-      );
-      cb(this.trySetGameObjectPosition(botGameObject, position));
-    });
   }
 
   getId() {
@@ -72,7 +42,7 @@ export class Board {
     return this.bots[token];
   }
 
-  public async move(bot: IBot, delta: IPosition) {
+  public move(bot: IBot, delta: IPosition) {
     const botGameObject = this.getGameObjectsByType(BotGameObject).find(
       b => b.name === bot.name,
     );
@@ -82,21 +52,7 @@ export class Board {
     const position = botGameObject.position;
     position.x = position.x + delta.x;
     position.y = position.y + delta.y;
-
-    return new Promise((resolve, reject) => {
-      this.opQueue.push(
-        {
-          queuedAt: new Date(),
-          bot: botGameObject,
-          operation: "move",
-          position: position,
-        },
-        res => {
-          console.log(bot.name, "moved done", res);
-          resolve(res);
-        },
-      );
-    });
+    return this.trySetGameObjectPosition(botGameObject, position);
   }
 
   private createNewExpirationTimer(bot: IBot) {

@@ -5,10 +5,7 @@ import { DiamondButtonProvider } from "src/gameengine/gameobjects/diamond-button
 import { BaseProvider } from "src/gameengine/gameobjects/base/base-provider";
 import { DiamondProvider } from "src/gameengine/gameobjects/diamond/diamond-provider";
 import { BotProvider } from "src/gameengine/gameobjects/bot/bot-provider";
-import { DummyBotProvider } from "src/gameengine/gameobjects/dummy-bot/dummy-bot-provider";
 import { BoardConfig } from "src/gameengine/board-config";
-import { IBot } from "src/interfaces/bot.interface";
-import { AbstractGameObject } from "src/gameengine/gameobjects/abstract-game-object";
 import { BoardDto } from "src/models/board.dto";
 import { GameObjectDto } from "src/models/game-object.dto";
 import NotFoundError from "src/errors/not-found.error";
@@ -16,13 +13,17 @@ import { BotsService } from "./bots.service";
 import UnauthorizedError from "src/errors/unauthorized.error";
 import { MoveDirection } from "src/enums/move-direction.enum";
 import { IPosition } from "src/common/interfaces/position.interface";
+import * as async from "async";
+import { IBot } from "src/interfaces/bot.interface";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
   private boards: Board[] = [];
+  private opQueue;
 
   constructor(private botsService: BotsService, private logger: CustomLogger) {
     this.createInMemoryBoard();
+    this.setupOperationQueue();
   }
 
   /**
@@ -80,12 +81,55 @@ export class BoardsService {
     }
 
     // Perform move and return board
-    return board.move(bot, this.directionToDelta(direction));
-    return this.getAsDto(board);
+    return new Promise((resolve, reject) => {
+      this.opQueue.push(
+        {
+          queuedAt: new Date(),
+          bot: bot,
+          board: board,
+          operation: "move",
+          direction: this.directionToDelta(direction),
+        },
+        res => {
+          console.log(bot.name, "moved done", res);
+          resolve(res);
+        },
+      );
+    });
+    // return board.move(bot, this.directionToDelta(direction));
+    // return this.getAsDto(board);
   }
 
   private getBoardById(id: string): Board {
     return this.boards.find(b => b.getId() === id);
+  }
+
+  /**
+   * The board uses an operation queue to handle multiple requests to operate on the board.
+   * All operations on the board are queued and handled one after another.
+   * Currently all move commands are handled using this queue.
+   */
+  private setupOperationQueue() {
+    // Move queue
+    const sleep = m => new Promise(r => setTimeout(r, m));
+    this.opQueue = async.queue(async (t, cb) => {
+      // console.log("Operation queue task received", t);
+      const board: Board = t["board"];
+      const bot: IBot = t["bot"];
+      const direction: IPosition = t["direction"];
+      const queuedAt: Date = t["queuedAt"];
+
+      // Simulate slow operations
+      console.log(bot.name, "before sleep");
+      await sleep(3000);
+      console.log(bot.name, "after sleep");
+      console.log(
+        "Current queue time:",
+        new Date().getTime() - queuedAt.getTime(),
+        "ms",
+      );
+      cb(board.move(bot, direction));
+    });
   }
 
   /**
