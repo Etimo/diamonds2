@@ -80,7 +80,7 @@ export class BoardsService {
     }
 
     // Perform move and return board
-    board.move(bot, this.directionToDelta(direction));
+    return board.move(bot, this.directionToDelta(direction));
     return this.getAsDto(board);
   }
 
