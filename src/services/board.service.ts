@@ -90,9 +90,14 @@ export class BoardsService {
           operation: "move",
           direction: this.directionToDelta(direction),
         },
-        res => {
-          console.log(bot.name, "moved done", res);
-          resolve(res);
+        (res, err) => {
+          console.log(res, err);
+          if (err) {
+            reject(err);
+          } else {
+            console.log(bot.name, "moved done", res);
+            resolve(res);
+          }
         },
       );
     });
@@ -114,7 +119,7 @@ export class BoardsService {
     const sleep = m => new Promise(r => setTimeout(r, m));
     this.opQueue = async.queue(async (t, cb) => {
       // console.log("Operation queue task received", t);
-      const board: Board = t["board"];
+      const board: Board = t["board2"];
       const bot: IBot = t["bot"];
       const direction: IPosition = t["direction"];
       const queuedAt: Date = t["queuedAt"];
@@ -128,7 +133,11 @@ export class BoardsService {
         new Date().getTime() - queuedAt.getTime(),
         "ms",
       );
-      cb(board.move(bot, direction));
+      try {
+        const res = board.move(bot, direction);
+      } catch (e) {
+        cb(null, e);
+      }
     });
   }
 
