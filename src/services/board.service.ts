@@ -13,18 +13,15 @@ import { BotsService } from "./bots.service";
 import UnauthorizedError from "src/errors/unauthorized.error";
 import { MoveDirection } from "src/enums/move-direction.enum";
 import { IPosition } from "src/common/interfaces/position.interface";
-import * as async from "async";
 import { IBot } from "src/interfaces/bot.interface";
-import { OperationQueueMoveEvent, OperationQueueEvent, OperationQueueJoinEvent } from 'src/models/operation-queue.event';
+import { OperationQueueBoard } from "src/gameengine/operation-queue-board";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
-  private boards: Board[] = [];
-  private opQueue;
+  private boards: OperationQueueBoard[] = [];
 
   constructor(private botsService: BotsService, private logger: CustomLogger) {
     this.createInMemoryBoard();
-    this.setupOperationQueue();
   }
 
   /**
@@ -61,25 +58,7 @@ export class BoardsService {
       throw new NotFoundError("Board not found");
     }
 
-    // Queue join
-    const event = new OperationQueueJoinEvent(
-      bot,
-      board
-    );
-    return new Promise((resolve, reject) => {
-      this.opQueue.push(
-        event,
-        (res, err) => {
-          console.log(res, err);
-          if (err) {
-            reject(err);
-          } else {
-            console.log(bot.name, "join done", res);
-            resolve(this.getAsDto(board));
-          }
-        },
-      );
-    });
+    return board.enqueueJoin(bot);
   }
 
   public async move(
@@ -99,63 +78,11 @@ export class BoardsService {
       throw new UnauthorizedError("Invalid botToken");
     }
 
-    // Queue move
-    const event = new OperationQueueMoveEvent(
-      bot,
-      board,
-      this.directionToDelta(direction),
-    );
-    return new Promise((resolve, reject) => {
-      this.opQueue.push(
-        event,
-        (res, err) => {
-          console.log(res, err);
-          if (err) {
-            reject(err);
-          } else {
-            console.log(bot.name, "move done", res);
-            resolve(this.getAsDto(board));
-          }
-        },
-      );
-    });
+    return board.enqueueMove(bot, this.directionToDelta(direction));
   }
 
-  private getBoardById(id: string): Board {
+  private getBoardById(id: string): OperationQueueBoard {
     return this.boards.find(b => b.getId() === id);
-  }
-
-  /**
-   * The board uses an operation queue to handle multiple requests to operate on the board.
-   * All operations on the board are queued and handled one after another.
-   * Currently all move commands are handled using this queue.
-   */
-  private setupOperationQueue() {
-    // Move queue
-    const sleep = m => new Promise(r => setTimeout(r, m));
-    this.opQueue = async.queue(async (t: OperationQueueEvent, cb) => {
-      // console.log("Operation queue task received", t);
-      const board: Board = t["board2"];
-      const bot: IBot = t["bot"];
-      const direction: IPosition = t["direction"];
-      const queuedAt: Date = t["queuedAt"];
-
-      // Simulate slow operations
-      console.log(bot.name, "before sleep");
-      await sleep(3000);
-      console.log(bot.name, "after sleep");
-      console.log(
-        "Current queue time:",
-        new Date().getTime() - queuedAt.getTime(),
-        "ms",
-      );
-      try {
-        const res = t.run();
-        cb(res);
-      } catch (e) {
-        cb(null, e);
-      }
-    });
   }
 
   /**
@@ -222,7 +149,7 @@ export class BoardsService {
       minimumDelayBetweenMoves: 100,
       sessionLength: 60,
     };
-    const board = new Board(config, providers, this.logger);
+    const board = new OperationQueueBoard(config, providers, this.logger);
     this.boards.push(board);
   }
 }

@@ -16,9 +16,9 @@ export class Board {
   private callbackLoopsId = {};
 
   constructor(
-    private config: BoardConfig,
-    private gameObjectProviders: AbstractGameObjectProvider[],
-    private logger: any,
+    protected config: BoardConfig,
+    protected gameObjectProviders: AbstractGameObjectProvider[],
+    protected logger: any,
   ) {
     this.notifyProvidersBoardInitialized();
   }
@@ -27,7 +27,7 @@ export class Board {
     return this._id;
   }
 
-  join(bot: IBot): boolean {
+  async join(bot: IBot) {
     // Add bot to board
     this.bots[bot.token] = bot;
 
@@ -42,7 +42,7 @@ export class Board {
     return this.bots[token];
   }
 
-  public move(bot: IBot, delta: IPosition) {
+  public async move(bot: IBot, delta: IPosition) {
     const botGameObject = this.getGameObjectsByType(BotGameObject).find(
       b => b.name === bot.name,
     );
