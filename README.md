@@ -14,3 +14,10 @@ yarn run start
 ```
 yarn test
 ```
+
+## Benchmark
+
+```
+yarn add -g artillery
+artillery run benchmark/test.yml
+```
