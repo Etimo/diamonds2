@@ -41,9 +41,9 @@ export class OperationQueueBoard extends Board {
       const queuedAt: Date = t["queuedAt"];
 
       // Simulate slow operations
-      console.log(bot.name, "before sleep");
-      await sleep(3000);
-      console.log(bot.name, "after sleep");
+      // console.log(bot.name, "before sleep");
+      // await sleep(3000);
+      // console.log(bot.name, "after sleep");
       console.log(
         "Current queue time:",
         new Date().getTime() - queuedAt.getTime(),
