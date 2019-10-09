@@ -30,3 +30,10 @@ artillery run benchmark/test.yml
 yarn run build
 yarn run start:prod
 ```
+
+## Benchmark
+
+```
+yarn add -g artillery
+artillery run benchmark/test.yml
+```
