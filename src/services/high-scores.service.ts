@@ -11,17 +11,33 @@ export class HighScoresService {
   private highScores: HighscoreDto[] = [];
 
   constructor(private readonly idService: IdService) {
-    let x: HighscoreDto = {
-      botName: "Daniel",
+    let testHighScore: HighscoreDto = {
+      botName: "test",
       score: 22,
     };
 
-    this.highScores.push(x);
+    this.highScores.push(testHighScore);
   }
 
   public async add(input: HighscoreDto): Promise<boolean> {
-    this.highScores.push(input);
-    return Promise.resolve(true);
+    if (this.isHighScore(input)) {
+      this.highScores.push(input);
+      return Promise.resolve(true);
+    }
+    return Promise.resolve(false);
+  }
+
+  private isHighScore(newScore: HighscoreDto): boolean {
+    let isHighScore: boolean = true;
+
+    this.highScores.forEach(highScore => {
+      if (newScore.botName == highScore.botName) {
+        isHighScore = newScore.score > highScore.score;
+        return false;
+      }
+    });
+    console.log("highScore=" + isHighScore + " botName" + newScore.botName);
+    return isHighScore;
   }
 
   all(): HighscoreDto[] {

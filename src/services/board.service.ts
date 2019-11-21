@@ -15,13 +15,28 @@ import { MoveDirection } from "src/enums/move-direction.enum";
 import { IPosition } from "src/common/interfaces/position.interface";
 import { IBot } from "src/interfaces/bot.interface";
 import { OperationQueueBoard } from "src/gameengine/operation-queue-board";
+import { HighScoresService } from "./high-scores.service";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
   private boards: OperationQueueBoard[] = [];
 
-  constructor(private botsService: BotsService, private logger: CustomLogger) {
+  constructor(
+    private botsService: BotsService,
+    private highscoresService: HighScoresService,
+    private logger: CustomLogger,
+  ) {
     this.createInMemoryBoard();
+
+    this.boards.forEach(board => {
+      board.registerSessionFinishedCallback((botName, score) => {
+        console.log("HIGHSCORE", botName, score);
+        this.highscoresService.add({
+          botName,
+          score,
+        });
+      });
+    });
   }
 
   /**
