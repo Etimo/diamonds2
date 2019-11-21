@@ -14,6 +14,17 @@ beforeAll(() => {
 
 test("Creates base when bot joins", () => {
   const bot = new BotGameObject({ x: 0, y: 0 });
+  
   provider.onGameObjectsAdded(board, [bot]);
+  
   expect(bot.base).toBeDefined();
+});
+
+test("Removes base property when bot is removed", () => {
+  const bot = new BotGameObject({ x: 0, y: 0 });
+  provider.onGameObjectsAdded(board, [bot]);
+
+  provider.onGameObjectsRemoved(board, [bot]);
+
+  expect(bot.base).toEqual(null);
 });
