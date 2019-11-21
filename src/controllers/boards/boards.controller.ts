@@ -71,7 +71,7 @@ export class BoardsController {
   })
   @HttpCode(200)
   @Post(":id/move")
-  move(@Param("id") id: string, @Body() input: MoveInputDto) {
+  async move(@Param("id") id: string, @Body() input: MoveInputDto) {
     return this.boardsService.move(id, input.botToken, input.direction);
   }
 }

@@ -8,7 +8,21 @@ import ConflictError from "../errors/conflict.error";
 export class BotsService {
   private bots: IBot[] = [];
 
-  constructor(private readonly idService: IdService) {}
+  constructor(private readonly idService: IdService) {
+    this.bots.push({
+      id: idService.next(),
+      token: idService.next(),
+      name: "test",
+      email: "test@test.se",
+    });
+    this.bots.push({
+      id: idService.next(),
+      token: idService.next(),
+      name: "test2",
+      email: "test2@test.se",
+    });
+    console.log(this.bots);
+  }
 
   public async add(input: BotRegistrationDto): Promise<IBot> {
     if (this.emailExists(input.email) || this.nameExists(input.name)) {

@@ -16,10 +16,11 @@ import { BotsService } from "./bots.service";
 import UnauthorizedError from "../errors/unauthorized.error";
 import { MoveDirection } from "../enums/move-direction.enum";
 import { IPosition } from "../common/interfaces/position.interface";
+import { OperationQueueBoard } from "../gameengine/operation-queue-board";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
-  private boards: Board[] = [];
+  private boards: OperationQueueBoard[] = [];
 
   constructor(private botsService: BotsService, private logger: CustomLogger) {
     this.createInMemoryBoard();
@@ -49,17 +50,17 @@ export class BoardsService {
    * @param boardId
    * @param bot
    */
-  public async join(boardId: string, botToken: string): Promise<boolean> {
+  public async join(boardId: string, botToken: string) {
     const bot = await this.botsService.get(botToken);
     if (!bot) {
       throw new UnauthorizedError("Invalid botToken");
     }
     const board = this.getBoardById(boardId);
-    if (board) {
-      board.join(bot);
-      return true;
+    if (!board) {
+      throw new NotFoundError("Board not found");
     }
-    throw new NotFoundError("Board not found");
+
+    return board.enqueueJoin(bot);
   }
 
   public async move(
@@ -79,12 +80,10 @@ export class BoardsService {
       throw new UnauthorizedError("Invalid botToken");
     }
 
-    // Perform move and return board
-    board.move(bot, this.directionToDelta(direction));
-    return this.getAsDto(board);
+    return board.enqueueMove(bot, this.directionToDelta(direction));
   }
 
-  private getBoardById(id: string): Board {
+  private getBoardById(id: string): OperationQueueBoard {
     return this.boards.find(b => b.getId() === id);
   }
 
@@ -152,7 +151,7 @@ export class BoardsService {
       minimumDelayBetweenMoves: 100,
       sessionLength: 60,
     };
-    const board = new Board(config, providers, this.logger);
+    const board = new OperationQueueBoard(config, providers, this.logger);
     this.boards.push(board);
   }
 }
