@@ -14,6 +14,7 @@ export class Board {
   public readonly maxNumberOfCarryingDiamonds: number = 5;
   private callbackLoopsRegistered = {};
   private callbackLoopsId = {};
+  highscoreCallback;
 
   constructor(
     protected config: BoardConfig,
@@ -25,6 +26,10 @@ export class Board {
 
   getId() {
     return this._id;
+  }
+
+  registerSessionFinishedCallback(callback: Function) {
+    this.highscoreCallback = callback;
   }
 
   async join(bot: IBot) {
@@ -63,6 +68,10 @@ export class Board {
         b => b.name === bot.name,
       );
       this.removeGameObject(botGameObject);
+
+      if (this.highscoreCallback) {
+        this.highscoreCallback(botGameObject.name, botGameObject.score);
+      }
     }, this.config.sessionLength * 1000);
     return id;
   }

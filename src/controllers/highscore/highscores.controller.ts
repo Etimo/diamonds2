@@ -6,19 +6,7 @@ import { HighScoresService } from "src/services/high-scores.service";
 @Controller("api/highscores")
 export class HighscoresController {
   constructor(private highScoresService: HighScoresService) {}
-  @ApiResponse({
-    status: 200,
-    description: "Returns highscores",
-    type: HighscoreDto,
-    isArray: true,
-  })
-  @Post()
-  async create(
-    @Body() highScoresRegistration: HighscoreDto,
-  ): Promise<HighscoreDto[]> {
-    await this.highScoresService.add(highScoresRegistration);
-    return this.highScoresService.all();
-  }
+
   @Get()
   async listAll() {
     return this.highScoresService.all();
