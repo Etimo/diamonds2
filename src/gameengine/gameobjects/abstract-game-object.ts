@@ -3,7 +3,6 @@ import { IPosition } from "src/common/interfaces/position.interface";
 
 export abstract class AbstractGameObject {
   private positions: IPosition[] = [];
-  private requestPositions: IPosition[] = [];
   private static nextId = 1;
   private readonly _id = AbstractGameObject.nextId++;
 
@@ -27,11 +26,10 @@ export abstract class AbstractGameObject {
   }
   set position(newPosition: IPosition) {
     this.positions.push(newPosition);
-    this.requestPositions.push(newPosition);
   }
 
   get previousPosition() {
-    return this.requestPositions.length > 1 ? {...this.requestPositions[this.requestPositions.length - 2]} : null;
+    return this.positions.length > 1 ? {...this.positions[this.positions.length - 2]} : null;
   }
 
   get properties(): object {
@@ -41,14 +39,14 @@ export abstract class AbstractGameObject {
   public hasAlreadyBeenHere(
     position: IPosition,
   ): boolean {
-    return this.requestPositions.some(p =>
+    return this.positions.some(p =>
       position.x === p.x &&
       position.y === p.y
     );
   }
 
   public clearPositions(): void {
-    this.requestPositions = [];
+    this.positions = [this.position];
   }
 
   canGameObjectEnter(gameObject: AbstractGameObject, board: Board): boolean {
