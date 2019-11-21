@@ -1,7 +1,7 @@
 import { AbstractGameObject } from "./gameobjects/abstract-game-object";
-import { IBot } from "src/interfaces/bot.interface";
+import { IBot } from "../interfaces/bot.interface";
 import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
-import { IPosition } from "src/common/interfaces/position.interface";
+import { IPosition } from "../common/interfaces/position.interface";
 import { BoardConfig } from "./board-config";
 import { BotGameObject } from "./gameobjects/bot/bot";
 import NotFoundError from "../errors/not-found.error";

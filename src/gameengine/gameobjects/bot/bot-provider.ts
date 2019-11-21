@@ -1,8 +1,8 @@
 import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
-import { IBot } from "src/interfaces/bot.interface";
-import { Board } from "src/gameengine/board";
+import { IBot } from "../../../interfaces/bot.interface";
+import { Board } from "../../../gameengine/board";
 import { BotGameObject } from "./bot";
-import { IPosition } from "src/common/interfaces/position.interface";
+import { IPosition } from "../../../common/interfaces/position.interface";
 
 export interface Config {
   /**

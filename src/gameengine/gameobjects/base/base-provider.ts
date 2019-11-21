@@ -1,5 +1,5 @@
 import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
-import { Board } from "src/gameengine/board";
+import { Board } from "../../../gameengine/board";
 import { BotGameObject } from "../bot/bot";
 import { AbstractGameObject } from "../abstract-game-object";
 import { BaseGameObject } from "./base";

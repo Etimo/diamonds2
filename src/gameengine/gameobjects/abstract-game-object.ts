@@ -1,5 +1,5 @@
 import { Board } from "../board";
-import { IPosition } from "src/common/interfaces/position.interface";
+import { IPosition } from "../../common/interfaces/position.interface";
 
 export abstract class AbstractGameObject {
   private static nextId = 1;

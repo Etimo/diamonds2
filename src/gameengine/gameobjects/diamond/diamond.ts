@@ -1,6 +1,6 @@
 import { AbstractGameObject } from "../abstract-game-object";
 import { Board } from "../../board";
-import { IPosition } from "src/common/interfaces/position.interface";
+import { IPosition } from "../../../common/interfaces/position.interface";
 import { BotGameObject } from "../bot/bot";
 
 export class DiamondGameObject extends AbstractGameObject {

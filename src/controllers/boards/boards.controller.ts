@@ -1,10 +1,9 @@
 import { Controller, Get, Post, Param, Body, HttpCode } from "@nestjs/common";
 import { ApiUseTags, ApiCreatedResponse, ApiResponse } from "@nestjs/swagger";
-import { BoardDto } from "src/models/board.dto";
-import { BoardsService } from "src/services/board.service";
-import { GameObjectDto } from "src/models/game-object.dto";
-import { JoinInputDto } from "src/models/join-input.dto";
-import { MoveInputDto } from "src/models/move-input.dto";
+import { BoardsService } from "../../services/board.service";
+import { BoardDto } from "../../models/board.dto";
+import { JoinInputDto } from "../../models/join-input.dto";
+import { MoveInputDto } from "../../models/move-input.dto";
 
 @ApiUseTags("Boards")
 @Controller("api/boards")

@@ -1,4 +1,4 @@
-import { IPosition } from "src/common/interfaces/position.interface";
+import { IPosition } from "../../../common/interfaces/position.interface";
 import { AbstractGameObject } from "../abstract-game-object";
 
 export class BotGameObject extends AbstractGameObject {

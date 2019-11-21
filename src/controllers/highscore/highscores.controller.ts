@@ -1,6 +1,6 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiUseTags, ApiResponse } from "@nestjs/swagger";
-import { HighscoreDto } from "src/models/highscore.dto";
+import { HighscoreDto } from "../../models/highscore.dto";
 @ApiUseTags("Highscores")
 @Controller("api/Highscores")
 export class HighscoresController {
@@ -11,7 +11,7 @@ export class HighscoresController {
     isArray: true,
   })
   @Get()
-  async get(): Promise<HighscoreDto[]> {
+  async get(): Promise<HighscoreDto> {
     return;
   }
 }

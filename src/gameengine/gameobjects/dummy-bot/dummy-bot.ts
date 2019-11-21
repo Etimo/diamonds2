@@ -1,5 +1,5 @@
 import { BotGameObject } from "../bot/bot";
-import { Board } from "src/gameengine/board";
+import { Board } from "../../../gameengine/board";
 import { DiamondGameObject } from "../diamond/diamond";
 
 export class DummyBotGameObject extends BotGameObject {
