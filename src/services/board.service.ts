@@ -13,17 +13,32 @@ import { BoardDto } from "../models/board.dto";
 import { GameObjectDto } from "../models/game-object.dto";
 import NotFoundError from "../errors/not-found.error";
 import { BotsService } from "./bots.service";
+import { OperationQueueBoard } from "src/gameengine/operation-queue-board";
+import { HighScoresService } from "./high-scores.service";
 import UnauthorizedError from "../errors/unauthorized.error";
 import { MoveDirection } from "../enums/move-direction.enum";
 import { IPosition } from "../common/interfaces/position.interface";
-import { OperationQueueBoard } from "../gameengine/operation-queue-board";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
   private boards: OperationQueueBoard[] = [];
 
-  constructor(private botsService: BotsService, private logger: CustomLogger) {
+  constructor(
+    private botsService: BotsService,
+    private highscoresService: HighScoresService,
+    private logger: CustomLogger,
+  ) {
     this.createInMemoryBoard();
+
+    this.boards.forEach(board => {
+      board.registerSessionFinishedCallback((botName, score) => {
+        console.log("HIGHSCORE", botName, score);
+        this.highscoresService.add({
+          botName,
+          score,
+        });
+      });
+    });
   }
 
   /**

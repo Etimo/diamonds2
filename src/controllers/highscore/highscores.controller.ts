@@ -1,17 +1,13 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Body, Post } from "@nestjs/common";
 import { ApiUseTags, ApiResponse } from "@nestjs/swagger";
-import { HighscoreDto } from "../../models/highscore.dto";
+import { HighScoresService } from "../../services/high-scores.service";
 @ApiUseTags("Highscores")
-@Controller("api/Highscores")
+@Controller("api/highscores")
 export class HighscoresController {
-  @ApiResponse({
-    status: 200,
-    description: "Returns highscores",
-    type: HighscoreDto,
-    isArray: true,
-  })
+  constructor(private highScoresService: HighScoresService) {}
+
   @Get()
-  async get(): Promise<HighscoreDto> {
-    return;
+  async listAll() {
+    return this.highScoresService.all();
   }
 }

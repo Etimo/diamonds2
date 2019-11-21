@@ -7,6 +7,7 @@ import { BoardsController } from "./controllers/boards/boards.controller";
 import { BotsController } from "./controllers/bots/bots.controller";
 import { CustomLogger } from "./logger";
 import { BoardsService } from "./services/board.service";
+import { HighScoresService } from "./services/high-scores.service";
 
 @Module({
   controllers: [BotsController, BoardsController, HighscoresController],
@@ -17,6 +18,7 @@ import { BoardsService } from "./services/board.service";
     BotsService,
     IdService,
     ValidatorService,
+    HighScoresService,
   ],
 })
 export class AppModule {}
