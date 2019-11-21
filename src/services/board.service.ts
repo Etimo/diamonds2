@@ -5,10 +5,7 @@ import { DiamondButtonProvider } from "src/gameengine/gameobjects/diamond-button
 import { BaseProvider } from "src/gameengine/gameobjects/base/base-provider";
 import { DiamondProvider } from "src/gameengine/gameobjects/diamond/diamond-provider";
 import { BotProvider } from "src/gameengine/gameobjects/bot/bot-provider";
-import { DummyBotProvider } from "src/gameengine/gameobjects/dummy-bot/dummy-bot-provider";
 import { BoardConfig } from "src/gameengine/board-config";
-import { IBot } from "src/interfaces/bot.interface";
-import { AbstractGameObject } from "src/gameengine/gameobjects/abstract-game-object";
 import { BoardDto } from "src/models/board.dto";
 import { GameObjectDto } from "src/models/game-object.dto";
 import NotFoundError from "src/errors/not-found.error";
@@ -16,13 +13,30 @@ import { BotsService } from "./bots.service";
 import UnauthorizedError from "src/errors/unauthorized.error";
 import { MoveDirection } from "src/enums/move-direction.enum";
 import { IPosition } from "src/common/interfaces/position.interface";
+import { IBot } from "src/interfaces/bot.interface";
+import { OperationQueueBoard } from "src/gameengine/operation-queue-board";
+import { HighScoresService } from "./high-scores.service";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
-  private boards: Board[] = [];
+  private boards: OperationQueueBoard[] = [];
 
-  constructor(private botsService: BotsService, private logger: CustomLogger) {
+  constructor(
+    private botsService: BotsService,
+    private highscoresService: HighScoresService,
+    private logger: CustomLogger,
+  ) {
     this.createInMemoryBoard();
+
+    this.boards.forEach(board => {
+      board.registerSessionFinishedCallback((botName, score) => {
+        console.log("HIGHSCORE", botName, score);
+        this.highscoresService.add({
+          botName,
+          score,
+        });
+      });
+    });
   }
 
   /**
@@ -49,17 +63,17 @@ export class BoardsService {
    * @param boardId
    * @param bot
    */
-  public async join(boardId: string, botToken: string): Promise<boolean> {
+  public async join(boardId: string, botToken: string) {
     const bot = await this.botsService.get(botToken);
     if (!bot) {
       throw new UnauthorizedError("Invalid botToken");
     }
     const board = this.getBoardById(boardId);
-    if (board) {
-      board.join(bot);
-      return true;
+    if (!board) {
+      throw new NotFoundError("Board not found");
     }
-    throw new NotFoundError("Board not found");
+
+    return board.enqueueJoin(bot);
   }
 
   public async move(
@@ -79,12 +93,10 @@ export class BoardsService {
       throw new UnauthorizedError("Invalid botToken");
     }
 
-    // Perform move and return board
-    board.move(bot, this.directionToDelta(direction));
-    return this.getAsDto(board);
+    return board.enqueueMove(bot, this.directionToDelta(direction));
   }
 
-  private getBoardById(id: string): Board {
+  private getBoardById(id: string): OperationQueueBoard {
     return this.boards.find(b => b.getId() === id);
   }
 
@@ -152,7 +164,7 @@ export class BoardsService {
       minimumDelayBetweenMoves: 100,
       sessionLength: 60,
     };
-    const board = new Board(config, providers, this.logger);
+    const board = new OperationQueueBoard(config, providers, this.logger);
     this.boards.push(board);
   }
 }

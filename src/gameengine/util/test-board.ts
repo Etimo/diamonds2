@@ -1,4 +1,5 @@
 import { Board } from "../board";
+import SilentLogger from "./silent-logger";
 
 export default function createTestBoard(): Board {
   return new Board(
@@ -9,6 +10,6 @@ export default function createTestBoard(): Board {
       sessionLength: 10,
     },
     [],
-    console,
+    new SilentLogger(),
   );
 }

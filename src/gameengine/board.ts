@@ -14,11 +14,12 @@ export class Board {
   public readonly maxNumberOfCarryingDiamonds: number = 5;
   private callbackLoopsRegistered = {};
   private callbackLoopsId = {};
+  highscoreCallback;
 
   constructor(
-    private config: BoardConfig,
-    private gameObjectProviders: AbstractGameObjectProvider[],
-    private logger: any,
+    protected config: BoardConfig,
+    protected gameObjectProviders: AbstractGameObjectProvider[],
+    protected logger: any,
   ) {
     this.notifyProvidersBoardInitialized();
   }
@@ -27,7 +28,11 @@ export class Board {
     return this._id;
   }
 
-  join(bot: IBot): boolean {
+  registerSessionFinishedCallback(callback: Function) {
+    this.highscoreCallback = callback;
+  }
+
+  async join(bot: IBot) {
     // Add bot to board
     this.bots[bot.token] = bot;
 
@@ -42,7 +47,7 @@ export class Board {
     return this.bots[token];
   }
 
-  public move(bot: IBot, delta: IPosition): boolean {
+  public async move(bot: IBot, delta: IPosition) {
     const botGameObject = this.getGameObjectsByType(BotGameObject).find(
       b => b.name === bot.name,
     );
@@ -52,7 +57,6 @@ export class Board {
     const position = botGameObject.position;
     position.x = position.x + delta.x;
     position.y = position.y + delta.y;
-
     return this.trySetGameObjectPosition(botGameObject, position);
   }
 
@@ -64,6 +68,10 @@ export class Board {
         b => b.name === bot.name,
       );
       this.removeGameObject(botGameObject);
+
+      if (this.highscoreCallback) {
+        this.highscoreCallback(botGameObject.name, botGameObject.score);
+      }
     }, this.config.sessionLength * 1000);
     return id;
   }
