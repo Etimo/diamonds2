@@ -40,3 +40,17 @@ test("trySetGameObjectPosition when gameobject not allow move bot stays", () => 
   expect(result).toBeFalsy();
   expect(bot.position).toStrictEqual(initialPosition);
 });
+
+test("trySetGameObjectPosition when bot move gameObjectEntered is triggered on gameobjects on destination", () => {
+  const initialPosition = { x: 0, y: 0 };
+  const bot = new BotGameObject(initialPosition);
+  spyOn(opponent, "canGameObjectEnter").and.returnValue(true);
+  spyOn(opponent, "onGameObjectEntered");
+
+  const result = board.trySetGameObjectPosition(bot, { x: 1, y: 0 });
+
+  expect(result).toBeTruthy();
+  expect(bot.position).toStrictEqual({ x: 1, y: 0 });
+  expect(opponent.onGameObjectEntered).toHaveBeenCalledTimes(1);
+
+});
