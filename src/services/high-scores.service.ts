@@ -36,7 +36,7 @@ export class HighScoresService {
         return false;
       }
     });
-    console.log("highScore=" + isHighScore + " botName" + newScore.botName);
+    console.log("highScore =" + isHighScore + " botName" + newScore.botName);
     return isHighScore;
   }
 
