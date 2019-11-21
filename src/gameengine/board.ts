@@ -202,7 +202,9 @@ export class Board {
     }
 
     // Check if we can enter the new position
-    if (!(skipEnterCheck || this.canGameObjectEnter(gameObject, dest))) {
+    if (
+      this.destinationIsOutOfBounds(dest) ||
+      !(skipEnterCheck || this.canGameObjectEnter(gameObject, dest))) {
       this.logger.debug("Not allowed to enter");
       return false;
     }
@@ -304,6 +306,12 @@ export class Board {
 
   private notifyProvidersBoardBotJoined(bot: IBot) {
     this.gameObjectProviders.forEach(p => p.onBotJoined(bot, this));
+  }
+
+  private destinationIsOutOfBounds(destination: IPosition): boolean {
+    const outOfX = destination.x < 0 || destination.x > this.width;
+    const outOfY = destination.y < 0 || destination.y > this.height;
+    return outOfX || outOfY;
   }
 
   notifyGameObjectEvent(
