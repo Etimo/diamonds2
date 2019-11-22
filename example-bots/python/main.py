@@ -7,21 +7,15 @@ from game.api import Api
 from game.util import *
 from game.logic.random import RandomLogic
 from game.logic.first_diamond import FirstDiamondLogic
-from game.logic.crash_in_middle import CrashInMiddle
 from game.logic.random_diamond import RandomDiamondLogic
-from game.logic.teleporter_shaker import TeleporterShake
-from game.logic.button_madness import ButtonMadness
 from colorama import init, Fore, Back, Style
 
 init()
 BASE_URL = "http://diamonds.etimo.se/api"
 CONTROLLERS = {
     "Random": RandomLogic,
-    "CrashInMiddle": CrashInMiddle,
     "FirstDiamond": FirstDiamondLogic,
     "RandomDiamond": RandomDiamondLogic,
-    "Teleport": TeleporterShake,
-    "RedButton": ButtonMadness
 }
 
 ###############################################################################
@@ -155,7 +149,8 @@ while True:
         break
 
     # Don't spam the board more than it allows!
-    sleep(move_delay * time_factor)
+    # sleep(move_delay * time_factor)
+    sleep(1)
 
 ###############################################################################
 #

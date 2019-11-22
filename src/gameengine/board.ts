@@ -1,10 +1,10 @@
 import { AbstractGameObject } from "./gameobjects/abstract-game-object";
 import { IBot } from "src/interfaces/bot.interface";
 import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
-import { IPosition } from "src/common/interfaces/position.interface";
 import { BoardConfig } from "./board-config";
 import { BotGameObject } from "./gameobjects/bot/bot";
 import NotFoundError from "../errors/not-found.error";
+import { IPosition } from "../common/interfaces/position.interface";
 
 export class Board {
   private static nextId = 1;
@@ -14,11 +14,12 @@ export class Board {
   public readonly maxNumberOfCarryingDiamonds: number = 5;
   private callbackLoopsRegistered = {};
   private callbackLoopsId = {};
+  highscoreCallback;
 
   constructor(
-    private config: BoardConfig,
-    private gameObjectProviders: AbstractGameObjectProvider[],
-    private logger: any,
+    protected config: BoardConfig,
+    protected gameObjectProviders: AbstractGameObjectProvider[],
+    protected logger: any,
   ) {
     this.notifyProvidersBoardInitialized();
   }
@@ -27,7 +28,11 @@ export class Board {
     return this._id;
   }
 
-  join(bot: IBot): boolean {
+  registerSessionFinishedCallback(callback: Function) {
+    this.highscoreCallback = callback;
+  }
+
+  async join(bot: IBot) {
     // Add bot to board
     this.bots[bot.token] = bot;
 
@@ -42,7 +47,7 @@ export class Board {
     return this.bots[token];
   }
 
-  public move(bot: IBot, delta: IPosition): boolean {
+  public async move(bot: IBot, delta: IPosition) {
     const botGameObject = this.getGameObjectsByType(BotGameObject).find(
       b => b.name === bot.name,
     );
@@ -52,7 +57,6 @@ export class Board {
     const position = botGameObject.position;
     position.x = position.x + delta.x;
     position.y = position.y + delta.y;
-
     return this.trySetGameObjectPosition(botGameObject, position);
   }
 
@@ -64,6 +68,10 @@ export class Board {
         b => b.name === bot.name,
       );
       this.removeGameObject(botGameObject);
+
+      if (this.highscoreCallback) {
+        this.highscoreCallback(botGameObject.name, botGameObject.score);
+      }
     }, this.config.sessionLength * 1000);
     return id;
   }
@@ -181,6 +189,12 @@ export class Board {
     skipLeaveCheck = false,
     skipEnterCheck = false,
   ): boolean {
+    // Check if the moving object already been here during this request
+    if (gameObject.hasAlreadyBeenHere(dest)) {
+      this.gameObjects.forEach(o => o.clearPositions());
+      return false;
+    }
+
     // Check if we can leave the current position
     if (!(skipLeaveCheck || this.canGameObjectLeave(gameObject, dest))) {
       this.logger.debug("Not allowed to leave");
@@ -188,7 +202,9 @@ export class Board {
     }
 
     // Check if we can enter the new position
-    if (!(skipEnterCheck || this.canGameObjectEnter(gameObject, dest))) {
+    if (
+      this.destinationIsOutOfBounds(dest) ||
+      !(skipEnterCheck || this.canGameObjectEnter(gameObject, dest))) {
       this.logger.debug("Not allowed to enter");
       return false;
     }
@@ -290,6 +306,12 @@ export class Board {
 
   private notifyProvidersBoardBotJoined(bot: IBot) {
     this.gameObjectProviders.forEach(p => p.onBotJoined(bot, this));
+  }
+
+  private destinationIsOutOfBounds(destination: IPosition): boolean {
+    const outOfX = destination.x < 0 || destination.x > this.width;
+    const outOfY = destination.y < 0 || destination.y > this.height;
+    return outOfX || outOfY;
   }
 
   notifyGameObjectEvent(

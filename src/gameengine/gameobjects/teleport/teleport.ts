@@ -1,7 +1,7 @@
 import { AbstractGameObject } from "../abstract-game-object";
 import { Board } from "../../board";
-import { IPosition } from "src/common/interfaces/position.interface";
 import { BotGameObject } from "../bot/bot";
+import { IPosition } from "../../../common/interfaces/position.interface";
 
 export class TeleportGameObject extends AbstractGameObject {
   constructor(position: IPosition, private readonly pairId: string) {
@@ -15,9 +15,7 @@ export class TeleportGameObject extends AbstractGameObject {
       t => t.pairId === this.pairId && t !== this,
     );
 
-    // Will cause max call stack exceeded since the other teleport will immediately change position back to here
-    //otherTeleport.position
-    if (board.trySetGameObjectPosition(bot, { x: 0, y: 0 })) {
+    if (board.trySetGameObjectPosition(bot, otherTeleport.position)) {
       board.notifyGameObjectEvent(this, "TELEPORTED");
     }
   }
