@@ -58,11 +58,12 @@
     "@types/node": "^10.12.18",
     "@types/pino": "^5.8.7",
     "@types/supertest": "^2.0.7",
-    "husky": "3",
+    "husky": "^3.1.0",
     "jest": "^24.9.0",
     "nodemon": "^1.19.4",
     "precise-commits": "^1.0.2",
     "prettier": "^1.15.3",
+    "pretty-quick": "^2.0.1",
     "supertest": "^4.0.2",
     "ts-jest": "^24.0.2",
     "ts-node": "^8.5.2",
@@ -71,7 +72,9 @@
     "typescript": "^3.2.4"
   },
   "husky": {
-    "hooks": {}
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   },
   "jest": {
     "moduleFileExtensions": [
