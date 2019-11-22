@@ -5,6 +5,7 @@ import { BotRegistrationDto } from "src/models/bot-registration.dto";
 import ConflictError from "../errors/conflict.error";
 import { HighscoreDto } from "src/models/highscore.dto";
 import { promises } from "dns";
+import { newExpression } from "@babel/types";
 
 @Injectable()
 export class HighScoresService {
@@ -19,25 +20,36 @@ export class HighScoresService {
     this.highScores.push(testHighScore);
   }
 
-  public async add(input: HighscoreDto): Promise<boolean> {
-    if (this.isHighScore(input)) {
+  public async addOrUpdate(input: HighscoreDto): Promise<boolean> {
+    if (this.isNewHighScore(input)) {
       this.highScores.push(input);
-      return Promise.resolve(true);
     }
-    return Promise.resolve(false);
+    return Promise.resolve(true);
   }
 
-  private isHighScore(newScore: HighscoreDto): boolean {
+  private isNewHighScore(newScore: HighscoreDto): boolean {
     let isHighScore: boolean = true;
 
-    this.highScores.forEach(highScore => {
+    this.highScores.forEach((highScore, index) => {
+      // console.log(
+      //   " botName: " + highScore.botName + " score = " + highScore.score,
+      // );
       if (newScore.botName == highScore.botName) {
-        isHighScore = newScore.score > highScore.score;
+        if (newScore.score > highScore.score) {
+          this.updateHighScore(index, newScore);
+        }
+        isHighScore = false;
         return false;
       }
     });
-    console.log("highScore =" + isHighScore + " botName" + newScore.botName);
+    // console.log(
+    //   " botName: " + newScore.botName + " isHighScore = " + isHighScore,
+    // );
     return isHighScore;
+  }
+
+  private updateHighScore(index: number, newScore: HighscoreDto) {
+    this.highScores[index] = newScore;
   }
 
   all(): HighscoreDto[] {

@@ -31,7 +31,7 @@ export class BoardsService {
     this.boards.forEach(board => {
       board.registerSessionFinishedCallback((botName, score) => {
         console.log("HIGHSCORE", botName, score);
-        this.highscoresService.add({
+        this.highscoresService.addOrUpdate({
           botName,
           score,
         });
