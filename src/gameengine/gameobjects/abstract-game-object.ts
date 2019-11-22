@@ -2,11 +2,12 @@ import { Board } from "../board";
 import { IPosition } from "src/common/interfaces/position.interface";
 
 export abstract class AbstractGameObject {
+  private positions: IPosition[] = [];
   private static nextId = 1;
   private readonly _id = AbstractGameObject.nextId++;
 
-  constructor(public position: IPosition) {
-    this.position = position;
+  constructor(startPosition: IPosition) {
+    this.position = startPosition;
   }
 
   get x(): number {
@@ -20,9 +21,32 @@ export abstract class AbstractGameObject {
   get id(): number {
     return this._id;
   }
+  get position(): IPosition {
+    return {...this.positions[this.positions.length - 1]};
+  }
+  set position(newPosition: IPosition) {
+    this.positions.push(newPosition);
+  }
+
+  get previousPosition() {
+    return this.positions.length > 1 ? {...this.positions[this.positions.length - 2]} : null;
+  }
 
   get properties(): object {
     return null;
+  }
+
+  public hasAlreadyBeenHere(
+    position: IPosition,
+  ): boolean {
+    return this.positions.some(p =>
+      position.x === p.x &&
+      position.y === p.y
+    );
+  }
+
+  public clearPositions(): void {
+    this.positions = [this.position];
   }
 
   canGameObjectEnter(gameObject: AbstractGameObject, board: Board): boolean {

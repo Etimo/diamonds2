@@ -1,10 +1,10 @@
 import { AbstractGameObject } from "./gameobjects/abstract-game-object";
 import { IBot } from "src/interfaces/bot.interface";
 import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
-import { IPosition } from "src/common/interfaces/position.interface";
 import { BoardConfig } from "./board-config";
 import { BotGameObject } from "./gameobjects/bot/bot";
 import NotFoundError from "../errors/not-found.error";
+import { IPosition } from "../common/interfaces/position.interface";
 
 export class Board {
   private static nextId = 1;
@@ -189,6 +189,12 @@ export class Board {
     skipLeaveCheck = false,
     skipEnterCheck = false,
   ): boolean {
+    // Check if the moving object already been here during this request
+    if (gameObject.hasAlreadyBeenHere(dest)) {
+      this.gameObjects.forEach(o => o.clearPositions());
+      return false;
+    }
+
     // Check if we can leave the current position
     if (!(skipLeaveCheck || this.canGameObjectLeave(gameObject, dest))) {
       this.logger.debug("Not allowed to leave");
