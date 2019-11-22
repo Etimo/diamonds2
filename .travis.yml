@@ -5,7 +5,7 @@ dist: trusty
 sudo: required
 env:
   global:
-  - secure: WAlh/tsTo6j0l5UN0+fnX+6DfU6/DPZSNh4QSD/nmqIHuJu7AnYbXMO3BhybRmHBpB0sklKUPmXF8UKySnjgd/O5TGvlz1bp/9BsJK9Bm/lo6aX4GcupEbW+VCwxr35Tarf8Xc7IWpr5p2FP+yBXQ+G3bCTiUDg+z66uZXHposC5yywyc0mvpXBfbZDg6OzMVCG//DAdmsK9gEJybsWMtcnftHjTIcLxUAjVu9XKe1e/wpsNAet619cVWXaKUuG5Dv+bRBOfEZa1YANFn/6RKfGpupbxsIsMAryByMwCw8ykrXukG8ZFWkCR24OQszSWXVsgfOyO1tNTH8KkySjRuo/dNnx6D7QO0EQHdDtRMsvwdvMCkYM8yxawTB3bFsv5G6GRA+d9QNiHh3Z/5hWokdHwG+h5ULkVD2HvJg4S0mk92okxqAKPx+uNgcuWD/Mu5Cpi9+VDXsNslxfA4pRQipepK8lw5WdnnMtboKc4vr67rA5qOiqRpnpRXutlW6itttAeb8J5mczTsdrxMhEmf7eIw9fYrrHY0KKxqF6cNrai6FgHRe48DnHtBz2XKj+d7tZBKqxKPkkwgU+tNd+LsJQTX2jCRipTWBbWdxikCysxVIx0cLcK1T0mzC28Nv5MVOk62rCFSYQuOdh5YhlmW6ORyIBwUnEsG7IXeMTgw5w=
+    secure: WAlh/tsTo6j0l5UN0+fnX+6DfU6/DPZSNh4QSD/nmqIHuJu7AnYbXMO3BhybRmHBpB0sklKUPmXF8UKySnjgd/O5TGvlz1bp/9BsJK9Bm/lo6aX4GcupEbW+VCwxr35Tarf8Xc7IWpr5p2FP+yBXQ+G3bCTiUDg+z66uZXHposC5yywyc0mvpXBfbZDg6OzMVCG//DAdmsK9gEJybsWMtcnftHjTIcLxUAjVu9XKe1e/wpsNAet619cVWXaKUuG5Dv+bRBOfEZa1YANFn/6RKfGpupbxsIsMAryByMwCw8ykrXukG8ZFWkCR24OQszSWXVsgfOyO1tNTH8KkySjRuo/dNnx6D7QO0EQHdDtRMsvwdvMCkYM8yxawTB3bFsv5G6GRA+d9QNiHh3Z/5hWokdHwG+h5ULkVD2HvJg4S0mk92okxqAKPx+uNgcuWD/Mu5Cpi9+VDXsNslxfA4pRQipepK8lw5WdnnMtboKc4vr67rA5qOiqRpnpRXutlW6itttAeb8J5mczTsdrxMhEmf7eIw9fYrrHY0KKxqF6cNrai6FgHRe48DnHtBz2XKj+d7tZBKqxKPkkwgU+tNd+LsJQTX2jCRipTWBbWdxikCysxVIx0cLcK1T0mzC28Nv5MVOk62rCFSYQuOdh5YhlmW6ORyIBwUnEsG7IXeMTgw5w=
 jobs:
   include:
   - stage: build
@@ -21,8 +21,14 @@ jobs:
     script:
     - docker build -t registry.heroku.com/diamonds2/web .
     deploy:
-      provider: script - docker push registry.heroku.com/diamonds2/web - heroku container:release
-        web -a diamonds2
+      provider: script
+        - docker push registry.heroku.com/diamonds2/web 
+        - heroku container:release web -a diamonds2
 stages:
-- build
+
+- name: build
+  if: type = pull_request
+- name: build
+  if: branch = master
 - name: deploy
+  if: branch = master
