@@ -12,6 +12,8 @@ jobs:
     - yarn run test:cov
     - yarn run build
   - stage: deploy
+    services:
+    - docker
     env:
       global:
         secure: sVwNLCniCOFbIP+6XMj2wBEYmEM/9oZAcVyvP+iZKVU83QOQgz6lb7ZGEcSrz9ZugMnd0+hLujw4b1UGyrH9/ltvfVL5yfJ4eiBxr0B/RcKcBOGoCtMvK/UhxVvbmXEeS+0xyX5FjSdEouvEmbxbjvDA4Ac5ezAeA2c9rMraVvvN4aGpUYlfxyd8kMUJZGBdG5lf/G7fUzZbQvmy1PyfcWHfSziJZLFee+ZFRrYim723yojiuZMU77s8vdhcwgGquuUTWy0vD1n06inI8J3hAzU04ulmHnP6Oh7wUKvAtXw4CxtR9NWzzybRXQ4BLaxXHJWcazUCTrMZmyKvl1IzljV0vvsbahBEMg6bteC+RUh5iQjPvrxtLX9j/fm8kjIAEjLt4Muwo8JjFBIDjsJB518FiAjuuc++zr2p44prxOleNRVWRyL8tRbwEnecZDfOyR3z7gPDUEecI82gP93SvMGfdeHxWBeImJ0AtVh3NnrLnIsQObCzm74YT68HswRKbDYrO5Ca1Ole/X0FOR30YAriXLbGp1H5nz9Dy7tGX7Zen1AMpSC2/iWJsUEhqXsqi9M0v5kpc5z8IuZgfUs/Fwhzc5lwyOTaKLEFEYLHSruoGWqSBsBzAvo1197cQkJHKrDmirXOOHSay/h4XSTYz1sFPCN9VU1/TT5282LlxAw=
