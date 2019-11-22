@@ -3,6 +3,10 @@ node_js:
 - '12'
 dist: trusty
 sudo: required
+env:
+  global:
+    secure: tamZcn6XkOkNYTsj9dVPFPzDcJHS46rmACGYVY+ew11u9QzW8ECgjXU+9+nhVGYBZNnt6NPr4Ll5pZW2wm5+tYqB4MbkogobzKWcF94k+BVAFWwKEbUsfTnPp0K8yJaBz9ZCTPscpK42CYSR7gsq/APJBRO3QFqu6Yac1VCwEmRRJI8r6f1+oAre4wTafzS9Z8bl61k57aar0RTWgclXE6v4DgMyyR+ix/BmpFogVbTY0fL1QOCT93fqfSPuZ5n6OeM/IecRBDEBAucb5vmvtMDdBafJH8d8VBXD8SgrdicVMPQeWiPo89Gqjibw+q4IfXsMw07FA2ZjjuWA4EVKwEy+dPSz3/3gB1xDve05lAMJv2xcn+fb3GqHVOvK6ytyAL/XCICZlMfSdbGccTRCVSF9iBe24beqRkqcElw0Q55p5Ubbo7cgqyBQLIYdzJRFvwcFVoyJej11rLbxt/Vg30ma/2EyopgdiL3kgW5q/b8buuAAY0uVpX/uLpdjlO8A/+v6AdLkki+/K8sSCqMSL1YPMEaKZQiBjwVuiDCDSwWYqPMOJsxyNBreK/8drQLqC44ec+Uw7E+LLKzwfUwb5OEjTj0n4eLXTdLsw0fD7sQ3eYX5kQN69qO7cn94IVHKrl7oH0wW/xfPKmiIRO7cjH2GURsS/3lW1T+H1+F7Xx8=
+
 jobs:
   include:
   - stage: build
@@ -12,19 +16,14 @@ jobs:
     - yarn run test:cov
     - yarn run build
   - stage: deploy
-    env:
-      global:
-        secure: sVwNLCniCOFbIP+6XMj2wBEYmEM/9oZAcVyvP+iZKVU83QOQgz6lb7ZGEcSrz9ZugMnd0+hLujw4b1UGyrH9/ltvfVL5yfJ4eiBxr0B/RcKcBOGoCtMvK/UhxVvbmXEeS+0xyX5FjSdEouvEmbxbjvDA4Ac5ezAeA2c9rMraVvvN4aGpUYlfxyd8kMUJZGBdG5lf/G7fUzZbQvmy1PyfcWHfSziJZLFee+ZFRrYim723yojiuZMU77s8vdhcwgGquuUTWy0vD1n06inI8J3hAzU04ulmHnP6Oh7wUKvAtXw4CxtR9NWzzybRXQ4BLaxXHJWcazUCTrMZmyKvl1IzljV0vvsbahBEMg6bteC+RUh5iQjPvrxtLX9j/fm8kjIAEjLt4Muwo8JjFBIDjsJB518FiAjuuc++zr2p44prxOleNRVWRyL8tRbwEnecZDfOyR3z7gPDUEecI82gP93SvMGfdeHxWBeImJ0AtVh3NnrLnIsQObCzm74YT68HswRKbDYrO5Ca1Ole/X0FOR30YAriXLbGp1H5nz9Dy7tGX7Zen1AMpSC2/iWJsUEhqXsqi9M0v5kpc5z8IuZgfUs/Fwhzc5lwyOTaKLEFEYLHSruoGWqSBsBzAvo1197cQkJHKrDmirXOOHSay/h4XSTYz1sFPCN9VU1/TT5282LlxAw=
     before_script:
     - npm install -g heroku
     - docker login --username=_ --password=${HEROKU_API_KEY} registry.heroku.com
     script:
     - docker build -t registry.heroku.com/diamonds2/web .
     deploy:
-      provider: script
-        - docker push registry.heroku.com/diamonds2/web 
-        - heroku container:release web -a diamonds2
+      provider: script - docker push registry.heroku.com/diamonds2/web - heroku container:release
+        web -a diamonds2
 stages:
 - build
 - name: deploy
-  # if: branch = master
