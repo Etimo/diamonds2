@@ -3,6 +3,9 @@ node_js:
 - '12'
 dist: trusty
 sudo: required
+env:
+  global:
+    secure: WAlh/tsTo6j0l5UN0+fnX+6DfU6/DPZSNh4QSD/nmqIHuJu7AnYbXMO3BhybRmHBpB0sklKUPmXF8UKySnjgd/O5TGvlz1bp/9BsJK9Bm/lo6aX4GcupEbW+VCwxr35Tarf8Xc7IWpr5p2FP+yBXQ+G3bCTiUDg+z66uZXHposC5yywyc0mvpXBfbZDg6OzMVCG//DAdmsK9gEJybsWMtcnftHjTIcLxUAjVu9XKe1e/wpsNAet619cVWXaKUuG5Dv+bRBOfEZa1YANFn/6RKfGpupbxsIsMAryByMwCw8ykrXukG8ZFWkCR24OQszSWXVsgfOyO1tNTH8KkySjRuo/dNnx6D7QO0EQHdDtRMsvwdvMCkYM8yxawTB3bFsv5G6GRA+d9QNiHh3Z/5hWokdHwG+h5ULkVD2HvJg4S0mk92okxqAKPx+uNgcuWD/Mu5Cpi9+VDXsNslxfA4pRQipepK8lw5WdnnMtboKc4vr67rA5qOiqRpnpRXutlW6itttAeb8J5mczTsdrxMhEmf7eIw9fYrrHY0KKxqF6cNrai6FgHRe48DnHtBz2XKj+d7tZBKqxKPkkwgU+tNd+LsJQTX2jCRipTWBbWdxikCysxVIx0cLcK1T0mzC28Nv5MVOk62rCFSYQuOdh5YhlmW6ORyIBwUnEsG7IXeMTgw5w=
 jobs:
   include:
   - stage: build
@@ -13,12 +16,9 @@ jobs:
     - yarn run build
   - stage: deploy
     services:
-    - docker
-    env:
-      global:
-        secure: sVwNLCniCOFbIP+6XMj2wBEYmEM/9oZAcVyvP+iZKVU83QOQgz6lb7ZGEcSrz9ZugMnd0+hLujw4b1UGyrH9/ltvfVL5yfJ4eiBxr0B/RcKcBOGoCtMvK/UhxVvbmXEeS+0xyX5FjSdEouvEmbxbjvDA4Ac5ezAeA2c9rMraVvvN4aGpUYlfxyd8kMUJZGBdG5lf/G7fUzZbQvmy1PyfcWHfSziJZLFee+ZFRrYim723yojiuZMU77s8vdhcwgGquuUTWy0vD1n06inI8J3hAzU04ulmHnP6Oh7wUKvAtXw4CxtR9NWzzybRXQ4BLaxXHJWcazUCTrMZmyKvl1IzljV0vvsbahBEMg6bteC+RUh5iQjPvrxtLX9j/fm8kjIAEjLt4Muwo8JjFBIDjsJB518FiAjuuc++zr2p44prxOleNRVWRyL8tRbwEnecZDfOyR3z7gPDUEecI82gP93SvMGfdeHxWBeImJ0AtVh3NnrLnIsQObCzm74YT68HswRKbDYrO5Ca1Ole/X0FOR30YAriXLbGp1H5nz9Dy7tGX7Zen1AMpSC2/iWJsUEhqXsqi9M0v5kpc5z8IuZgfUs/Fwhzc5lwyOTaKLEFEYLHSruoGWqSBsBzAvo1197cQkJHKrDmirXOOHSay/h4XSTYz1sFPCN9VU1/TT5282LlxAw=
+      - docker
     before_script:
-    - yarn global add heroku
+    - npm install -g heroku
     - docker login --username=_ --password=${HEROKU_API_KEY} registry.heroku.com
     script:
     - docker build -t registry.heroku.com/diamonds2/web .
@@ -27,6 +27,7 @@ jobs:
         - docker push registry.heroku.com/diamonds2/web 
         - heroku container:release web -a diamonds2
 stages:
-- build
+- name: build
+  if: type = pull_request || branch = develop  || branch = master 
 - name: deploy
   if: branch = master
