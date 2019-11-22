@@ -27,10 +27,6 @@ jobs:
 stages:
 
 - name: build
-  if: type = pull_request
-- name: build
-  if: branch = develop 
-- name: build
-  if: branch = master 
+  if: type = pull_request || branch = develop  || branch = master 
 - name: deploy
   if: branch = master
