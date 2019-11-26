@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { Board } from "./board";
 import { BoardConfig } from "./board-config";
 import { IBot } from "src/interfaces/bot.interface";

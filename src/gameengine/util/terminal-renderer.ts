@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { Board } from "../board";
 import { BotGameObject } from "../gameobjects/bot/bot";
 
