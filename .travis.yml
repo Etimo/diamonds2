@@ -12,7 +12,7 @@ jobs:
     before_script:
     - yarn
     script:
-    - yarn run test:cov
+    - yarn run test:coveralls
     - yarn run build
   - stage: deploy
     services:
