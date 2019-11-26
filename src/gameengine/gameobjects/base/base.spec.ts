@@ -3,7 +3,7 @@ import { BotGameObject } from "../bot/bot";
 
 let base: BaseGameObject;
 
-beforeAll(() => {
+beforeEach(() => {
   base = new BaseGameObject({ x: 0, y: 0 });
 });
 

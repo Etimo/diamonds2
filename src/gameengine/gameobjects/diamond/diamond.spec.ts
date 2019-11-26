@@ -4,7 +4,7 @@ import createTestBoard from "../../util/test-board";
 
 let gameObject: DiamondGameObject;
 
-beforeAll(() => {
+beforeEach(() => {
   gameObject = new DiamondGameObject({ x: 0, y: 0 }, 1);
 });
 

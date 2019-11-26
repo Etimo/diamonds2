@@ -6,7 +6,7 @@ import { DiamondButtonGameObject } from "./diamond-button";
 let provider: DiamondButtonProvider;
 let board: Board;
 
-beforeAll(() => {
+beforeEach(() => {
   provider = new DiamondButtonProvider();
   board = createTestBoard();
 });
