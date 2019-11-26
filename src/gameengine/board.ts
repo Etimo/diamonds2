@@ -89,9 +89,10 @@ export class Board {
       const id = setInterval(_ => {
         // TODO: add lock
         this.logger.debug(`Callback loop triggered for interval ${interval}`);
-        this.callbackLoopsRegistered[interval].forEach(
-          (g: AbstractGameObject) =>
-            g.onGameObjectCallbackNotified(this, interval),
+        this.callbackLoopsRegistered[
+          interval
+        ].forEach((g: AbstractGameObject) =>
+          g.onGameObjectCallbackNotified(this, interval),
         );
       }, interval);
       this.callbackLoopsRegistered[interval] = [gameObject];
@@ -204,7 +205,8 @@ export class Board {
     // Check if we can enter the new position
     if (
       this.destinationIsOutOfBounds(dest) ||
-      !(skipEnterCheck || this.canGameObjectEnter(gameObject, dest))) {
+      !(skipEnterCheck || this.canGameObjectEnter(gameObject, dest))
+    ) {
       this.logger.debug("Not allowed to enter");
       return false;
     }
