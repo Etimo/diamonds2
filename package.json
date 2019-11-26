@@ -84,7 +84,11 @@
     ],
     "coveragePathIgnorePatterns" : [
       "<rootDir>/errors/",
-      "<rootDir>/models/"
+      "<rootDir>/models/",
+      "<rootDir>/enums/",
+      "<rootDir>/migration/",
+      "<rootDir>/config/",
+      "<rootDir>/scripts/"
     ],
     "rootDir": "src",
     "testRegex": ".spec.ts$",
