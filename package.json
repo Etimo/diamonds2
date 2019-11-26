@@ -79,6 +79,9 @@
       "json",
       "ts"
     ],
+    "collectCoverageFrom": [
+      "<rootDir>/**/*.ts"
+    ],
     "coveragePathIgnorePatterns" : [
       "<rootDir>/errors/",
       "<rootDir>/models/"
