@@ -80,7 +80,7 @@
       "ts"
     ],
     "collectCoverageFrom": [
-      "<rootDir>/**/*.ts",
+      "<rootDir>/**/*.ts"
     ],
     "coveragePathIgnorePatterns" : [
       "<rootDir>/errors/",
