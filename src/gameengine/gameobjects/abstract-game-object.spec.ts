@@ -9,7 +9,7 @@ class DummyObject extends AbstractGameObject {
   }
 }
 
-beforeAll(() => {
+beforeEach(() => {
   go = new DummyObject();
 });
 
@@ -22,7 +22,7 @@ test("y property returns y position", () => {
 });
 
 test("id property returns an id", () => {
-  expect(go.id).toBe(1);
+  expect(go.id).toBeDefined();
 });
 
 test("position property returns position", () => {

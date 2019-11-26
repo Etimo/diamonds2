@@ -11,6 +11,7 @@ export class DiamondButtonProvider extends AbstractGameObjectProvider {
   onGameObjectsRemoved(board: Board, gameObjects: AbstractGameObject[]) {
     // Check number of diamonds on the board
     const existingButtons = board.getGameObjectsByType(DiamondButtonGameObject);
+    /* istanbul ignore else */
     if (existingButtons.length == 0) {
       this.generateNewButton(board);
     }
