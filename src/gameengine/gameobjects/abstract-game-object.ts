@@ -22,27 +22,24 @@ export abstract class AbstractGameObject {
     return this._id;
   }
   get position(): IPosition {
-    return {...this.positions[this.positions.length - 1]};
+    return { ...this.positions[this.positions.length - 1] };
   }
   set position(newPosition: IPosition) {
     this.positions.push(newPosition);
   }
 
   get previousPosition() {
-    return this.positions.length > 1 ? {...this.positions[this.positions.length - 2]} : null;
+    return this.positions.length > 1
+      ? { ...this.positions[this.positions.length - 2] }
+      : null;
   }
 
   get properties(): object {
     return null;
   }
 
-  public hasAlreadyBeenHere(
-    position: IPosition,
-  ): boolean {
-    return this.positions.some(p =>
-      position.x === p.x &&
-      position.y === p.y
-    );
+  public hasAlreadyBeenHere(position: IPosition): boolean {
+    return this.positions.some(p => position.x === p.x && position.y === p.y);
   }
 
   public clearPositions(): void {

@@ -5,7 +5,7 @@ import { BotProvider } from "./bot-provider";
 
 let provider: BotProvider;
 let board: Board;
-let data = {}
+let data = {};
 
 beforeAll(() => {
   provider = new BotProvider({
@@ -13,8 +13,8 @@ beforeAll(() => {
   });
   board = createTestBoard();
   data = {
-      name: "name",
-  }
+    name: "name",
+  };
 });
 
 test("Creates bot when someone joins a board", () => {
@@ -32,34 +32,33 @@ test("Initilizes score when creating bot", () => {
 });
 
 test("Initilizes diamonds when creating bot", () => {
-    provider.onBotJoined(data, board);
-  
-    const bot = board.getGameObjectsByType(BotGameObject)[0];
-  
-    expect(bot.diamonds).toBe(0);
-  });
-  
+  provider.onBotJoined(data, board);
+
+  const bot = board.getGameObjectsByType(BotGameObject)[0];
+
+  expect(bot.diamonds).toBe(0);
+});
+
 test("Initilizes timeJoined when creating bot", () => {
-    provider.onBotJoined(data, board);
-  
-    const bot = board.getGameObjectsByType(BotGameObject)[0];
-  
-    expect(bot.timeJoined).toBeDefined();
-  });
-  
+  provider.onBotJoined(data, board);
+
+  const bot = board.getGameObjectsByType(BotGameObject)[0];
+
+  expect(bot.timeJoined).toBeDefined();
+});
+
 test("Initilizes inventorySize when creating bot", () => {
-    provider.onBotJoined(data, board);
-  
-    const bot = board.getGameObjectsByType(BotGameObject)[0];
-  
-    expect(bot.inventorySize).toBe(5);
-  });
-  
+  provider.onBotJoined(data, board);
+
+  const bot = board.getGameObjectsByType(BotGameObject)[0];
+
+  expect(bot.inventorySize).toBe(5);
+});
+
 test("Initilizes name when creating bot", () => {
-    provider.onBotJoined(data, board);
-  
-    const bot = board.getGameObjectsByType(BotGameObject)[0];
-  
-    expect(bot.name).toEqual("name");
-  });
-  
+  provider.onBotJoined(data, board);
+
+  const bot = board.getGameObjectsByType(BotGameObject)[0];
+
+  expect(bot.name).toEqual("name");
+});

@@ -14,12 +14,14 @@ beforeEach(() => {
   teleporterPaired = new TeleportGameObject({ x: 10, y: 10 }, "1");
   notPairedTeleporter = new TeleportGameObject({ x: 5, y: 5 }, "2");
 
-  board.addGameObjects([teleporterToEnter, teleporterPaired, notPairedTeleporter]);
-
+  board.addGameObjects([
+    teleporterToEnter,
+    teleporterPaired,
+    notPairedTeleporter,
+  ]);
 });
 
 test("Stepping on a teleporter moves bot to position of paired teleporter", () => {
-
   const bot = new BotGameObject({ x: 0, y: 0 });
 
   teleporterToEnter.onGameObjectEntered(bot, board);

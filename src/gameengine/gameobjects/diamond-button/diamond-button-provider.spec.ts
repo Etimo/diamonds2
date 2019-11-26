@@ -18,7 +18,7 @@ test("Creates button when board initializes", () => {
 });
 
 test("Creates button when button is removed", () => {
-  const button = new DiamondButtonGameObject({x: 0, y: 0});
+  const button = new DiamondButtonGameObject({ x: 0, y: 0 });
 
   provider.onGameObjectsRemoved(board, [button]);
 
