@@ -12,6 +12,7 @@ export class DiamondGameObject extends AbstractGameObject {
    * Remove the diamond when a bot enters and put it in the bot's inventory.
    */
   onGameObjectEntered(gameObject: AbstractGameObject, board: Board) {
+    /* istanbul ignore else */
     if (gameObject instanceof BotGameObject) {
       const bot = gameObject as BotGameObject;
       if (bot.diamonds + this.points <= bot.inventorySize) {
