@@ -17,10 +17,16 @@ test("Creates button when board initializes", () => {
   expect(board.getGameObjectsByType(DiamondButtonGameObject).length).toBe(1);
 });
 
-test("Creates button when button is removed", () => {
-  const button = new DiamondButtonGameObject({ x: 0, y: 0 });
+// test("Creates button when button is removed", () => {
+//   const button = new DiamondButtonGameObject({ x: 0, y: 0 });
 
-  provider.onGameObjectsRemoved(board, [button]);
+//   board.removeGameObject(button);
+
+//   expect(board.getGameObjectsByType(DiamondButtonGameObject).length).toBe(1);
+// });
+
+test("Creates button when button is removed", () => {
+  provider.onGameObjectsRemoved(board, []);
 
   expect(board.getGameObjectsByType(DiamondButtonGameObject).length).toBe(1);
 });
