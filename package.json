@@ -78,6 +78,10 @@
       "json",
       "ts"
     ],
+    "coveragePathIgnorePatterns" : [
+      "<rootDir>/errors/",
+      "<rootDir>/models/"
+    ],
     "rootDir": "src",
     "testRegex": ".spec.ts$",
     "transform": {
