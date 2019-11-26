@@ -7,7 +7,7 @@ let provider: BotProvider;
 let board: Board;
 let data = {};
 
-beforeAll(() => {
+beforeEach(() => {
   provider = new BotProvider({
     inventorySize: 5,
   });

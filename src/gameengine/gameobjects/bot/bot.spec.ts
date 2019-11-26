@@ -2,7 +2,7 @@ import { BotGameObject } from "../bot/bot";
 
 let bot: BotGameObject;
 
-beforeAll(() => {
+beforeEach(() => {
   bot = new BotGameObject({ x: 0, y: 0 });
 });
 

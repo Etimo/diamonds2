@@ -5,7 +5,7 @@ let highScoresService: HighScoresService;
 let testBotName: string;
 let numBotsCreatedOnConstructor: number;
 
-beforeAll(() => {
+beforeEach(() => {
   highScoresService = new HighScoresService(new IdService());
   testBotName = "specBot";
   numBotsCreatedOnConstructor = 1;

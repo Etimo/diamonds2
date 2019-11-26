@@ -7,7 +7,7 @@ import createTestBoard from "../../util/test-board";
 let provider: BaseProvider;
 let board: Board;
 
-beforeAll(() => {
+beforeEach(() => {
   provider = new BaseProvider();
   board = createTestBoard();
 });
