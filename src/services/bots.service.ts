@@ -21,12 +21,13 @@ export class BotsService {
       name: "test2",
       email: "test2@test.se",
     });
-    console.log(this.bots);
   }
 
   public async add(input: BotRegistrationDto): Promise<IBot> {
     if (this.emailExists(input.email) || this.nameExists(input.name)) {
-      throw new ConflictError("Email and/or name already exists");
+      return Promise.reject(
+        new ConflictError("Email and/or name already exists"),
+      );
     }
     const bot = {
       token: this.idService.next().toString(),
@@ -42,14 +43,11 @@ export class BotsService {
     return this.bots.find(b => b.token === token);
   }
 
-  all(): IBot[] {
-    return [...this.bots];
-  }
-
   private emailExists(email: string) {
     email = email.toLowerCase();
     return this.bots.some((bot: IBot) => bot.email.toLowerCase() === email);
   }
+
   private nameExists(name: string) {
     name = name.toLowerCase();
     return this.bots.some((bot: IBot) => bot.name.toLowerCase() === name);
