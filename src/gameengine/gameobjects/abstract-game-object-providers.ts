@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { Board } from "../board";
 import { AbstractGameObject } from "./abstract-game-object";
 import { IBot } from "src/interfaces/bot.interface";

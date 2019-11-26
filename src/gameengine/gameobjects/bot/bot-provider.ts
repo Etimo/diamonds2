@@ -24,7 +24,6 @@ export class BotProvider extends AbstractGameObjectProvider {
   }
 
   protected getInitializedBot(data: IBot, base: IPosition, board: Board) {
-    console.log("Hello");
     const botGameObject = new BotGameObject(base);
     botGameObject.base = { x: base.x, y: base.y };
     botGameObject.timeJoined = new Date();
