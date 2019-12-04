@@ -22,7 +22,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     const request = ctx.getRequest();
 
-    console.error(exception.stack, exception);
+    console.error(exception.stack, JSON.stringify(exception));
 
     const httpException: HttpException = this.mapException(exception);
     const status = httpException.getStatus();

@@ -1,0 +1,47 @@
+config:
+  target: 'http://localhost:3000/api'
+  payload:
+    -
+      path: bots.csv
+      order: sequence
+      fields:
+        - name
+        - email
+    -
+      path: moves.csv
+      fields:
+        - direction
+  phases:
+    - duration: 1
+      arrivalCount: 10
+  defaults:
+    headers:
+      x-my-service-auth: '987401838271002188298567'
+scenarios:
+  - name: Play
+    flow:
+    - get:
+        url: "/boards"
+    - post:
+        url: "/bots"
+        json: 
+          email: "{{ email }}"
+          name: "{{ name }}"
+        capture:
+          json: "$.token"
+          as: "token"
+    - post:
+        url: "/boards/1/join"
+        json:
+          botToken: "{{ token }}"
+    - post:
+        url: "/boards/1/join"
+        json:
+          botToken: "{{ token }}"
+    - loop:
+      - post:
+          url: "/boards/1/move"
+          json:
+            botToken: "{{ token }}"
+            direction: "{{ direction }}"
+      count: 100
