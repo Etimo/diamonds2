@@ -8,7 +8,7 @@ Start server:
 
 ```
 yarn
-yarn run start
+yarn run start:dev
 ```
 
 ## Test
@@ -22,4 +22,11 @@ yarn test
 ```
 yarn add -g artillery
 artillery run benchmark/test.yml
+```
+
+## Run production build
+
+```
+yarn run build
+yarn run start:prod
 ```

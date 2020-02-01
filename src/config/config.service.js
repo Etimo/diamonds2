@@ -45,7 +45,7 @@ var ConfigService = /** @class */ (function () {
     };
     return ConfigService;
 }());
-console.log(process.env);
+
 var configService = new ConfigService(process.env).ensureValues([
     "POSTGRES_HOST",
     "POSTGRES_PORT",

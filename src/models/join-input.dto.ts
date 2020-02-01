@@ -1,6 +1,8 @@
 import { ApiModelProperty } from "@nestjs/swagger";
 
 export class JoinInputDto {
-  @ApiModelProperty()
+  @ApiModelProperty({
+    description: "The secret token of the bot that you want to move.",
+  })
   botToken: string;
 }
