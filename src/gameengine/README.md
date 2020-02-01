@@ -2,22 +2,6 @@
 
 The game engine is designed around some kind of mediator-like pattern.
 
-# Run an example instance of the game using the cli
-
-Having `ts-node` in the path:
-
-```
-ts-node cli-example.ts
-```
-
-Otherwise something like this from the project root:
-
-```
-./node_modules/.bin/ts-node src/gameengine/cli-example.ts
-```
-
-This implementation outputs the board to the console and plays using an example bot.
-
 ## Game object providers
 
 Game object providers react to events around the board itself, such as when a board is initialized and when objects are added or removed.
@@ -72,18 +56,21 @@ A board is created using a configuration and a set of game object providers ("Fe
 
 ```typescript
 const providers = [
-    new DiamondButtonProvider(),
+    new DiamondButtonProvider({...}),
     new BaseProvider(),
-    new DiamondProvider(),
-    new BotProvider(),
+    new DiamondProvider({
+        minRatioForGeneration: 0.01,
+        generationRatio: 0.1,
+    }),
+    new BotProvider({
+        inventorySize: 5,
+    }),
     new DummyBotProvider()
 ];
 const config: BoardConfig = {
-    diamondsGenerationRatio: 0.1,
     height: 10,
     width: 10,
     minimumDelayBetweenMoves: 100,
-    maxCarryingDiamonds: 5
 };
 const board = new Board(config, providers, log);
 ```
@@ -92,15 +79,16 @@ Perhaps a board with only bots and diamonds:
 ```typescript
 const providers = [
     new BaseProvider(),
-    new DiamondProvider(),
+    new DiamondProvider({
+        minRatioForGeneration: 0.01,
+        generationRatio: 0.1,
+    }),
     new BotProvider(),
 ];
 const config: BoardConfig = {
-    diamondsGenerationRatio: 0.1,
     height: 10,
     width: 10,
     minimumDelayBetweenMoves: 100,
-    maxCarryingDiamonds: 5
 };
 const board = new Board(config, providers, log);
 ```

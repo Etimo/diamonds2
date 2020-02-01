@@ -1,8 +1,7 @@
 import { Controller, Get, Post, Param, Body, HttpCode } from "@nestjs/common";
-import { ApiUseTags, ApiCreatedResponse, ApiResponse } from "@nestjs/swagger";
+import { ApiUseTags, ApiResponse } from "@nestjs/swagger";
 import { BoardDto } from "src/models/board.dto";
 import { BoardsService } from "src/services/board.service";
-import { GameObjectDto } from "src/models/game-object.dto";
 import { JoinInputDto } from "src/models/join-input.dto";
 import { MoveInputDto } from "src/models/move-input.dto";
 
@@ -25,6 +24,11 @@ export class BoardsController {
     return this.boardsService.getAll();
   }
 
+  /**
+   * Return a specific board.
+   *
+   * @param id The id of the board.
+   */
   @ApiResponse({
     status: 200,
     description: "Returns specific board",
@@ -39,6 +43,12 @@ export class BoardsController {
     return this.boardsService.getById(id);
   }
 
+  /**
+   * Join a board to start a new playing session.
+   *
+   * @param id The id of the board.
+   * @param input
+   */
   @ApiResponse({
     status: 200,
     description: "Joined specific board",
@@ -57,6 +67,12 @@ export class BoardsController {
     return this.boardsService.join(id, input.botToken);
   }
 
+  /**
+   * Perform a move for a bot on a board.
+   *
+   * @param id The id of the board
+   * @param input
+   */
   @ApiResponse({
     status: 200,
     description: "Returns specific board",
