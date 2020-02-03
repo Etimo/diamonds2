@@ -9,7 +9,6 @@ var ConfigService = /** @class */ (function () {
         if (throwOnMissing === void 0) { throwOnMissing = true; }
         var value = this.env[key];
         if (!value && throwOnMissing) {
-            console.log("jassyr : " + key);
             throw new Error("config error - missing env." + key);
         }
         return value;
