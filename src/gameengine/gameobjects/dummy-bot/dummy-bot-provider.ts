@@ -1,10 +1,10 @@
 import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
 import { Board } from "src/gameengine/board";
 import { DummyBotGameObject } from "./dummy-bot";
-import { BotProvider, Config } from "../bot/bot-provider";
+import { BotProvider, BotProviderConfig } from "../bot/bot-provider";
 
 export class DummyBotProvider extends BotProvider {
-  constructor(protected config: Config) {
+  constructor(protected config: BotProviderConfig) {
     super(config);
   }
 

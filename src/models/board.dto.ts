@@ -1,5 +1,6 @@
 import { GameObjectDto } from "./game-object.dto";
 import { ApiModelProperty } from "@nestjs/swagger";
+import BoardFeatureDto from "./board-feature.dto";
 
 export class BoardDto {
   @ApiModelProperty()
@@ -12,4 +13,6 @@ export class BoardDto {
   minimumDelayBetweenMoves: number;
   @ApiModelProperty({ isArray: true, type: GameObjectDto })
   gameObjects: GameObjectDto[];
+  @ApiModelProperty()
+  features: BoardFeatureDto[];
 }

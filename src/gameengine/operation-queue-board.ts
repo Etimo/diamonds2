@@ -17,8 +17,8 @@ export class OperationQueueBoard extends Board {
   private opQueue;
 
   constructor(
-    protected config: BoardConfig,
-    protected gameObjectProviders: AbstractGameObjectProvider[],
+    config: BoardConfig,
+    gameObjectProviders: AbstractGameObjectProvider[],
     protected logger: any,
   ) {
     super(config, gameObjectProviders, logger);

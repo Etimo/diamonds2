@@ -129,6 +129,12 @@ export class BoardsService {
       width: board.width,
       height: board.height,
       minimumDelayBetweenMoves: board.getConfig().minimumDelayBetweenMoves,
+      features: board.gameObjectProviders.map(gop => {
+        return {
+          name: gop.constructor.name,
+          config: gop.config,
+        };
+      }),
       gameObjects: board.getAllGameObjects().map(g => {
         return <GameObjectDto>{
           id: g.id,

@@ -2,7 +2,7 @@ import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
 import { Board } from "src/gameengine/board";
 import { DiamondGameObject } from "./diamond";
 
-export interface Config {
+export interface DiamondProviderConfig {
   /**
    * The minimum ratio (percent of board size) of diamonds before new ones should be generated.
    */
@@ -13,9 +13,11 @@ export interface Config {
   generationRatio: number;
 }
 
-export class DiamondProvider extends AbstractGameObjectProvider {
-  constructor(private config: Config) {
-    super();
+export class DiamondProvider extends AbstractGameObjectProvider<
+  DiamondProviderConfig
+> {
+  constructor(config: DiamondProviderConfig) {
+    super(config);
   }
 
   onBoardInitialized(board: Board) {

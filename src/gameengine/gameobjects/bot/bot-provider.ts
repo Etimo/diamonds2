@@ -4,16 +4,16 @@ import { Board } from "src/gameengine/board";
 import { BotGameObject } from "./bot";
 import { IPosition } from "src/common/interfaces/position.interface";
 
-export interface Config {
+export interface BotProviderConfig {
   /**
    * The maximum number of diamonds a bot can carry at the same time.
    */
   inventorySize: number;
 }
 
-export class BotProvider extends AbstractGameObjectProvider {
-  constructor(protected config: Config) {
-    super();
+export class BotProvider extends AbstractGameObjectProvider<BotProviderConfig> {
+  constructor(config: BotProviderConfig) {
+    super(config);
   }
 
   onBotJoined(bot: IBot, board: Board) {

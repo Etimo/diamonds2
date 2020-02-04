@@ -17,8 +17,8 @@ export class Board {
   highscoreCallback;
 
   constructor(
-    protected config: BoardConfig,
-    protected gameObjectProviders: AbstractGameObjectProvider[],
+    public config: BoardConfig,
+    public gameObjectProviders: AbstractGameObjectProvider[],
     protected logger: any,
   ) {
     this.notifyProvidersBoardInitialized();
@@ -169,10 +169,6 @@ export class Board {
 
   getAllGameObjects(): AbstractGameObject[] {
     return this.gameObjects;
-  }
-
-  getAllGameObjectProviders(): AbstractGameObjectProvider[] {
-    return this.gameObjectProviders;
   }
 
   addGameObjects(gameObjects: AbstractGameObject[]) {
