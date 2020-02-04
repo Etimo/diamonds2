@@ -73,7 +73,8 @@ export class BoardsService {
       throw new NotFoundError("Board not found");
     }
 
-    return board.enqueueJoin(bot);
+    const result = board.enqueueJoin(bot);
+    return this.getAsDto(board);
   }
 
   public async move(
@@ -93,7 +94,8 @@ export class BoardsService {
       throw new UnauthorizedError("Invalid botToken");
     }
 
-    return board.enqueueMove(bot, this.directionToDelta(direction));
+    const result = await board.enqueueMove(bot, this.directionToDelta(direction));
+    return this.getAsDto(board);
   }
 
   private getBoardById(id: string): OperationQueueBoard {
