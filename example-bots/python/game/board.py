@@ -1,6 +1,7 @@
 class Board(object):
 
     def __init__(self, data):
+        print(data)
         self.id = data["id"]
         self.width = data["width"]
         self.height = data["height"]
