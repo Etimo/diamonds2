@@ -41,14 +41,14 @@ export class OperationQueueBoard extends Board {
       const queuedAt: Date = t["queuedAt"];
 
       // Simulate slow operations
-      console.log(bot.name, "before sleep");
-      await sleep(3000);
-      console.log(bot.name, "after sleep");
-      console.log(
-        "Current queue time:",
-        new Date().getTime() - queuedAt.getTime(),
-        "ms",
-      );
+      // console.log(bot.name, "before sleep");
+      // await sleep(3000);
+      // console.log(bot.name, "after sleep");
+      // console.log(
+      //   "Current queue time:",
+      //   new Date().getTime() - queuedAt.getTime(),
+      //   "ms",
+      // );
       try {
         const res = t.run();
         cb(res);
@@ -67,11 +67,9 @@ export class OperationQueueBoard extends Board {
     const event = new OperationQueueJoinEvent(bot, this);
     return new Promise((resolve, reject) => {
       this.opQueue.push(event, (res, err) => {
-        console.log(res, err);
         if (err) {
           resolve(false);
         } else {
-          console.log(bot.name, "join done", res);
           resolve(res);
         }
       });
@@ -86,11 +84,9 @@ export class OperationQueueBoard extends Board {
     const event = new OperationQueueMoveEvent(bot, this, delta);
     return new Promise((resolve, reject) => {
       this.opQueue.push(event, (res, err) => {
-        console.log(res, err);
         if (err) {
           resolve(false);
         } else {
-          console.log(bot.name, "move done", res);
           resolve(res);
         }
       });
