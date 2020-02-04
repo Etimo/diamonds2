@@ -21,7 +21,12 @@ class FirstDiamondLogic(object):
         if self.goal_position:
             # Calculate move according to goal position
             current_position = board_bot["position"]
-            delta_x, delta_y = get_direction(current_position["x"], current_position["y"], self.goal_position["x"], self.goal_position["y"])
+            delta_x, delta_y = get_direction(
+                current_position["x"],
+                current_position["y"],
+                self.goal_position["x"],
+                self.goal_position["y"],
+            )
             return delta_x, delta_y
 
         return 0, 0

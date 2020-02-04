@@ -5,7 +5,6 @@ import hashlib
 
 
 class Bot(object):
-
     def __init__(self, email, name, api):
         self.email = email
         self.name = name
@@ -52,4 +51,6 @@ class Bot(object):
             return Board(req.json())
 
     def move(self, board_id, dx, dy):
-        return self.api.boards_move(board_id, self._get_direction(dx, dy), self.bot_token)
+        return self.api.boards_move(
+            board_id, self._get_direction(dx, dy), self.bot_token
+        )
