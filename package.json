@@ -85,7 +85,7 @@
     "collectCoverageFrom": [
       "<rootDir>/**/*.ts"
     ],
-    "coveragePathIgnorePatterns" : [
+    "coveragePathIgnorePatterns": [
       "<rootDir>/errors/",
       "<rootDir>/models/",
       "<rootDir>/enums/",
