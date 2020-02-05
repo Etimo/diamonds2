@@ -36,6 +36,7 @@
     "chalk": "^2.4.2",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.10.1",
+    "compression": "^1.7.4",
     "coveralls": "^3.0.8",
     "dotenv": "^8.2.0",
     "fastify-swagger": "^2.3.2",

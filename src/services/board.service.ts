@@ -94,7 +94,10 @@ export class BoardsService {
       throw new UnauthorizedError("Invalid botToken");
     }
 
-    const result = await board.enqueueMove(bot, this.directionToDelta(direction));
+    const result = await board.enqueueMove(
+      bot,
+      this.directionToDelta(direction),
+    );
     return this.getAsDto(board);
   }
 
