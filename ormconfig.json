@@ -1,17 +1,13 @@
 {
   "type": "postgres",
-  "host": "localhost",
+  "host": "database",
   "port": 5432,
   "username": "postgres",
-  "password": "diamonds2",
+  "password": "postgres",
   "database": "postgres",
-  "entities": [
-    "**/*.entity{.ts,.js}"
-  ],
+  "entities": ["**/*.entity{.ts,.js}"],
   "migrationsTableName": "migration",
-  "migrations": [
-    "src/migration/*.ts"
-  ],
+  "migrations": ["src/migration/*.ts"],
   "cli": {
     "migrationsDir": "src/migration"
   },

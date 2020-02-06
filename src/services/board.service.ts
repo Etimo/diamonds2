@@ -1,20 +1,19 @@
-import { Injectable, Scope, NotFoundException } from "@nestjs/common";
+import { Injectable, Scope } from "@nestjs/common";
+import { IPosition } from "src/common/interfaces/position.interface";
+import { MoveDirection } from "src/enums/move-direction.enum";
+import NotFoundError from "src/errors/not-found.error";
+import UnauthorizedError from "src/errors/unauthorized.error";
 import { Board } from "src/gameengine/board";
-import { CustomLogger } from "src/logger";
-import { DiamondButtonProvider } from "src/gameengine/gameobjects/diamond-button/diamond-button-provider";
-import { BaseProvider } from "src/gameengine/gameobjects/base/base-provider";
-import { DiamondProvider } from "src/gameengine/gameobjects/diamond/diamond-provider";
-import { BotProvider } from "src/gameengine/gameobjects/bot/bot-provider";
 import { BoardConfig } from "src/gameengine/board-config";
+import { BaseProvider } from "src/gameengine/gameobjects/base/base-provider";
+import { BotProvider } from "src/gameengine/gameobjects/bot/bot-provider";
+import { DiamondButtonProvider } from "src/gameengine/gameobjects/diamond-button/diamond-button-provider";
+import { DiamondProvider } from "src/gameengine/gameobjects/diamond/diamond-provider";
+import { OperationQueueBoard } from "src/gameengine/operation-queue-board";
+import { CustomLogger } from "src/logger";
 import { BoardDto } from "src/models/board.dto";
 import { GameObjectDto } from "src/models/game-object.dto";
-import NotFoundError from "src/errors/not-found.error";
 import { BotsService } from "./bots.service";
-import UnauthorizedError from "src/errors/unauthorized.error";
-import { MoveDirection } from "src/enums/move-direction.enum";
-import { IPosition } from "src/common/interfaces/position.interface";
-import { IBot } from "src/interfaces/bot.interface";
-import { OperationQueueBoard } from "src/gameengine/operation-queue-board";
 import { HighScoresService } from "./high-scores.service";
 
 @Injectable({ scope: Scope.DEFAULT })
@@ -111,13 +110,13 @@ export class BoardsService {
    */
   private directionToDelta(direction: MoveDirection): IPosition {
     switch (direction) {
-      case MoveDirection.NORTH:
+      case MoveDirection.UP:
         return { x: 0, y: -1 };
-      case MoveDirection.SOUTH:
+      case MoveDirection.DOWN:
         return { x: 0, y: 1 };
-      case MoveDirection.WEST:
+      case MoveDirection.LEFT:
         return { x: -1, y: 0 };
-      case MoveDirection.EAST:
+      case MoveDirection.RIGHT:
         return { x: 1, y: 0 };
       default:
         throw Error();

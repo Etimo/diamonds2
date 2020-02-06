@@ -12,13 +12,13 @@ class Bot(object):
 
     def _get_direction(self, dx, dy):
         if dx == -1 and dy == 0:
-            return "WEST"
+            return "LEFT"
         elif dx == 1 and dy == 0:
-            return "EAST"
+            return "RIGHT"
         elif dx == 0 and dy == -1:
-            return "NORTH"
+            return "UP"
         elif dx == 0 and dy == 1:
-            return "SOUTH"
+            return "DOWN"
         else:
             raise Exception("Invalid move")
 
