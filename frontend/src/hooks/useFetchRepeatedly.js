@@ -9,7 +9,7 @@ export default (url, delay, baseResponse) => {
   useEffect(() => {
     const fetch = async () => {
       const { data } = await axios.get(url);
-      setResponse(data);
+      setResponse(data.data);
     };
     fetch();
   }, [url]);
@@ -19,7 +19,7 @@ export default (url, delay, baseResponse) => {
       if (!isFetching) {
         setIsFetching(true);
         const { data } = await axios.get(url);
-        setResponse(data);
+        setResponse(data.data);
         setIsFetching(false);
       }
     };

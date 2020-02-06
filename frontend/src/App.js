@@ -12,7 +12,6 @@ const delay = 250; // 0.25 ms
 
 export default () => {
   const [rows, bots] = useBoard(url, delay);
-
   return (
     <Layout>
       <Header />
