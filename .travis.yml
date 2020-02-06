@@ -15,7 +15,7 @@ jobs:
         - cd ../frontend
         - yarn
       script:
-        - cd backend
+        - cd ../backend
         - yarn run test:coverage
         - cd ../frontend
         - yarn test
