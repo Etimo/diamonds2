@@ -14,7 +14,8 @@ export class Board {
   public readonly maxNumberOfCarryingDiamonds: number = 5;
   private callbackLoopsRegistered = {};
   private callbackLoopsId = {};
-  highscoreCallback;
+  /** List of callbacks that are triggerred whenever a session is finished. */
+  private sessionFinishedCallbacks: Function[] = [];
 
   constructor(
     public config: BoardConfig,
@@ -24,14 +25,38 @@ export class Board {
     this.notifyProvidersBoardInitialized();
   }
 
+  /**
+   * Return id of the board.
+   */
   getId() {
     return this._id;
   }
 
+  /**
+   * Register a new callback that will be triggered whenever a game session is finished.
+   *
+   * @param callback
+   */
   registerSessionFinishedCallback(callback: Function) {
-    this.highscoreCallback = callback;
+    this.sessionFinishedCallbacks.push(callback);
   }
 
+  /**
+   * Remove a registered callback.
+   *
+   * @param callback
+   */
+  unregisterSessionFinishedCallback(callback: Function) {
+    this.sessionFinishedCallbacks = this.sessionFinishedCallbacks.filter(
+      c => c !== callback,
+    );
+  }
+
+  /**
+   * Add a new bot to the board and start a new game session.
+   *
+   * @param bot The bot to add to the board.
+   */
   async join(bot: IBot) {
     // Add bot to board
     this.bots[bot.token] = bot;
@@ -43,10 +68,22 @@ export class Board {
     return true;
   }
 
+  /**
+   * Return a bot on the board matching the given token.
+   *
+   * @param token The token of the bot to find.
+   */
   getBot(token: string): IBot {
     return this.bots[token];
   }
 
+  /**
+   * Try to perform a move for a bot on the board.
+   *
+   * @param bot The bot to move.
+   * @param delta The change in position to perform.
+   * @returns True if the move succeeds, false otherwise.
+   */
   public async move(bot: IBot, delta: IPosition) {
     const botGameObject = this.getGameObjectsByType(BotGameObject).find(
       b => b.name === bot.name,
@@ -54,6 +91,8 @@ export class Board {
     if (!botGameObject) {
       throw new ForbiddenError("Bot not on the board");
     }
+
+    // Update position
     const position = botGameObject.position;
     position.x = position.x + delta.x;
     position.y = position.y + delta.y;
@@ -69,8 +108,8 @@ export class Board {
       );
       this.removeGameObject(botGameObject);
 
-      if (this.highscoreCallback) {
-        this.highscoreCallback(botGameObject.name, botGameObject.score);
+      if (this.sessionFinishedCallbacks) {
+        this.sessionFinishedCallbacks(botGameObject.name, botGameObject.score);
       }
     }, this.config.sessionLength * 1000);
     return id;

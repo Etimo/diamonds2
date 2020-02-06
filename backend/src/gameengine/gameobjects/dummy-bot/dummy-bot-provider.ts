@@ -4,7 +4,7 @@ import { DummyBotGameObject } from "./dummy-bot";
 import { BotProvider, BotProviderConfig } from "../bot/bot-provider";
 
 export class DummyBotProvider extends BotProvider {
-  constructor(protected config: BotProviderConfig) {
+  constructor(config: BotProviderConfig) {
     super(config);
   }
 
