@@ -10,10 +10,10 @@ jobs:
   include:
     - stage: build
       before_script:
+        - cd backend
         - yarn
       script:
-        - yarn --cwd "backend" run test:cov
-        - yarn --cwd "frontend" run test:cov
+        - yarn run test:coverage
 
 stages:
   - name: build
