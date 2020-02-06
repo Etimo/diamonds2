@@ -12,13 +12,8 @@ jobs:
       before_script:
         - cd backend
         - yarn
-        - cd ../frontend
-        - yarn
       script:
-        - cd ../backend
         - yarn run test:coverage
-        - cd ../frontend
-        - yarn test
 
 stages:
   - name: build
