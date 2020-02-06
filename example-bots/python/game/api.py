@@ -20,7 +20,8 @@ class Api(object):
         )
         func = getattr(requests, method)
         headers = {"Content-Type": "application/json"}
-        req = func(self._get_url(endpoint), headers=headers, data=json.dumps(body))
+        req = func(self._get_url(endpoint),
+                   headers=headers, data=json.dumps(body))
         print("<<< {} {}".format(req.status_code, req.text))
         return req
 

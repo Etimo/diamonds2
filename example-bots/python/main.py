@@ -11,7 +11,7 @@ from game.logic.random_diamond import RandomDiamondLogic
 from colorama import init, Fore, Back, Style
 
 init()
-BASE_URL = "http://diamonds.etimo.se/api"
+BASE_URL = "http://localhost:3000/api"
 CONTROLLERS = {
     "Random": RandomLogic,
     "FirstDiamond": FirstDiamondLogic,
@@ -30,8 +30,10 @@ group.add_argument(
     help="A bot token to use when running using an existing bot",
     action="store",
 )
-group.add_argument("--name", help="The name of the bot to register", action="store")
-parser.add_argument("--email", help="The email of the bot to register", action="store")
+group.add_argument(
+    "--name", help="The name of the bot to register", action="store")
+parser.add_argument(
+    "--email", help="The email of the bot to register", action="store")
 parser.add_argument("--board", help="Id of the board to join", action="store")
 parser.add_argument(
     "--time-factor",
@@ -148,7 +150,7 @@ while True:
         # Game over, we are not allowed to move anymore
         break
     else:
-        board = Board(result.json())
+        board = Board(result.json()['data'])
 
     # Get new state
     board_bot = board.get_bot(bot)

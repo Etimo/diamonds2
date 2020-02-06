@@ -26,7 +26,7 @@ class Bot(object):
         req = self.api.bots_get(self.bot_token)
         if req.status_code == 200:
             result = req.json()
-            self.name = result["name"]
+            self.name = result["data"]["name"]
 
     def register(self):
         req = self.api.bots_register(self.name, self.email)
@@ -38,9 +38,8 @@ class Bot(object):
 
     def list_boards(self):
         req = self.api.boards_list()
-
         if req.status_code == 200:
-            return map(lambda x: Board(x), req.json())
+            return [Board(x) for x in req.json()['data']]
 
     def join(self, board_id):
         return self.api.boards_join(board_id, self.bot_token)
@@ -48,7 +47,7 @@ class Bot(object):
     def get_board(self, board_id):
         req = self.api.boards_get(board_id)
         if req.status_code == 200:
-            return Board(req.json())
+            return Board(req.json()['data'])
 
     def move(self, board_id, dx, dy):
         return self.api.boards_move(
