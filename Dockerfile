@@ -1,17 +1,13 @@
-FROM node:12-alpine3.9 as dist
-WORKDIR /tmp/
-COPY package.json yarn.lock tsconfig.json tsconfig.build.json ./
-COPY src/ src/
+FROM node:12-alpine3.9 as develop
+WORKDIR /src
 RUN yarn install
-RUN yarn run build
 
-FROM node:12-alpine3.9 as node_modules
-WORKDIR /tmp/
+FROM node:12-alpine3.9 as build
 COPY package.json yarn.lock ./
 RUN yarn install --production
+RUN yarn run build
 
-FROM node:12-alpine3.9
+FROM node:12-alpine3.9 as prod
 WORKDIR /src
-COPY --from=node_modules /tmp/node_modules ./node_modules
 COPY --from=dist /tmp/dist ./dist
 CMD ["node", "dist/main.js"]
