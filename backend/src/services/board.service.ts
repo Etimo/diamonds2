@@ -17,6 +17,7 @@ import { IBot } from "src/interfaces/bot.interface";
 import { OperationQueueBoard } from "src/gameengine/operation-queue-board";
 import { HighScoresService } from "./high-scores.service";
 import ForbiddenError from "src/errors/forbidden.error";
+import ConflictError from "src/errors/conflict.error";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
@@ -74,7 +75,10 @@ export class BoardsService {
       throw new NotFoundError("Board not found");
     }
 
-    const result = board.enqueueJoin(bot);
+    const result = await board.enqueueJoin(bot);
+    if (!result) {
+      throw new ConflictError("Board full");
+    }
     return this.getAsDto(board);
   }
 
