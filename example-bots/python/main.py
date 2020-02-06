@@ -11,7 +11,7 @@ from game.logic.random_diamond import RandomDiamondLogic
 from colorama import init, Fore, Back, Style
 
 init()
-BASE_URL = "http://diamonds.etimo.se/api"
+BASE_URL = "http://localhost:3000/api"
 CONTROLLERS = {
     "Random": RandomLogic,
     "FirstDiamond": FirstDiamondLogic,
@@ -30,8 +30,10 @@ group.add_argument(
     help="A bot token to use when running using an existing bot",
     action="store",
 )
-group.add_argument("--name", help="The name of the bot to register", action="store")
-parser.add_argument("--email", help="The email of the bot to register", action="store")
+group.add_argument(
+    "--name", help="The name of the bot to register", action="store")
+parser.add_argument(
+    "--email", help="The email of the bot to register", action="store")
 parser.add_argument("--board", help="Id of the board to join", action="store")
 parser.add_argument(
     "--time-factor",
@@ -66,8 +68,8 @@ if logic_controller not in CONTROLLERS:
 ###############################################################################
 if not args.token:
     bot = Bot(args.email, args.name, api)
-    result = bot.register()
-    if result.status_code == 200:
+    resp, status = bot.register()
+    if status == 200:
         print("")
         print(
             Style.BRIGHT
@@ -105,13 +107,13 @@ if not current_board_id:
     for board in boards:
         # Try to join board
         current_board_id = board.id
-        result = bot.join(current_board_id)
-        if result.status_code == 200:
+        resp, status = bot.join(current_board_id)
+        if status == 200:
             break
 else:
     # Try to join the one we specified
-    result = bot.join(current_board_id)
-    if result.status_code != 200:
+    resp, status = bot.join(current_board_id)
+    if status != 200:
         current_board_id = None
 
 # Did we manage to join a board?
@@ -140,15 +142,15 @@ while True:
     delta_x, delta_y = bot_logic.next_move(board_bot, board)
 
     # Try to perform move
-    result = bot.move(current_board_id, delta_x, delta_y)
-    if result.status_code == 409:
+    resp, status = bot.move(current_board_id, delta_x, delta_y)
+    if status == 409:
         # Read new board state
         board = bot.get_board(current_board_id)
-    elif result.status_code == 403:
+    elif status == 403:
         # Game over, we are not allowed to move anymore
         break
     else:
-        board = Board(result.json())
+        board = Board(resp)
 
     # Get new state
     board_bot = board.get_bot(bot)

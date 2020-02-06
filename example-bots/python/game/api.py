@@ -20,30 +20,45 @@ class Api(object):
         )
         func = getattr(requests, method)
         headers = {"Content-Type": "application/json"}
-        req = func(self._get_url(endpoint), headers=headers, data=json.dumps(body))
+        req = func(self._get_url(endpoint),
+                   headers=headers, data=json.dumps(body))
         print("<<< {} {}".format(req.status_code, req.text))
         return req
 
     def bots_get(self, bot_token):
-        return self._req("/bots/{}".format(bot_token), "get", {})
+        response = self._req("/bots/{}".format(bot_token), "get", {})
+        return self._return_response_and_status(response)
 
     def bots_register(self, name, email):
-        return self._req("/bots", "post", {"email": email, "name": name})
+        response = self._req("/bots", "post", {"email": email, "name": name})
+        return self._return_response_and_status(response)
 
     def boards_list(self):
-        return self._req("/boards", "get", {})
+        response = self._req("/boards", "get", {})
+        return self._return_response_and_status(response)
 
     def boards_join(self, board_id, bot_token):
-        return self._req(
+        response = self._req(
             "/boards/{}/join".format(board_id), "post", {"botToken": bot_token}
         )
+        return self._return_response_and_status(response)
 
     def boards_get(self, board_id):
-        return self._req("/boards/{}".format(board_id), "get", {})
+        response = self._req("/boards/{}".format(board_id), "get", {})
+        return self._return_response_and_status(response)
 
     def boards_move(self, board_id, direction, bot_token):
-        return self._req(
+        response = self._req(
             "/boards/{}/move".format(board_id),
             "post",
             {"direction": direction, "botToken": bot_token},
         )
+        return self._return_response_and_status(response)
+
+    def _return_response_and_status(self, response):
+        try:
+            resp = response.json()['data']
+        except KeyError:
+            resp = response.json()
+
+        return resp, response.status_code
