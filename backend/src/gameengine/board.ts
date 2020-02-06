@@ -9,9 +9,11 @@ import { IPosition } from "../common/interfaces/position.interface";
 export class Board {
   private static nextId = 1;
   private readonly _id = `${Board.nextId++}`;
+  /** List of bots currently active on the board. */
   private bots: Object = {};
+  /** List of game objects on the board. */
   private gameObjects: AbstractGameObject[] = [];
-  public readonly maxNumberOfCarryingDiamonds: number = 5;
+  /** Set of registered timer callbacks. */
   private callbackLoopsRegistered = {};
   private callbackLoopsId = {};
   /** List of callbacks that are triggerred whenever a session is finished. */
@@ -99,22 +101,33 @@ export class Board {
     return this.trySetGameObjectPosition(botGameObject, position);
   }
 
+  /**
+   * Create a new timer that will clear out a bot from the board when their session finishes.
+   * @param bot
+   */
   private createNewExpirationTimer(bot: IBot) {
     const id = setTimeout(_ => {
-      // TODO: add lock
       this.logger.debug(`Purge bot ${bot.name}`);
       const botGameObject = this.getGameObjectsByType(BotGameObject).find(
         b => b.name === bot.name,
       );
       this.removeGameObject(botGameObject);
 
-      if (this.sessionFinishedCallbacks) {
-        this.sessionFinishedCallbacks(botGameObject.name, botGameObject.score);
-      }
+      // Notify all session finished callbacks
+      this.sessionFinishedCallbacks.forEach(sfc =>
+        sfc(botGameObject.name, botGameObject.score),
+      );
     }, this.config.sessionLength * 1000);
     return id;
   }
 
+  /**
+   * Check if a position on the board is empty (contains no game objects) or not.
+   *
+   * @param x
+   * @param y
+   * @returns True if the cell is empty, false otherwise.
+   */
   isCellEmpty(x: number, y: number): boolean {
     return !this.gameObjects.some(g => g.x === x && g.y === y);
   }
@@ -198,24 +211,43 @@ export class Board {
     return this.config;
   }
 
+  /**
+   * Width of board.
+   */
   get width() {
     return this.config.width;
   }
 
+  /**
+   * Height of board.
+   */
   get height() {
     return this.config.height;
   }
 
+  /**
+   * Returns a list of all game objects currently on the board.
+   */
   getAllGameObjects(): AbstractGameObject[] {
     return this.gameObjects;
   }
 
+  /**
+   * Add new game objects to the board and notify game object providers.
+   *
+   * @param gameObjects The game objects to add.
+   */
   addGameObjects(gameObjects: AbstractGameObject[]) {
     this.gameObjects.push(...gameObjects);
     this.notifyProvidersGameObjectsAdded(gameObjects);
   }
 
-  getGameObjectOnPosition(p: IPosition): AbstractGameObject[] {
+  /**
+   * Returns a list of game objects currently located on a given position on the board.
+   *
+   * @param p The position
+   */
+  getGameObjectsOnPosition(p: IPosition): AbstractGameObject[] {
     return this.gameObjects.filter(g => g.x === p.x && g.y === p.y);
   }
 
@@ -247,7 +279,7 @@ export class Board {
     }
 
     // Notfy game objects in current position that we are leaving to the new position
-    const gameObjectsPrev = this.getGameObjectOnPosition(gameObject.position);
+    const gameObjectsPrev = this.getGameObjectsOnPosition(gameObject.position);
     this.logger.debug(
       JSON.stringify(gameObject),
       "left",
@@ -259,7 +291,7 @@ export class Board {
     gameObject.position = dest;
 
     // Notify game objects in new position that we are entering the new position
-    const gameObjectsDest = this.getGameObjectOnPosition(dest);
+    const gameObjectsDest = this.getGameObjectsOnPosition(dest);
     this.logger.debug(
       JSON.stringify(gameObject),
       "entered",
@@ -271,12 +303,12 @@ export class Board {
   }
 
   canGameObjectEnter(gameObject: AbstractGameObject, dest: IPosition): boolean {
-    const gameObjects = this.getGameObjectOnPosition(dest);
+    const gameObjects = this.getGameObjectsOnPosition(dest);
     return !gameObjects.some(g => !g.canGameObjectEnter(gameObject, this));
   }
 
   canGameObjectLeave(gameObject: AbstractGameObject, dest: IPosition): boolean {
-    const gameObjects = this.getGameObjectOnPosition(dest);
+    const gameObjects = this.getGameObjectsOnPosition(dest);
     return !gameObjects.some(g => !g.canGameObjectLeave(gameObject, this));
   }
 
