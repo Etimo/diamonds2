@@ -1,16 +1,15 @@
-FROM node:11.13-alpine
-
-WORKDIR /build
-ADD ./package.json .
+FROM node:12-alpine3.9 as develop
+WORKDIR /src
 RUN yarn install
 
-ADD . .
+FROM node:12-alpine3.9 as build
+COPY package.json yarn.lock ./
+RUN yarn install --production
 RUN yarn build
 
-FROM nginx:mainline-alpine
-
-RUN rm /etc/nginx/conf.d/default.conf
-COPY ./nginx-conf/ /etc/nginx/conf.d/
-
+FROM nginx:mainline-alpine as prod
 WORKDIR /usr/share/nginx/html
-COPY --from=0 /build/build/ .
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx-conf/* /etc/nginx/conf.d/
+COPY --from=build /src/build/ .
+EXPOSE 80 443

@@ -33,7 +33,7 @@ var ConfigService = /** @class */ (function() {
   ConfigService.prototype.getTypeOrmConfig = function() {
     return {
       type: "postgres",
-      host: "localhost",
+      host: this.getValue("POSTGRES_HOST"),
       port: parseInt(this.getValue("POSTGRES_PORT")),
       username: this.getValue("POSTGRES_USER"),
       password: this.getValue("POSTGRES_PASSWORD"),
