@@ -12,8 +12,8 @@ jobs:
       before_script:
         - yarn
       script:
-        - yarn --cwd "backend" run test:cov
-        - yarn --cwd "frontend" run test:cov
+        - yarn --cwd "backend" run test:coverage
+        - yarn --cwd "frontend" run test:coverage
 
 stages:
   - name: build
