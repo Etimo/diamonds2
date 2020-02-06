@@ -12,21 +12,8 @@ jobs:
     before_script:
     - yarn
     script:
-    - yarn run test:cov
-    - yarn run build
-  - stage: deploy
-    before_script:
-    - npm install -g heroku
-    - docker login --username=_ --password=${HEROKU_API_KEY} registry.heroku.com
-    script:
-    - docker build -t registry.heroku.com/diamonds2/web .
-    deploy:
-      provider: script
-        - docker push registry.heroku.com/diamonds2/web 
-        - heroku container:release web -a diamonds2
+    - yarn --cwd "backend" run test:cov
+    - yarn --cwd "frontend" run test:cov
+  
 stages:
-
 - name: build
-  if: type = pull_request || branch = develop  || branch = master 
-- name: deploy
-  if: branch = master
