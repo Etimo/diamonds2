@@ -12,24 +12,6 @@ License:
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Start
+# Etimo Diamonds2
 
-Start server:
-
-```
-yarn
-yarn run start:dev
-```
-
-## Test
-
-```
-yarn test
-```
-
-## Run production build
-
-```
-yarn run build
-yarn run start:prod
-```
+TODO
