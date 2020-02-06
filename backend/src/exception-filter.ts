@@ -7,6 +7,7 @@ import {
   InternalServerErrorException,
   ConflictException,
   UnauthorizedException,
+  ForbiddenException,
 } from "@nestjs/common";
 
 @Catch()
@@ -15,6 +16,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     NotFoundError: NotFoundException,
     ConflictError: ConflictException,
     UnauthorizedError: UnauthorizedException,
+    ForbiddenError: ForbiddenException,
   };
 
   catch(exception: Error, host: ArgumentsHost) {

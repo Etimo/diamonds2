@@ -3,7 +3,7 @@ import { IBot } from "src/interfaces/bot.interface";
 import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
 import { BoardConfig } from "./board-config";
 import { BotGameObject } from "./gameobjects/bot/bot";
-import NotFoundError from "../errors/not-found.error";
+import ForbiddenError from "../errors/forbidden.error";
 import { IPosition } from "../common/interfaces/position.interface";
 
 export class Board {
@@ -52,7 +52,7 @@ export class Board {
       b => b.name === bot.name,
     );
     if (!botGameObject) {
-      throw new NotFoundError("Bot not on the board");
+      throw new ForbiddenError("Bot not on the board");
     }
     const position = botGameObject.position;
     position.x = position.x + delta.x;
