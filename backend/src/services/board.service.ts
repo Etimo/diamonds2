@@ -16,6 +16,7 @@ import { IPosition } from "src/common/interfaces/position.interface";
 import { IBot } from "src/interfaces/bot.interface";
 import { OperationQueueBoard } from "src/gameengine/operation-queue-board";
 import { HighScoresService } from "./high-scores.service";
+import ForbiddenError from "src/errors/forbidden.error";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
@@ -98,6 +99,11 @@ export class BoardsService {
       bot,
       this.directionToDelta(direction),
     );
+
+    if (!result) {
+      throw new ForbiddenError("Move not legal");
+    }
+
     return this.getAsDto(board);
   }
 

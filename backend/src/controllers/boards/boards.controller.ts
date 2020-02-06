@@ -79,6 +79,10 @@ export class BoardsController {
     type: BoardDto,
   })
   @ApiResponse({
+    status: 401,
+    description: "Invalid botToken",
+  })
+  @ApiResponse({
     status: 403,
     description: "Move not legal",
   })
