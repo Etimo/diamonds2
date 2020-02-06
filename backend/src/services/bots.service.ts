@@ -3,7 +3,7 @@ import { IBot } from "src/interfaces/bot.interface";
 import { IdService } from "./id.service";
 import { BotRegistrationDto } from "src/models/bot-registration.dto";
 import ConflictError from "../errors/conflict.error";
-import NotFoundError from "src/errors/not-found.error";
+import NotFoundError from "../errors/not-found.error";
 
 @Injectable()
 export class BotsService {
