@@ -21,6 +21,7 @@ import { HighScoresService } from "./high-scores.service";
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
   private boards: OperationQueueBoard[] = [];
+  private lastMoveTimes: {};
 
   constructor(
     private botsService: BotsService,
@@ -98,6 +99,13 @@ export class BoardsService {
       throw new UnauthorizedError("Invalid botToken");
     }
 
+    // Rate limit moves
+    if (this.moveIsRateLimited(board, bot)) {
+      const delay = board.getConfig().minimumDelayBetweenMoves;
+      throw new ConflictError(`Minimum delay between moves: (${delay} ms`);
+    }
+    board.updateLastMove(bot);
+
     const result = await board.enqueueMove(
       bot,
       this.directionToDelta(direction),
@@ -110,7 +118,14 @@ export class BoardsService {
     return this.getAsDto(board);
   }
 
-  private getBoardById(id: number): OperationQueueBoard {
+  private moveIsRateLimited(board: OperationQueueBoard, bot: IBot) {
+    const lastMove = board.getLastMove(bot);
+    const timeBetweenMoves = board.getConfig().minimumDelayBetweenMoves;
+    const now = Date.now();
+    return lastMove > now - timeBetweenMoves;
+  }
+
+  private getBoardById(id: string): OperationQueueBoard {
     return this.boards.find(b => b.getId() === id);
   }
 

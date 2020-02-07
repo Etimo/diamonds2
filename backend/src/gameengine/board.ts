@@ -1,6 +1,5 @@
 import { IBot } from "src/interfaces/bot.interface";
 import { IPosition } from "../common/interfaces/position.interface";
-import ForbiddenError from "../errors/forbidden.error";
 import { BoardConfig } from "./board-config";
 import { AbstractGameObject } from "./gameobjects/abstract-game-object";
 import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
@@ -14,6 +13,7 @@ export class Board {
   public readonly maxNumberOfCarryingDiamonds: number = 5;
   private callbackLoopsRegistered = {};
   private callbackLoopsId = {};
+  private botMoves = {};
   highscoreCallback;
 
   constructor(
@@ -315,6 +315,14 @@ export class Board {
     const outOfX = destination.x < 0 || destination.x >= this.width;
     const outOfY = destination.y < 0 || destination.y >= this.height;
     return outOfX || outOfY;
+  }
+
+  getLastMove(bot: IBot) {
+    return this.botMoves[bot.name];
+  }
+
+  updateLastMove(bot: IBot) {
+    this.botMoves[bot.name] = Date.now();
   }
 
   notifyGameObjectEvent(
