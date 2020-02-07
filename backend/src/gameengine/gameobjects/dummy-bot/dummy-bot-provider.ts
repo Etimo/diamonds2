@@ -1,4 +1,3 @@
-import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
 import { Board } from "src/gameengine/board";
 import { DummyBotGameObject } from "./dummy-bot";
 import { BotProvider, BotProviderConfig } from "../bot/bot-provider";
