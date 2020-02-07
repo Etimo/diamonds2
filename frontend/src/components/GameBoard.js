@@ -19,40 +19,24 @@ export default ({ rows }) => {
     const goImgMap = {
       Teleporter: teleporter,
       Wall: wall,
-      DiamondButton: redButton
+      DiamondButtonGameObject: redButton,
+      DiamondGameObject: diamond,
+      RedDiamond: diamondRed,
+      BotGameObject: robot,
+      BaseGameObject: base,
+      BotGameObjectBaseGameObject: botBase,
+      BaseGameObjectBotGameObject: botBase,
+      DiamondGameObjectBotGameObject: botDiamond,
+      BotGameObjectDiamondGameObject: botDiamond
     };
-
-    if (
-      _.has(content, "botName") &&
-      _.has(content, "base") &&
-      _.has(content, "diamond")
-    ) {
-      return botBaseDiamond;
-    } else if (_.has(content, "botName") && _.has(content, "base")) {
-      return botBase;
-    } else if (_.has(content, "botName") && _.has(content, "diamond")) {
-      return botDiamond;
-    } else if (_.has(content, "base")) {
-      return base;
-    } else if (_.has(content, "botName")) {
-      return robot;
-    } else if (_.has(content, "diamond")) {
-      return content.points === 1 ? diamond : diamondRed;
-    } else if (_.has(content, "go")) {
-      return goImgMap[content.goName];
-    } else {
-      return null;
-    }
+    return goImgMap[content.type];
   };
 
   const decideCharacterName = content => {
-    if (_.has(content, "botName")) {
-      return content.botName;
-    } else if (_.has(content, "base")) {
-      return content.base;
-    } else {
-      return null;
+    if (_.has(content.properties, "name")) {
+      return content.properties.name;
     }
+    return null;
   };
 
   const width = rows.length;
