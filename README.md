@@ -14,4 +14,10 @@ License:
 
 # Etimo Diamonds2
 
-TODO
+## Setup dev env
+
+```
+docker-compose up --build --parallel
+```
+
+Navigate to `http://localhost:8080` for frontend. Backend is exposed on `http://localhost:8081`.
