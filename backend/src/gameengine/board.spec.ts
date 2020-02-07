@@ -314,7 +314,7 @@ describe("addGameObjects", () => {
   let baseGameObject: BaseGameObject;
   beforeEach(() => {
     board = createTestBoard([provider]);
-    baseGameObject = new BaseGameObject({ x: 0, y: 0 });
+    baseGameObject = new BaseGameObject({ x: 0, y: 0 } as BotGameObject);
   });
 
   test("adds to array", () => {
