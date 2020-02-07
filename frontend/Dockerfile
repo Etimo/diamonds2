@@ -1,6 +1,7 @@
 FROM node:12-alpine3.9 as develop
 WORKDIR /app
-COPY . /app
+COPY . .
+VOLUME /app/src
 RUN yarn
 
 FROM node:12-alpine3.9 as build
