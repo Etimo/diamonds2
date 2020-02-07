@@ -69,8 +69,10 @@ export class Board {
       const botGameObject = this.getGameObjectsByType(BotGameObject).find(
         b => b.name === bot.name,
       );
+      if (!botGameObject) {
+        return;
+      }
       this.removeGameObject(botGameObject);
-
       if (this.highscoreCallback) {
         this.highscoreCallback(botGameObject.name, botGameObject.score);
       }
@@ -309,8 +311,8 @@ export class Board {
   }
 
   private destinationIsOutOfBounds(destination: IPosition): boolean {
-    const outOfX = destination.x < 0 || destination.x > this.width;
-    const outOfY = destination.y < 0 || destination.y > this.height;
+    const outOfX = destination.x < 0 || destination.x >= this.width;
+    const outOfY = destination.y < 0 || destination.y >= this.height;
     return outOfX || outOfY;
   }
 
