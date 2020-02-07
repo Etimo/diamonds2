@@ -1,6 +1,7 @@
 FROM node:12-alpine3.9 as develop
 WORKDIR /app
-COPY . /app
+COPY . .
+VOLUME /app/src
 RUN yarn
 
 FROM node:12-alpine3.9 as build
@@ -10,6 +11,5 @@ COPY . .
 RUN yarn run build
 
 FROM node:12-alpine3.9 as prod
-WORKDIR /app
 COPY --from=dist /app/dist ./dist
 CMD ["node", "dist/main.js"]

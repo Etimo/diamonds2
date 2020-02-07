@@ -1,26 +1,28 @@
-import { Injectable, Scope, NotFoundException } from "@nestjs/common";
+import { Injectable, Scope } from "@nestjs/common";
+import { IPosition } from "src/common/interfaces/position.interface";
+import { MoveDirection } from "src/enums/move-direction.enum";
+import ConflictError from "src/errors/conflict.error";
+import ForbiddenError from "src/errors/forbidden.error";
+import NotFoundError from "src/errors/not-found.error";
+import UnauthorizedError from "src/errors/unauthorized.error";
 import { Board } from "src/gameengine/board";
-import { CustomLogger } from "src/logger";
-import { DiamondButtonProvider } from "src/gameengine/gameobjects/diamond-button/diamond-button-provider";
-import { BaseProvider } from "src/gameengine/gameobjects/base/base-provider";
-import { DiamondProvider } from "src/gameengine/gameobjects/diamond/diamond-provider";
-import { BotProvider } from "src/gameengine/gameobjects/bot/bot-provider";
 import { BoardConfig } from "src/gameengine/board-config";
+import { BaseProvider } from "src/gameengine/gameobjects/base/base-provider";
+import { BotProvider } from "src/gameengine/gameobjects/bot/bot-provider";
+import { DiamondButtonProvider } from "src/gameengine/gameobjects/diamond-button/diamond-button-provider";
+import { DiamondProvider } from "src/gameengine/gameobjects/diamond/diamond-provider";
+import { OperationQueueBoard } from "src/gameengine/operation-queue-board";
+import { CustomLogger } from "src/logger";
 import { BoardDto } from "src/models/board.dto";
 import { GameObjectDto } from "src/models/game-object.dto";
-import NotFoundError from "src/errors/not-found.error";
 import { BotsService } from "./bots.service";
-import UnauthorizedError from "src/errors/unauthorized.error";
-import { MoveDirection } from "src/enums/move-direction.enum";
-import { IPosition } from "src/common/interfaces/position.interface";
-import { OperationQueueBoard } from "src/gameengine/operation-queue-board";
 import { HighScoresService } from "./high-scores.service";
-import ForbiddenError from "src/errors/forbidden.error";
-import ConflictError from "src/errors/conflict.error";
+import { IBot } from "src/interfaces/bot.interface";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
   private boards: OperationQueueBoard[] = [];
+  private lastMoveTimes: {};
 
   constructor(
     private botsService: BotsService,
@@ -51,7 +53,7 @@ export class BoardsService {
    * Return a specific board.
    * @param id The id of the board to return.
    */
-  public getById(id: string): BoardDto {
+  public getById(id: number): BoardDto {
     const board = this.getBoardById(id);
     if (board) {
       return this.getAsDto(board);
@@ -64,7 +66,7 @@ export class BoardsService {
    * @param boardId
    * @param bot
    */
-  public async join(boardId: string, botToken: string) {
+  public async join(boardId: number, botToken: string) {
     const bot = await this.botsService.get(botToken);
     if (!bot) {
       throw new UnauthorizedError("Invalid botToken");
@@ -82,7 +84,7 @@ export class BoardsService {
   }
 
   public async move(
-    boardId: string,
+    boardId: number,
     botToken: string,
     direction: MoveDirection,
   ) {
@@ -98,6 +100,13 @@ export class BoardsService {
       throw new UnauthorizedError("Invalid botToken");
     }
 
+    // Rate limit moves
+    if (this.moveIsRateLimited(board, bot)) {
+      const delay = board.getConfig().minimumDelayBetweenMoves;
+      throw new ConflictError(`Minimum delay between moves: (${delay} ms`);
+    }
+    board.updateLastMove(bot);
+
     const result = await board.enqueueMove(
       bot,
       this.directionToDelta(direction),
@@ -110,7 +119,14 @@ export class BoardsService {
     return this.getAsDto(board);
   }
 
-  private getBoardById(id: string): OperationQueueBoard {
+  private moveIsRateLimited(board: OperationQueueBoard, bot: IBot) {
+    const lastMove = board.getLastMove(bot);
+    const timeBetweenMoves = board.getConfig().minimumDelayBetweenMoves;
+    const now = Date.now();
+    return lastMove > now - timeBetweenMoves;
+  }
+
+  private getBoardById(id: number): OperationQueueBoard {
     return this.boards.find(b => b.getId() === id);
   }
 
@@ -139,7 +155,7 @@ export class BoardsService {
    */
   private getAsDto(board: Board): BoardDto {
     return {
-      id: `${board.getId()}`,
+      id: board.getId(),
       width: board.width,
       height: board.height,
       minimumDelayBetweenMoves: board.getConfig().minimumDelayBetweenMoves,
