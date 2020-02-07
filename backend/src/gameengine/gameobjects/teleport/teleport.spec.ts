@@ -11,7 +11,7 @@ let board: Board;
 beforeEach(() => {
   board = createTestBoard();
   teleporterToEnter = new TeleportGameObject({ x: 0, y: 0 }, "1");
-  teleporterPaired = new TeleportGameObject({ x: 10, y: 10 }, "1");
+  teleporterPaired = new TeleportGameObject({ x: 9, y: 9 }, "1");
   notPairedTeleporter = new TeleportGameObject({ x: 5, y: 5 }, "2");
 
   board.addGameObjects([
