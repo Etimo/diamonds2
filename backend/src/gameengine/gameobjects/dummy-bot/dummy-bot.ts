@@ -1,6 +1,8 @@
+/** istanbul ignore file */
 import { BotGameObject } from "../bot/bot";
 import { Board } from "src/gameengine/board";
 import { DiamondGameObject } from "../diamond/diamond";
+import { BotProviderConfig } from "../bot/bot-provider";
 
 export class DummyBotGameObject extends BotGameObject {
   onGameObjectCallbackNotified(board: Board, intervalMs: number) {
