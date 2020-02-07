@@ -89,7 +89,7 @@ describe("trySetGameObjectPosition", () => {
     expect(bot.position).toStrictEqual({ x: 1, y: 0 });
   });
 
-  test("when gameobject not allowed move bot stays", () => {
+  test("when gameobject not allowed to move bot stays", () => {
     const initialPosition = { x: 0, y: 0 };
     const bot = new BotGameObject(initialPosition);
     spyOn(opponent, "canGameObjectEnter").and.returnValue(false);
