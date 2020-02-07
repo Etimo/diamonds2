@@ -4,10 +4,20 @@ import { BotGameObject } from "./gameobjects/bot/bot";
 import { AbstractGameObject } from "./gameobjects/abstract-game-object";
 import { BaseGameObject } from "./gameobjects/base/base";
 import { DiamondProvider } from "./gameobjects/diamond/diamond-provider";
+import { BotProvider } from "./gameobjects/bot/bot-provider";
+import { create } from "domain";
+import { IBot } from "src/interfaces/bot.interface";
 
 let board: Board;
 let opponent: BotGameObject;
 let provider: DiamondProvider;
+const botExampleData: IBot = {
+  id: "1",
+  email: "email",
+  name: "name",
+  token: "1",
+};
+
 beforeEach(() => {
   provider = new DiamondProvider({
     generationRatio: 0.1,
@@ -17,6 +27,45 @@ beforeEach(() => {
   opponent = new BotGameObject({ x: 1, y: 0 });
   board.addGameObjects([opponent]);
   jest.useFakeTimers();
+});
+
+test("board has some kind of id", () => {
+  expect(board.getId()).toBeDefined();
+});
+
+describe("sessionFinishedCallbacks and join", () => {
+  let provider: BotProvider;
+  beforeEach(() => {
+    provider = new BotProvider({
+      inventorySize: 5,
+    });
+    board = createTestBoard([provider]);
+  });
+  test("join creates expiration timer and callbacks are invoked when sessions are finished", async () => {
+    let result = false;
+    board.registerSessionFinishedCallback(() => {
+      result = true;
+    });
+    await board.join(botExampleData);
+
+    jest.runAllTimers();
+
+    expect(result).toBeTruthy();
+  });
+
+  test("join notifies providers", async () => {
+    spyOn(provider, "onBotJoined");
+
+    await board.join(botExampleData);
+
+    expect(provider.onBotJoined).toHaveBeenCalled();
+  });
+
+  test("possible to get bot when joined", async () => {
+    await board.join(botExampleData);
+
+    expect(board.getBot(botExampleData.token)).toEqual(botExampleData);
+  });
 });
 
 describe("trySetGameObjectPosition", () => {
