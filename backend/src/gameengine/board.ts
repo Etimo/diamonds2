@@ -7,7 +7,7 @@ import { BotGameObject } from "./gameobjects/bot/bot";
 
 export class Board {
   private static nextId = 1;
-  private readonly _id = `${Board.nextId++}`;
+  private readonly _id: number = Board.nextId++;
   private bots: Object = {};
   private gameObjects: AbstractGameObject[] = [];
   public readonly maxNumberOfCarryingDiamonds: number = 5;
@@ -24,7 +24,7 @@ export class Board {
     this.notifyProvidersBoardInitialized();
   }
 
-  getId() {
+  getId(): number {
     return this._id;
   }
 
@@ -72,6 +72,7 @@ export class Board {
       if (!botGameObject) {
         return;
       }
+
       this.removeGameObject(botGameObject);
       if (this.highscoreCallback) {
         this.highscoreCallback(botGameObject.name, botGameObject.score);
@@ -180,7 +181,7 @@ export class Board {
     this.notifyProvidersGameObjectsAdded(gameObjects);
   }
 
-  getGameObjectOnPosition(p: IPosition): AbstractGameObject[] {
+  getGameObjectsOnPosition(p: IPosition): AbstractGameObject[] {
     return this.gameObjects.filter(g => g.x === p.x && g.y === p.y);
   }
 
@@ -212,7 +213,7 @@ export class Board {
     }
 
     // Notfy game objects in current position that we are leaving to the new position
-    const gameObjectsPrev = this.getGameObjectOnPosition(gameObject.position);
+    const gameObjectsPrev = this.getGameObjectsOnPosition(gameObject.position);
     this.logger.debug(
       JSON.stringify(gameObject),
       "left",
@@ -224,7 +225,7 @@ export class Board {
     gameObject.position = dest;
 
     // Notify game objects in new position that we are entering the new position
-    const gameObjectsDest = this.getGameObjectOnPosition(dest);
+    const gameObjectsDest = this.getGameObjectsOnPosition(dest);
     this.logger.debug(
       JSON.stringify(gameObject),
       "entered",
@@ -236,12 +237,12 @@ export class Board {
   }
 
   canGameObjectEnter(gameObject: AbstractGameObject, dest: IPosition): boolean {
-    const gameObjects = this.getGameObjectOnPosition(dest);
+    const gameObjects = this.getGameObjectsOnPosition(dest);
     return !gameObjects.some(g => !g.canGameObjectEnter(gameObject, this));
   }
 
   canGameObjectLeave(gameObject: AbstractGameObject, dest: IPosition): boolean {
-    const gameObjects = this.getGameObjectOnPosition(dest);
+    const gameObjects = this.getGameObjectsOnPosition(dest);
     return !gameObjects.some(g => !g.canGameObjectLeave(gameObject, this));
   }
 
