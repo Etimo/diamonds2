@@ -11,11 +11,38 @@ beforeEach(() => {
 });
 
 describe("trySetGameObjectPosition", () => {
-  test("going out of bounds error returns false", () => {
+  test("going out of bounds returns false to the west", () => {
     const initialPosition = { x: 0, y: 0 };
     const bot = new BotGameObject(initialPosition);
 
     const result = board.trySetGameObjectPosition(bot, { x: -1, y: 0 });
+
+    expect(result).toBeFalsy();
+    expect(bot.position).toStrictEqual(initialPosition);
+  });
+  test("going out of bounds returns false to the east", () => {
+    const initialPosition = { x: 9, y: 0 };
+    const bot = new BotGameObject(initialPosition);
+
+    const result = board.trySetGameObjectPosition(bot, { x: 10, y: 0 });
+
+    expect(result).toBeFalsy();
+    expect(bot.position).toStrictEqual(initialPosition);
+  });
+  test("going out of bounds returns false to the north", () => {
+    const initialPosition = { x: 0, y: 0 };
+    const bot = new BotGameObject(initialPosition);
+
+    const result = board.trySetGameObjectPosition(bot, { x: 0, y: -1 });
+
+    expect(result).toBeFalsy();
+    expect(bot.position).toStrictEqual(initialPosition);
+  });
+  test("going out of bounds returns false to the south", () => {
+    const initialPosition = { x: 0, y: 9 };
+    const bot = new BotGameObject(initialPosition);
+
+    const result = board.trySetGameObjectPosition(bot, { x: 0, y: 10 });
 
     expect(result).toBeFalsy();
     expect(bot.position).toStrictEqual(initialPosition);
