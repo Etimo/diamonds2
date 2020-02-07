@@ -11,7 +11,6 @@ var ConfigService = /** @class */ (function() {
     }
     var value = this.env[key];
     if (!value && throwOnMissing) {
-      console.log("jassyr : " + key);
       throw new Error("config error - missing env." + key);
     }
     return value;
@@ -31,7 +30,7 @@ var ConfigService = /** @class */ (function() {
     return mode != "DEV";
   };
   ConfigService.prototype.getTypeOrmConfig = function() {
-    return {
+    var cfg = {
       type: "postgres",
       host: this.getValue("POSTGRES_HOST"),
       port: parseInt(this.getValue("POSTGRES_PORT")),
@@ -44,12 +43,13 @@ var ConfigService = /** @class */ (function() {
       cli: {
         migrationsDir: "src/migration",
       },
-      ssl: this.isProduction(),
+      ssl: false,
     };
+    console.log(cfg);
+    return cfg;
   };
   return ConfigService;
 })();
-
 var configService = new ConfigService(process.env).ensureValues([
   "POSTGRES_HOST",
   "POSTGRES_PORT",

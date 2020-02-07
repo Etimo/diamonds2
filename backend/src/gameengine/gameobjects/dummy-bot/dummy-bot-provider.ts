@@ -1,6 +1,6 @@
 import { Board } from "src/gameengine/board";
-import { DummyBotGameObject } from "./dummy-bot";
 import { BotProvider, BotProviderConfig } from "../bot/bot-provider";
+import { DummyBotGameObject } from "./dummy-bot";
 
 export interface DummyBotProviderConfig extends BotProviderConfig {
   /**

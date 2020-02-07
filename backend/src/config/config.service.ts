@@ -22,12 +22,6 @@ class ConfigService {
   public getPort() {
     return this.getValue("PORT", true);
   }
-
-  public isProduction() {
-    const mode = this.getValue("MODE", false);
-    return mode != "DEV";
-  }
-
   public getTypeOrmConfig(): TypeOrmModuleOptions {
     return {
       type: "postgres",
@@ -48,7 +42,7 @@ class ConfigService {
         migrationsDir: "src/migration",
       },
 
-      ssl: this.isProduction(),
+      ssl: false,
     };
   }
 }
