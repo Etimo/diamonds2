@@ -21,7 +21,7 @@ class RandomDiamondLogic(object):
             # Move towards a random diamond on board
             self.goal_position = board.diamonds[
                 int(len(board.diamonds) * random.random())
-            ]
+            ].get('position')
 
         if self.goal_position:
             # Calculate move according to goal position
