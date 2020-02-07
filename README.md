@@ -17,7 +17,8 @@ License:
 ## Setup dev env
 
 ```
-docker-compose up --build --parallel
+docker-compose build --parallel
+docker-compose up
 ```
 
 Navigate to `http://localhost:8080` for frontend. Backend is exposed on `http://localhost:8081`.
