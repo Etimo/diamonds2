@@ -17,6 +17,7 @@ import { BoardDto } from "src/models/board.dto";
 import { GameObjectDto } from "src/models/game-object.dto";
 import { BotsService } from "./bots.service";
 import { HighScoresService } from "./high-scores.service";
+import { IBot } from "src/interfaces/bot.interface";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
@@ -125,7 +126,7 @@ export class BoardsService {
     return lastMove > now - timeBetweenMoves;
   }
 
-  private getBoardById(id: string): OperationQueueBoard {
+  private getBoardById(id: number): OperationQueueBoard {
     return this.boards.find(b => b.getId() === id);
   }
 
