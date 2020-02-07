@@ -1,3 +1,4 @@
+/** istanbul ignore file */
 import { BotGameObject } from "../bot/bot";
 import { Board } from "src/gameengine/board";
 import { DiamondGameObject } from "../diamond/diamond";
