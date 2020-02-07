@@ -1,14 +1,14 @@
-import { AbstractGameObject } from "./gameobjects/abstract-game-object";
 import { IBot } from "src/interfaces/bot.interface";
-import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
-import { BoardConfig } from "./board-config";
-import { BotGameObject } from "./gameobjects/bot/bot";
-import ForbiddenError from "../errors/forbidden.error";
 import { IPosition } from "../common/interfaces/position.interface";
+import ForbiddenError from "../errors/forbidden.error";
+import { BoardConfig } from "./board-config";
+import { AbstractGameObject } from "./gameobjects/abstract-game-object";
+import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
+import { BotGameObject } from "./gameobjects/bot/bot";
 
 export class Board {
   private static nextId = 1;
-  private readonly _id = `${Board.nextId++}`;
+  private readonly _id: number = Board.nextId++;
   private bots: Object = {};
   private gameObjects: AbstractGameObject[] = [];
   public readonly maxNumberOfCarryingDiamonds: number = 5;
@@ -24,7 +24,7 @@ export class Board {
     this.notifyProvidersBoardInitialized();
   }
 
-  getId() {
+  getId(): number {
     return this._id;
   }
 
@@ -69,6 +69,10 @@ export class Board {
       const botGameObject = this.getGameObjectsByType(BotGameObject).find(
         b => b.name === bot.name,
       );
+      if (!botGameObject) {
+        return;
+      }
+
       this.removeGameObject(botGameObject);
 
       if (this.highscoreCallback) {
