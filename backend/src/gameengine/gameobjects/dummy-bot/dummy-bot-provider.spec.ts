@@ -13,10 +13,12 @@ beforeEach(() => {
     prefix: "DummyBot",
   });
   board = createTestBoard();
+  jest.useFakeTimers();
 });
 
 test("Creates dummy bots when board initializes", () => {
   provider.onBoardInitialized(board);
+  jest.runOnlyPendingTimers();
 
   expect(board.getGameObjectsByType(DummyBotGameObject).length).toBe(1);
 });
@@ -29,6 +31,7 @@ test("Creates configured number of dummy bots when board initializes", () => {
   });
 
   provider.onBoardInitialized(board);
+  jest.runOnlyPendingTimers();
 
   expect(board.getGameObjectsByType(DummyBotGameObject).length).toBe(2);
 });
