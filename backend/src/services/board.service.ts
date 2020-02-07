@@ -19,7 +19,6 @@ import { DiamondProvider } from "../gameengine/gameobjects/diamond/diamond-provi
 import { BotProvider } from "../gameengine/gameobjects/bot/bot-provider";
 import { BoardConfig } from "../gameengine/board-config";
 import { TeleportProvider } from "../gameengine/gameobjects/teleport/teleport-provider";
-import { IBot } from "src/interfaces/bot.interface";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
