@@ -1,13 +1,20 @@
 import { Board } from "./board";
 import createTestBoard from "./util/test-board";
 import { BotGameObject } from "./gameobjects/bot/bot";
+import { DiamondButtonGameObject } from "./gameobjects/diamond-button/diamond-button";
+import { DiamondGameObject } from "./gameobjects/diamond/diamond";
 
 let board: Board;
 let opponent: BotGameObject;
+let button: DiamondButtonGameObject;
+let diamond: DiamondGameObject;
+
 beforeEach(() => {
   board = createTestBoard();
   opponent = new BotGameObject({ x: 1, y: 0 });
   board.addGameObjects([opponent]);
+  button = new DiamondButtonGameObject({ x: 0, y: 0 });
+  diamond = new DiamondGameObject({ x: 0, y: 0 }, 1);
 });
 
 describe("trySetGameObjectPosition", () => {
@@ -80,5 +87,19 @@ describe("trySetGameObjectPosition", () => {
     expect(result).toBeTruthy();
     expect(bot.position).toStrictEqual({ x: 1, y: 0 });
     expect(opponent.onGameObjectEntered).toHaveBeenCalledTimes(1);
+  });
+
+  test("Removes buttons from board", () => {
+    board.addGameObjects([button]);
+    board.removeGameObjectsByType(DiamondButtonGameObject);
+
+    expect(board.getGameObjectsByType(DiamondButtonGameObject).length).toBe(0);
+  });
+
+  test("Removes diamonds from board", () => {
+    board.addGameObjects([diamond]);
+    board.removeGameObjectsByType(DiamondGameObject);
+
+    expect(board.getGameObjectsByType(DiamondGameObject).length).toBe(0);
   });
 });
