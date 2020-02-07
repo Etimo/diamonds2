@@ -1,6 +1,7 @@
 FROM node:12-alpine3.9 as develop
-WORKDIR /src
-RUN yarn install
+WORKDIR /app
+COPY . /app
+RUN yarn
 
 FROM node:12-alpine3.9 as build
 COPY package.json yarn.lock ./
@@ -12,5 +13,5 @@ FROM nginx:mainline-alpine as prod
 WORKDIR /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx-conf/* /etc/nginx/conf.d/
-COPY --from=build /src/build/ .
+COPY --from=build /app/build/ .
 EXPOSE 3000

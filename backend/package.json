@@ -92,7 +92,9 @@
       "<rootDir>/enums/",
       "<rootDir>/migration/",
       "<rootDir>/config/",
-      "<rootDir>/scripts/"
+      "<rootDir>/scripts/",
+      "<rootDir>/interceptors/",
+      "<rootDir>/db/"
     ],
     "rootDir": "src",
     "testRegex": ".spec.ts$",

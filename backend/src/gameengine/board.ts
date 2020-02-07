@@ -67,6 +67,7 @@ export class Board {
     this.createNewExpirationTimer(bot);
     // ...and notify all providers
     this.notifyProvidersBoardBotJoined(bot);
+
     return true;
   }
 
@@ -90,15 +91,14 @@ export class Board {
     const botGameObject = this.getGameObjectsByType(BotGameObject).find(
       b => b.name === bot.name,
     );
-    if (!botGameObject) {
-      throw new ForbiddenError("Bot not on the board");
-    }
 
-    // Update position
-    const position = botGameObject.position;
-    position.x = position.x + delta.x;
-    position.y = position.y + delta.y;
-    return this.trySetGameObjectPosition(botGameObject, position);
+    if (botGameObject) {
+      const position = botGameObject.position;
+      position.x = position.x + delta.x;
+      position.y = position.y + delta.y;
+      return this.trySetGameObjectPosition(botGameObject, position);
+    }
+    return false;
   }
 
   /**
