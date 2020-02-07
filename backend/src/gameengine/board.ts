@@ -275,8 +275,8 @@ export class Board {
     t: new (...args: any[]) => T,
   ) {
     this.gameObjects.forEach(g => g.onGameObjectRemoved(this));
-    const removed = this.gameObjects.filter(g => !(g instanceof t));
-    this.gameObjects = this.gameObjects.filter(g => g instanceof t);
+    const removed = this.gameObjects.filter(g => g instanceof t);
+    this.gameObjects = this.gameObjects.filter(g => !(g instanceof t));
     this.notifyProvidersGameObjectsRemoved(removed);
   }
 
