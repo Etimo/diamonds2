@@ -27,7 +27,8 @@ export default ({ rows }) => {
       BotGameObjectBaseGameObject: botBase,
       BaseGameObjectBotGameObject: botBase,
       DiamondGameObjectBotGameObject: botDiamond,
-      BotGameObjectDiamondGameObject: botDiamond
+      BotGameObjectDiamondGameObject: botDiamond,
+      TeleportGameObject: teleporter
     };
     return goImgMap[content.type];
   };

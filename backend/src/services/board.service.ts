@@ -17,6 +17,7 @@ import { OperationQueueBoard } from "src/gameengine/operation-queue-board";
 import { HighScoresService } from "./high-scores.service";
 import ForbiddenError from "src/errors/forbidden.error";
 import ConflictError from "src/errors/conflict.error";
+import { TeleportProvider } from "../gameengine/gameobjects/teleport/teleport-provider";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
@@ -177,6 +178,7 @@ export class BoardsService {
       new BotProvider({
         inventorySize: 5,
       }),
+      new TeleportProvider(),
     ];
     const config: BoardConfig = {
       height: 10,
