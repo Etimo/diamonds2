@@ -11,7 +11,7 @@ from game.logic.random_diamond import RandomDiamondLogic
 from colorama import init, Fore, Back, Style
 
 init()
-BASE_URL = "http://localhost:3000/api"
+BASE_URL = "http://localhost:8081/api"
 CONTROLLERS = {
     "Random": RandomLogic,
     "FirstDiamond": FirstDiamondLogic,
@@ -89,6 +89,9 @@ if not args.token:
 bot = Bot("", "", api)
 bot.bot_token = args.token
 bot.get_my_info()
+if not bot.name:
+    print("Bot does not exist.")
+    exit(1)
 print("Welcome back", bot.name)
 
 # Setup variables
@@ -143,12 +146,9 @@ while True:
 
     # Try to perform move
     resp, status = bot.move(current_board_id, delta_x, delta_y)
-    if status == 409:
+    if status == 409 or status == 403:
         # Read new board state
         board = bot.get_board(current_board_id)
-    elif status == 403:
-        # Game over, we are not allowed to move anymore
-        break
     else:
         board = Board(resp)
 

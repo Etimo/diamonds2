@@ -1,19 +1,19 @@
-import { AbstractGameObject } from "./gameobjects/abstract-game-object";
 import { IBot } from "src/interfaces/bot.interface";
-import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
-import { BoardConfig } from "./board-config";
-import { BotGameObject } from "./gameobjects/bot/bot";
-import ForbiddenError from "../errors/forbidden.error";
 import { IPosition } from "../common/interfaces/position.interface";
+import { BoardConfig } from "./board-config";
+import { AbstractGameObject } from "./gameobjects/abstract-game-object";
+import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
+import { BotGameObject } from "./gameobjects/bot/bot";
 
 export class Board {
   private static nextId = 1;
-  private readonly _id = `${Board.nextId++}`;
+  private readonly _id: number = Board.nextId++;
   private bots: Object = {};
   private gameObjects: AbstractGameObject[] = [];
   public readonly maxNumberOfCarryingDiamonds: number = 5;
   private callbackLoopsRegistered = {};
   private callbackLoopsId = {};
+  private botMoves = {};
   highscoreCallback;
 
   constructor(
@@ -24,7 +24,7 @@ export class Board {
     this.notifyProvidersBoardInitialized();
   }
 
-  getId() {
+  getId(): number {
     return this._id;
   }
 
@@ -69,8 +69,11 @@ export class Board {
       const botGameObject = this.getGameObjectsByType(BotGameObject).find(
         b => b.name === bot.name,
       );
-      this.removeGameObject(botGameObject);
+      if (!botGameObject) {
+        return;
+      }
 
+      this.removeGameObject(botGameObject);
       if (this.highscoreCallback) {
         this.highscoreCallback(botGameObject.name, botGameObject.score);
       }
@@ -178,7 +181,7 @@ export class Board {
     this.notifyProvidersGameObjectsAdded(gameObjects);
   }
 
-  getGameObjectOnPosition(p: IPosition): AbstractGameObject[] {
+  getGameObjectsOnPosition(p: IPosition): AbstractGameObject[] {
     return this.gameObjects.filter(g => g.x === p.x && g.y === p.y);
   }
 
@@ -210,7 +213,7 @@ export class Board {
     }
 
     // Notfy game objects in current position that we are leaving to the new position
-    const gameObjectsPrev = this.getGameObjectOnPosition(gameObject.position);
+    const gameObjectsPrev = this.getGameObjectsOnPosition(gameObject.position);
     this.logger.debug(
       JSON.stringify(gameObject),
       "left",
@@ -222,7 +225,7 @@ export class Board {
     gameObject.position = dest;
 
     // Notify game objects in new position that we are entering the new position
-    const gameObjectsDest = this.getGameObjectOnPosition(dest);
+    const gameObjectsDest = this.getGameObjectsOnPosition(dest);
     this.logger.debug(
       JSON.stringify(gameObject),
       "entered",
@@ -234,12 +237,12 @@ export class Board {
   }
 
   canGameObjectEnter(gameObject: AbstractGameObject, dest: IPosition): boolean {
-    const gameObjects = this.getGameObjectOnPosition(dest);
+    const gameObjects = this.getGameObjectsOnPosition(dest);
     return !gameObjects.some(g => !g.canGameObjectEnter(gameObject, this));
   }
 
   canGameObjectLeave(gameObject: AbstractGameObject, dest: IPosition): boolean {
-    const gameObjects = this.getGameObjectOnPosition(dest);
+    const gameObjects = this.getGameObjectsOnPosition(dest);
     return !gameObjects.some(g => !g.canGameObjectLeave(gameObject, this));
   }
 
@@ -272,8 +275,8 @@ export class Board {
     t: new (...args: any[]) => T,
   ) {
     this.gameObjects.forEach(g => g.onGameObjectRemoved(this));
-    const removed = this.gameObjects.filter(g => !(g instanceof t));
-    this.gameObjects = this.gameObjects.filter(g => g instanceof t);
+    const removed = this.gameObjects.filter(g => g instanceof t);
+    this.gameObjects = this.gameObjects.filter(g => !(g instanceof t));
     this.notifyProvidersGameObjectsRemoved(removed);
   }
 
@@ -309,9 +312,17 @@ export class Board {
   }
 
   private destinationIsOutOfBounds(destination: IPosition): boolean {
-    const outOfX = destination.x < 0 || destination.x > this.width;
-    const outOfY = destination.y < 0 || destination.y > this.height;
+    const outOfX = destination.x < 0 || destination.x >= this.width;
+    const outOfY = destination.y < 0 || destination.y >= this.height;
     return outOfX || outOfY;
+  }
+
+  getLastMove(bot: IBot) {
+    return this.botMoves[bot.name];
+  }
+
+  updateLastMove(bot: IBot) {
+    this.botMoves[bot.name] = Date.now();
   }
 
   notifyGameObjectEvent(

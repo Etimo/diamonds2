@@ -19,15 +19,17 @@ export default ({ bots }) => {
       <Table.Tbody>
         {bots.map(bot => {
           return (
-            <Table.Tr key={bot.name}>
-              <Table.Td>{bot.name}</Table.Td>
+            <Table.Tr key={bot.properties.name}>
+              <Table.Td>{bot.properties.name}</Table.Td>
               <Table.Td>
-                {_.times(bot.diamonds, index => {
+                {_.times(bot.properties.diamonds, index => {
                   return <Table.Img key={index} alt="diamond" src={diamond} />;
                 })}
               </Table.Td>
-              <Table.Td>{bot.score}</Table.Td>
-              <Table.Td>{Math.round(bot.millisecondsLeft / 1000)}s</Table.Td>
+              <Table.Td>{bot.properties.score}</Table.Td>
+              <Table.Td>
+                {Math.round(bot.properties.millisecondsLeft / 1000)}s
+              </Table.Td>
             </Table.Tr>
           );
         })}

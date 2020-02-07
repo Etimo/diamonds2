@@ -16,7 +16,7 @@ class FirstDiamondLogic(object):
             self.goal_position = base
         else:
             # Move towards first diamond on board
-            self.goal_position = board.diamonds[0]
+            self.goal_position = board.diamonds[0].get('position')
 
         if self.goal_position:
             # Calculate move according to goal position

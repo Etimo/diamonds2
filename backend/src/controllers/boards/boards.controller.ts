@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Param, Body, HttpCode } from "@nestjs/common";
-import { ApiUseTags, ApiResponse } from "@nestjs/swagger";
+import { Body, Controller, Get, HttpCode, Param, Post } from "@nestjs/common";
+import { ApiResponse, ApiUseTags } from "@nestjs/swagger";
 import { BoardDto } from "src/models/board.dto";
-import { BoardsService } from "src/services/board.service";
 import { JoinInputDto } from "src/models/join-input.dto";
 import { MoveInputDto } from "src/models/move-input.dto";
+import { BoardsService } from "src/services/board.service";
 
 @ApiUseTags("Boards")
 @Controller("api/boards")
@@ -40,7 +40,7 @@ export class BoardsController {
   })
   @Get(":id")
   public find(@Param("id") id: string): BoardDto {
-    return this.boardsService.getById(id);
+    return this.boardsService.getById(parseInt(id, 10));
   }
 
   /**
@@ -68,7 +68,7 @@ export class BoardsController {
   @HttpCode(200)
   @Post(":id/join")
   join(@Param("id") id: string, @Body() input: JoinInputDto) {
-    return this.boardsService.join(id, input.botToken);
+    return this.boardsService.join(parseInt(id, 10), input.botToken);
   }
 
   /**
@@ -97,6 +97,10 @@ export class BoardsController {
   @HttpCode(200)
   @Post(":id/move")
   async move(@Param("id") id: string, @Body() input: MoveInputDto) {
-    return this.boardsService.move(id, input.botToken, input.direction);
+    return this.boardsService.move(
+      parseInt(id, 10),
+      input.botToken,
+      input.direction,
+    );
   }
 }
