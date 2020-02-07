@@ -1,10 +1,9 @@
-import { AbstractGameObject } from "./gameobjects/abstract-game-object";
 import { IBot } from "src/interfaces/bot.interface";
-import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
-import { BoardConfig } from "./board-config";
-import { BotGameObject } from "./gameobjects/bot/bot";
-import ForbiddenError from "../errors/forbidden.error";
 import { IPosition } from "../common/interfaces/position.interface";
+import { BoardConfig } from "./board-config";
+import { AbstractGameObject } from "./gameobjects/abstract-game-object";
+import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
+import { BotGameObject } from "./gameobjects/bot/bot";
 
 export class Board {
   private static nextId = 1;
@@ -14,6 +13,7 @@ export class Board {
   public readonly maxNumberOfCarryingDiamonds: number = 5;
   private callbackLoopsRegistered = {};
   private callbackLoopsId = {};
+  private botMoves = {};
   highscoreCallback;
 
   constructor(
@@ -314,6 +314,14 @@ export class Board {
     const outOfX = destination.x < 0 || destination.x >= this.width;
     const outOfY = destination.y < 0 || destination.y >= this.height;
     return outOfX || outOfY;
+  }
+
+  getLastMove(bot: IBot) {
+    return this.botMoves[bot.name];
+  }
+
+  updateLastMove(bot: IBot) {
+    this.botMoves[bot.name] = Date.now();
   }
 
   notifyGameObjectEvent(
