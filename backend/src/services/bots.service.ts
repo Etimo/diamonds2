@@ -3,6 +3,7 @@ import { IBot } from "src/interfaces/bot.interface";
 import { IdService } from "./id.service";
 import { BotRegistrationDto } from "src/models/bot-registration.dto";
 import ConflictError from "../errors/conflict.error";
+import NotFoundError from "../errors/not-found.error";
 
 @Injectable()
 export class BotsService {
@@ -40,7 +41,11 @@ export class BotsService {
   }
 
   public async get(token: string): Promise<IBot> {
-    return this.bots.find(b => b.token === token);
+    const bot = this.bots.find(b => b.token === token);
+    if (!bot) {
+      throw new NotFoundError("Bot not found");
+    }
+    return bot;
   }
 
   private emailExists(email: string) {

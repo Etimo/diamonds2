@@ -3,7 +3,7 @@ import { IBot } from "src/interfaces/bot.interface";
 import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
 import { BoardConfig } from "./board-config";
 import { BotGameObject } from "./gameobjects/bot/bot";
-import NotFoundError from "../errors/not-found.error";
+import ForbiddenError from "../errors/forbidden.error";
 import { IPosition } from "../common/interfaces/position.interface";
 
 export class Board {
@@ -40,6 +40,7 @@ export class Board {
     this.createNewExpirationTimer(bot);
     // ...and notify all providers
     this.notifyProvidersBoardBotJoined(bot);
+
     return true;
   }
 
@@ -51,13 +52,14 @@ export class Board {
     const botGameObject = this.getGameObjectsByType(BotGameObject).find(
       b => b.name === bot.name,
     );
-    if (!botGameObject) {
-      throw new NotFoundError("Bot not on the board");
+
+    if (botGameObject) {
+      const position = botGameObject.position;
+      position.x = position.x + delta.x;
+      position.y = position.y + delta.y;
+      return this.trySetGameObjectPosition(botGameObject, position);
     }
-    const position = botGameObject.position;
-    position.x = position.x + delta.x;
-    position.y = position.y + delta.y;
-    return this.trySetGameObjectPosition(botGameObject, position);
+    return false;
   }
 
   private createNewExpirationTimer(bot: IBot) {

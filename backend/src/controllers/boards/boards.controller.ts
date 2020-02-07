@@ -54,6 +54,10 @@ export class BoardsController {
     description: "Joined specific board",
   })
   @ApiResponse({
+    status: 401,
+    description: "Invalid botToken",
+  })
+  @ApiResponse({
     status: 404,
     description: "Board not found",
   })
@@ -77,6 +81,10 @@ export class BoardsController {
     status: 200,
     description: "Returns specific board",
     type: BoardDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: "Invalid botToken",
   })
   @ApiResponse({
     status: 403,

@@ -13,7 +13,7 @@ jobs:
         - cd backend
         - yarn
       script:
-        - yarn run test:coverage
+        - yarn run test:coveralls
 
 stages:
   - name: build

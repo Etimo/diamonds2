@@ -1,6 +1,7 @@
 FROM node:12-alpine3.9 as develop
-WORKDIR /src
-RUN yarn install
+WORKDIR /app
+COPY . /app
+RUN yarn
 
 FROM node:12-alpine3.9 as build
 COPY package.json yarn.lock ./
@@ -9,6 +10,6 @@ COPY . .
 RUN yarn run build
 
 FROM node:12-alpine3.9 as prod
-WORKDIR /src
-COPY --from=dist /src/dist ./dist
+WORKDIR /app
+COPY --from=dist /app/dist ./dist
 CMD ["node", "dist/main.js"]

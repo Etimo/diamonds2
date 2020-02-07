@@ -39,3 +39,7 @@ test("Stepping on a diamond does not remove diamond if there is no space in inve
 
   expect(board.getGameObjectsByType(DiamondGameObject).length).toBe(1);
 });
+
+test("Returns points in properties", () => {
+  expect(gameObject.properties["points"]).toBe(1);
+});
