@@ -7,7 +7,7 @@ services:
       target: "develop"
     command: /bin/sh -c "yarn run start"
     volumes:
-      - ./frontend:/src
+      - ./frontend/src:/app/src
     ports:
       - 8080:3000
 
@@ -17,7 +17,7 @@ services:
       target: "develop"
     command: /bin/sh -c "yarn run start:dev"
     volumes:
-      - ./backend:/src
+      - ./backend/src:/app/src
     environment:
       POSTGRES_HOST: database
       POSTGRES_PORT: 5432
