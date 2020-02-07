@@ -23,4 +23,6 @@ docker-compose build --parallel
 docker-compose up
 ```
 
-Navigate to `http://localhost:8080` for frontend. Backend is exposed on `http://localhost:8081`. For local development, the database is available at `http://localhost:8082`.
+Navigate to `http://localhost:8080` for frontend. Backend is exposed on `http://localhost:8081`.
+
+The database is reachable at [http://localhost:8082](http://localhost:8082/?pgsql=database&username=postgres&db=postgres).
