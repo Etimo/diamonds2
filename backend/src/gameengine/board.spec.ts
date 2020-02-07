@@ -5,7 +5,6 @@ import { AbstractGameObject } from "./gameobjects/abstract-game-object";
 import { BaseGameObject } from "./gameobjects/base/base";
 import { DiamondProvider } from "./gameobjects/diamond/diamond-provider";
 import { BotProvider } from "./gameobjects/bot/bot-provider";
-import { create } from "domain";
 import { IBot } from "src/interfaces/bot.interface";
 
 let board: Board;
