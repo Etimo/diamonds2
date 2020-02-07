@@ -1,23 +1,23 @@
 import { Injectable, Scope } from "@nestjs/common";
-import { IPosition } from "src/common/interfaces/position.interface";
-import { MoveDirection } from "src/enums/move-direction.enum";
-import ConflictError from "src/errors/conflict.error";
-import ForbiddenError from "src/errors/forbidden.error";
-import NotFoundError from "src/errors/not-found.error";
-import UnauthorizedError from "src/errors/unauthorized.error";
-import { Board } from "src/gameengine/board";
-import { BoardConfig } from "src/gameengine/board-config";
-import { BaseProvider } from "src/gameengine/gameobjects/base/base-provider";
-import { BotProvider } from "src/gameengine/gameobjects/bot/bot-provider";
-import { DiamondButtonProvider } from "src/gameengine/gameobjects/diamond-button/diamond-button-provider";
-import { DiamondProvider } from "src/gameengine/gameobjects/diamond/diamond-provider";
-import { OperationQueueBoard } from "src/gameengine/operation-queue-board";
-import { CustomLogger } from "src/logger";
-import { BoardDto } from "src/models/board.dto";
-import { GameObjectDto } from "src/models/game-object.dto";
+import { OperationQueueBoard } from "../gameengine/operation-queue-board";
 import { BotsService } from "./bots.service";
 import { HighScoresService } from "./high-scores.service";
-import { IBot } from "src/interfaces/bot.interface";
+import { CustomLogger } from "../logger";
+import { BoardDto } from "../models/board.dto";
+import NotFoundError from "../errors/not-found.error";
+import UnauthorizedError from "../errors/unauthorized.error";
+import ConflictError from "../errors/conflict.error";
+import { MoveDirection } from "../enums/move-direction.enum";
+import ForbiddenError from "../errors/forbidden.error";
+import { IBot } from "../interfaces/bot.interface";
+import { IPosition } from "../common/interfaces/position.interface";
+import { Board } from "../gameengine/board";
+import { GameObjectDto } from "../models/game-object.dto";
+import { DiamondButtonProvider } from "../gameengine/gameobjects/diamond-button/diamond-button-provider";
+import { BaseProvider } from "../gameengine/gameobjects/base/base-provider";
+import { DiamondProvider } from "../gameengine/gameobjects/diamond/diamond-provider";
+import { BotProvider } from "../gameengine/gameobjects/bot/bot-provider";
+import { BoardConfig } from "../gameengine/board-config";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
@@ -74,6 +74,12 @@ export class BoardsService {
     const board = this.getBoardById(boardId);
     if (!board) {
       throw new NotFoundError("Board not found");
+    }
+
+    const boardBot = board.getBot(botToken);
+
+    if (boardBot) {
+      throw new ConflictError("Already on board");
     }
 
     const result = await board.enqueueJoin(bot);
@@ -166,12 +172,12 @@ export class BoardsService {
         };
       }),
       gameObjects: board.getAllGameObjects().map(g => {
-        return <GameObjectDto>{
+        return {
           id: g.id,
           position: g.position,
           type: g.constructor.name,
           properties: g.properties,
-        };
+        } as GameObjectDto;
       }),
     };
   }
