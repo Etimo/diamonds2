@@ -7,7 +7,7 @@ import { BotGameObject } from "./gameobjects/bot/bot";
 
 export class Board {
   private static nextId = 1;
-  private readonly _id = `${Board.nextId++}`;
+  private readonly _id: number = Board.nextId++;
   private bots: Object = {};
   private gameObjects: AbstractGameObject[] = [];
   public readonly maxNumberOfCarryingDiamonds: number = 5;
@@ -24,7 +24,7 @@ export class Board {
     this.notifyProvidersBoardInitialized();
   }
 
-  getId() {
+  getId(): number {
     return this._id;
   }
 
@@ -72,6 +72,7 @@ export class Board {
       if (!botGameObject) {
         return;
       }
+
       this.removeGameObject(botGameObject);
       if (this.highscoreCallback) {
         this.highscoreCallback(botGameObject.name, botGameObject.score);

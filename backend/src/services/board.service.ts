@@ -12,7 +12,6 @@ import { BotProvider } from "src/gameengine/gameobjects/bot/bot-provider";
 import { DiamondButtonProvider } from "src/gameengine/gameobjects/diamond-button/diamond-button-provider";
 import { DiamondProvider } from "src/gameengine/gameobjects/diamond/diamond-provider";
 import { OperationQueueBoard } from "src/gameengine/operation-queue-board";
-import { IBot } from "src/interfaces/bot.interface";
 import { CustomLogger } from "src/logger";
 import { BoardDto } from "src/models/board.dto";
 import { GameObjectDto } from "src/models/game-object.dto";
@@ -53,7 +52,7 @@ export class BoardsService {
    * Return a specific board.
    * @param id The id of the board to return.
    */
-  public getById(id: string): BoardDto {
+  public getById(id: number): BoardDto {
     const board = this.getBoardById(id);
     if (board) {
       return this.getAsDto(board);
@@ -66,7 +65,7 @@ export class BoardsService {
    * @param boardId
    * @param bot
    */
-  public async join(boardId: string, botToken: string) {
+  public async join(boardId: number, botToken: string) {
     const bot = await this.botsService.get(botToken);
     if (!bot) {
       throw new UnauthorizedError("Invalid botToken");
@@ -84,7 +83,7 @@ export class BoardsService {
   }
 
   public async move(
-    boardId: string,
+    boardId: number,
     botToken: string,
     direction: MoveDirection,
   ) {
@@ -155,7 +154,7 @@ export class BoardsService {
    */
   private getAsDto(board: Board): BoardDto {
     return {
-      id: `${board.getId()}`,
+      id: board.getId(),
       width: board.width,
       height: board.height,
       minimumDelayBetweenMoves: board.getConfig().minimumDelayBetweenMoves,

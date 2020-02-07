@@ -1,10 +1,10 @@
-import { GameObjectDto } from "./game-object.dto";
 import { ApiModelProperty } from "@nestjs/swagger";
 import BoardFeatureDto from "./board-feature.dto";
+import { GameObjectDto } from "./game-object.dto";
 
 export class BoardDto {
   @ApiModelProperty()
-  id: string;
+  id: number;
   @ApiModelProperty()
   width: number;
   @ApiModelProperty()

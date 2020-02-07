@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { IBot } from "src/interfaces/bot.interface";
-import { IdService } from "./id.service";
 import { BotRegistrationDto } from "src/models/bot-registration.dto";
 import ConflictError from "../errors/conflict.error";
 import NotFoundError from "../errors/not-found.error";
+import { IdService } from "./id.service";
 
 @Injectable()
 export class BotsService {
@@ -50,11 +50,11 @@ export class BotsService {
 
   private emailExists(email: string) {
     email = email.toLowerCase();
-    return this.bots.some((bot: IBot) => bot.email.toLowerCase() === email);
+    return this.bots.some((bot: IBot) => bot.email?.toLowerCase() === email);
   }
 
   private nameExists(name: string) {
     name = name.toLowerCase();
-    return this.bots.some((bot: IBot) => bot.name.toLowerCase() === name);
+    return this.bots.some((bot: IBot) => bot.name?.toLowerCase() === name);
   }
 }
