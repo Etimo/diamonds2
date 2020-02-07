@@ -51,13 +51,14 @@ export class Board {
     const botGameObject = this.getGameObjectsByType(BotGameObject).find(
       b => b.name === bot.name,
     );
-    if (!botGameObject) {
-      throw new ForbiddenError("Bot not on the board");
+
+    if (botGameObject) {
+      const position = botGameObject.position;
+      position.x = position.x + delta.x;
+      position.y = position.y + delta.y;
+      return this.trySetGameObjectPosition(botGameObject, position);
     }
-    const position = botGameObject.position;
-    position.x = position.x + delta.x;
-    position.y = position.y + delta.y;
-    return this.trySetGameObjectPosition(botGameObject, position);
+    return false;
   }
 
   private createNewExpirationTimer(bot: IBot) {

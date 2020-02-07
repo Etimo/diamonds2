@@ -13,7 +13,6 @@ import { BotsService } from "./bots.service";
 import UnauthorizedError from "src/errors/unauthorized.error";
 import { MoveDirection } from "src/enums/move-direction.enum";
 import { IPosition } from "src/common/interfaces/position.interface";
-import { IBot } from "src/interfaces/bot.interface";
 import { OperationQueueBoard } from "src/gameengine/operation-queue-board";
 import { HighScoresService } from "./high-scores.service";
 import ForbiddenError from "src/errors/forbidden.error";
