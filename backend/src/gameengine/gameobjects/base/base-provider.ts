@@ -13,7 +13,7 @@ export class BaseProvider extends AbstractGameObjectProvider {
         if (!bot.base) {
           bot.base = board.getEmptyPosition();
         }
-        board.addGameObjects([new BaseGameObject(bot.base)]);
+        board.addGameObjects([new BaseGameObject(bot)]);
       });
   }
 

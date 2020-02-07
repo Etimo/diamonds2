@@ -16,11 +16,26 @@ License:
 
 Diamonds is a programming challenge. Program a bot and compete to get the highest score. 🤖🔷
 
-## Setup dev env
+## Development
+
+Run the following commands to setup a development environment using Docker:
 
 ```
 docker-compose build --parallel
 docker-compose up
 ```
 
-Navigate to `http://localhost:8080` for frontend. Backend is exposed on `http://localhost:8081`.
+* Frontend: [http://localhost:8080](http://localhost:8080)
+* API: [http://localhost:8081](http://localhost:8081)
+* Database (browsing): [http://localhost:8082](http://localhost:8082/?pgsql=database&username=postgres&db=postgres)
+
+## Production
+
+To run Diamonds in production, run the following commands from the root folder:
+
+```
+docker-compose -f docker-compose.prod.yml build --parallel
+docker-compose -f docker-compose.prod.yml up
+```
+
+This will not expose the database like in development mode, and serve frontend from nginx instead of using node. It will also install less packages.

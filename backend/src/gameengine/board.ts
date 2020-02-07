@@ -1,15 +1,13 @@
-import { AbstractGameObject } from "./gameobjects/abstract-game-object";
 import { IBot } from "src/interfaces/bot.interface";
-import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
-import { BoardConfig } from "./board-config";
-import { BotGameObject } from "./gameobjects/bot/bot";
-import ForbiddenError from "../errors/forbidden.error";
 import { IPosition } from "../common/interfaces/position.interface";
+import { BoardConfig } from "./board-config";
+import { AbstractGameObject } from "./gameobjects/abstract-game-object";
+import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
+import { BotGameObject } from "./gameobjects/bot/bot";
 
 export class Board {
   private static nextId = 1;
-  private readonly _id = `${Board.nextId++}`;
-  /** List of bots currently active on the board. */
+  private readonly _id: number = Board.nextId++;
   private bots: Object = {};
   /** List of game objects on the board. */
   private gameObjects: AbstractGameObject[] = [];
@@ -18,6 +16,7 @@ export class Board {
   private callbackLoopsId = {};
   /** List of callbacks that are triggerred whenever a session is finished. */
   private sessionFinishedCallbacks: Function[] = [];
+  private botMoves = {};
 
   constructor(
     public config: BoardConfig,
@@ -30,7 +29,7 @@ export class Board {
   /**
    * Return id of the board.
    */
-  getId() {
+  getId(): number {
     return this._id;
   }
 
@@ -111,12 +110,15 @@ export class Board {
       const botGameObject = this.getGameObjectsByType(BotGameObject).find(
         b => b.name === bot.name,
       );
-      this.removeGameObject(botGameObject);
+      if (!botGameObject) {
+        return;
+      }
 
       // Notify all session finished callbacks
       this.sessionFinishedCallbacks.forEach(sfc =>
         sfc(botGameObject.name, botGameObject.score),
       );
+      this.removeGameObject(botGameObject);
     }, this.config.sessionLength * 1000);
     return id;
   }
@@ -341,8 +343,8 @@ export class Board {
     t: new (...args: any[]) => T,
   ) {
     this.gameObjects.forEach(g => g.onGameObjectRemoved(this));
-    const removed = this.gameObjects.filter(g => !(g instanceof t));
-    this.gameObjects = this.gameObjects.filter(g => g instanceof t);
+    const removed = this.gameObjects.filter(g => g instanceof t);
+    this.gameObjects = this.gameObjects.filter(g => !(g instanceof t));
     this.notifyProvidersGameObjectsRemoved(removed);
   }
 
@@ -378,9 +380,17 @@ export class Board {
   }
 
   private destinationIsOutOfBounds(destination: IPosition): boolean {
-    const outOfX = destination.x < 0 || destination.x > this.width;
-    const outOfY = destination.y < 0 || destination.y > this.height;
+    const outOfX = destination.x < 0 || destination.x >= this.width;
+    const outOfY = destination.y < 0 || destination.y >= this.height;
     return outOfX || outOfY;
+  }
+
+  getLastMove(bot: IBot) {
+    return this.botMoves[bot.name];
+  }
+
+  updateLastMove(bot: IBot) {
+    this.botMoves[bot.name] = Date.now();
   }
 
   notifyGameObjectEvent(

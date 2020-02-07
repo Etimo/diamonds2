@@ -1,14 +1,13 @@
-import { NestFactory, HttpAdapterHost } from "@nestjs/core";
-import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
-import { AppModule } from "./app.module";
-import bodyParser = require("body-parser");
-
-import { CustomLogger } from "./logger";
 import { ValidationPipe } from "@nestjs/common";
-import { AllExceptionsFilter } from "./exception-filter";
-import { TimingInterceptor } from "./interceptors/timing.interceptor";
-import { EnvelopeInterceptor } from "./interceptors/envelope.interceptor";
+import { NestFactory } from "@nestjs/core";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import * as compression from "compression";
+import { AppModule } from "./app.module";
+import { AllExceptionsFilter } from "./exception-filter";
+import { EnvelopeInterceptor } from "./interceptors/envelope.interceptor";
+import { TimingInterceptor } from "./interceptors/timing.interceptor";
+import { CustomLogger } from "./logger";
+import bodyParser = require("body-parser");
 
 async function bootstrap() {
   const logger = new CustomLogger();
