@@ -14,6 +14,8 @@ License:
 
 # Etimo Diamonds2
 
+Diamonds is a programming challenge. Program a bot and compete to get the highest score. 🤖🔷
+
 ## Setup dev env
 
 ```
