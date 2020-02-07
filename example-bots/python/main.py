@@ -89,6 +89,9 @@ if not args.token:
 bot = Bot("", "", api)
 bot.bot_token = args.token
 bot.get_my_info()
+if not bot.name:
+    print("Bot does not exist.")
+    exit(1)
 print("Welcome back", bot.name)
 
 # Setup variables
