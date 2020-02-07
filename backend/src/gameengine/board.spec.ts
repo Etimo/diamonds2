@@ -288,7 +288,7 @@ describe("removeGameObjectsByType", () => {
   });
 
   test("removes from array", () => {
-    board.removeGameObjectsByType(BotGameObject);
+    board.removeGameObjectsByType(BaseGameObject);
 
     expect(board.getAllGameObjects()).toEqual([opponent]);
   });
