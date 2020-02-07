@@ -40,6 +40,7 @@ export class Board {
     this.createNewExpirationTimer(bot);
     // ...and notify all providers
     this.notifyProvidersBoardBotJoined(bot);
+
     return true;
   }
 
