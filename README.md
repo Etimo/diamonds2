@@ -37,3 +37,5 @@ To run Diamonds in production, run the following commands from the root folder:
 docker-compose -f docker-compose.prod.yml build --parallel
 docker-compose -f docker-compose.prod.yml up
 ```
+
+This will not expose the database like in development mode, and serve frontend from nginx instead of using node. It will also install less packages.
