@@ -17,6 +17,7 @@ import { BoardDto } from "src/models/board.dto";
 import { GameObjectDto } from "src/models/game-object.dto";
 import { BotsService } from "./bots.service";
 import { HighScoresService } from "./high-scores.service";
+import { TeleportProvider } from "../gameengine/gameobjects/teleport/teleport-provider";
 import { IBot } from "src/interfaces/bot.interface";
 
 @Injectable({ scope: Scope.DEFAULT })
@@ -193,6 +194,7 @@ export class BoardsService {
       new BotProvider({
         inventorySize: 5,
       }),
+      new TeleportProvider(),
     ];
     const config: BoardConfig = {
       height: 10,
