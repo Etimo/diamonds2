@@ -9,12 +9,14 @@ export class Board {
   private static nextId = 1;
   private readonly _id: number = Board.nextId++;
   private bots: Object = {};
+  /** List of game objects on the board. */
   private gameObjects: AbstractGameObject[] = [];
-  public readonly maxNumberOfCarryingDiamonds: number = 5;
+  /** Set of registered timer callbacks. */
   private callbackLoopsRegistered = {};
   private callbackLoopsId = {};
+  /** List of callbacks that are triggerred whenever a session is finished. */
+  private sessionFinishedCallbacks: Function[] = [];
   private botMoves = {};
-  highscoreCallback;
 
   constructor(
     public config: BoardConfig,
@@ -24,14 +26,38 @@ export class Board {
     this.notifyProvidersBoardInitialized();
   }
 
+  /**
+   * Return id of the board.
+   */
   getId(): number {
     return this._id;
   }
 
+  /**
+   * Register a new callback that will be triggered whenever a game session is finished.
+   *
+   * @param callback
+   */
   registerSessionFinishedCallback(callback: Function) {
-    this.highscoreCallback = callback;
+    this.sessionFinishedCallbacks.push(callback);
   }
 
+  /**
+   * Remove a registered callback.
+   *
+   * @param callback
+   */
+  unregisterSessionFinishedCallback(callback: Function) {
+    this.sessionFinishedCallbacks = this.sessionFinishedCallbacks.filter(
+      c => c !== callback,
+    );
+  }
+
+  /**
+   * Add a new bot to the board and start a new game session.
+   *
+   * @param bot The bot to add to the board.
+   */
   async join(bot: IBot) {
     // Add bot to board
     this.bots[bot.token] = bot;
@@ -44,10 +70,22 @@ export class Board {
     return true;
   }
 
+  /**
+   * Return a bot on the board matching the given token.
+   *
+   * @param token The token of the bot to find.
+   */
   getBot(token: string): IBot {
     return this.bots[token];
   }
 
+  /**
+   * Try to perform a move for a bot on the board.
+   *
+   * @param bot The bot to move.
+   * @param delta The change in position to perform.
+   * @returns True if the move succeeds, false otherwise.
+   */
   public async move(bot: IBot, delta: IPosition) {
     const botGameObject = this.getGameObjectsByType(BotGameObject).find(
       b => b.name === bot.name,
@@ -62,9 +100,12 @@ export class Board {
     return false;
   }
 
+  /**
+   * Create a new timer that will clear out a bot from the board when their session finishes.
+   * @param bot
+   */
   private createNewExpirationTimer(bot: IBot) {
     const id = setTimeout(_ => {
-      // TODO: add lock
       this.logger.debug(`Purge bot ${bot.name}`);
       const botGameObject = this.getGameObjectsByType(BotGameObject).find(
         b => b.name === bot.name,
@@ -73,14 +114,22 @@ export class Board {
         return;
       }
 
+      // Notify all session finished callbacks
+      this.sessionFinishedCallbacks.forEach(sfc =>
+        sfc(botGameObject.name, botGameObject.score),
+      );
       this.removeGameObject(botGameObject);
-      if (this.highscoreCallback) {
-        this.highscoreCallback(botGameObject.name, botGameObject.score);
-      }
     }, this.config.sessionLength * 1000);
     return id;
   }
 
+  /**
+   * Check if a position on the board is empty (contains no game objects) or not.
+   *
+   * @param x
+   * @param y
+   * @returns True if the cell is empty, false otherwise.
+   */
   isCellEmpty(x: number, y: number): boolean {
     return !this.gameObjects.some(g => g.x === x && g.y === y);
   }
@@ -164,23 +213,42 @@ export class Board {
     return this.config;
   }
 
+  /**
+   * Width of board.
+   */
   get width() {
     return this.config.width;
   }
 
+  /**
+   * Height of board.
+   */
   get height() {
     return this.config.height;
   }
 
+  /**
+   * Returns a list of all game objects currently on the board.
+   */
   getAllGameObjects(): AbstractGameObject[] {
     return this.gameObjects;
   }
 
+  /**
+   * Add new game objects to the board and notify game object providers.
+   *
+   * @param gameObjects The game objects to add.
+   */
   addGameObjects(gameObjects: AbstractGameObject[]) {
     this.gameObjects.push(...gameObjects);
     this.notifyProvidersGameObjectsAdded(gameObjects);
   }
 
+  /**
+   * Returns a list of game objects currently located on a given position on the board.
+   *
+   * @param p The position
+   */
   getGameObjectsOnPosition(p: IPosition): AbstractGameObject[] {
     return this.gameObjects.filter(g => g.x === p.x && g.y === p.y);
   }
@@ -275,8 +343,8 @@ export class Board {
     t: new (...args: any[]) => T,
   ) {
     this.gameObjects.forEach(g => g.onGameObjectRemoved(this));
-    const removed = this.gameObjects.filter(g => !(g instanceof t));
-    this.gameObjects = this.gameObjects.filter(g => g instanceof t);
+    const removed = this.gameObjects.filter(g => g instanceof t);
+    this.gameObjects = this.gameObjects.filter(g => !(g instanceof t));
     this.notifyProvidersGameObjectsRemoved(removed);
   }
 

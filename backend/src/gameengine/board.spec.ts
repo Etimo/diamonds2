@@ -5,7 +5,6 @@ import { AbstractGameObject } from "./gameobjects/abstract-game-object";
 import { BaseGameObject } from "./gameobjects/base/base";
 import { DiamondProvider } from "./gameobjects/diamond/diamond-provider";
 import { BotProvider } from "./gameobjects/bot/bot-provider";
-import { create } from "domain";
 import { IBot } from "src/interfaces/bot.interface";
 
 let board: Board;
@@ -283,12 +282,12 @@ describe("removeGameObject", () => {
 describe("removeGameObjectsByType", () => {
   let baseGameObject: BaseGameObject;
   beforeEach(() => {
-    baseGameObject = new BaseGameObject({ x: 0, y: 0 });
+    baseGameObject = new BaseGameObject({ x: 0, y: 0 } as BotGameObject);
     board.addGameObjects([baseGameObject]);
   });
 
   test("removes from array", () => {
-    board.removeGameObjectsByType(BotGameObject);
+    board.removeGameObjectsByType(BaseGameObject);
 
     expect(board.getAllGameObjects()).toEqual([opponent]);
   });
@@ -314,7 +313,7 @@ describe("addGameObjects", () => {
   let baseGameObject: BaseGameObject;
   beforeEach(() => {
     board = createTestBoard([provider]);
-    baseGameObject = new BaseGameObject({ x: 0, y: 0 });
+    baseGameObject = new BaseGameObject({ x: 0, y: 0 } as BotGameObject);
   });
 
   test("adds to array", () => {

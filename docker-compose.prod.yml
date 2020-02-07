@@ -4,28 +4,28 @@ services:
   frontend:
     build:
       context: ./frontend
-      target: "develop"
-    command: /bin/sh -c "yarn run start"
+      target: "prod"
+    command: /bin/sh -c "nginx -g 'daemon off;'"
     volumes:
       - ./frontend:/app
       - /app/node_modules
     ports:
-      - 8080:3000
+      - 8080:80
 
   backend:
     build:
       context: ./backend
-      target: "develop"
-    command: /bin/sh -c "yarn run start:dev"
+      target: "prod"
+    command: /bin/sh -c "yarn run typeorm:migration:run && yarn start:prod"
     volumes:
       - ./backend:/app
       - /app/node_modules
     environment:
       POSTGRES_HOST: database
       POSTGRES_PORT: 5432
+      POSTGRES_DATABASE: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DATABASE: postgres
       PORT: 5000
       RUN_MIGRATIONS: "false"
     ports:
@@ -39,13 +39,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - db-data:/var/lib/postgresql/data
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8082:8080
+      - data-db:/var/lib/postgresql/data
 
 volumes:
-  db-data:
+  data-db:

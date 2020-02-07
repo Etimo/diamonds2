@@ -18,6 +18,8 @@ import { BaseProvider } from "../gameengine/gameobjects/base/base-provider";
 import { DiamondProvider } from "../gameengine/gameobjects/diamond/diamond-provider";
 import { BotProvider } from "../gameengine/gameobjects/bot/bot-provider";
 import { BoardConfig } from "../gameengine/board-config";
+import { TeleportProvider } from "../gameengine/gameobjects/teleport/teleport-provider";
+import { IBot } from "src/interfaces/bot.interface";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
@@ -199,6 +201,7 @@ export class BoardsService {
       new BotProvider({
         inventorySize: 5,
       }),
+      new TeleportProvider(),
     ];
     const config: BoardConfig = {
       height: 10,

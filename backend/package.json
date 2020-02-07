@@ -9,9 +9,6 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
     "start:dev": "nodemon --config nodemon.json",
-    "start:dev:db": "./src/scripts/start-db.sh",
-    "start:debug": "nodemon --config nodemon-debug.json",
-    "prestart:prod": "rimraf dist && yarn run build",
     "start:prod": "node dist/main.js",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest",
@@ -22,8 +19,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "pretypeorm": "(rm ormconfig.json || :) && ts-node -r tsconfig-paths/register src/scripts/write-type-orm-config.ts",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
-    "typeorm:migration:generate": "yarn run typeorm -- migration:generate -n",
-    "typeorm:migration:run": "yarn run typeorm -- migration:run"
+    "typeorm:migration:generate": "yarn run typeorm migration:generate -n",
+    "typeorm:migration:run": "yarn run typeorm migration:run"
   },
   "dependencies": {
     "@nestjs/common": "^6.7.2",
@@ -42,6 +39,7 @@
     "fastify-swagger": "^2.3.2",
     "loglevel": "^1.6.1",
     "loglevel-plugin-prefix": "^0.8.4",
+    "nest": "^0.1.6",
     "pg": "^7.14.0",
     "reflect-metadata": "^0.1.12",
     "rimraf": "^3.0.0",
@@ -69,8 +67,8 @@
     "ts-jest": "^24.0.2",
     "ts-node": "^8.5.2",
     "tsconfig-paths": "^3.7.0",
-    "tslint": "5.18.0",
-    "typescript": "^3.2.4"
+    "typescript": "^3.2.4",
+    "tslint": "5.18.0"
   },
   "husky": {
     "hooks": {
