@@ -14,7 +14,7 @@ import { configService } from "./config/config.service";
 
 @Module({
   controllers: [BotsController, BoardsController, HighscoresController],
-  imports: [TypeOrmModule.forRoot(configService.getTypeOrmConfig())],
+  imports: [TypeOrmModule.forRoot()],
   providers: [
     CustomLogger,
     BoardsService,
