@@ -1,7 +1,8 @@
 const prefix = "DIAMONDS_ORM_";
 
 function getValue(key, defaultValue) {
-  return process.env[prefix + key] || defaultValue;ß
+  // Return value from env or default value
+  return process.env[prefix + key] || defaultValue;
 }
 
 const config = {
