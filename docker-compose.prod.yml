@@ -6,9 +6,6 @@ services:
       context: ./frontend
       target: "prod"
     command: /bin/sh -c "nginx -g 'daemon off;'"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
     ports:
       - 8080:80
 
@@ -17,9 +14,6 @@ services:
       context: ./backend
       target: "prod"
     command: /bin/sh -c "yarn run typeorm:migration:run && yarn start:prod"
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
     environment:
       POSTGRES_HOST: database
       POSTGRES_PORT: 5432
