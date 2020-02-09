@@ -9,20 +9,17 @@ const createBoard = ({ width, height, gameObjects }) => {
   for (let y = 0; y < height; y++) {
     rows.push([]);
     for (let x = 0; x < width; x++) {
-      rows[y][x] = {
-        type: "",
-        properties: {}
-      };
+      rows[y][x] = [];
     }
   }
 
   // Add game objects
   gameObjects.forEach(go => {
-    rows[go.position.y][go.position.x] = {
-      ...rows[go.position.y][go.position.x],
-      type: rows[go.position.y][go.position.x].type + go.type,
+    rows[go.position.y][go.position.x].push({
+      type: go.type,
+      name: go.name,
       properties: go.properties
-    };
+    });
   });
   return rows;
 };

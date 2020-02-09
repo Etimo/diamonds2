@@ -2,35 +2,38 @@ import React from "react";
 import _ from "lodash";
 import Board from "../blocks/Board";
 import {
-  base,
-  botBaseDiamond,
-  botBase,
-  diamond,
-  diamondRed,
-  botDiamond,
-  robot,
-  teleporter,
-  wall,
-  redButton
+  BaseGameObject,
+  BotGameObject,
+  DiamondButtonGameObject,
+  DiamondGameObject1,
+  DiamondGameObject2,
+  TeleporterGameObject,
 } from "../images";
 
 export default ({ rows }) => {
+  /** Set of mappers for special game objects (i.e. not a 1-to-1 mapping of type to filename) */
+  const imageNameMappers = {
+    "DiamondGameObject": (go) => go.type + go.properties.points
+  }
+
+  const imageMap = {
+    DiamondButtonGameObject: DiamondButtonGameObject,
+    BotGameObject: BotGameObject,
+    BaseGameObject: BaseGameObject,
+    DiamondGameObject1: DiamondGameObject1,
+    DiamondGameObject2: DiamondGameObject2,
+    TeleportGameObject: TeleporterGameObject,
+  };
+
+  const decideImageName = content => {
+    if (content.type in imageNameMappers) {
+      return imageNameMappers[content.type](content);
+    }
+    return content.type;
+  }
+
   const decideCharacter = content => {
-    const goImgMap = {
-      Teleporter: teleporter,
-      Wall: wall,
-      DiamondButtonGameObject: redButton,
-      DiamondGameObject: diamond,
-      RedDiamond: diamondRed,
-      BotGameObject: robot,
-      BaseGameObject: base,
-      BotGameObjectBaseGameObject: botBase,
-      BaseGameObjectBotGameObject: botBase,
-      DiamondGameObjectBotGameObject: botDiamond,
-      BotGameObjectDiamondGameObject: botDiamond,
-      TeleportGameObject: teleporter
-    };
-    return goImgMap[content.type];
+    return imageMap[decideImageName(content)];
   };
 
   const decideCharacterName = content => {
@@ -49,10 +52,7 @@ export default ({ rows }) => {
       {rows.map((cells, key) => {
         return (
           <Board.Row key={key}>
-            {cells.map((content, key) => {
-              const character = decideCharacter(content);
-              const characterName = decideCharacterName(content);
-              const shouldRotate = content.goName === "Teleporter" ? 1 : 0;
+            {cells.map((items, key) => {
 
               return (
                 <Board.Cell
@@ -60,16 +60,26 @@ export default ({ rows }) => {
                   bigCellSize={bigCellSize}
                   smallCellSize={smallCellSize}
                 >
-                  {characterName && (
-                    <Board.CharacterName>{characterName}</Board.CharacterName>
-                  )}
-                  {character && (
-                    <Board.CharacterImg
-                      alt="player"
-                      src={character}
-                      rotate={shouldRotate}
-                    />
-                  )}
+                  {items.map((content, key) => {
+                    const character = decideCharacter(content);
+                    const characterName = decideCharacterName(content);
+                    const shouldRotate = content.goName === "Teleporter" ? 1 : 0;
+                    if (characterName) {
+                        return (
+                          <Board.CharacterName>{characterName}</Board.CharacterName>
+                        )
+                    }
+                    if (character) {
+                      return (
+                        <Board.CharacterImg
+                          key={key}
+                          alt="player"
+                          src={character}
+                          rotate={shouldRotate}
+                        />
+                      )
+                    }
+                  })}
                 </Board.Cell>
               );
             })}

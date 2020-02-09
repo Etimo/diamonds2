@@ -10,6 +10,7 @@ export default styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  position: relative;
 
   @media only screen and (max-width: 1050px) {
     max-width: initial;

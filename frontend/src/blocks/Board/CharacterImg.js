@@ -11,6 +11,7 @@ const spin = keyframes`
 
 export default styled.img`
   width: 75%;
+  position: absolute;
 
   ${props =>
     props.rotate &&
