@@ -1,27 +1,19 @@
 language: node_js
 node_js:
-- '12'
+  - "12"
 dist: trusty
 sudo: required
-services:
-  - docker
 env:
   global:
-  - secure: WAlh/tsTo6j0l5UN0+fnX+6DfU6/DPZSNh4QSD/nmqIHuJu7AnYbXMO3BhybRmHBpB0sklKUPmXF8UKySnjgd/O5TGvlz1bp/9BsJK9Bm/lo6aX4GcupEbW+VCwxr35Tarf8Xc7IWpr5p2FP+yBXQ+G3bCTiUDg+z66uZXHposC5yywyc0mvpXBfbZDg6OzMVCG//DAdmsK9gEJybsWMtcnftHjTIcLxUAjVu9XKe1e/wpsNAet619cVWXaKUuG5Dv+bRBOfEZa1YANFn/6RKfGpupbxsIsMAryByMwCw8ykrXukG8ZFWkCR24OQszSWXVsgfOyO1tNTH8KkySjRuo/dNnx6D7QO0EQHdDtRMsvwdvMCkYM8yxawTB3bFsv5G6GRA+d9QNiHh3Z/5hWokdHwG+h5ULkVD2HvJg4S0mk92okxqAKPx+uNgcuWD/Mu5Cpi9+VDXsNslxfA4pRQipepK8lw5WdnnMtboKc4vr67rA5qOiqRpnpRXutlW6itttAeb8J5mczTsdrxMhEmf7eIw9fYrrHY0KKxqF6cNrai6FgHRe48DnHtBz2XKj+d7tZBKqxKPkkwgU+tNd+LsJQTX2jCRipTWBbWdxikCysxVIx0cLcK1T0mzC28Nv5MVOk62rCFSYQuOdh5YhlmW6ORyIBwUnEsG7IXeMTgw5w=
-  - secure: E0IO+2hgEUFKQhg6johbhlP2ceKcd5oDycvF5bZ4WeO3BdRBoQ9GtvV9V8Ts+bAV6rfqzV7+VEehH6OGKvMs2uYpUxtZHLjeBsh7MaNvzdpWJmANY4C2+zFIPx34dLRaHloasHy06S0+7L9mW35817W2gFCkWdK23wSrNvIM1yvJqA/lz1Nk9vZVID4j+1PJuH6+QDESfPTvelQXIKP1v1vzILSoCENw/gLKUgHO3Xyv5O5VOHdBdSQRwtFFtR5vC6OO0l27K/5BnxUMsplg+ojrpj+aS26CHcaQ/PPqb67ZUJtynvr/XQBtH57WoXtWcdzj9cTNIz3Mocpntzp52rkiBtkcqZ/itUAvPmSpF6D1Edxc58wwf+4tw1IlC2iADQzYSZuR1/MkXKKK/6xXj+wyu12EMBGVD33+MQXwEEVKBjMKgXbiJzfpzO0qmUMedpbnxuwRaq+Chs5fpm5rOXeyBVYVf3gJt5g0/r5ZVrvZLDASw1Gd2BXjkeOaU1jaXiibKeZ97fV1zemlr6cuzS3zyFSSCApuMyyJGlppuiCjHLNDKgDRg+wSi9InUeVNaY3Lijaj3l9Ocht8Tjon9FPurjK3+2biJjHB3aYXlaQkIn6lXSMAmuIY+aljsC8szW1R9wmXjiV/gKQ8NjCdXuvzkEA0dk79wtcu5Tus7R4=
-  - secure: KKSJEVKipM3L7oaNpFSq/QswI06b8kuZ2/NwZ8FOR4DdyZrCuOgumkPUAl6fU9qIQT1sez53EE+NQxzwCE3wEaasKybWCUTCGoM27M2KzUIhh+tEQtlGn1HJORGlUcrdWYlfKtx+bDzMov3FnSiSvIDvPU34LFzOOqwlw5yI6qNiM5hXYRAcLOVWEZudqULBxu7sTJ+1efFOsOmXl5TNID+xrZxq7Zdi/LaQCbjZ0AeRgfMPZnHobeqfc3ZY16v47tWhnrJIJg8Mc6HB9+MPI6qmBJ5QWfW8tkmrhN68KoIv8JJhT0ny2waiyFV/FD21BooP801JazgrCR0sAPDUDlXrfXyO8xouemwkO2dScfbRS8gdYwRMCnMCZ3EL2K0bNKRS/x8utbny2Dmhd0VETFN7CkbUuAXxQmvdScdh7l/5lOGtOVCAPoS3ygo1kx8UBMFKl4YpIOTJ0JTOm52CBhwJQdyrSuD51sD9SyuvJurzhaaH2yEf2mxN2X6YvspR7XsXbcJunc1ORLCIj8WueCP4BGDWPV7oO6MMY5mBAhIECNfR/GAjUNVUE4qtUUcXyER4aIS/D57EmnOh9J10WW9wx5TrTsXNpYUV7EbYGtLBeZIUZ0XQ4K3YLAKP6i0L8fkCL5c37V3mbXlBblI1ZBBEfeTAc/8BwCKP3keOzy4=
+    secure: WAlh/tsTo6j0l5UN0+fnX+6DfU6/DPZSNh4QSD/nmqIHuJu7AnYbXMO3BhybRmHBpB0sklKUPmXF8UKySnjgd/O5TGvlz1bp/9BsJK9Bm/lo6aX4GcupEbW+VCwxr35Tarf8Xc7IWpr5p2FP+yBXQ+G3bCTiUDg+z66uZXHposC5yywyc0mvpXBfbZDg6OzMVCG//DAdmsK9gEJybsWMtcnftHjTIcLxUAjVu9XKe1e/wpsNAet619cVWXaKUuG5Dv+bRBOfEZa1YANFn/6RKfGpupbxsIsMAryByMwCw8ykrXukG8ZFWkCR24OQszSWXVsgfOyO1tNTH8KkySjRuo/dNnx6D7QO0EQHdDtRMsvwdvMCkYM8yxawTB3bFsv5G6GRA+d9QNiHh3Z/5hWokdHwG+h5ULkVD2HvJg4S0mk92okxqAKPx+uNgcuWD/Mu5Cpi9+VDXsNslxfA4pRQipepK8lw5WdnnMtboKc4vr67rA5qOiqRpnpRXutlW6itttAeb8J5mczTsdrxMhEmf7eIw9fYrrHY0KKxqF6cNrai6FgHRe48DnHtBz2XKj+d7tZBKqxKPkkwgU+tNd+LsJQTX2jCRipTWBbWdxikCysxVIx0cLcK1T0mzC28Nv5MVOk62rCFSYQuOdh5YhlmW6ORyIBwUnEsG7IXeMTgw5w=
 jobs:
   include:
-  - stage: build
-    before_script:
-    - cd backend
-    - yarn
-    script:
-    - yarn run test:coveralls
-  - name: docker-build
-    # if: branch = master
-    script:
-      - docker-compose build --parallel
+    - stage: build
+      before_script:
+        - cd backend
+        - yarn
+      script:
+        - yarn run test:coveralls
 
 stages:
-- name: build
+  - name: build
