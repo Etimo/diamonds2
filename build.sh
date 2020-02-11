@@ -2,8 +2,9 @@
 
 # Get git hash
 HASH=$(git rev-parse --short HEAD)
+echo "Git hash: $HASH"
 
-# docker-compose -f docker-compose.prod.yml build --parallel
+docker-compose -f docker-compose.prod.yml build --parallel
 
 echo "Tagging images..."
 docker tag diamonds2_frontend:latest etimodanielwinther/diamonds2_frontend:latest
