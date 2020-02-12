@@ -13,7 +13,7 @@ services:
     build:
       context: ./backend
       target: "prod"
-    command: /bin/sh -c "yarn run typeorm:migration:run && yarn start:prod"
+    command: /bin/sh -c "yarn start:prod"
     environment:
       - DIAMONDS_ORM_HOST
       - DIAMONDS_ORM_PORT
