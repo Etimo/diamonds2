@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Get git hash
-HASH=$(git rev-parse --short HEAD)
+HASH=$(git rev-parse HEAD)
 echo "Git hash: $HASH"
 
 # Login to docker
