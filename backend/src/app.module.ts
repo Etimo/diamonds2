@@ -22,7 +22,7 @@ import { configService } from "./config/config.service";
       username: process.env["DIAMONDS_ORM_USERNAME"],
       password: process.env["DIAMONDS_ORM_PASSWORD"],
       database: process.env["DIAMONDS_ORM_DATABASE"],
-      synchronize: true,
+      synchronize: false,
     }),
   ],
   providers: [
