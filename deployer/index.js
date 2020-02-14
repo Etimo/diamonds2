@@ -62,4 +62,6 @@ app.post("/" + endpoint, (req, res) => {
   res.send("OK");
 });
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(port, () =>
+  console.log(`Deploy webhook listening on port ${port}!`)
+);
