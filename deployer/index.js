@@ -3,6 +3,10 @@ const app = express();
 const port = 3000;
 const bodyParser = require("body-parser");
 const { exec } = require("child_process");
+const crypto = require("crypto");
+
+const sigHeaderName = "X-Hub-Signature";
+const secret = process.env["GITHUB_SECRET"];
 
 // The branches to redeploy
 const branches = (process.env["DEPLOY_BRANCHES"] || "").split(",");
@@ -33,6 +37,34 @@ function redeploy(hash) {
 
 app.post("/" + endpoint, (req, res) => {
   try {
+    const payload = JSON.stringify(req.body);
+    if (!payload) {
+      res.status(404).send("");
+      return;
+    }
+
+    // Verify signature
+    const sig = req.get(sigHeaderName) || "";
+    const hmac = crypto.createHmac("sha1", secret);
+    const digest = Buffer.from(
+      "sha1=" + hmac.update(payload).digest("hex"),
+      "utf8"
+    );
+    const checksum = Buffer.from(sig, "utf8");
+    if (
+      checksum.length !== digest.length ||
+      !crypto.timingSafeEqual(digest, checksum)
+    ) {
+      console.log("Invalid signature");
+      res
+        .status(403)
+        .send(
+          `Request body digest (${digest}) did not match ${sigHeaderName} (${checksum})`
+        );
+      return;
+    }
+
+    // Process data
     const body = req.body;
     const action = body["action"];
     if (action === "completed") {
@@ -57,6 +89,7 @@ app.post("/" + endpoint, (req, res) => {
       }
     }
   } catch (e) {
+    console.error(e);
     // res.send(e);
   }
   res.send("OK");
