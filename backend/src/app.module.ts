@@ -14,7 +14,24 @@ import { configService } from "./config/config.service";
 
 @Module({
   controllers: [BotsController, BoardsController, HighscoresController],
-  imports: [TypeOrmModule.forRoot(configService.getTypeOrmConfig())],
+  imports: [
+    TypeOrmModule.forRoot({
+      type: "postgres",
+      host: process.env["DIAMONDS_ORM_HOST"],
+      port: parseInt(process.env["DIAMONDS_ORM_PORT"]),
+      username: process.env["DIAMONDS_ORM_USERNAME"],
+      password: process.env["DIAMONDS_ORM_PASSWORD"],
+      database: process.env["DIAMONDS_ORM_DATABASE"],
+      synchronize: false,
+      entities: ["**/*.entity{.ts,.js}"],
+      migrationsTableName: "migration",
+      migrations: ["src/migration/*.ts"],
+      cli: {
+        migrationsDir: "src/migration",
+      },
+      ssl: false,
+    }),
+  ],
   providers: [
     CustomLogger,
     BoardsService,

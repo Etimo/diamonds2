@@ -1,19 +1,31 @@
 language: node_js
 node_js:
-  - "12"
+- '12'
 dist: trusty
 sudo: required
 env:
   global:
-    secure: WAlh/tsTo6j0l5UN0+fnX+6DfU6/DPZSNh4QSD/nmqIHuJu7AnYbXMO3BhybRmHBpB0sklKUPmXF8UKySnjgd/O5TGvlz1bp/9BsJK9Bm/lo6aX4GcupEbW+VCwxr35Tarf8Xc7IWpr5p2FP+yBXQ+G3bCTiUDg+z66uZXHposC5yywyc0mvpXBfbZDg6OzMVCG//DAdmsK9gEJybsWMtcnftHjTIcLxUAjVu9XKe1e/wpsNAet619cVWXaKUuG5Dv+bRBOfEZa1YANFn/6RKfGpupbxsIsMAryByMwCw8ykrXukG8ZFWkCR24OQszSWXVsgfOyO1tNTH8KkySjRuo/dNnx6D7QO0EQHdDtRMsvwdvMCkYM8yxawTB3bFsv5G6GRA+d9QNiHh3Z/5hWokdHwG+h5ULkVD2HvJg4S0mk92okxqAKPx+uNgcuWD/Mu5Cpi9+VDXsNslxfA4pRQipepK8lw5WdnnMtboKc4vr67rA5qOiqRpnpRXutlW6itttAeb8J5mczTsdrxMhEmf7eIw9fYrrHY0KKxqF6cNrai6FgHRe48DnHtBz2XKj+d7tZBKqxKPkkwgU+tNd+LsJQTX2jCRipTWBbWdxikCysxVIx0cLcK1T0mzC28Nv5MVOk62rCFSYQuOdh5YhlmW6ORyIBwUnEsG7IXeMTgw5w=
+  - secure: dokkRAi3ATm9jbiuQyMTyxRyMasTIh/qQ4+/pFKwFtN3x5qj/2agfmpI03fc7BFIiH9U+0LvtuwrAbqwqe/kyfCp1goMX27+aW4S27dLWcIke5gdQVvGRN4YPJDmSUN6pkVXFrlNDeV45X+QYd6+CFrIwMnlhwDzqmfmxybAnFoiBqD4MvXnIQL+AxdmrOuIvbMGUkH6Jlnd962w9SF0kRbOJU/S5Vjf4Wp92ruU/pcc9pcUf9eXVlng4ZR5+D40GisS31LAeem9hVVsTljtwH4vAJ5EDd26zZnHUN/Fcec8Ht8D22PAIF1h/ZopjBert23AXOlNYWRT5N424Jo6FecgFtA5plux4CbORUovCSAhqTp/qwotdGO/B4uWLs+ZZBmJnBpXnX7CWTJlBhH/kSKjjtMigjrawq8HWATqOMDNb2PJiLaDzsvzluwDTbChe2r52WYKP6xpIRGA6MKC/EL62IhCQPMpVdp9E5WZBubT7imUNCEJnxKGWe6nDjw1bgeWpZt76gw81Mqe2F+4WYtupsNDbp5+xw10jwBbn0AS4zOSGv+mhvp4OUdotAyN+/kyq359KPgkcso6BvBsCHGx+SuAQ4wvOIdWb7CLsPSa6OGW+a9cuvwPIC/9082JZHWyaPgJ76WIT106mzwZImnZdIVKaf680Vip6SbOkDM=
+  - secure: seXzMO2bmP2nlOVGS7LYGsT5ecP13Y1lBoNJ705QRH0tvfo4ErbuWJDWjq5dZ55cSpeJnjNWUrp9ZoeASsIygZHad3B4DW1E7jW3NZsfWRXPR7dV6bWDcAY+zOY8ezdi6g4RESMItZR9BE25ZflQFNHBNmhul5IHiFYnVH1loML57SNfFc7pz+LZlYzKwXnDPfbC9g12Nip03JF6Jb7v9lCySShFNwCWHdhX9+4lecVx3lIeicfc+jtR8Pzl3mGgpYKbm5DeeRPKMLEZ3VzAmVqDQaD0Bt88dl6oPeiij0X4pKlg9G0Vza3B3IKZzs14/60HNOkf5N+Tzd2+F8+5RrsPDd6PrexpfN7yxycy2dbdZUlT83hm+8nLodaY8YHlZXhi7XodZ+iRU4sgnYaU6fAImDoaZW6WN5Furgox2Il+GTgoZ1aQotjO2MT9hbHf/Zes9Fc9syPqSk1NaCjbFYCvyVdE/5PhbxOYgSCFv/NivMRB20STP6tX4pxt/hNt1l0ZydfDr6Kkjdv0uOBO2p8d0wLd8FI/9ohAlqmNZjXrgIg0cJ4siC7/D9FXmoaghpI9dlMt0beMVr+i99z5mPN3VUfC0AoGRka47QzYsXJSWL2vDBXFMFl6AhXbZ5U5Aq15MbeGUTt2vWfxa2y365bsG+LJAJx4hUwYmukks1k=
+services:
+- docker
+before_install:
+- sudo rm /usr/local/bin/docker-compose
+- curl -L https://github.com/docker/compose/releases/download/1.25.0/docker-compose-`uname
+  -s`-`uname -m` > docker-compose
+- chmod +x docker-compose
+- sudo mv docker-compose /usr/local/bin
 jobs:
   include:
-    - stage: build
-      before_script:
-        - cd backend
-        - yarn
-      script:
-        - yarn run test:coveralls
-
+  - stage: test
+    before_script:
+    - cd backend
+    - yarn
+    script:
+    - yarn run test:coveralls
+  - stage: build
+    script:
+    - ./build.sh
 stages:
-  - name: build
+- name: test
+- name: build
