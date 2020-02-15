@@ -23,6 +23,13 @@ import { configService } from "./config/config.service";
       password: process.env["DIAMONDS_ORM_PASSWORD"],
       database: process.env["DIAMONDS_ORM_DATABASE"],
       synchronize: false,
+      entities: ["**/*.entity{.ts,.js}"],
+      migrationsTableName: "migration",
+      migrations: ["src/migration/*.ts"],
+      cli: {
+        migrationsDir: "src/migration",
+      },
+      ssl: false,
     }),
   ],
   providers: [

@@ -21,13 +21,12 @@ services:
       - ./backend/src:/app/src
       - /app/node_modules
     environment:
-      POSTGRES_HOST: database
-      POSTGRES_PORT: 5432
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DATABASE: postgres
+      DIAMONDS_ORM_HOST: database
+      DIAMONDS_ORM_PORT: 5432
+      DIAMONDS_ORM_USERNAME: postgres
+      DIAMONDS_ORM_PASSWORD: postgres
+      DIAMONDS_ORM_DATABASE: postgres
       PORT: 5000
-      RUN_MIGRATIONS: "false"
     ports:
       - 8081:5000
 
