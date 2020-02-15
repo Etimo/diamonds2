@@ -17,4 +17,6 @@ docker tag diamonds2_backend:latest etimodanielwinther/diamonds2_backend:git-$HA
 
 echo "Pushing images..."
 docker push etimodanielwinther/diamonds2_frontend:latest
+docker push etimodanielwinther/diamonds2_frontend:git-$HASH
 docker push etimodanielwinther/diamonds2_backend:latest
+docker push etimodanielwinther/diamonds2_backend:git-$HASH
