@@ -12,9 +12,9 @@ License:
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-# Etimo Diamonds2
+# 💎 Etimo Diamonds2
 
-Diamonds is a programming challenge. Program a bot and compete to get the highest score. 🤖🔷
+Diamonds is a programming challenge. Program a bot and compete to get the highest score. 
 
 ## Development
 
