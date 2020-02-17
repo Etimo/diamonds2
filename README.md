@@ -58,4 +58,4 @@ To run Diamonds in production mode using prebuilt docker images you will need th
 DIAMONDS_DOCKER_TAG=latest docker-compose -f docker-compose.prod-run.yml up
 ```
 
-This setup is used when running Diamonds using the [deployer/README.md](auto deployer).
+This setup is used when running Diamonds using the [auto deployer](deployer/).
