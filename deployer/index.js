@@ -1,12 +1,13 @@
 const express = require("express");
 const app = express();
-const port = 3000;
 const bodyParser = require("body-parser");
 const { exec } = require("child_process");
 const crypto = require("crypto");
 
 const sigHeaderName = "X-Hub-Signature";
 const secret = process.env["GITHUB_SECRET"];
+
+const port = parseInt(process.env["PORT"]);
 
 // The branches to redeploy
 const branches = (process.env["DEPLOY_BRANCHES"] || "").split(",");
@@ -21,8 +22,8 @@ if (!endpoint) {
 
 app.use(bodyParser.json());
 
-function redeploy(hash) {
-  exec(`./redeploy.sh ${hash}`, (error, stdout, stderr) => {
+function redeploy(hash, branch) {
+  exec(`./redeploy.sh ${hash} ${branch}`, (error, stdout, stderr) => {
     if (error) {
       console.error(error.message);
       return;
@@ -81,7 +82,7 @@ app.post("/" + endpoint, (req, res) => {
           if (branches.indexOf(branch) > -1) {
             const sha = checkSuite["head_sha"];
             console.log(`Found successful build for commit hash ${sha}`);
-            redeploy(sha);
+            redeploy(sha, branch);
           } else {
             console.log(`Received new event but was invalid branch: ${branch}`);
           }
