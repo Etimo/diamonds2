@@ -20,7 +20,7 @@ docker pull etimodanielwinther/diamonds2_frontend:git-$COMMIT_HASH
 docker pull etimodanielwinther/diamonds2_backend:git-$COMMIT_HASH
 
 # Redeploy
-export DIAMONDS_CURRENT_HASH=git-$COMMIT_HASH
+export DIAMONDS_DOCKER_TAG=git-$COMMIT_HASH
 (cd .. && docker-compose -f docker-compose.prod-run.yml down)
 (cd .. && docker-compose -f docker-compose.prod-run.yml up -d)
 
