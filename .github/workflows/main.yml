@@ -34,9 +34,6 @@ jobs:
       - name: Run tests
         run: yarn --cwd=frontend test
   build:
-    needs:
-      - test-backend
-      - test-frontend
     name: Build
     runs-on: ubuntu-18.04
     steps:
