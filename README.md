@@ -12,9 +12,9 @@ License:
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-# Etimo Diamonds2
+# 💎 Etimo Diamonds2
 
-Diamonds is a programming challenge. Program a bot and compete to get the highest score. 🤖🔷
+Diamonds is a programming challenge. Program a bot and compete to get the highest score. 
 
 ## Development
 
@@ -29,15 +29,33 @@ docker-compose up
 - API: [http://localhost:8081](http://localhost:8081)
 - Database (browsing): [http://localhost:8082](http://localhost:8082/?pgsql=database&username=postgres&db=postgres)
 
-## Production
+## Production (from source)
 
-To run Diamonds in production, run the following commands from the root folder:
+To run Diamonds from source in production mode you first need to have a database setup somewhere. Then you need to expose the following environment variables pointing out the database:
 
 ```
-docker-compose -f docker-compose.prod.yml build --parallel
-docker-compose -f docker-compose.prod.yml up
+DIAMONDS_ORM_HOST
+DIAMONDS_ORM_PORT
+DIAMONDS_ORM_DATABASE
+DIAMONDS_ORM_USERNAME
+DIAMONDS_ORM_PASSWORD
+```
+
+Then run the following commands from the root folder:
+
+```
+docker-compose -f docker-compose.prod-build.yml build --parallel
+docker-compose -f docker-compose.prod-build.yml up
 ```
 
 This will not expose the database like in development mode, and serve frontend from nginx instead of using node. It will also install less packages.
 
-Hello world
+## Production (using prebuilt docker images)
+
+To run Diamonds in production mode using prebuilt docker images you will need the same environment variables as described in the previous section. Then run docker-compose using a specific tag as environment variable:
+
+```
+DIAMONDS_DOCKER_TAG=latest docker-compose -f docker-compose.prod-run.yml up
+```
+
+This setup is used when running Diamonds using the [auto deployer](deployer/).
