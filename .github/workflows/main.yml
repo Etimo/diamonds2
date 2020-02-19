@@ -1,0 +1,46 @@
+name: CI
+on: [pull_request, push]
+  # pull_request:
+  #   branches:
+  #     - master
+  #     - develop
+  # push:
+  #   branches:
+  #     - master
+  #     - develop
+jobs:
+  test-backend:
+    name: Test backend
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Install dependencies
+        run: yarn --cwd=backend install
+      - name: Run tests with coverage report
+        run: yarn --cwd=backend test:coveralls
+  test-frontend:
+    name: Test frontend
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Install dependencies
+        run: yarn --cwd=frontend install
+      - name: Run tests
+        run: yarn --cwd=frontend test
+  build:
+    needs:
+      - test-backend
+      - test-frontend
+    name: Build
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build docker image
+        run: docker-compose -f docker-compose.yml build --parallel
+
