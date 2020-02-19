@@ -52,7 +52,7 @@ jobs:
   tag-and-push:
     name: Tag and push docker images
     needs:
-      - test
+      - test-backend
       - build
     runs-on: ubuntu-18.04
     steps:
