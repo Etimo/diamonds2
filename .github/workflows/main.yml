@@ -1,4 +1,4 @@
-name: CI
+name: Build
 on: [pull_request, push]
   # pull_request:
   #   branches:
@@ -17,10 +17,17 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+      - name: Change working dir
+        run: cd backend
       - name: Install dependencies
-        run: yarn --cwd=backend install
+        run: yarn install
       - name: Run tests with coverage report
-        run: yarn --cwd=backend test:coveralls
+        run: yarn test:coverage
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
   test-frontend:
     name: Test frontend
     runs-on: ubuntu-18.04
@@ -31,8 +38,8 @@ jobs:
           node-version: '12.x'
       - name: Install dependencies
         run: yarn --cwd=frontend install
-      - name: Run tests
-        run: yarn --cwd=frontend test
+      # - name: Run tests
+      #   run: yarn --cwd=frontend test
   build:
     name: Build
     runs-on: ubuntu-18.04
