@@ -1,0 +1,79 @@
+name: CI/CD
+on:
+  [pull_request, push]
+  # pull_request:
+  #   branches:
+  #     - master
+  #     - develop
+  # push:
+  #   branches:
+  #     - master
+  #     - develop
+jobs:
+  test-backend:
+    name: Test backend
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - name: Change working dir
+        run: cd backend
+      - name: Install dependencies
+        run: yarn install
+      - name: Run tests with coverage report
+        run: yarn run test:coverage
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  # test-frontend:
+  #   name: Test frontend
+  #   runs-on: ubuntu-18.04
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: '12.x'
+  #     - name: Install dependencies
+  #       run: yarn --cwd=frontend install
+  # - name: Run tests
+  #   run: yarn --cwd=frontend test
+  build:
+    name: Build
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build docker image
+        run: docker-compose -f docker-compose.yml build
+
+  tag-and-push:
+    name: Tag and push docker images
+    needs:
+      - test
+      - build
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Docker login
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Tag docker images
+        run: |
+          docker tag diamonds2_frontend:latest etimodanielwinther/diamonds2_frontend:latest
+          docker tag diamonds2_frontend:latest etimodanielwinther/diamonds2_frontend:git-${{ github.sha }}
+          docker tag diamonds2_backend:latest etimodanielwinther/diamonds2_backend:latest
+          docker tag diamonds2_backend:latest etimodanielwinther/diamonds2_backend:git-${{ github.sha }}
+      - name: Push docker images
+        run: |
+          docker push etimodanielwinther/diamonds2_frontend:latest
+          docker push etimodanielwinther/diamonds2_frontend:git-${{ github.sha }}
+          docker push etimodanielwinther/diamonds2_backend:latest
+          docker push etimodanielwinther/diamonds2_backend:git-${{ github.sha }}
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-18.04
+    steps:
+      - run: echo Hello
