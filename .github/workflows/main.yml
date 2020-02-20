@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: "12.x"
       - name: Install dependencies
-        run: yarn install
+        run: yarn --cwd=backend install
       - name: Run tests with coverage report
         run: yarn --cwd=backend run test:coverage
       - name: Coveralls
@@ -39,7 +39,7 @@ jobs:
   #       run: yarn --cwd=frontend install
   # - name: Run tests
   #   run: yarn --cwd=frontend test
-  build-dev:
+  test-build:
     name: Build for dev env
     runs-on: ubuntu-18.04
     steps:
@@ -53,13 +53,13 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Build docker image
-        run: docker-compose -f docker-compose.prod-build.yml build
+        run: docker-compose -f docker-compose.prod.yml build
 
   tag-and-push:
     name: Tag and push docker images
     needs:
       - test-backend
-      - build-dev
+      - test-build
     runs-on: ubuntu-18.04
     steps:
       - name: Extract branch name
