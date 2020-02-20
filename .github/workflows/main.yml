@@ -1,5 +1,6 @@
-name: Build
-on: [pull_request, push]
+name: CI/CD
+on:
+  [pull_request, push]
   # pull_request:
   #   branches:
   #     - master
@@ -16,35 +17,127 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
-          node-version: '12.x'
-      - name: Change working dir
-        run: cd backend
+          node-version: "12.x"
       - name: Install dependencies
         run: yarn install
       - name: Run tests with coverage report
-        run: yarn test:coverage
+        run: yarn --cwd=backend run test:coverage
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-  test-frontend:
-    name: Test frontend
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '12.x'
-      - name: Install dependencies
-        run: yarn --cwd=frontend install
-      # - name: Run tests
-      #   run: yarn --cwd=frontend test
-  build:
-    name: Build
+  # test-frontend:
+  #   name: Test frontend
+  #   runs-on: ubuntu-18.04
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: '12.x'
+  #     - name: Install dependencies
+  #       run: yarn --cwd=frontend install
+  # - name: Run tests
+  #   run: yarn --cwd=frontend test
+  build-dev:
+    name: Build for dev env
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v1
       - name: Build docker image
         run: docker-compose -f docker-compose.yml build
 
+  build-prod:
+    name: Build for prod env
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build docker image
+        run: docker-compose -f docker-compose.prod-build.yml build
+
+  tag-and-push:
+    name: Tag and push docker images
+    needs:
+      - test-backend
+      - build-dev
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')"
+      - name: Print current branch name
+        run: echo "${BRANCH_NAME}"    
+      - name: Docker login
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Tag docker images
+        run: |
+          docker tag diamonds2_frontend:latest etimodanielwinther/diamonds2_frontend:latest-${BRANCH_NAME}
+          docker tag diamonds2_frontend:latest etimodanielwinther/diamonds2_frontend:${BRANCH_NAME}-${{ github.sha }}
+          docker tag diamonds2_backend:latest etimodanielwinther/diamonds2_backend:latest-${BRANCH_NAME}
+          docker tag diamonds2_backend:latest etimodanielwinther/diamonds2_backend:${BRANCH_NAME}-${{ github.sha }}
+      - name: Push docker images
+        run: |
+          docker push etimodanielwinther/diamonds2_frontend:latest-${BRANCH_NAME}
+          docker push etimodanielwinther/diamonds2_frontend:${BRANCH_NAME}-${{ github.sha }}
+          docker push etimodanielwinther/diamonds2_backend:latest-${BRANCH_NAME}
+          docker push etimodanielwinther/diamonds2_backend:${BRANCH_NAME}-${{ github.sha }}
+
+  deploy-test:
+    name: Deploy
+    needs: tag-and-push
+    runs-on: ubuntu-18.04
+    # if: TODO
+    steps:
+      - uses: chrnorm/deployment-action@releases/v1
+        name: Create GitHub deployment
+        id: deployment
+        with:
+          token: "${{ github.token }}"
+          target-url: http://${{ secrets.DEPLOY_TEST_HOST }}
+          environment: test
+
+      - name: Execute remote command
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_TEST_HOST }}
+          USERNAME: ${{ secrets.DEPLOY_TEST_USERNAME }}
+          PORT: 22
+          KEY: ${{ secrets.DEPLOY_TEST_KEY }}
+          script: |
+            cd diamonds2
+            git fetch
+            git checkout --progress --force ${{ github.sha }}
+            ls
+            docker ps
+
+      - name: Update deployment status (success)
+        if: success()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target-url: http://${{ secrets.DEPLOY_TEST_HOST }}
+          state: "success"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+
+      - name: Update deployment status (failure)
+        if: failure()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target-url: http://${{ secrets.DEPLOY_TEST_HOST }}
+          state: "failure"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+    
+  # deploy-prod:
+  #   name: Deploy
+  #   needs: tag-and-push
+  #   runs-on: ubuntu-18.04
+  #   steps:
+  #     - name: Executing remote command
+  #       uses: appleboy/ssh-action@master
+  #       with:
+  #         host: ${{ secrets.DEPLOY_TEST_HOST }}
+  #         USERNAME: ${{ secrets.DEPLOY_TEST_USERNAME }}
+  #         PORT: 22
+  #         KEY: ${{ secrets.DEPLOY_TEST_KEY }}
+  #         script: ls
