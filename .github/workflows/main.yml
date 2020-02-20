@@ -39,6 +39,7 @@ jobs:
     name: Build for dev env
     runs-on: ubuntu-18.04
     steps:
+      - run: echo "Ref ${{ github.ref }}"
       - uses: actions/checkout@v1
       - name: Build docker image
         run: docker-compose -f docker-compose.yml build
