@@ -1,14 +1,13 @@
 name: CI/CD
 on:
-  [pull_request, push]
-  # pull_request:
-  #   branches:
-  #     - master
-  #     - develop
-  # push:
-  #   branches:
-  #     - master
-  #     - develop
+  pull_request:
+    branches:
+      - master
+      - develop
+  push:
+    branches:
+      - master
+      - develop
 jobs:
   test-backend:
     name: Test backend
@@ -51,6 +50,7 @@ jobs:
   build-prod:
     name: Build for prod env
     runs-on: ubuntu-18.04
+    if: github.ref == 'refs/heads/develop'
     needs:
       - test-backend
       - test-build
@@ -82,7 +82,7 @@ jobs:
     name: Deploy
     needs: build-prod
     runs-on: ubuntu-18.04
-    # if: TODO
+    if: github.ref == 'refs/heads/develop'
     steps:
       - uses: chrnorm/deployment-action@releases/v1
         name: Create GitHub deployment
