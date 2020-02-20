@@ -1,13 +1,7 @@
 name: CI/CD
 on:
-  pull_request:
-    branches:
-      - master
-      - develop
-  push:
-    branches:
-      - master
-      - develop
+  - pull_request
+  - push
 jobs:
   test-backend:
     name: Test backend
