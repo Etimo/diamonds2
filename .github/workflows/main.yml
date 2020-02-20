@@ -44,7 +44,6 @@ jobs:
     name: Build for dev env
     runs-on: ubuntu-18.04
     steps:
-      - uses: actions/checkout@v1
       - name: Build docker image
         run: docker-compose -f docker-compose.yml build
 
@@ -52,7 +51,6 @@ jobs:
     name: Build for prod env
     runs-on: ubuntu-18.04
     steps:
-      - uses: actions/checkout@v1
       - name: Build docker image
         run: docker-compose -f docker-compose.prod.yml build
 
@@ -61,6 +59,7 @@ jobs:
     needs:
       - test-backend
       - test-build
+      - build-prod
     runs-on: ubuntu-18.04
     steps:
       - name: Extract branch name
