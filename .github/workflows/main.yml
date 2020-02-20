@@ -92,10 +92,6 @@ jobs:
           environment: test
           initial_status: "in_progress"
 
-      - name: Extract branch name
-        shell: bash
-        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')"
-
       - name: Execute remote command
         uses: appleboy/ssh-action@master
         with:
@@ -108,7 +104,7 @@ jobs:
             git fetch
             git checkout --progress --force ${{ github.sha }}
             docker-compose down
-            DIAMONDS_DOCKER_TAG=${BRANCH_NAME}-${{ github.sha }} docker-compose -f docker-compose.prod-run.yml up -d
+            DIAMONDS_DOCKER_TAG=develop-${{ github.sha }} docker-compose -f docker-compose.prod-run.yml up -d
 
       - name: Update deployment status (success)
         if: success()

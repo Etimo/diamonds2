@@ -1,11 +1,11 @@
+![CI/CD](https://github.com/Etimo/diamonds2/workflows/CI/CD/badge.svg)
+
 Master branch:
 
-[![Build Status](https://travis-ci.com/Etimo/diamonds2.svg?branch=master)](https://travis-ci.com/Etimo/diamonds2)
 [![Coverage Status](https://coveralls.io/repos/github/Etimo/diamonds2/badge.svg?branch=master)](https://coveralls.io/github/Etimo/diamonds2?branch=master)
 
 Develop branch:
 
-[![Build Status](https://travis-ci.com/Etimo/diamonds2.svg?branch=develop)](https://travis-ci.com/Etimo/diamonds2)
 [![Coverage Status](https://coveralls.io/repos/github/Etimo/diamonds2/badge.svg?branch=develop)](https://coveralls.io/github/Etimo/diamonds2?branch=develop)
 
 License:
