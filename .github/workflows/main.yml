@@ -1,14 +1,7 @@
 name: CI/CD
 on:
-  [pull_request, push]
-  # pull_request:
-  #   branches:
-  #     - master
-  #     - develop
-  # push:
-  #   branches:
-  #     - master
-  #     - develop
+  - pull_request
+  - push
 jobs:
   test-backend:
     name: Test backend
@@ -40,29 +33,34 @@ jobs:
   #       run: yarn --cwd=frontend install
   # - name: Run tests
   #   run: yarn --cwd=frontend test
+
+  # Test that building local dev env using docker works
   test-build:
     name: Build for dev env
     runs-on: ubuntu-18.04
     steps:
+      - run: echo "Ref ${{ github.ref }}"
       - uses: actions/checkout@v1
       - name: Build docker image
         run: docker-compose -f docker-compose.yml build
 
+  # Build and push production images
   build-prod:
     name: Build for prod env
     runs-on: ubuntu-18.04
+    if: github.ref == 'refs/heads/develop'
     needs:
       - test-backend
       - test-build
     steps:
       - uses: actions/checkout@v1
       - name: Build docker image
-        run: docker-compose -f docker-compose.prod.yml build
+        run: docker-compose -f docker-compose.prod-build.yml build
       - name: Extract branch name
         shell: bash
         run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')"
       - name: Print current branch name
-        run: echo "${BRANCH_NAME}"    
+        run: echo "${BRANCH_NAME}"
       - name: Docker login
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
       - name: Tag docker images
@@ -78,11 +76,12 @@ jobs:
           docker push etimodanielwinther/diamonds2_backend:latest-${BRANCH_NAME}
           docker push etimodanielwinther/diamonds2_backend:${BRANCH_NAME}-${{ github.sha }}
 
+  # When pushing code to develop we want to deploy latest develop images to test environment
   deploy-test:
     name: Deploy
     needs: build-prod
     runs-on: ubuntu-18.04
-    # if: TODO
+    if: github.ref == 'refs/heads/develop'
     steps:
       - uses: chrnorm/deployment-action@releases/v1
         name: Create GitHub deployment
@@ -91,6 +90,11 @@ jobs:
           token: "${{ github.token }}"
           target-url: http://${{ secrets.DEPLOY_TEST_HOST }}
           environment: test
+          initial_status: "in_progress"
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')"
 
       - name: Execute remote command
         uses: appleboy/ssh-action@master
@@ -103,8 +107,8 @@ jobs:
             cd diamonds2
             git fetch
             git checkout --progress --force ${{ github.sha }}
-            ls
-            docker ps
+            docker-compose down
+            DIAMONDS_DOCKER_TAG=${BRANCH_NAME}-${{ github.sha }} docker-compose -f docker-compose.prod-run.yml up -d
 
       - name: Update deployment status (success)
         if: success()
@@ -123,7 +127,8 @@ jobs:
           target-url: http://${{ secrets.DEPLOY_TEST_HOST }}
           state: "failure"
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-    
+  
+  # Deploy production images to production
   # deploy-prod:
   #   name: Deploy
   #   needs: tag-and-push

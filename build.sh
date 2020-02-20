@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Get git hash
-HASH=$(git rev-parse --short HEAD)
+HASH=$(git rev-parse HEAD)
 echo "Git hash: $HASH"
 
 # Login to docker
 echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
 
-docker-compose -f docker-compose.prod.yml build --parallel
+docker-compose -f docker-compose.prod-build.yml build --parallel
 
 echo "Tagging images..."
 docker tag diamonds2_frontend:latest etimodanielwinther/diamonds2_frontend:latest

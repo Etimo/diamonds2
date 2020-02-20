@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      target: "prod"
+    command: /bin/sh -c "nginx -g 'daemon off;'"
+    ports:
+      - 8080:80
+
+  backend:
+    build:
+      context: ./backend
+      target: "prod"
+    command: /bin/sh -c "yarn start:prod"
+    environment:
+      - DIAMONDS_ORM_HOST
+      - DIAMONDS_ORM_PORT
+      - DIAMONDS_ORM_DATABASE
+      - DIAMONDS_ORM_USERNAME
+      - DIAMONDS_ORM_PASSWORD
+      - PORT=5000
+      - RUN_MIGRATIONS=false
+    ports:
+      - 8081:5000
