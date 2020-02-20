@@ -39,6 +39,8 @@ jobs:
   #       run: yarn --cwd=frontend install
   # - name: Run tests
   #   run: yarn --cwd=frontend test
+
+  # Test that building local dev env using docker works
   test-build:
     name: Build for dev env
     runs-on: ubuntu-18.04
@@ -47,6 +49,7 @@ jobs:
       - name: Build docker image
         run: docker-compose -f docker-compose.yml build
 
+  # Build and push production images
   build-prod:
     name: Build for prod env
     runs-on: ubuntu-18.04
@@ -78,6 +81,7 @@ jobs:
           docker push etimodanielwinther/diamonds2_backend:latest-${BRANCH_NAME}
           docker push etimodanielwinther/diamonds2_backend:${BRANCH_NAME}-${{ github.sha }}
 
+  # When pushing code to develop we want to deploy latest develop images to test environment
   deploy-test:
     name: Deploy
     needs: build-prod
@@ -91,6 +95,8 @@ jobs:
           token: "${{ github.token }}"
           target-url: http://${{ secrets.DEPLOY_TEST_HOST }}
           environment: test
+          initial_status: "in_progress"
+
       - name: Extract branch name
         shell: bash
         run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')"
@@ -126,6 +132,8 @@ jobs:
           target-url: http://${{ secrets.DEPLOY_TEST_HOST }}
           state: "failure"
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+  
+  # Deploy production images to production
   # deploy-prod:
   #   name: Deploy
   #   needs: tag-and-push
