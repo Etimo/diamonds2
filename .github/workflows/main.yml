@@ -21,6 +21,11 @@ jobs:
         run: yarn --cwd=backend install
       - name: Run tests with coverage report
         run: yarn --cwd=backend run test:coverage
+      - name: Ls
+        run: |
+          pwd
+          ls
+          ls ./backend/coverage
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
