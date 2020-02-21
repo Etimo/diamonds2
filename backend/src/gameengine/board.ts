@@ -114,6 +114,9 @@ export class Board {
         return;
       }
 
+      // Remove locally
+      delete this.bots[bot.token];
+
       // Notify all session finished callbacks
       this.sessionFinishedCallbacks.forEach(sfc =>
         sfc(botGameObject.name, botGameObject.score),
