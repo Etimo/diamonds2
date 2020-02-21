@@ -14,7 +14,7 @@ License:
 
 # 💎 Etimo Diamonds2
 
-Diamonds is a programming challenge. Program a bot and compete to get the highest score. 
+Diamonds is a programming challenge. Program a bot and compete to get the highest score.
 
 ## Development
 
@@ -57,5 +57,3 @@ To run Diamonds in production mode using prebuilt docker images you will need th
 ```
 DIAMONDS_DOCKER_TAG=latest docker-compose -f docker-compose.prod-run.yml up
 ```
-
-This setup is used when running Diamonds using the [auto deployer](deployer/).
