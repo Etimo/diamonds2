@@ -104,6 +104,7 @@ jobs:
             git fetch
             git checkout --progress --force ${{ github.sha }}
             docker-compose down
+            env | grep DIAMONDS_ORM_HOST
             DIAMONDS_DOCKER_TAG=develop-${{ github.sha }} docker-compose -f docker-compose.prod-run.yml up -d
 
       - name: Update deployment status (success)
@@ -123,7 +124,6 @@ jobs:
           target-url: http://${{ secrets.DEPLOY_TEST_HOST }}
           state: "failure"
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-  
   # Deploy production images to production
   # deploy-prod:
   #   name: Deploy
