@@ -52,6 +52,14 @@ describe("sessionFinishedCallbacks and join", () => {
     expect(result).toBeTruthy();
   });
 
+  test("bot is removed from board when session finishes", async () => {
+    await board.join(botExampleData);
+
+    jest.runAllTimers();
+
+    expect(board.getBot(botExampleData.token)).toBeFalsy();
+  });
+
   test("join notifies providers", async () => {
     spyOn(provider, "onBotJoined");
 
