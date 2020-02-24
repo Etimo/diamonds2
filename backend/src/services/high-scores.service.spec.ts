@@ -39,7 +39,9 @@ beforeEach(async () => {
   });
 });
 afterAll(async () => {
-  await connection.close();
+  if (connection) {
+    await connection.close();
+  }
 });
 
 test("Add new score", async () => {
