@@ -36,8 +36,8 @@ beforeAll(async () => {
   });
 });
 
-afterAll(() => {
-  connection.close();
+afterAll(async () => {
+  await connection.close();
 });
 
 beforeEach(() => {

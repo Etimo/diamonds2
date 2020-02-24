@@ -30,7 +30,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  connection.close();
+  await connection.close();
 });
 
 beforeEach(async () => {

@@ -38,8 +38,8 @@ beforeEach(async () => {
     score: 22,
   });
 });
-afterAll(() => {
-  connection.close();
+afterAll(async () => {
+  await connection.close();
 });
 
 test("Add new score", async () => {
