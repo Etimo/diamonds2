@@ -1,15 +1,15 @@
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({ name: "high_scores" })
-export class HighScoreEntity {
+@Entity({ name: "bot_registrations" })
+export class BotRegistrationsEntity {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  token: string;
 
   @Column({ type: "varchar", length: 300 })
   botName: string;
 
-  @Column({ type: "int" })
-  score: number;
+  @Column({ type: "varchar", length: 300 })
+  email: string;
 
   @Column({ type: "timestamptz", default: () => "CURRENT_TIMESTAMP" })
   createTimeStamp: Date;

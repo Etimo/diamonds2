@@ -4,6 +4,7 @@ import { BotDto } from "src/models/bot.dto";
 import { BotRegistrationDto } from "src/models/bot-registration.dto";
 import { BotsService } from "src/services/bots.service";
 import { IBot } from "src/interfaces/bot.interface";
+import { BotRegistrationPublicDto } from "src/models/bot-registration-public.dto";
 
 @ApiUseTags("Bots")
 @Controller("api/bots")
@@ -29,7 +30,9 @@ export class BotsController {
   })
   @HttpCode(200)
   @Post()
-  async create(@Body() botRegistration: BotRegistrationDto): Promise<IBot> {
+  async create(
+    @Body() botRegistration: BotRegistrationDto,
+  ): Promise<BotRegistrationPublicDto> {
     return await this.botService.add(botRegistration);
   }
 

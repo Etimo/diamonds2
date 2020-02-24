@@ -11,7 +11,8 @@ import { CustomLogger } from "./logger";
 import { BoardsService } from "./services/board.service";
 import { HighScoresService } from "./services/high-scores.service";
 import { configService } from "./config/config.service";
-
+import { HighScoreEntity } from "./db/models/highScores.entity";
+import { BotRegistrationsEntity } from "./db/models/botRegistrations.entity";
 @Module({
   controllers: [BotsController, BoardsController, HighscoresController],
   imports: [
@@ -31,6 +32,9 @@ import { configService } from "./config/config.service";
       },
       ssl: false,
     }),
+
+    TypeOrmModule.forFeature([HighScoreEntity]),
+    TypeOrmModule.forFeature([BotRegistrationsEntity]),
   ],
   providers: [
     CustomLogger,

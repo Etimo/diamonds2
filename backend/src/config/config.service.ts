@@ -48,11 +48,11 @@ class ConfigService {
 }
 
 const configService = new ConfigService(process.env).ensureValues([
-  "POSTGRES_HOST",
-  "POSTGRES_PORT",
-  "POSTGRES_USER",
-  "POSTGRES_PASSWORD",
-  "POSTGRES_DATABASE",
+  "DIAMONDS_ORM_HOST",
+  "DIAMONDS_ORM_PORT",
+  "DIAMONDS_ORM_USERNAME",
+  "DIAMONDS_ORM_PASSWORD",
+  "DIAMONDS_ORM_DATABASE",
 ]);
 
 export { configService };

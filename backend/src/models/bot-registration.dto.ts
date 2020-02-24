@@ -17,5 +17,5 @@ export class BotRegistrationDto {
   @IsString()
   @MinLength(1)
   @MaxLength(10)
-  readonly name: string;
+  readonly botName: string;
 }

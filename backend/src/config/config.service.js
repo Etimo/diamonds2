@@ -30,13 +30,13 @@ var ConfigService = /** @class */ (function() {
     return mode != "DEV";
   };
   ConfigService.prototype.getTypeOrmConfig = function() {
-    var cfg = {
+    return {
       type: "postgres",
-      host: this.getValue("POSTGRES_HOST"),
-      port: parseInt(this.getValue("POSTGRES_PORT")),
-      username: this.getValue("POSTGRES_USER"),
-      password: this.getValue("POSTGRES_PASSWORD"),
-      database: this.getValue("POSTGRES_DATABASE"),
+      host: this.getValue("DIAMONDS_ORM_HOST"),
+      port: parseInt(this.getValue("DIAMONDS_ORM_PORT")),
+      username: this.getValue("DIAMONDS_ORM_USERNAME"),
+      password: this.getValue("DIAMONDS_ORM_PASSWORD"),
+      database: this.getValue("DIAMONDS_ORM_DATABASE"),
       entities: ["**/*.entity{.ts,.js}"],
       migrationsTableName: "migration",
       migrations: ["src/migration/*.ts"],
@@ -45,16 +45,15 @@ var ConfigService = /** @class */ (function() {
       },
       ssl: false,
     };
-    console.log(cfg);
-    return cfg;
   };
   return ConfigService;
 })();
+
 var configService = new ConfigService(process.env).ensureValues([
-  "POSTGRES_HOST",
-  "POSTGRES_PORT",
-  "POSTGRES_USER",
-  "POSTGRES_PASSWORD",
-  "POSTGRES_DATABASE",
+  "DIAMONDS_ORM_HOST",
+  "DIAMONDS_ORM_PORT",
+  "DIAMONDS_ORM_USERNAME",
+  "DIAMONDS_ORM_PASSWORD",
+  "DIAMONDS_ORM_DATABASE",
 ]);
 exports.configService = configService;
