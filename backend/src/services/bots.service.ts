@@ -61,7 +61,7 @@ export class BotsService {
       .then(botRegistrationsEntity =>
         BotRegistrationPublicDto.fromEntity(botRegistrationsEntity),
       );
-    console.log(existBot);
+    //console.log(existBot);
     return existBot;
     // return await this.repo
     //   .save(dto)
@@ -102,5 +102,14 @@ export class BotsService {
       .then(botRegistrationsEntity =>
         BotRegistrationPublicDto.fromEntity(botRegistrationsEntity),
       );
+  }
+
+  public async delete(dto: BotRegistrationDto) {
+    return await this.repo
+      .createQueryBuilder()
+      .delete()
+      .from("bot_registrations")
+      .where("botName = :botName", { botName: dto.botName })
+      .execute();
   }
 }

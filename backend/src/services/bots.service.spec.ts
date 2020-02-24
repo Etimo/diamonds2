@@ -26,6 +26,7 @@ beforeAll(async () => {
     database: "postgres",
     entities: ["**/*.entity{.ts,.js}"],
   });
+  service = new BotsService(connection.getRepository(BotRegistrationsEntity));
 });
 
 afterAll(async () => {
@@ -33,7 +34,15 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  service = new BotsService(connection.getRepository(BotRegistrationsEntity));
+  await service.delete({
+    email: "",
+    botName: "bot1",
+  });
+
+  await service.delete({
+    email: "",
+    botName: "bot122",
+  });
 });
 
 test("Adding bot with same email generates error", async () => {

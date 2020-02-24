@@ -58,7 +58,7 @@ export class HighScoresService {
     if (resultSetHighScore) {
       if (resultSetHighScore.score < newScore.score) {
         //update
-        console.log("Update HighScore ");
+        //console.log("Update HighScore ");
         await this.repo
           .createQueryBuilder()
           .update("high_scores")
@@ -67,11 +67,11 @@ export class HighScoresService {
           .execute();
         isNew = false;
       } else {
-        console.log("New HighScore is lower or equal ");
+        //console.log("New HighScore is lower or equal ");
         isNew = false;
       }
     } else {
-      console.log("Is new HighScore  ");
+      //console.log("Is new HighScore  ");
     }
 
     return isNew;
@@ -107,5 +107,14 @@ export class HighScoresService {
   }
   public async create(dto: HighscoreDto): Promise<HighscoreDto> {
     return this.repo.save(dto);
+  }
+
+  public async delete(dto: HighscoreDto) {
+    return await this.repo
+      .createQueryBuilder()
+      .delete()
+      .from("high_scores")
+      .where("botName = :botName", { botName: dto.botName })
+      .execute();
   }
 }

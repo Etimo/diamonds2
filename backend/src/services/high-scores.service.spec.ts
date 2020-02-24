@@ -1,9 +1,8 @@
 import { HighScoresService } from "./high-scores.service";
 import { IdService } from "./id.service";
-import { ConnectionOptions, Connection } from "typeorm";
+import { createConnection, Connection } from "typeorm";
 import { HighScoreEntity } from "../db/models/highScores.entity";
 import { ConnectEvent } from "@nestjs/common/interfaces/external/kafka-options.interface";
-import { createConnection } from "typeorm";
 import { configService } from "../config/config.service";
 import { async } from "rxjs/internal/scheduler/async";
 
@@ -27,13 +26,17 @@ beforeAll(async () => {
     database: "postgres",
     entities: ["**/*.entity{.ts,.js}"],
   });
-});
-beforeEach(async () => {
+
   highScoresService = new HighScoresService(
     connection.getRepository(HighScoreEntity),
   );
   testBotName = "specBot";
-  numBotsCreatedOnConstructor = 1;
+});
+beforeEach(async () => {
+  await highScoresService.delete({
+    botName: testBotName,
+    score: 22,
+  });
 });
 afterAll(() => {
   connection.close();
@@ -62,7 +65,14 @@ test("Update score", async () => {
 
   await highScoresService.addOrUpdate(bot);
 
-  let x = await highScoresService.getBotScore(bot);
+  let bot2 = {
+    botName: testBotName,
+    score: 84,
+  };
+
+  await highScoresService.addOrUpdate(bot2);
+
+  let x = await highScoresService.getBotScore(bot2);
 
   expect(x.length).toEqual(1);
 });
@@ -74,7 +84,14 @@ test("Ignore lower score", async () => {
   };
   await highScoresService.addOrUpdate(bot);
 
-  let x = await highScoresService.getBotScore(bot);
+  let bot2 = {
+    botName: testBotName,
+    score: 4,
+  };
+
+  await highScoresService.addOrUpdate(bot2);
+
+  let x = await highScoresService.getBotScore(bot2);
 
   expect(x.length).toEqual(1);
 });
