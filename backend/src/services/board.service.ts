@@ -19,6 +19,7 @@ import { DiamondProvider } from "../gameengine/gameobjects/diamond/diamond-provi
 import { BotProvider } from "../gameengine/gameobjects/bot/bot-provider";
 import { BoardConfig } from "../gameengine/board-config";
 import { TeleportProvider } from "../gameengine/gameobjects/teleport/teleport-provider";
+import { MetricsService } from "./metrics.service";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
@@ -28,6 +29,7 @@ export class BoardsService {
   constructor(
     private botsService: BotsService,
     private highscoresService: HighScoresService,
+    private metricsService: MetricsService,
     private logger: CustomLogger,
   ) {
     this.createInMemoryBoard();
@@ -35,6 +37,9 @@ export class BoardsService {
     this.boards.forEach(board => {
       board.registerSessionFinishedCallback((botName, score) => {
         console.log("HIGHSCORE", botName, score);
+        if (this.metricsService) {
+          this.metricsService.decPlayersTotal(board.getId());
+        }
         this.highscoresService.addOrUpdate({
           botName,
           score,
@@ -86,6 +91,9 @@ export class BoardsService {
     const result = await board.enqueueJoin(bot);
     if (!result) {
       throw new ConflictError("Board full");
+    }
+    if (this.metricsService) {
+      this.metricsService.incPlayersTotal(board.getId());
     }
     return this.getAsDto(board);
   }

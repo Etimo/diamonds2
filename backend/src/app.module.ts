@@ -11,6 +11,7 @@ import { CustomLogger } from "./logger";
 import { BoardsService } from "./services/board.service";
 import { HighScoresService } from "./services/high-scores.service";
 import { configService } from "./config/config.service";
+import { MetricsService } from "./services/metrics.service";
 
 @Module({
   controllers: [BotsController, BoardsController, HighscoresController],
@@ -39,6 +40,7 @@ import { configService } from "./config/config.service";
     IdService,
     ValidatorService,
     HighScoresService,
+    MetricsService,
   ],
 })
 export class AppModule {}

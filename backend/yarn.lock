@@ -171,6 +171,11 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@digikare/nestjs-prom@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@digikare/nestjs-prom/-/nestjs-prom-0.2.2.tgz#270908378da13be73df3d4fbc803bf7d3de146ea"
+  integrity sha512-Ygnw6dEsg97psYVi1HP7zg8HmR85IpfTU95P9xYxm4FxEokys9KFLMtTCWDuCNVJzu5R9Bc8mdIMqbMbi44NCQ==
+
 "@jest/console@^24.7.1", "@jest/console@^24.9.0":
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/@jest/console/-/console-24.9.0.tgz#79b1bc06fb74a8cfb01cbdedf945584b1b9707f0"
@@ -1262,6 +1267,11 @@ bindings@^1.5.0:
   integrity sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==
   dependencies:
     file-uri-to-path "1.0.0"
+
+bintrees@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/bintrees/-/bintrees-1.0.1.tgz#0e655c9b9c2435eaab68bf4027226d2b55a34524"
+  integrity sha1-DmVcm5wkNeqraL9AJyJtK1WjRSQ=
 
 bluebird@^3.5.5:
   version "3.7.2"
@@ -5555,6 +5565,11 @@ pkg-dir@^4.2.0:
   dependencies:
     find-up "^4.0.0"
 
+pkginfo@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/pkginfo/-/pkginfo-0.4.1.tgz#b5418ef0439de5425fc4995042dced14fb2a84ff"
+  integrity sha1-tUGO8EOd5UJfxJlQQtztFPsqhP8=
+
 please-upgrade-node@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/please-upgrade-node/-/please-upgrade-node-3.2.0.tgz#aeddd3f994c933e4ad98b99d9a556efa0e2fe942"
@@ -5653,6 +5668,21 @@ process@^0.11.10:
   version "0.11.10"
   resolved "https://registry.yarnpkg.com/process/-/process-0.11.10.tgz#7332300e840161bda3e69a1d1d91a7d4bc16f182"
   integrity sha1-czIwDoQBYb2j5podHZGn1LwW8YI=
+
+prom-client@^12.0.0:
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/prom-client/-/prom-client-12.0.0.tgz#9689379b19bd3f6ab88a9866124db9da3d76c6ed"
+  integrity sha512-JbzzHnw0VDwCvoqf8y1WDtq4wSBAbthMB1pcVI/0lzdqHGJI3KBJDXle70XK+c7Iv93Gihqo0a5LlOn+g8+DrQ==
+  dependencies:
+    tdigest "^0.1.1"
+
+prometheus-api-metrics@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/prometheus-api-metrics/-/prometheus-api-metrics-2.2.3.tgz#d244f77acb160a67f1f9a3a9e86049215d31a619"
+  integrity sha512-A5lPAsn2HDRpdjZyj7wdx8XCSUS2uwadT6FKoboOY+1NKNA4FX5Ttwxs0GCxUQrAFkb1u5vkXIx3ScMLF/D9Qw==
+  dependencies:
+    debug "^3.2.6"
+    pkginfo "^0.4.1"
 
 promise-inflight@^1.0.1:
   version "1.0.1"
@@ -6778,6 +6808,13 @@ tapable@^1.0.0, tapable@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/tapable/-/tapable-1.1.3.tgz#a1fccc06b58db61fd7a45da2da44f5f3a3e67ba2"
   integrity sha512-4WK/bYZmj8xLr+HUCODHGF1ZFzsYffasLUgEiMBY4fgtltdO6B4WJtlSbPaDTLpYTcGVwM2qLnFTICEcNxs3kA==
+
+tdigest@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/tdigest/-/tdigest-0.1.1.tgz#2e3cb2c39ea449e55d1e6cd91117accca4588021"
+  integrity sha1-Ljyyw56kSeVdHmzZEReszKRYgCE=
+  dependencies:
+    bintrees "1.0.1"
 
 term-size@^1.2.0:
   version "1.2.0"
