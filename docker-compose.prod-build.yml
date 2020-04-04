@@ -24,3 +24,12 @@ services:
       - RUN_MIGRATIONS=false
     ports:
       - 8081:5000
+
+  bots:
+    image: etimodanielwinther/diamonds2_bots:${DIAMONDS_DOCKER_TAG}
+    restart: always
+    volumes:
+      - bot-data:/bot-data
+
+volumes:
+  bot-data:
