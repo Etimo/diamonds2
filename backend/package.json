@@ -22,6 +22,7 @@
     "typeorm:migration:run": "yarn run typeorm migration:run"
   },
   "dependencies": {
+    "@digikare/nestjs-prom": "^0.2.2",
     "@nestjs/common": "^6.7.2",
     "@nestjs/core": "^6.7.2",
     "@nestjs/platform-express": "^6.0.0",
@@ -40,6 +41,8 @@
     "loglevel-plugin-prefix": "^0.8.4",
     "nest": "^0.1.6",
     "pg": "^7.14.0",
+    "prom-client": "^12.0.0",
+    "prometheus-api-metrics": "^2.2.3",
     "reflect-metadata": "^0.1.12",
     "rimraf": "^3.0.0",
     "rxjs": "^6.3.3",
@@ -66,8 +69,8 @@
     "ts-jest": "^24.0.2",
     "ts-node": "^8.5.2",
     "tsconfig-paths": "^3.7.0",
-    "typescript": "^3.2.4",
-    "tslint": "5.18.0"
+    "tslint": "5.18.0",
+    "typescript": "^3.2.4"
   },
   "husky": {
     "hooks": {
