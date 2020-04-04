@@ -6,6 +6,7 @@ import UnauthorizedError from "../errors/unauthorized.error";
 import { IBot } from "../interfaces/bot.interface";
 import NotFoundError from "../errors/not-found.error";
 import SilentLogger from "../gameengine/util/silent-logger";
+import { CustomLogger } from "src/logger";
 
 let boardsService: BoardsService;
 let botService: BotsService;
@@ -21,7 +22,7 @@ beforeEach(() => {
   boardsService = new BoardsService(
     botService,
     highScoreService,
-    new SilentLogger(),
+    new SilentLogger() as CustomLogger,
   );
 });
 

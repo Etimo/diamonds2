@@ -1,4 +1,4 @@
-import { Injectable, Scope } from "@nestjs/common";
+import { Injectable, Scope, Logger } from "@nestjs/common";
 import { OperationQueueBoard } from "../gameengine/operation-queue-board";
 import { BotsService } from "./bots.service";
 import { HighScoresService } from "./high-scores.service";
@@ -28,7 +28,7 @@ export class BoardsService {
   constructor(
     private botsService: BotsService,
     private highscoresService: HighScoresService,
-    private logger: any,
+    private logger: CustomLogger,
   ) {
     this.createInMemoryBoard();
 
