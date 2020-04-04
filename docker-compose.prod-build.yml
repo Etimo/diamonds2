@@ -26,7 +26,8 @@ services:
       - 8081:5000
 
   bots:
-    image: etimodanielwinther/diamonds2_bots:${DIAMONDS_DOCKER_TAG}
+    build:
+      context: ./example-bots/python
     restart: always
     volumes:
       - bot-data:/bot-data
