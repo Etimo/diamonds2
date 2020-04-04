@@ -4,14 +4,12 @@ services:
   frontend:
     image: etimodanielwinther/diamonds2_frontend:${DIAMONDS_DOCKER_TAG}
     command: /bin/sh -c "nginx -g 'daemon off;'"
-    label: diamonds2-frontend
     ports:
       - 80:80
 
   backend:
     image: etimodanielwinther/diamonds2_backend:${DIAMONDS_DOCKER_TAG}
     command: /bin/sh -c "yarn start:prod"
-    label: diamonds2-backend
     environment:
       - DIAMONDS_ORM_HOST
       - DIAMONDS_ORM_PORT
