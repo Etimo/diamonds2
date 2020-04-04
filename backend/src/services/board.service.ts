@@ -28,7 +28,7 @@ export class BoardsService {
   constructor(
     private botsService: BotsService,
     private highscoresService: HighScoresService,
-    private logger: CustomLogger,
+    private logger: any,
   ) {
     this.createInMemoryBoard();
 

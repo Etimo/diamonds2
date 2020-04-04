@@ -2,11 +2,10 @@ import { BotsService } from "./bots.service";
 import { IdService } from "./id.service";
 import { BoardsService } from "./board.service";
 import { HighScoresService } from "./high-scores.service";
-import { CustomLogger } from "../logger";
 import UnauthorizedError from "../errors/unauthorized.error";
 import { IBot } from "../interfaces/bot.interface";
 import NotFoundError from "../errors/not-found.error";
-import ConflictError from "../errors/conflict.error";
+import SilentLogger from "../gameengine/util/silent-logger";
 
 let boardsService: BoardsService;
 let botService: BotsService;
@@ -22,7 +21,7 @@ beforeEach(() => {
   boardsService = new BoardsService(
     botService,
     highScoreService,
-    new CustomLogger(),
+    new SilentLogger(),
   );
 });
 
