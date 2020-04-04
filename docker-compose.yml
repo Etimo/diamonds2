@@ -30,6 +30,13 @@ services:
     ports:
       - 8081:5000
 
+  bots:
+    build:
+      context: ./example-bots/python
+    restart: always
+    volumes:
+      - bot-data:/bot-data
+
   database:
     image: postgres:alpine
     restart: always
@@ -48,3 +55,4 @@ services:
 
 volumes:
   db-data:
+  bot-data:
