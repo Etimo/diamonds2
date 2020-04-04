@@ -77,6 +77,8 @@ if not args.token:
             + Style.RESET_ALL
         )
         args.token = bot.bot_token
+        with open(".token-" + bot.id, "w") as f:
+            f.write(bot.bot_token)
     else:
         print("Unable to register bot")
         exit(1)
