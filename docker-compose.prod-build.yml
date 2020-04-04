@@ -6,6 +6,7 @@ services:
       context: ./frontend
       target: "prod"
     command: /bin/sh -c "nginx -g 'daemon off;'"
+    label: diamonds2-frontend
     ports:
       - 8080:80
 
@@ -14,6 +15,7 @@ services:
       context: ./backend
       target: "prod"
     command: /bin/sh -c "yarn start:prod"
+    label: diamonds2-backend
     environment:
       - DIAMONDS_ORM_HOST
       - DIAMONDS_ORM_PORT
