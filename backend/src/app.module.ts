@@ -10,7 +10,9 @@ import { BotsController } from "./controllers/bots/bots.controller";
 import { CustomLogger } from "./logger";
 import { BoardsService } from "./services/board.service";
 import { HighScoresService } from "./services/high-scores.service";
-import { configService } from "./config/config.service";
+
+import { HighScoreEntity } from "./db/models/highScores.entity";
+import { BotRegistrationsEntity } from "./db/models/botRegistrations.entity";
 import { MetricsService } from "./services/metrics.service";
 
 @Module({
@@ -23,7 +25,7 @@ import { MetricsService } from "./services/metrics.service";
       username: process.env["DIAMONDS_ORM_USERNAME"],
       password: process.env["DIAMONDS_ORM_PASSWORD"],
       database: process.env["DIAMONDS_ORM_DATABASE"],
-      synchronize: false,
+      synchronize: true,
       entities: ["**/*.entity{.ts,.js}"],
       migrationsTableName: "migration",
       migrations: ["src/migration/*.ts"],
@@ -32,6 +34,8 @@ import { MetricsService } from "./services/metrics.service";
       },
       ssl: false,
     }),
+
+    TypeOrmModule.forFeature([HighScoreEntity, BotRegistrationsEntity]),
   ],
   providers: [
     CustomLogger,
