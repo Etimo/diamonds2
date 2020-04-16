@@ -16,7 +16,7 @@ services:
     build:
       context: ./backend
       target: "develop"
-    command: /bin/sh -c "yarn run  typeorm:migration:run && yarn run start:dev"
+    command: /bin/sh -c " yarn run start:dev"
     volumes:
       - ./backend/src:/app/src
       - /app/node_modules
