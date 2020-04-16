@@ -1,10 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { IBot } from "src/interfaces/bot.interface";
-import { BotRegistrationDto } from "src/models/bot-registration.dto";
-import ConflictError from "../errors/conflict.error";
 import { HighscoreDto } from "../models/highscore.dto";
-import { promises } from "dns";
-import { newExpression } from "@babel/types";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { HighScoreEntity } from "../db/models/highScores.entity";
@@ -24,15 +19,10 @@ export class HighScoresService {
       botName: "test2",
       score: 22,
     };
-
-    //with db
-    //this.highScores.push(testHighScore);
   }
 
   public async addOrUpdate(input: HighscoreDto): Promise<boolean> {
     if (await this.isNewHighScore(input)) {
-      //this.highScores.push(input);
-
       await this.create(input);
     }
 
@@ -97,13 +87,9 @@ export class HighScoresService {
   }
 
   public async all() {
-    //with db
     return await this.repo
       .find()
       .then(highScores => highScores.map(e => HighscoreDto.fromEntity(e)));
-
-    //with db
-    // return this.highScores;
   }
   public async create(dto: HighscoreDto): Promise<HighscoreDto> {
     return this.repo.save(dto);

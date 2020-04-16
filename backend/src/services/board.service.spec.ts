@@ -1,72 +1,91 @@
-import { BotsService } from "./bots.service";
-import { IdService } from "./id.service";
 import { BoardsService } from "./board.service";
+import { Repository, SelectQueryBuilder, Connection } from "typeorm";
+import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
+import { Test, TestingModule } from "@nestjs/testing";
 import { HighScoresService } from "./high-scores.service";
-import { HighScoreEntity } from "../db/models/highScores.entity";
+import { getRepositoryToken } from "@nestjs/typeorm";
 import { CustomLogger } from "../logger";
+import { BotsService } from "./bots.service";
+import { HighScoreEntity } from "../db/models/highScores.entity";
 import UnauthorizedError from "../errors/unauthorized.error";
 import { IBot } from "../interfaces/bot.interface";
 import NotFoundError from "../errors/not-found.error";
-import ConflictError from "../errors/conflict.error";
-import { createConnection, Connection } from "typeorm";
-import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
 
-let boardsService: BoardsService;
-let botService: BotsService;
-let highScoreService: HighScoresService;
-const dummyBoardId = 1111111;
-const dummyBoardToken = "dummy";
-const dummyBotId = "dummyId";
-let connection: Connection;
+describe("BoardsService", () => {
+  let botsService: BotsService;
+  let highScoresService: HighScoresService;
+  const dummyBoardId = 1111111;
+  const dummyBoardToken = "dummy";
+  const dummyBotId = "dummyId";
+  let boardsService: BoardsService;
+  let repositoryMock: MockType<Repository<HighScoreEntity>>;
+  let repositoryMock2: MockType<Repository<BotRegistrationsEntity>>;
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        BotsService,
 
-beforeAll(async () => {
-  // const opt = {
-  //   ...configService.getTypeOrmConfig(),
-  //   debug: true,
-  // };
-  //TODO: FIX ConnectionOptions from configService.getTypeOrmConfig()
-  connection = await createConnection({
-    type: "postgres",
-    host: "localhost",
-    port: 5432,
-    username: "postgres",
-    password: "postgres",
-    database: "postgres",
-    entities: ["**/*.entity{.ts,.js}"],
+        {
+          provide: getRepositoryToken(BotRegistrationsEntity),
+          useFactory: repositoryMockFactory,
+        },
+        HighScoresService,
+
+        {
+          provide: getRepositoryToken(HighScoreEntity),
+          useFactory: repositoryMockFactory,
+        },
+        BoardsService,
+        CustomLogger,
+      ],
+    }).compile();
+    highScoresService = module.get<HighScoresService>(HighScoresService);
+    botsService = module.get<BotsService>(BotsService);
+    boardsService = module.get<BoardsService>(BoardsService);
+    repositoryMock = module.get(getRepositoryToken(HighScoreEntity));
+    repositoryMock2 = module.get(getRepositoryToken(BotRegistrationsEntity));
+  });
+  beforeEach(async () => {
+    jest.clearAllMocks();
+  });
+
+  it("should be defined", () => {
+    expect(highScoresService).toBeDefined();
+    expect(botsService).toBeDefined();
+    expect(boardsService).toBeDefined();
+  });
+
+  it("Should throw UnauthorizedError when bot not exists", async () => {
+    spyOn(botsService, "get").and.returnValue(undefined);
+    await expect(
+      boardsService.join(dummyBoardId, dummyBoardToken),
+    ).rejects.toThrowError(UnauthorizedError);
+  });
+
+  it("Should throw NotFoundError when board not exists", async () => {
+    spyOn(botsService, "get").and.returnValue({} as IBot);
+    await expect(
+      boardsService.join(dummyBoardId, dummyBoardToken),
+    ).rejects.toThrowError(NotFoundError);
   });
 });
 
-afterAll(async () => {
-  if (connection) {
-    await connection.close();
-  }
-});
-
-beforeEach(() => {
-  const idService = new IdService();
-  botService = new BotsService(
-    connection.getRepository(BotRegistrationsEntity),
-  );
-  highScoreService = new HighScoresService(
-    connection.getRepository(HighScoreEntity),
-  );
-  boardsService = new BoardsService(
-    botService,
-    highScoreService,
-    new CustomLogger(),
-  );
-});
-
-test("Should throw UnauthorizedError when bot not exists", async () => {
-  spyOn(botService, "get").and.returnValue(undefined);
-  await expect(
-    boardsService.join(dummyBoardId, dummyBoardToken),
-  ).rejects.toThrowError(UnauthorizedError);
-});
-
-test("Should throw NotFoundError when board not exists", async () => {
-  spyOn(botService, "get").and.returnValue({} as IBot);
-  await expect(
-    boardsService.join(dummyBoardId, dummyBoardToken),
-  ).rejects.toThrowError(NotFoundError);
-});
+//Repository functions to Mock
+// @ts-ignore
+export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
+  () => ({
+    findOne: jest.fn(entity => entity),
+    find: jest.fn(entity => entity),
+    update: jest.fn(),
+    save: jest.fn(),
+    createQueryBuilder: jest.fn(() => ({
+      where: jest.fn(() => ({ getOne: jest.fn(entity => entity) })),
+      getOne: jest.fn(),
+    })),
+    execute: jest.fn(entity => entity),
+    where: jest.fn(),
+  }),
+);
+export type MockType<T> = {
+  [P in keyof T]: jest.Mock<{}>;
+};

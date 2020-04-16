@@ -1,99 +1,225 @@
 import { HighScoresService } from "./high-scores.service";
-import { IdService } from "./id.service";
-import { createConnection, Connection } from "typeorm";
+import { Repository, SelectQueryBuilder, Connection } from "typeorm";
 import { HighScoreEntity } from "../db/models/highScores.entity";
-import { ConnectEvent } from "@nestjs/common/interfaces/external/kafka-options.interface";
-import { configService } from "../config/config.service";
-import { async } from "rxjs/internal/scheduler/async";
+import { Test, TestingModule } from "@nestjs/testing";
+import { HighscoreDto } from "../models/highscore.dto";
+import { getRepositoryToken } from "@nestjs/typeorm";
 
-let highScoresService: HighScoresService;
-let testBotName: string;
-let numBotsCreatedOnConstructor: number;
-let connection: Connection;
+describe("HighScoresService", () => {
+  let highScoresService: HighScoresService;
+  let testBotName: string = "testBot";
+  let repositoryMock: MockType<Repository<HighScoreEntity>>;
 
-beforeAll(async () => {
-  // const opt = {
-  //   ...configService.getTypeOrmConfig(),
-  //   debug: true,
-  // };
-  //TODO: FIX ConnectionOptions from configService.getTypeOrmConfig()
-  connection = await createConnection({
-    type: "postgres",
-    host: "localhost",
-    port: 5432,
-    username: "postgres",
-    password: "postgres",
-    database: "postgres",
-    entities: ["**/*.entity{.ts,.js}"],
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        HighScoresService,
+
+        {
+          provide: getRepositoryToken(HighScoreEntity),
+          useFactory: repositoryMockFactory,
+        },
+      ],
+    }).compile();
+    highScoresService = module.get<HighScoresService>(HighScoresService);
+    repositoryMock = module.get(getRepositoryToken(HighScoreEntity));
+  });
+  beforeEach(async () => {
+    jest.clearAllMocks();
   });
 
-  highScoresService = new HighScoresService(
-    connection.getRepository(HighScoreEntity),
-  );
-  testBotName = "specBot";
-});
-beforeEach(async () => {
-  await highScoresService.delete({
-    botName: testBotName,
-    score: 22,
-  });
-});
-afterAll(async () => {
-  if (connection) {
-    await connection.close();
-  }
-});
-
-test("Add new score", async () => {
-  await highScoresService.addOrUpdate({
-    botName: testBotName,
-    score: 22,
+  it("should be defined", () => {
+    expect(highScoresService).toBeDefined();
   });
 
-  //console.log(highScoresService.all());
-  let x = await highScoresService.getBotScore({
-    botName: testBotName,
-    score: 0,
+  it("Add new score", async () => {
+    let newHighScoreDto = {
+      botName: testBotName,
+      score: 44,
+    };
+
+    //Mocking find from repository
+    repositoryMock.find.mockReturnValue(
+      new Promise<HighscoreDto[]>((resolve, reject) => {
+        var savedPackage: HighscoreDto[] = [newHighScoreDto];
+
+        setTimeout(() => {
+          resolve(savedPackage);
+        }, 1500);
+      }),
+    );
+
+    //Insert new HighScore
+    await highScoresService.addOrUpdate(newHighScoreDto);
+
+    let highscoreDtoItems = await highScoresService.getBotScore(
+      newHighScoreDto,
+    );
+
+    expect(highscoreDtoItems.length).toEqual(1);
+    expect(repositoryMock.save).toHaveBeenCalledTimes(1);
+    expect(repositoryMock.save).toHaveBeenCalledWith(newHighScoreDto);
   });
 
-  expect(x.length).toEqual(1);
+  it("getBotScore", async () => {
+    let bot = {
+      botName: testBotName,
+      score: 100,
+    };
+
+    repositoryMock.find.mockReturnValue(
+      new Promise<HighscoreDto[]>((resolve, reject) => {
+        var savedPackage: HighscoreDto[] = [bot];
+
+        setTimeout(() => {
+          resolve(savedPackage);
+        }, 1500);
+      }),
+    );
+
+    expect(await highScoresService.getBotScore(bot)).toEqual([bot]);
+    expect(repositoryMock.find).toHaveBeenCalledWith({
+      where: [{ botName: bot.botName }],
+    });
+  });
+
+  test("Update score", async () => {
+    //same botName, different score
+    let botLowScore = {
+      botName: testBotName,
+      score: 44,
+    };
+    let botHighScore = {
+      botName: testBotName,
+      score: 84,
+    };
+
+    //insert first botLowScore
+    await highScoresService.addOrUpdate(botLowScore);
+
+    expect(repositoryMock.save).toHaveBeenCalledWith(botLowScore);
+    expect(repositoryMock.save).toHaveBeenCalledTimes(1);
+
+    const execute = jest.fn();
+    const where = jest.fn(() => ({ execute }));
+    const set = jest.fn(() => ({ where }));
+    const update = jest.fn(() => ({ set }));
+
+    const getOne = jest.fn(
+      () =>
+        new Promise<HighscoreDto>((resolve, reject) => {
+          var savedPackage: HighscoreDto = botLowScore;
+
+          setTimeout(() => {
+            resolve(savedPackage);
+          }, 500);
+        }),
+    );
+    const where2 = jest.fn(() => ({ getOne }));
+
+    repositoryMock.createQueryBuilder.mockImplementation(
+      jest.fn(() => ({ update: update, where: where2 })),
+    );
+
+    await highScoresService.addOrUpdate(botHighScore);
+
+    expect(repositoryMock.save).toHaveBeenCalledTimes(1);
+    expect(update).toHaveBeenCalledTimes(1);
+
+    repositoryMock.find.mockReturnValue(
+      new Promise<HighscoreDto[]>((resolve, reject) => {
+        var savedPackage: HighscoreDto[] = [botHighScore];
+
+        setTimeout(() => {
+          resolve(savedPackage);
+        }, 1500);
+      }),
+    );
+
+    //find bot
+    let highscoreDtoItems = await highScoresService.getBotScore(botHighScore);
+    //only one result when looking  bot with testBotName
+    expect(highscoreDtoItems.length).toEqual(1);
+
+    expect(highscoreDtoItems[0].score).toEqual(botHighScore.score);
+  });
+
+  it("Ignore lower score", async () => {
+    let botHighScore = {
+      botName: testBotName,
+      score: 5,
+    };
+    let botLowScore = {
+      botName: testBotName,
+      score: 4,
+    };
+
+    await highScoresService.addOrUpdate(botHighScore);
+
+    //insert botHighScore
+    expect(repositoryMock.save).toHaveBeenCalledWith(botHighScore);
+    expect(repositoryMock.save).toHaveBeenCalledTimes(1);
+
+    const execute = jest.fn();
+    const where = jest.fn(() => ({ execute }));
+    const set = jest.fn(() => ({ where }));
+    const update = jest.fn(() => ({ set }));
+
+    const getOne = jest.fn(
+      () =>
+        new Promise<HighscoreDto>((resolve, reject) => {
+          var savedPackage: HighscoreDto = botHighScore;
+
+          setTimeout(() => {
+            resolve(savedPackage);
+          }, 500);
+        }),
+    );
+    const where2 = jest.fn(() => ({ getOne }));
+
+    repositoryMock.createQueryBuilder.mockImplementation(
+      jest.fn(() => ({ update: update, where: where2 })),
+    );
+
+    await highScoresService.addOrUpdate(botLowScore);
+
+    // Save calls should not increase.
+    expect(repositoryMock.save).toHaveBeenCalledTimes(1);
+    expect(update).toHaveBeenCalledTimes(0);
+
+    repositoryMock.find.mockReturnValue(
+      new Promise<HighscoreDto[]>((resolve, reject) => {
+        var savedPackage: HighscoreDto[] = [botHighScore];
+
+        setTimeout(() => {
+          resolve(savedPackage);
+        }, 1500);
+      }),
+    );
+
+    let highscoreDtoItems = await highScoresService.getBotScore(botLowScore);
+
+    expect(highscoreDtoItems.length).toEqual(1);
+
+    expect(highscoreDtoItems[0].score).toEqual(botHighScore.score);
+  });
 });
 
-test("Update score", async () => {
-  let bot = {
-    botName: testBotName,
-    score: 44,
-  };
-
-  await highScoresService.addOrUpdate(bot);
-
-  let bot2 = {
-    botName: testBotName,
-    score: 84,
-  };
-
-  await highScoresService.addOrUpdate(bot2);
-
-  let x = await highScoresService.getBotScore(bot2);
-
-  expect(x.length).toEqual(1);
-});
-
-test("Ignore lower score", async () => {
-  let bot = {
-    botName: testBotName,
-    score: 5,
-  };
-  await highScoresService.addOrUpdate(bot);
-
-  let bot2 = {
-    botName: testBotName,
-    score: 4,
-  };
-
-  await highScoresService.addOrUpdate(bot2);
-
-  let x = await highScoresService.getBotScore(bot2);
-
-  expect(x.length).toEqual(1);
-});
+// @ts-ignore
+export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
+  () => ({
+    findOne: jest.fn(entity => entity),
+    find: jest.fn(entity => entity),
+    update: jest.fn(),
+    save: jest.fn(),
+    createQueryBuilder: jest.fn(() => ({
+      where: jest.fn(() => ({ getOne: jest.fn(entity => entity) })),
+      getOne: jest.fn(),
+    })),
+    execute: jest.fn(entity => entity),
+    where: jest.fn(),
+  }),
+);
+export type MockType<T> = {
+  [P in keyof T]: jest.Mock<{}>;
+};

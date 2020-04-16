@@ -33,8 +33,7 @@ import { BotRegistrationsEntity } from "./db/models/botRegistrations.entity";
       ssl: false,
     }),
 
-    TypeOrmModule.forFeature([HighScoreEntity]),
-    TypeOrmModule.forFeature([BotRegistrationsEntity]),
+    TypeOrmModule.forFeature([HighScoreEntity, BotRegistrationsEntity]),
   ],
   providers: [
     CustomLogger,
