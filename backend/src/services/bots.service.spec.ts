@@ -24,8 +24,6 @@ describe("BotsService", () => {
     }).compile();
     botsService = module.get<BotsService>(BotsService);
     repositoryMock = module.get(getRepositoryToken(BotRegistrationsEntity));
-  });
-  beforeEach(async () => {
     jest.clearAllMocks();
   });
 

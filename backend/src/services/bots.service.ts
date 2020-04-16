@@ -14,21 +14,7 @@ export class BotsService {
   constructor(
     @InjectRepository(BotRegistrationsEntity)
     private readonly repo: Repository<BotRegistrationsEntity>,
-  ) {
-    // console.log(repo.createQueryBuilder);
-    // this.bots.push({
-    //   id: idService.next(),
-    //   token: idService.next(),
-    //   name: "test",
-    //   email: "test@test.se",
-    // });
-    // this.bots.push({
-    //   id: idService.next(),
-    //   token: idService.next(),
-    //   name: "test2",
-    //   email: "test2@test.se",
-    // });
-  }
+  ) {}
 
   public async add(
     input: BotRegistrationDto,
@@ -41,15 +27,7 @@ export class BotsService {
         new ConflictError("Email and/or name already exists"),
       );
     }
-    // const bot = {
-    //   token: this.idService.next().toString(),
-    //   name: input.name,
-    //   email: input.email,
-    //   id: this.idService.next().toString(),
-    // };
 
-    // this.bots.push(bot);
-    //return Promise.resolve(bot);
     return this.create(input);
   }
 
@@ -63,12 +41,6 @@ export class BotsService {
       );
     //console.log(existBot);
     return existBot;
-    // return await this.repo
-    //   .save(dto)
-    //   .then(botRegistrationsEntity =>
-    //     BotRegistrationPublicDto.fromEntity(botRegistrationsEntity),
-    //   );
-    //return this.bots.find(b => b.token === token);
   }
 
   private async emailExists(email: string) {
@@ -80,8 +52,6 @@ export class BotsService {
       .getOne();
     //    console.log(!existEmail);
     return existEmail;
-
-    //this.bots.some((bot: IBot) => bot.email.toLowerCase() === email);
   }
 
   private async nameExists(name: string) {
@@ -91,7 +61,7 @@ export class BotsService {
       .where("botRegistrations.botName = :botName", { botName: name })
       .getOne();
     //console.log(!firstUser);
-    return existName; //this.bots.some((bot: IBot) => bot.name.toLowerCase() === name);
+    return existName;
   }
 
   public async create(

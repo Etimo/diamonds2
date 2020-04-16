@@ -23,8 +23,6 @@ describe("HighScoresService", () => {
     }).compile();
     highScoresService = module.get<HighScoresService>(HighScoresService);
     repositoryMock = module.get(getRepositoryToken(HighScoreEntity));
-  });
-  beforeEach(async () => {
     jest.clearAllMocks();
   });
 
