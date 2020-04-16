@@ -11,6 +11,8 @@ import { HighScoreEntity } from "../db/models/highScores.entity";
 import UnauthorizedError from "../errors/unauthorized.error";
 import { IBot } from "../interfaces/bot.interface";
 import NotFoundError from "../errors/not-found.error";
+import SilentLogger from "../gameengine/util/silent-logger";
+import { MetricsService } from "./metrics.service";
 
 describe("BoardsService", () => {
   let botsService: BotsService;
@@ -36,17 +38,20 @@ describe("BoardsService", () => {
           provide: getRepositoryToken(HighScoreEntity),
           useFactory: repositoryMockFactory,
         },
-        BoardsService,
-        CustomLogger,
       ],
     }).compile();
     highScoresService = module.get<HighScoresService>(HighScoresService);
     botsService = module.get<BotsService>(BotsService);
-    boardsService = module.get<BoardsService>(BoardsService);
+
     repositoryMock = module.get(getRepositoryToken(HighScoreEntity));
     repositoryMock2 = module.get(getRepositoryToken(BotRegistrationsEntity));
-  });
-  beforeEach(async () => {
+    boardsService = new BoardsService(
+      botsService,
+      highScoresService,
+      null,
+      new SilentLogger() as CustomLogger,
+    );
+
     jest.clearAllMocks();
   });
 
