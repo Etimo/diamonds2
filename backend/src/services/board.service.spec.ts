@@ -3,6 +3,7 @@ import { Repository, SelectQueryBuilder, Connection } from "typeorm";
 import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
 import { Test, TestingModule } from "@nestjs/testing";
 import { HighScoresService } from "./high-scores.service";
+
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { CustomLogger } from "../logger";
 import { BotsService } from "./bots.service";
@@ -10,6 +11,10 @@ import { HighScoreEntity } from "../db/models/highScores.entity";
 import UnauthorizedError from "../errors/unauthorized.error";
 import { IBot } from "../interfaces/bot.interface";
 import NotFoundError from "../errors/not-found.error";
+
+import { CustomLogger } from "src/logger";
+
+
 
 describe("BoardsService", () => {
   let botsService: BotsService;
@@ -25,11 +30,13 @@ describe("BoardsService", () => {
       providers: [
         BotsService,
 
+
         {
           provide: getRepositoryToken(BotRegistrationsEntity),
           useFactory: repositoryMockFactory,
         },
         HighScoresService,
+
 
         {
           provide: getRepositoryToken(HighScoreEntity),

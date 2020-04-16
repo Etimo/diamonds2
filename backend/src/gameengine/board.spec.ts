@@ -117,10 +117,10 @@ describe("trySetGameObjectPosition", () => {
     const initialPosition = { x: 0, y: 0 };
     const bot = new BotGameObject(initialPosition);
 
-    const result = board.trySetGameObjectPosition(bot, { x: 1, y: 0 });
+    const result = board.trySetGameObjectPosition(bot, { x: 0, y: 1 });
 
     expect(result).toBeTruthy();
-    expect(bot.position).toStrictEqual({ x: 1, y: 0 });
+    expect(bot.position).toStrictEqual({ x: 0, y: 1 });
   });
 
   test("when gameobject not allowed to move bot stays", () => {

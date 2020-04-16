@@ -4,4 +4,7 @@ export default class SilentLogger {
   warn() {}
   error() {}
   critical() {}
+  log() {}
+  trace() {}
+  verbose() {}
 }

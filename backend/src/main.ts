@@ -5,9 +5,9 @@ import * as compression from "compression";
 import { AppModule } from "./app.module";
 import { AllExceptionsFilter } from "./exception-filter";
 import { EnvelopeInterceptor } from "./interceptors/envelope.interceptor";
-import { TimingInterceptor } from "./interceptors/timing.interceptor";
 import { CustomLogger } from "./logger";
 import bodyParser = require("body-parser");
+import * as apiMetrics from "prometheus-api-metrics";
 
 async function bootstrap() {
   const logger = new CustomLogger();
@@ -16,9 +16,9 @@ async function bootstrap() {
   });
   app.use(bodyParser.json());
   app.use(compression());
+  app.use(apiMetrics());
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new AllExceptionsFilter());
-  app.useGlobalInterceptors(new TimingInterceptor(logger));
   app.useGlobalInterceptors(new EnvelopeInterceptor(logger));
 
   const options = new DocumentBuilder()

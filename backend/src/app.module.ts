@@ -10,8 +10,12 @@ import { BotsController } from "./controllers/bots/bots.controller";
 import { CustomLogger } from "./logger";
 import { BoardsService } from "./services/board.service";
 import { HighScoresService } from "./services/high-scores.service";
+
 import { HighScoreEntity } from "./db/models/highScores.entity";
 import { BotRegistrationsEntity } from "./db/models/botRegistrations.entity";
+import { configService } from "./config/config.service";
+import { MetricsService } from "./services/metrics.service";
+
 @Module({
   controllers: [BotsController, BoardsController, HighscoresController],
   imports: [
@@ -41,6 +45,7 @@ import { BotRegistrationsEntity } from "./db/models/botRegistrations.entity";
     IdService,
     ValidatorService,
     HighScoresService,
+    MetricsService,
   ],
 })
 export class AppModule {}

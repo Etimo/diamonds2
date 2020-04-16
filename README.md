@@ -27,6 +27,7 @@ docker-compose up
 
 - Frontend: [http://localhost:8080](http://localhost:8080)
 - API: [http://localhost:8081](http://localhost:8081)
+- Swagger: [http://localhost:8081/docs](http://localhost:8081/docs)
 - Database (browsing): [http://localhost:8082](http://localhost:8082/?pgsql=database&username=postgres&db=postgres)
 
 ## Production (from source)

@@ -69,12 +69,16 @@ jobs:
           docker tag diamonds2_frontend:latest etimodanielwinther/diamonds2_frontend:${BRANCH_NAME}-${{ github.sha }}
           docker tag diamonds2_backend:latest etimodanielwinther/diamonds2_backend:latest-${BRANCH_NAME}
           docker tag diamonds2_backend:latest etimodanielwinther/diamonds2_backend:${BRANCH_NAME}-${{ github.sha }}
+          docker tag diamonds2_bots:latest etimodanielwinther/diamonds2_bots:latest-${BRANCH_NAME}
+          docker tag diamonds2_bots:latest etimodanielwinther/diamonds2_bots:${BRANCH_NAME}-${{ github.sha }}
       - name: Push docker images
         run: |
           docker push etimodanielwinther/diamonds2_frontend:latest-${BRANCH_NAME}
           docker push etimodanielwinther/diamonds2_frontend:${BRANCH_NAME}-${{ github.sha }}
           docker push etimodanielwinther/diamonds2_backend:latest-${BRANCH_NAME}
           docker push etimodanielwinther/diamonds2_backend:${BRANCH_NAME}-${{ github.sha }}
+          docker push etimodanielwinther/diamonds2_bots:latest-${BRANCH_NAME}
+          docker push etimodanielwinther/diamonds2_bots:${BRANCH_NAME}-${{ github.sha }}
 
   # When pushing code to develop we want to deploy latest develop images to test environment
   deploy-test:

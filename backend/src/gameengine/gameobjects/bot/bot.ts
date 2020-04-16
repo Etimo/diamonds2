@@ -1,5 +1,6 @@
 import { IPosition } from "src/common/interfaces/position.interface";
 import { AbstractGameObject } from "../abstract-game-object";
+import { Board } from "src/gameengine/board";
 
 export class BotGameObject extends AbstractGameObject {
   base: IPosition;
@@ -22,5 +23,12 @@ export class BotGameObject extends AbstractGameObject {
       timeJoined: this.timeJoined,
       base: this.base,
     };
+  }
+
+  canGameObjectEnter(gameObject: AbstractGameObject, board: Board): boolean {
+    if (gameObject instanceof BotGameObject) {
+      return false;
+    }
+    return true;
   }
 }
