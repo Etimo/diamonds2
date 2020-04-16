@@ -13,7 +13,6 @@ import { HighScoresService } from "./services/high-scores.service";
 
 import { HighScoreEntity } from "./db/models/highScores.entity";
 import { BotRegistrationsEntity } from "./db/models/botRegistrations.entity";
-import { configService } from "./config/config.service";
 import { MetricsService } from "./services/metrics.service";
 
 @Module({

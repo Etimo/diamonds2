@@ -12,10 +12,6 @@ import UnauthorizedError from "../errors/unauthorized.error";
 import { IBot } from "../interfaces/bot.interface";
 import NotFoundError from "../errors/not-found.error";
 
-import { CustomLogger } from "src/logger";
-
-
-
 describe("BoardsService", () => {
   let botsService: BotsService;
   let highScoresService: HighScoresService;
@@ -30,13 +26,11 @@ describe("BoardsService", () => {
       providers: [
         BotsService,
 
-
         {
           provide: getRepositoryToken(BotRegistrationsEntity),
           useFactory: repositoryMockFactory,
         },
         HighScoresService,
-
 
         {
           provide: getRepositoryToken(HighScoreEntity),
