@@ -11,13 +11,13 @@ services:
     image: etimodanielwinther/diamonds2_backend:${DIAMONDS_DOCKER_TAG}
     command: /bin/sh -c "yarn start:prod"
     environment:
-      - DIAMONDS_ORM_HOST
-      - DIAMONDS_ORM_PORT
-      - DIAMONDS_ORM_DATABASE
-      - DIAMONDS_ORM_USERNAME
-      - DIAMONDS_ORM_PASSWORD
+      - ENVIRONMENT=production
+      - TYPEORM_HOST
+      - TYPEORM_PORT
+      - TYPEORM_DATABASE
+      - TYPEORM_USERNAME
+      - TYPEORM_PASSWORD
       - PORT=5000
-      - RUN_MIGRATIONS=false
     ports:
       - 8081:5000
 
