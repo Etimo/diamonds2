@@ -26,9 +26,9 @@ import { MetricsService } from "./services/metrics.service";
       password: process.env["TYPEORM_PASSWORD"],
       database: process.env["TYPEORM_DATABASE"],
       synchronize: true,
-      entities: ["src/db/models/*.entity.ts"],
+      entities: ["./src/db/models/*.entity.ts"],
       migrationsTableName: "migration",
-      migrations: ["src/migration/*.ts"],
+      migrations: ["./src/migration/*.ts"],
       ssl: false,
     }),
 
