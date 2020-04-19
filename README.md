@@ -16,6 +16,8 @@ License:
 
 Diamonds is a programming challenge. Program a bot and compete to get the highest score.
 
+Rules TODO.
+
 ## Development
 
 Run the following commands to setup a development environment using Docker:
