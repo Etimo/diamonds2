@@ -9,7 +9,7 @@ services:
 
   backend:
     image: etimodanielwinther/diamonds2_backend:${DIAMONDS_DOCKER_TAG}
-    command: /bin/sh -c "yarn start:prod"
+    command: /bin/sh -c "yarn run typeorm:migration:run && yarn start:prod"
     environment:
       - ENVIRONMENT=production
       - TYPEORM_HOST
