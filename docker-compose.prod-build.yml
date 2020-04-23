@@ -12,8 +12,8 @@ services:
   backend:
     build:
       context: ./backend
-      target: "prod"
-    command: /bin/sh -c "yarn run typeorm:migration:run && yarn start:prod"
+      target: "develop"
+    command: /bin/sh -c "yarn run start:dev"
     environment:
       - TYPEORM_HOST
       - TYPEORM_PORT
