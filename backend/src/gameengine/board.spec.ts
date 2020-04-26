@@ -13,7 +13,7 @@ let provider: DiamondProvider;
 const botExampleData: IBot = {
   id: "1",
   email: "email",
-  name: "name",
+  botName: "name",
   token: "1",
 };
 

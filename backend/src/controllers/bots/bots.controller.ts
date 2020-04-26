@@ -44,14 +44,14 @@ export class BotsController {
   @ApiResponse({
     status: 200,
     description: "Returns bot",
-    type: BotDto,
+    type: BotRegistrationPublicDto,
   })
   @ApiResponse({
     status: 404,
     description: "Bot not found",
   })
   @Get(":token")
-  async find(@Param("token") token: string): Promise<IBot> {
+  async find(@Param("token") token: string): Promise<BotRegistrationPublicDto> {
     return await this.botService.get(token);
   }
 }

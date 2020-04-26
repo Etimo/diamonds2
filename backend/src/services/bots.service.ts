@@ -31,7 +31,7 @@ export class BotsService {
     return this.create(input);
   }
 
-  public async get(token: string): Promise<IBot> {
+  public async get(token: string): Promise<BotRegistrationPublicDto> {
     const existBot = await this.repo
       .createQueryBuilder("botRegistrations")
       .where("botRegistrations.token = :token", { token: token })
@@ -39,7 +39,6 @@ export class BotsService {
       .then(botRegistrationsEntity =>
         BotRegistrationPublicDto.fromEntity(botRegistrationsEntity),
       );
-    //console.log(existBot);
     return existBot;
   }
 

@@ -1,6 +1,6 @@
 export interface IBot {
   id?: string;
-  name?: string;
+  botName?: string;
   email?: string;
   token?: string;
 }

@@ -88,7 +88,7 @@ export class Board {
    */
   public async move(bot: IBot, delta: IPosition) {
     const botGameObject = this.getGameObjectsByType(BotGameObject).find(
-      b => b.name === bot.name,
+      b => b.name === bot.botName,
     );
 
     if (botGameObject) {
@@ -106,9 +106,9 @@ export class Board {
    */
   private createNewExpirationTimer(bot: IBot) {
     const id = setTimeout(_ => {
-      this.logger.debug(`Purge bot ${bot.name}`);
+      this.logger.debug(`Purge bot ${bot.botName}`);
       const botGameObject = this.getGameObjectsByType(BotGameObject).find(
-        b => b.name === bot.name,
+        b => b.name === bot.botName,
       );
       if (!botGameObject) {
         return;
@@ -389,11 +389,11 @@ export class Board {
   }
 
   getLastMove(bot: IBot) {
-    return this.botMoves[bot.name];
+    return this.botMoves[bot.botName];
   }
 
   updateLastMove(bot: IBot) {
-    this.botMoves[bot.name] = Date.now();
+    this.botMoves[bot.botName] = Date.now();
   }
 
   notifyGameObjectEvent(

@@ -13,7 +13,7 @@ beforeEach(() => {
   });
   board = createTestBoard();
   data = {
-    name: "name",
+    botName: "name",
   };
 });
 

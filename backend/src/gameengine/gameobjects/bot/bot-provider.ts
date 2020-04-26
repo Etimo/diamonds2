@@ -24,6 +24,7 @@ export class BotProvider extends AbstractGameObjectProvider<BotProviderConfig> {
   }
 
   protected getInitializedBot(data: IBot, base: IPosition, board: Board) {
+    console.log("BOT DATA", data)
     const botGameObject = new BotGameObject(base);
     botGameObject.base = { x: base.x, y: base.y };
     botGameObject.timeJoined = new Date();
@@ -34,7 +35,7 @@ export class BotProvider extends AbstractGameObjectProvider<BotProviderConfig> {
     botGameObject.diamonds = 0;
     botGameObject.score = 0;
     botGameObject.inventorySize = this.config.inventorySize;
-    botGameObject.name = data.name;
+    botGameObject.name = data.botName;
     return botGameObject;
   }
 }
