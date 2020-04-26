@@ -1,10 +1,10 @@
-module.exports = {
+const dbConfig = {
   type: "postgres",
   port: 5432,
-  host: "localhost",
-  username: "postgres",
-  password: "postgres",
-  database: "postgres",
+  host: process.env["TYPEORM_HOST"] || "localhost",
+  username: process.env["TYPEORM_USERNAME"] || "postgres",
+  password: process.env["TYPEORM_PASSWORD"] || "postgres",
+  database: process.env["TYPEORM_DATABASE"] || "postgres",
   entities: ["**/*.entity{.ts,.js}"],
   migrationsTableName: "migration",
   migrations: ["src/migration/*.ts"],
@@ -13,3 +13,5 @@ module.exports = {
     migrationsDir: "src/migration",
   },
 };
+console.log("ormconfig.js db config", dbConfig.host);
+module.exports = dbConfig;
