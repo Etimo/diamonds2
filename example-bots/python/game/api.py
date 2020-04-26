@@ -30,7 +30,7 @@ class Api(object):
         return self._return_response_and_status(response)
 
     def bots_register(self, name, email):
-        response = self._req("/bots", "post", {"email": email, "name": name})
+        response = self._req("/bots", "post", {"email": email, "botName": name})
         return self._return_response_and_status(response)
 
     def boards_list(self):

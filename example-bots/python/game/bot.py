@@ -25,15 +25,13 @@ class Bot(object):
     def get_my_info(self):
         resp, status = self.api.bots_get(self.bot_token)
         if status == 200:
-            self.name = resp["name"]
-            self.id = resp["id"]
+            self.name = resp["botName"]
 
     def register(self):
         resp, status = self.api.bots_register(self.name, self.email)
 
         if status == 200:
             self.bot_token = resp["token"]
-            self.id = resp["id"]
         return resp, status
 
     def list_boards(self):

@@ -9,6 +9,7 @@ class FirstDiamondLogic(object):
         self.turn_direction = 1
 
     def next_move(self, board_bot, board):
+        print(board_bot)
         props = board_bot["properties"]
 
         # Analyze new state
