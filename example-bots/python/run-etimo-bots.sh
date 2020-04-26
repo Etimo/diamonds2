@@ -1,20 +1,19 @@
 #!/bin/sh
 
 URL=http://backend:5000/api
-URL=http://localhost:8080/api
 run() {
     pipenv run python main.py --logic FirstDiamond --email=$1 --name=$2 --host=$URL &
 }
 
-# echo Waiting for server to start...
-# while [ 1 ]; do
-#     nc -z $URL 5000
-#     if [ $? -eq 0 ]; then
-#         break
-#     fi
-#     sleep 1
-# done
-# echo Starting
+echo Waiting for server to start...
+while [ 1 ]; do
+    nc -z $URL 5000
+    if [ $? -eq 0 ]; then
+        break
+    fi
+    sleep 1
+done
+echo Starting
 
 tokens=$(ls -la /bot-data/.token* | wc -l)
 if [ $tokens != "0" ]; then
