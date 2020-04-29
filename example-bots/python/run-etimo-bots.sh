@@ -16,11 +16,11 @@ while [ 1 ]; do
 done
 echo Starting
 
-tokens=$(ls -la /bot-data/.etimo-token* | wc -l)
+tokens=$(ls -la /bot-data/.token* | wc -l)
 if [ $tokens != "0" ]; then
     # Existing tokens, use them
     echo Found $tokens existing tokens, use them
-    for f in $(ls /bot-data/.etimo-token*); do
+    for f in $(ls /bot-data/.token*); do
         token=$(cat $f)
         pipenv run python main.py --logic FirstDiamond --token=$token --host=$URL &
         sleep 10
@@ -28,10 +28,10 @@ if [ $tokens != "0" ]; then
 else
     # Create new bots
     for bot in etimo1 etimo2; do
-        pipenv run python main.py --logic FirstDiamond --email=bot-$bot@etimo.se --name=$bot --host=$URL &
+        pipenv run python main.py --logic FirstDiamond --email=$bot@etimo.se --name=$bot --host=$URL &
         sleep 10
     done
-    cp .etimo-token* /bot-data
+    cp .token* /bot-data
 fi
 
 wait
