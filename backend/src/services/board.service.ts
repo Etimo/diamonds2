@@ -36,7 +36,6 @@ export class BoardsService {
 
     this.boards.forEach(board => {
       board.registerSessionFinishedCallback((botName, score) => {
-        console.log("HIGHSCORE", botName, score);
         if (this.metricsService) {
           this.metricsService.decPlayersTotal(board.getId());
         }
@@ -212,13 +211,15 @@ export class BoardsService {
         pairs: 1,
       }),
     ];
-    const config: BoardConfig = {
-      height: 10,
-      width: 10,
-      minimumDelayBetweenMoves: 100,
-      sessionLength: 60,
-    };
-    const board = new OperationQueueBoard(config, providers, this.logger);
-    this.boards.push(board);
+    for (let i = 0; i < 4; i++) {
+      const config: BoardConfig = {
+        height: 15,
+        width: 15,
+        minimumDelayBetweenMoves: 100,
+        sessionLength: 60,
+      };
+      const board = new OperationQueueBoard(config, providers, this.logger);
+      this.boards.push(board);
+    }
   }
 }
