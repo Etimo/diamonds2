@@ -34,7 +34,9 @@ export class DiamondProvider extends AbstractGameObjectProvider<
   }
 
   private generateDiamonds(board: Board) {
-    const count = board.width * board.height * this.config.generationRatio;
+    const count = Math.floor(
+      board.width * board.height * this.config.generationRatio,
+    );
     const diamonds = new Array(count)
       .fill(null)
       .map(_ => new DiamondGameObject(board.getEmptyPosition(), 1));
