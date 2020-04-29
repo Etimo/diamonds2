@@ -10,6 +10,9 @@ Diamonds is a programming challenge. Program a bot and compete to get the highes
 
 - Read the [game rules](RULES.md).
 - Try the api out using Swagger either [locally](http://localhost:8081/docs) or [live](http://diamonds.etimo.se/docs/)
+- Run the example bot locally and implement your logic
+- Register a bot live using the `POST /api/bots` endpoint
+- Run the bot against the live game
 
 ## Development
 
@@ -30,11 +33,11 @@ docker-compose up
 To run Diamonds from source in production mode you first need to have a database setup somewhere. Then you need to expose the following environment variables pointing out the database:
 
 ```
-DIAMONDS_ORM_HOST
-DIAMONDS_ORM_PORT
-DIAMONDS_ORM_DATABASE
-DIAMONDS_ORM_USERNAME
-DIAMONDS_ORM_PASSWORD
+TYPEORM_HOST
+TYPEORM_PORT
+TYPEORM_DATABASE
+TYPEORM_USERNAME
+TYPEORM_PASSWORD
 ```
 
 Then run the following commands from the root folder:
