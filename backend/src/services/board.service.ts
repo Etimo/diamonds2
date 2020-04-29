@@ -92,7 +92,8 @@ export class BoardsService {
       throw new ConflictError("Board full");
     }
     if (this.metricsService) {
-      this.metricsService.incPlayersTotal(board.getId());
+      this.metricsService.incPlayersTotal(boardId);
+      this.metricsService.incSessionsStarted(boardId);
     }
     return this.getAsDto(board);
   }
@@ -128,6 +129,10 @@ export class BoardsService {
 
     if (!result) {
       throw new ForbiddenError("Move not legal");
+    }
+
+    if (this.metricsService) {
+      this.metricsService.incMovesPerformed(boardId);
     }
 
     return this.getAsDto(board);

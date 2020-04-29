@@ -3,6 +3,7 @@ import { HighscoreDto } from "../models/highscore.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { HighScoreEntity } from "../db/models/highScores.entity";
+import { MetricsService } from "./metrics.service";
 
 @Injectable()
 export class HighScoresService {
@@ -13,17 +14,15 @@ export class HighScoresService {
   constructor(
     @InjectRepository(HighScoreEntity)
     private readonly repo: Repository<HighScoreEntity>,
-  ) {
-    //with db
-    let testHighScore: HighscoreDto = {
-      botName: "test2",
-      score: 22,
-    };
-  }
+    private metricsService: MetricsService,
+  ) {}
 
   public async addOrUpdate(input: HighscoreDto): Promise<boolean> {
     if (await this.isNewHighScore(input)) {
       await this.create(input);
+      if (this.metricsService) {
+        this.metricsService.incHighscoresImproved();
+      }
     }
 
     return Promise.resolve(true);
@@ -65,21 +64,6 @@ export class HighScoresService {
     }
 
     return isNew;
-  }
-  private isNewHighScoreOnMemory(newScore: HighscoreDto): boolean {
-    let isHighScore: boolean = true;
-
-    this.highScores.forEach((highScore, index) => {
-      if (newScore.botName == highScore.botName) {
-        if (newScore.score > highScore.score) {
-          this.updateHighScore(index, newScore);
-        }
-        isHighScore = false;
-        return false;
-      }
-    });
-
-    return isHighScore;
   }
 
   private updateHighScore(index: number, newScore: HighscoreDto) {

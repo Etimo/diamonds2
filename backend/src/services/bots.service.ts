@@ -6,6 +6,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
 import { BotRegistrationPublicDto } from "../models/bot-registration-public.dto";
+import { MetricsService } from "./metrics.service";
 
 @Injectable()
 export class BotsService {
@@ -14,6 +15,7 @@ export class BotsService {
   constructor(
     @InjectRepository(BotRegistrationsEntity)
     private readonly repo: Repository<BotRegistrationsEntity>,
+    private metricsService: MetricsService,
   ) {}
 
   public async add(
@@ -26,6 +28,10 @@ export class BotsService {
       return Promise.reject(
         new ConflictError("Email and/or name already exists"),
       );
+    }
+
+    if (this.metricsService) {
+      this.metricsService.incBotsRegistered();
     }
 
     return this.create(input);

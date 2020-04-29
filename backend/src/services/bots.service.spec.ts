@@ -6,6 +6,7 @@ import ConflictError from "../errors/conflict.error";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { BotRegistrationPublicDto } from "../models/bot-registration-public.dto";
+import { MetricsService } from "./metrics.service";
 
 describe("BotsService", () => {
   let botsService: BotsService;
@@ -14,8 +15,11 @@ describe("BotsService", () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        {
+          provide: MetricsService,
+          useValue: null,
+        },
         BotsService,
-
         {
           provide: getRepositoryToken(BotRegistrationsEntity),
           useFactory: repositoryMockFactory,

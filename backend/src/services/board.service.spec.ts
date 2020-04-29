@@ -27,16 +27,18 @@ describe("BoardsService", () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         BotsService,
-
         {
           provide: getRepositoryToken(BotRegistrationsEntity),
           useFactory: repositoryMockFactory,
         },
         HighScoresService,
-
         {
           provide: getRepositoryToken(HighScoreEntity),
           useFactory: repositoryMockFactory,
+        },
+        {
+          useValue: null,
+          provide: MetricsService,
         },
       ],
     }).compile();

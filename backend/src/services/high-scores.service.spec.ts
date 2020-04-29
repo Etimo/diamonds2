@@ -4,6 +4,7 @@ import { HighScoreEntity } from "../db/models/highScores.entity";
 import { Test, TestingModule } from "@nestjs/testing";
 import { HighscoreDto } from "../models/highscore.dto";
 import { getRepositoryToken } from "@nestjs/typeorm";
+import { MetricsService } from "./metrics.service";
 
 describe("HighScoresService", () => {
   let highScoresService: HighScoresService;
@@ -14,7 +15,10 @@ describe("HighScoresService", () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         HighScoresService,
-
+        {
+          provide: MetricsService,
+          useValue: null,
+        },
         {
           provide: getRepositoryToken(HighScoreEntity),
           useFactory: repositoryMockFactory,
