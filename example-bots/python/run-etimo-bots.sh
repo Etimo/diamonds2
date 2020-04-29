@@ -1,13 +1,14 @@
 #!/bin/sh
 
-URL=http://backend:5000/api
+BACKEND=backend
+URL=http://$BACKEND:5000/api
 run() {
     pipenv run python main.py --logic FirstDiamond --email=$1 --name=$2 --host=$URL &
 }
 
 echo Waiting for server to start...
 while [ 1 ]; do
-    nc -z $URL 5000
+    nc -z $BACKEND 5000
     if [ $? -eq 0 ]; then
         break
     fi
