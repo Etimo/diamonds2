@@ -10,7 +10,7 @@ export default () => {
       <Header.Link
         target="_blank"
         rel="noopener"
-        href="https://github.com/Etimo/diamonds"
+        href="https://github.com/Etimo/diamonds2"
       >
         How to play
       </Header.Link>
