@@ -11,6 +11,8 @@ export class HighscoresController {
   @ApiResponse({
     status: 200,
     description: "Returns highscores",
+    isArray: true,
+    type: HighscoreDto,
   })
   @Get()
   async listAll(): Promise<HighscoreDto[]> {
