@@ -1,22 +1,15 @@
 ![CI/CD](https://github.com/Etimo/diamonds2/workflows/CI/CD/badge.svg)
-
-Master branch:
-
-[![Coverage Status](https://coveralls.io/repos/github/Etimo/diamonds2/badge.svg?branch=master)](https://coveralls.io/github/Etimo/diamonds2?branch=master)
-
-Develop branch:
-
 [![Coverage Status](https://coveralls.io/repos/github/Etimo/diamonds2/badge.svg?branch=develop)](https://coveralls.io/github/Etimo/diamonds2?branch=develop)
-
-License:
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-# 💎 Etimo Diamonds2
+# 💎 Etimo Diamonds 2
 
 Diamonds is a programming challenge. Program a bot and compete to get the highest score.
 
-Rules TODO.
+## Want to play?
+
+- Read the [game rules](RULES.md).
+- Try the api out using Swagger either [locally](http://localhost:8081/docs) or [live](http://diamonds.etimo.se/docs/)
 
 ## Development
 

@@ -7,7 +7,7 @@ let provider: TeleportProvider;
 let board: Board;
 
 beforeEach(() => {
-  provider = new TeleportProvider();
+  provider = new TeleportProvider({ pairs: 1 });
   board = createTestBoard();
 });
 

@@ -4,11 +4,6 @@ import { DiamondGameObject } from "../diamond/diamond";
 import { BotGameObject } from "../bot/bot";
 
 export class DiamondButtonGameObject extends AbstractGameObject {
-  public get properties(): object {
-    return {
-      position: this.position,
-    };
-  }
   /**
    * Clear all diamonds when a bot enters the cell of this button.
    */

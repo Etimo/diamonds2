@@ -3,12 +3,16 @@ import { Board } from "../../board";
 import { IPosition } from "src/common/interfaces/position.interface";
 import { BotGameObject } from "../bot/bot";
 
+export interface DiamondGameObjectProperties {
+  points: number;
+}
+
 export class DiamondGameObject extends AbstractGameObject {
   constructor(position: IPosition, private readonly points) {
     super(position);
   }
 
-  public get properties(): object {
+  public get properties(): DiamondGameObjectProperties {
     return {
       points: this.points,
     };

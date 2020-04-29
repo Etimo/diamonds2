@@ -208,7 +208,9 @@ export class BoardsService {
       new BotProvider({
         inventorySize: 5,
       }),
-      new TeleportProvider(),
+      new TeleportProvider({
+        pairs: 1,
+      }),
     ];
     const config: BoardConfig = {
       height: 10,

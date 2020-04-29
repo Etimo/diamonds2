@@ -15,7 +15,6 @@ import { HighScoreEntity } from "./db/models/highScores.entity";
 import { BotRegistrationsEntity } from "./db/models/botRegistrations.entity";
 import { MetricsService } from "./services/metrics.service";
 
-
 const dbConfig: TypeOrmModuleOptions = {
   type: "postgres",
   host: process.env["TYPEORM_HOST"],
@@ -29,7 +28,7 @@ const dbConfig: TypeOrmModuleOptions = {
   migrations: ["./src/migration/*.{ts,js}"],
   ssl: false,
 };
-console.log("DB Config", dbConfig.host, dbConfig.username)
+console.log("DB Config", dbConfig.host, dbConfig.username);
 @Module({
   controllers: [BotsController, BoardsController, HighscoresController],
   imports: [

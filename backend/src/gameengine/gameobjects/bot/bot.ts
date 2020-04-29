@@ -2,6 +2,17 @@ import { IPosition } from "src/common/interfaces/position.interface";
 import { AbstractGameObject } from "../abstract-game-object";
 import { Board } from "src/gameengine/board";
 
+export interface BotGameObjectProperties {
+  base: IPosition;
+  diamonds: number;
+  timeJoined: Date;
+  inventorySize: number;
+  score: number;
+  name: string;
+  nextMoveAvailableAt: Date;
+  millisecondsLeft: number;
+}
+
 export class BotGameObject extends AbstractGameObject {
   base: IPosition;
   diamonds: number;
@@ -12,7 +23,7 @@ export class BotGameObject extends AbstractGameObject {
   name: string;
   nextMoveAvailableAt: Date;
 
-  get properties() {
+  get properties(): BotGameObjectProperties {
     return {
       diamonds: this.diamonds,
       score: this.score,
