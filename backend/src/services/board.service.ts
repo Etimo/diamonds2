@@ -1,5 +1,4 @@
 import { Injectable, Scope, Logger } from "@nestjs/common";
-import { OperationQueueBoard } from "../gameengine/operation-queue-board";
 import { BotsService } from "./bots.service";
 import { HighScoresService } from "./high-scores.service";
 import { CustomLogger } from "../logger";
@@ -23,7 +22,7 @@ import { MetricsService } from "./metrics.service";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
-  private boards: OperationQueueBoard[] = [];
+  private boards: Board[] = [];
   private lastMoveTimes: {};
 
   constructor(
@@ -138,14 +137,14 @@ export class BoardsService {
     return this.getAsDto(board);
   }
 
-  private moveIsRateLimited(board: OperationQueueBoard, bot: IBot) {
+  private moveIsRateLimited(board: Board, bot: IBot) {
     const lastMove = board.getLastMove(bot);
     const timeBetweenMoves = board.getConfig().minimumDelayBetweenMoves;
     const now = Date.now();
     return lastMove > now - timeBetweenMoves;
   }
 
-  private getBoardById(id: number): OperationQueueBoard {
+  private getBoardById(id: number): Board {
     return this.boards.find(b => b.getId() === id);
   }
 
@@ -223,7 +222,7 @@ export class BoardsService {
         minimumDelayBetweenMoves: 100,
         sessionLength: 60,
       };
-      const board = new OperationQueueBoard(config, providers, this.logger);
+      const board = new Board(config, providers, this.logger);
       this.boards.push(board);
     }
   }

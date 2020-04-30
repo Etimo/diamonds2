@@ -4,11 +4,13 @@ import { BoardConfig } from "./board-config";
 import { AbstractGameObject } from "./gameobjects/abstract-game-object";
 import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
 import { BotGameObject } from "./gameobjects/bot/bot";
+import * as async from "async";
 
 export class Board {
+  private opQueue;
   private static nextId = 1;
   private readonly _id: number = Board.nextId++;
-  private bots: Object = {};
+  private bots: object = {};
   /** List of game objects on the board. */
   private gameObjects: AbstractGameObject[] = [];
   /** Set of registered timer callbacks. */
@@ -24,6 +26,41 @@ export class Board {
     protected logger: any,
   ) {
     this.notifyProvidersBoardInitialized();
+    this.setupOperationQueue();
+  }
+
+  /**
+   * The board uses an operation queue to handle multiple requests to operate on the board.
+   * All operations on the board are queued and handled one after another.
+   * Currently all move commands are handled using this queue.
+   */
+  private setupOperationQueue() {
+    this.opQueue = async.queue(async (t: () => Promise<boolean>, cb) => {
+      try {
+        const res = t();
+        cb(res);
+      } catch (e) {
+        cb(null, e);
+      }
+    });
+  }
+  /**
+   * Queue a join to a board. Will prevent multiple simultaneous calls to collide.
+   * @param bot
+   */
+  public async enqueueJoin(bot: IBot): Promise<boolean> {
+    // Queue join
+    const joinEvent = () => this.join(bot);
+    return this.enqueueEvent(joinEvent);
+  }
+
+  /**
+   * Queue a move on a board. Will prevent multiple simultaneous calls to collide.
+   * @param bot
+   */
+  public async enqueueMove(bot: IBot, delta: IPosition): Promise<boolean> {
+    const moveEvent = () => this.move(bot, delta);
+    return this.enqueueEvent(moveEvent);
   }
 
   /**
@@ -113,15 +150,18 @@ export class Board {
       if (!botGameObject) {
         return;
       }
+      const removeEvent = () => {
+        // Remove locally
+        delete this.bots[bot.token];
 
-      // Remove locally
-      delete this.bots[bot.token];
-
-      // Notify all session finished callbacks
-      this.sessionFinishedCallbacks.forEach(sfc =>
-        sfc(botGameObject.name, botGameObject.score),
-      );
-      this.removeGameObject(botGameObject);
+        // Notify all session finished callbacks
+        this.sessionFinishedCallbacks.forEach(sfc =>
+          sfc(botGameObject.name, botGameObject.score),
+        );
+        this.removeGameObject(botGameObject);
+        return Promise.resolve(true);
+      };
+      this.enqueueEventFirst(removeEvent);
     }, this.config.sessionLength * 1000);
     return id;
   }
@@ -386,6 +426,29 @@ export class Board {
     const outOfX = destination.x < 0 || destination.x >= this.width;
     const outOfY = destination.y < 0 || destination.y >= this.height;
     return outOfX || outOfY;
+  }
+
+  private enqueueEvent(event: () => Promise<boolean>): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.opQueue.push(event, (res, err) => {
+        if (err) {
+          resolve(false);
+        } else {
+          resolve(res);
+        }
+      });
+    });
+  }
+  private enqueueEventFirst(event: () => Promise<boolean>): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.opQueue.unshift(event, (res, err) => {
+        if (err) {
+          resolve(false);
+        } else {
+          resolve(res);
+        }
+      });
+    });
   }
 
   getLastMove(bot: IBot) {
