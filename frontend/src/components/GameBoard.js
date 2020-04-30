@@ -21,7 +21,6 @@ export default ({ rows }) => {
       Wall: wall,
       DiamondButtonGameObject: redButton,
       DiamondGameObject: diamond,
-      RedDiamond: diamondRed,
       BotGameObject: robot,
       BaseGameObject: base,
       BotGameObjectBaseGameObject: botBase,
@@ -30,7 +29,7 @@ export default ({ rows }) => {
       BotGameObjectDiamondGameObject: botDiamond,
       TeleportGameObject: teleporter
     };
-    if (content.type == 'DiamondGameObject') {
+    if (content.type == "DiamondGameObject") {
       if (content.properties.points === 1) {
         return diamond;
       } else if (content.properties.points === 2) {
