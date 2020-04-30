@@ -63,6 +63,7 @@ const providers = [
     new DiamondProvider({
         minRatioForGeneration: 0.01,
         generationRatio: 0.1,
+        redRatio: 0.2,
     }),
     new BotProvider({
         inventorySize: 5,
