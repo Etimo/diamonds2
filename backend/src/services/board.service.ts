@@ -205,6 +205,7 @@ export class BoardsService {
       new DiamondProvider({
         generationRatio: 0.1,
         minRatioForGeneration: 0.01,
+        redRatio: 0.2,
       }),
       // new DummyBotProvider({
       //   inventorySize: 5,

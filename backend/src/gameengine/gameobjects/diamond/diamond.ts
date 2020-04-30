@@ -8,7 +8,7 @@ export interface DiamondGameObjectProperties {
 }
 
 export class DiamondGameObject extends AbstractGameObject {
-  constructor(position: IPosition, private readonly points) {
+  constructor(position: IPosition, public points: number) {
     super(position);
   }
 

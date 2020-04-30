@@ -11,6 +11,10 @@ export interface DiamondProviderConfig {
    * The ratio (percent of board size) of diamonds to generate
    */
   generationRatio: number;
+  /**
+   * The ratio (percent of total diamonds generated) of diamonds that should be red
+   */
+  redRatio: number;
 }
 
 export class DiamondProvider extends AbstractGameObjectProvider<
@@ -40,6 +44,10 @@ export class DiamondProvider extends AbstractGameObjectProvider<
     const diamonds = new Array(count)
       .fill(null)
       .map(_ => new DiamondGameObject(board.getEmptyPosition(), 1));
+    const redDiamonds = Math.floor(diamonds.length * this.config.redRatio);
+    for (let i = 0; i < redDiamonds; i++) {
+      diamonds[i].points = 2;
+    }
     board.addGameObjects(diamonds);
   }
 }

@@ -30,6 +30,13 @@ export default ({ rows }) => {
       BotGameObjectDiamondGameObject: botDiamond,
       TeleportGameObject: teleporter
     };
+    if (content.type == 'DiamondGameObject') {
+      if (content.properties.points === 1) {
+        return diamond;
+      } else if (content.properties.points === 2) {
+        return diamondRed;
+      }
+    }
     return goImgMap[content.type];
   };
 
