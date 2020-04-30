@@ -10,6 +10,7 @@ beforeEach(() => {
   provider = new DiamondProvider({
     generationRatio: 0.1,
     minRatioForGeneration: 0.01,
+    redRatio: 0,
   });
   board = createTestBoard();
 });
