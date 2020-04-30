@@ -72,7 +72,11 @@ export class HighScoresService {
 
   public async all() {
     return await this.repo
-      .find()
+      .find({
+        order: {
+          score: "DESC",
+        },
+      })
       .then(highScores => highScores.map(e => HighscoreDto.fromEntity(e)));
   }
   public async create(dto: HighscoreDto): Promise<HighscoreDto> {
