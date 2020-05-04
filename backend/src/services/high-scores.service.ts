@@ -55,6 +55,9 @@ export class HighScoresService {
           .where("botName = :botName", { botName: newScore.botName })
           .execute();
         isNew = false;
+        if (this.metricsService) {
+          this.metricsService.incHighscoresImproved();
+        }
       } else {
         //console.log("New HighScore is lower or equal ");
         isNew = false;
