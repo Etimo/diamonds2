@@ -14,6 +14,8 @@ Diamonds is a programming challenge. Program a bot and compete to get the highes
 - Register a bot live using the `POST /api/bots` endpoint
 - Run the bot against the live game
 
+If you find a bug or has a suggestion for improvement you are more than welcome to [submit an issue](https://github.com/Etimo/diamonds2/issues/new) or [pull request](https://github.com/Etimo/diamonds2/compare)!
+
 ## Development
 
 Run the following commands to setup a development environment using Docker:
