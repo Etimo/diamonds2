@@ -3,10 +3,10 @@ import _ from "lodash";
 import { diamond } from "../images";
 import Table from "../blocks/Table";
 
-export default ({ bots }) => {
+export default ({ bots, boardId }) => {
   return (
     <Table>
-      <Table.Caption>Active Players</Table.Caption>
+      <Table.Caption>Board {boardId} Players</Table.Caption>
       <Table.Thead>
         <Table.Tr>
           <Table.Th radiusLeft>Name</Table.Th>

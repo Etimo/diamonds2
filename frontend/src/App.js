@@ -14,7 +14,7 @@ export default () => {
 
   const [rows, bots] = useBoard(boardId, delay);
 
-  const onBoardChange = (event) => {
+  const onBoardChange = event => {
     setBoardId(event.target.value);
   };
 
@@ -25,7 +25,7 @@ export default () => {
         <GameBoard rows={rows} />
         <Layout.Tables>
           <BoardPicker value={boardId} onChange={onBoardChange} />
-          <PlayerTable bots={bots} />
+          <PlayerTable bots={bots} boardId={boardId} />
           <HighScoreTable />
         </Layout.Tables>
       </Layout.Game>
