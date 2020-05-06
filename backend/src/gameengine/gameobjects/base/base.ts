@@ -14,8 +14,10 @@ export class BaseGameObject extends AbstractGameObject {
   onGameObjectEntered(gameObject: AbstractGameObject, board: Board) {
     if (gameObject instanceof BotGameObject) {
       const bot = gameObject as BotGameObject;
-      bot.score += bot.diamonds;
-      bot.diamonds = 0;
+      if (bot.base === this.bot.base) {
+        bot.score += bot.diamonds;
+        bot.diamonds = 0;
+      }
     }
   }
 }
