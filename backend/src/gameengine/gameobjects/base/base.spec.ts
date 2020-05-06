@@ -35,4 +35,5 @@ test("Only allow correct bot to drop off diamonds", () => {
 
   // Diamonds should still be in inventory
   expect(bot2.diamonds).toBe(4);
+  expect(bot2.score).toBe(0);
 });
