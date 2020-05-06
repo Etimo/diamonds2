@@ -162,7 +162,7 @@ while True:
 
     # Don't spam the board more than it allows!
     # sleep(move_delay * time_factor)
-    sleep(0.2)
+    sleep(1)
 
 ###############################################################################
 #
