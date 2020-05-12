@@ -217,7 +217,7 @@ export class BoardsService {
         pairs: 1,
       }),
     ];
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 1; i++) {
       const config: BoardConfig = {
         height: 15,
         width: 15,
