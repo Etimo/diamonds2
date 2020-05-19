@@ -9,7 +9,7 @@ let teleport: TeleportGameObject;
 
 beforeEach(() => {
   provider = new TeleportRelocationProvider({ seconds: 1 });
-  board = createTestBoard();
+  board = createTestBoard([provider]);
   teleport = new TeleportGameObject(board.getEmptyPosition(), "1");
   board.addGameObjects([teleport]);
 
