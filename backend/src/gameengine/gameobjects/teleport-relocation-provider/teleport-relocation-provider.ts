@@ -12,7 +12,7 @@ export interface TeleportRelocationProviderConfig {
 }
 
 /**
- * This provider listens for when diamonds are removed and moves the any teleporters whenever diamonds are regenerated.
+ * This provider moves all teleporters on the board when a certain time has passed.
  */
 export class TeleportRelocationProvider extends AbstractGameObjectProvider<
   TeleportRelocationProviderConfig
