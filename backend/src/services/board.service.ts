@@ -20,6 +20,7 @@ import { BotProvider } from "../gameengine/gameobjects/bot/bot-provider";
 import { BoardConfig } from "../gameengine/board-config";
 import { TeleportProvider } from "../gameengine/gameobjects/teleport/teleport-provider";
 import { MetricsService } from "./metrics.service";
+import { SeasonsService } from "./seasons.service";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
@@ -30,18 +31,21 @@ export class BoardsService {
     private botsService: BotsService,
     private highscoresService: HighScoresService,
     private metricsService: MetricsService,
+    private seasonsService: SeasonsService,
     private logger: CustomLogger,
   ) {
     this.createInMemoryBoard();
 
     this.boards.forEach(board => {
-      board.registerSessionFinishedCallback((botName, score) => {
+      board.registerSessionFinishedCallback(async (botName, score) => {
         if (this.metricsService) {
           this.metricsService.decPlayersTotal(board.getId());
         }
+        const currentSeason = await this.seasonsService.getCurrentSeason();
         this.highscoresService.addOrUpdate({
           botName,
           score,
+          season: currentSeason.name,
         });
       });
     });

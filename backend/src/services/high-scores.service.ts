@@ -4,6 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { HighScoreEntity } from "../db/models/highScores.entity";
 import { MetricsService } from "./metrics.service";
+import { SeasonsService } from "./seasons.service";
 
 @Injectable()
 export class HighScoresService {
@@ -15,6 +16,7 @@ export class HighScoresService {
     @InjectRepository(HighScoreEntity)
     private readonly repo: Repository<HighScoreEntity>,
     private metricsService: MetricsService,
+    private seasonService: SeasonsService,
   ) {}
 
   public async addOrUpdate(input: HighscoreDto): Promise<boolean> {
@@ -38,21 +40,29 @@ export class HighScoresService {
 
   private async isNewHighScore(newScore: HighscoreDto) {
     let isNew: boolean = true;
+    const season = await this.seasonService.getCurrentSeason();
 
     const resultSetHighScore = await this.repo
       .createQueryBuilder(this.entityHighScores)
-      .where("highScores.botName = :botName", { botName: newScore.botName })
+      .where("highScores.botName = :botName AND highScores.season = :season", {
+        botName: newScore.botName,
+        season: season.name,
+      })
       .getOne();
 
     if (resultSetHighScore) {
       if (resultSetHighScore.score < newScore.score) {
         //update
         //console.log("Update HighScore ");
+
         await this.repo
           .createQueryBuilder()
           .update("high_scores")
           .set({ score: newScore.score })
-          .where("botName = :botName", { botName: newScore.botName })
+          .where("botName = :botName AND season = :season", {
+            botName: newScore.botName,
+            season: season.name,
+          })
           .execute();
         isNew = false;
         if (this.metricsService) {
@@ -82,6 +92,20 @@ export class HighScoresService {
       })
       .then(highScores => highScores.map(e => HighscoreDto.fromEntity(e)));
   }
+
+  public async allBySeason(season: string) {
+    return await this.repo
+      .find({
+        where: {
+          season,
+        },
+        order: {
+          score: "DESC",
+        },
+      })
+      .then(highScores => highScores.map(e => HighscoreDto.fromEntity(e)));
+  }
+
   public async create(dto: HighscoreDto): Promise<HighscoreDto> {
     return this.repo.save(dto);
   }
@@ -92,6 +116,15 @@ export class HighScoresService {
       .delete()
       .from("high_scores")
       .where("botName = :botName", { botName: dto.botName })
+      .execute();
+  }
+
+  public async updateHighscores() {
+    return await this.repo
+      .createQueryBuilder()
+      .update("high_scores")
+      .set({ season: "Linköping VT 2020" })
+      .where("season = null")
       .execute();
   }
 }
