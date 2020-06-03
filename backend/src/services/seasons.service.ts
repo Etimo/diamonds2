@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { SeasonsEntity } from "../db/models/seasons.entity";
 import { ISeason } from "../interfaces/season.interface";
-import { SeasonDto } from "src/models/season.dto";
+import { SeasonDto } from "../models/season.dto";
 import ConflictError from "../errors/conflict.error";
 
 @Injectable()

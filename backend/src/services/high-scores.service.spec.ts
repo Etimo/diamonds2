@@ -5,15 +5,23 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { HighscoreDto } from "../models/highscore.dto";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { MetricsService } from "./metrics.service";
+import { SeasonsService } from "./seasons.service";
+import { SeasonsEntity } from "../db/models/seasons.entity";
 
 describe("HighScoresService", () => {
   let highScoresService: HighScoresService;
+  let seasonService: SeasonsService;
   let testBotName: string = "testBot";
   let repositoryMock: MockType<Repository<HighScoreEntity>>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        SeasonsService,
+        {
+          provide: getRepositoryToken(SeasonsEntity),
+          useFactory: repositoryMockFactory,
+        },
         HighScoresService,
         {
           provide: MetricsService,
@@ -26,12 +34,14 @@ describe("HighScoresService", () => {
       ],
     }).compile();
     highScoresService = module.get<HighScoresService>(HighScoresService);
+    seasonService = module.get<SeasonsService>(SeasonsService);
     repositoryMock = module.get(getRepositoryToken(HighScoreEntity));
     jest.clearAllMocks();
   });
 
   it("should be defined", () => {
     expect(highScoresService).toBeDefined();
+    expect(seasonService).toBeDefined();
   });
 
   it("Add new score", async () => {
