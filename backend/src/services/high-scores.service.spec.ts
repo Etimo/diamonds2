@@ -38,6 +38,7 @@ describe("HighScoresService", () => {
     let newHighScoreDto = {
       botName: testBotName,
       score: 44,
+      season: "Off Season",
     };
 
     //Mocking find from repository
@@ -67,6 +68,7 @@ describe("HighScoresService", () => {
     let bot = {
       botName: testBotName,
       score: 100,
+      season: "Off Season",
     };
 
     repositoryMock.find.mockReturnValue(
@@ -90,10 +92,12 @@ describe("HighScoresService", () => {
     let botLowScore = {
       botName: testBotName,
       score: 44,
+      season: "Off Season",
     };
     let botHighScore = {
       botName: testBotName,
       score: 84,
+      season: "Off Season",
     };
 
     //insert first botLowScore
@@ -150,10 +154,12 @@ describe("HighScoresService", () => {
     let botHighScore = {
       botName: testBotName,
       score: 5,
+      season: "Off Season",
     };
     let botLowScore = {
       botName: testBotName,
       score: 4,
+      season: "Off Season",
     };
 
     await highScoresService.addOrUpdate(botHighScore);
