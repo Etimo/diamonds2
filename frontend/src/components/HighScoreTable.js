@@ -5,9 +5,9 @@ import Table from "../blocks/Table";
 const delay = 5000; // 5 sec
 const url = "api/highscores";
 
-export default ({ seasonName, currentSeason }) => {
-  const highScores = useFetchRepeatedly(`${url}/${seasonName}`, delay, []);
-  const isCurrentSeason = seasonName == currentSeason ? true : false;
+export default ({ seasonId, currentSeasonId }) => {
+  const highScores = useFetchRepeatedly(`${url}/${seasonId}`, delay, []);
+  const isCurrentSeason = seasonId == currentSeasonId ? true : false;
 
   return (
     <Table>

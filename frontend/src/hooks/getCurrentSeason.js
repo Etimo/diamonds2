@@ -4,15 +4,14 @@ import useFetchRepeatedly from "./useFetchRepeatedly";
 export default () => {
   const delay = 1800000; // 30min
   const fetchedCurrentSeason = useFetchRepeatedly(
-    `/api/seasons/currentSeason`,
+    `/api/seasons/current`,
     delay,
     []
   );
   const [currentSeason, setCurrentSeason] = useState([]);
 
   useEffect(() => {
-    const season = fetchedCurrentSeason.name;
-    setCurrentSeason(season);
+    setCurrentSeason(fetchedCurrentSeason);
   }, [fetchedCurrentSeason]);
   return currentSeason;
 };

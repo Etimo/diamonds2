@@ -12,7 +12,7 @@ import SeasonPicker from "./components/SeasonPicker";
 export default () => {
   const currentSeason = getCurrentSeason();
   const [boardId, setBoardId] = useState(1);
-  const [seasonName, setSeasonName] = useState(0);
+  const [seasonId, setSeasonId] = useState(0);
   const delay = 250; // 0.25 s
 
   const [rows, bots] = useBoard(boardId, delay);
@@ -22,7 +22,7 @@ export default () => {
   };
 
   const onSeasonChange = event => {
-    setSeasonName(event.target.value);
+    setSeasonId(event.target.key);
   };
 
   return (
@@ -33,13 +33,10 @@ export default () => {
         <Layout.Tables>
           <BoardPicker value={boardId} onChange={onBoardChange} />
           <PlayerTable bots={bots} boardId={boardId} />
-          <SeasonPicker
-            value={seasonName ? seasonName : currentSeason}
-            onChange={onSeasonChange}
-          />
+          <SeasonPicker value={currentSeason.name} onChange={onSeasonChange} />
           <HighScoreTable
-            seasonName={seasonName ? seasonName : currentSeason}
-            currentSeason={currentSeason}
+            seasonId={seasonId ? seasonId : currentSeason.id}
+            currentSeasonId={currentSeason.id}
           />
         </Layout.Tables>
       </Layout.Game>

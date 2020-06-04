@@ -7,8 +7,7 @@ export default () => {
   const [seasons, setSeasons] = useState([]);
 
   useEffect(() => {
-    const seasonNames = fetchedSeasons.map(season => season.name);
-    setSeasons(seasonNames);
+    setSeasons(fetchedSeasons);
   }, [fetchedSeasons]);
   return seasons;
 };

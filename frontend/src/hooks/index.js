@@ -2,7 +2,7 @@ import useInterval from "./useInterval";
 import useFetchRepeatedly from "./useFetchRepeatedly";
 import useBoard from "./useBoard";
 import useBoardIds from "./useBoardIds";
-import useSeasonNames from "./useSeasonNames";
+import useSeasons from "./useSeasons";
 import getCurrentSeason from "./getCurrentSeason";
 
 export {
@@ -10,6 +10,6 @@ export {
   useFetchRepeatedly,
   useBoard,
   useBoardIds,
-  useSeasonNames,
+  useSeasons,
   getCurrentSeason
 };
