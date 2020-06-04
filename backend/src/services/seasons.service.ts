@@ -14,7 +14,7 @@ export class SeasonsService {
   public async getOffSeason() {
     const offSeason = await this.repo
       .createQueryBuilder("seasons")
-      .where("seasons.name = 'Off Season'")
+      .where("seasons.name = 'Off season'")
       .getOne();
 
     return SeasonDto.fromEntity(offSeason);
@@ -30,7 +30,7 @@ export class SeasonsService {
       return SeasonDto.fromEntity(currentSeason);
     }
 
-    return this.getOffSeason();
+    return await this.getOffSeason();
   }
 
   public async all() {
