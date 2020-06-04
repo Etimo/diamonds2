@@ -11,8 +11,8 @@ export class HighScoreEntity {
   @Column({ type: "int" })
   score: number;
 
-  @Column({ type: "varchar", length: 300, default: "Off season" })
-  season: string;
+  @Column({ type: "uuid" })
+  seasonId: string;
 
   @Column({ type: "timestamptz", default: () => "CURRENT_TIMESTAMP" })
   createTimeStamp: Date;

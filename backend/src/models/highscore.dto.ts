@@ -21,7 +21,7 @@ export class HighscoreDto {
     return this.from({
       botName: entity.botName,
       score: entity.score,
-      season: entity.season,
+      season: entity.seasonId,
     });
   }
 }

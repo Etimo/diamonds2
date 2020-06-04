@@ -8,10 +8,10 @@ export class SeasonsEntity {
   @Column({ type: "varchar", length: 300 })
   name: string;
 
-  @Column({ type: "timestamptz", default: () => "CURRENT_TIMESTAMP" })
+  @Column({ type: "timestamptz" })
   startDate: Date;
 
-  @Column({ type: "timestamptz", default: () => "CURRENT_TIMESTAMP" })
+  @Column({ type: "timestamptz" })
   endDate: Date;
 
   @Column({ type: "timestamptz", default: () => "CURRENT_TIMESTAMP" })

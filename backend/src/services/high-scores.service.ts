@@ -44,10 +44,13 @@ export class HighScoresService {
 
     const resultSetHighScore = await this.repo
       .createQueryBuilder(this.entityHighScores)
-      .where("highScores.botName = :botName AND highScores.season = :season", {
-        botName: newScore.botName,
-        season: season.name,
-      })
+      .where(
+        "highScores.botName = :botName AND highScores.seasonId = :seasonId",
+        {
+          botName: newScore.botName,
+          seasonId: season.id,
+        },
+      )
       .getOne();
 
     if (resultSetHighScore) {
@@ -59,9 +62,9 @@ export class HighScoresService {
           .createQueryBuilder()
           .update("high_scores")
           .set({ score: newScore.score })
-          .where("botName = :botName AND season = :season", {
+          .where("botName = :botName AND seasonId = :seasonId", {
             botName: newScore.botName,
-            season: season.name,
+            seasonId: season.id,
           })
           .execute();
         isNew = false;

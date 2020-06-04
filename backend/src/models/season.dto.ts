@@ -3,6 +3,8 @@ import { SeasonsEntity } from "../db/models/seasons.entity";
 
 export class SeasonDto {
   @ApiModelProperty()
+  id: string;
+  @ApiModelProperty()
   name: string;
   @ApiModelProperty()
   startDate: Date;
@@ -11,6 +13,7 @@ export class SeasonDto {
 
   public static from(dto: Partial<SeasonDto>) {
     const seasonObj = new SeasonDto();
+    seasonObj.id = dto.id;
     seasonObj.name = dto.name;
     seasonObj.startDate = dto.startDate;
     seasonObj.endDate = dto.endDate;
@@ -19,6 +22,7 @@ export class SeasonDto {
 
   public static fromEntity(entity: SeasonsEntity) {
     return this.from({
+      id: entity.id,
       name: entity.name,
       startDate: entity.startDate,
       endDate: entity.endDate,
@@ -27,6 +31,7 @@ export class SeasonDto {
 
   public static offSeason() {
     const seasonObj = new SeasonDto();
+    seasonObj.id = "1";
     seasonObj.name = "Off Season";
     seasonObj.startDate = new Date();
     seasonObj.endDate = new Date();

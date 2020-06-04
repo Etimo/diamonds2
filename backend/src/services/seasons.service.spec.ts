@@ -51,6 +51,7 @@ describe("SeasonsService", () => {
     let futureDate = todaysDate.setDate(todaysDate.getDate() + 10);
 
     let testSeason = {
+      id: "1234",
       name: "Test Season",
       startDate: new Date(yesterdaysDate),
       endDate: new Date(futureDate),
@@ -106,6 +107,7 @@ describe("SeasonsService", () => {
     let futureDate = todaysDate.setDate(todaysDate.getDate() + 10);
 
     let testSeason = {
+      id: "1234",
       name: "Test Season",
       startDate: new Date(yesterdaysDate),
       endDate: new Date(futureDate),
@@ -135,6 +137,7 @@ describe("SeasonsService", () => {
     let currentSeason = await seasonsService.getCurrentSeason();
 
     expect(currentSeason.name).toEqual("Test Season");
+    expect(currentSeason.id).toEqual("1234");
   });
 });
 
