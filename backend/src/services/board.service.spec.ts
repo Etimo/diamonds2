@@ -15,6 +15,7 @@ import SilentLogger from "../gameengine/util/silent-logger";
 import { MetricsService } from "./metrics.service";
 import { SeasonsService } from "./seasons.service";
 import { SeasonsEntity } from "../db/models/seasons.entity";
+import ConflictError from "../errors/conflict.error";
 
 describe("BoardsService", () => {
   let botsService: BotsService;
@@ -64,6 +65,7 @@ describe("BoardsService", () => {
       null,
       seasonsService,
       new SilentLogger() as CustomLogger,
+      2,
     );
 
     jest.clearAllMocks();
@@ -81,6 +83,34 @@ describe("BoardsService", () => {
     await expect(
       boardsService.join(dummyBoardId, dummyBoardToken),
     ).rejects.toThrowError(UnauthorizedError);
+  });
+
+  it("Should throw ConflictError when bot is already present on other board", async () => {
+    const boards = boardsService.getAll();
+    spyOn(botsService, "get").and.returnValue({
+      token: dummyBoardToken,
+      botName: "name",
+      email: "email",
+    } as IBot);
+    await boardsService.join(boards[0].id, dummyBoardToken);
+
+    await expect(
+      boardsService.join(boards[1].id, dummyBoardToken),
+    ).rejects.toThrowError(ConflictError);
+  });
+
+  it("Should throw ConflictError when bot is already present on same board", async () => {
+    const boards = boardsService.getAll();
+    spyOn(botsService, "get").and.returnValue({
+      token: dummyBoardToken,
+      botName: "name",
+      email: "email",
+    } as IBot);
+    await boardsService.join(boards[0].id, dummyBoardToken);
+
+    await expect(
+      boardsService.join(boards[0].id, dummyBoardToken),
+    ).rejects.toThrowError(ConflictError);
   });
 
   it("Should throw NotFoundError when board not exists", async () => {

@@ -33,8 +33,9 @@ export class BoardsService {
     private metricsService: MetricsService,
     private seasonsService: SeasonsService,
     private logger: CustomLogger,
+    private numberOfBoards: number = 1,
   ) {
-    this.createInMemoryBoard();
+    this.createInMemoryBoard(numberOfBoards);
 
     this.boards.forEach(board => {
       board.registerSessionFinishedCallback(async (botName, score) => {
@@ -85,11 +86,12 @@ export class BoardsService {
       throw new NotFoundError("Board not found");
     }
 
-    const boardBot = board.getBot(botToken);
-
-    if (boardBot) {
-      throw new ConflictError("Already on board");
-    }
+    // Check if bot is on any board
+    this.boards.forEach(b => {
+      if (b.getBot(botToken)) {
+        throw new ConflictError("Already playing");
+      }
+    });
 
     const result = await board.enqueueJoin(bot);
     if (!result) {
@@ -202,7 +204,7 @@ export class BoardsService {
   /**
    * Create an example board for debugging purpose.
    */
-  private createInMemoryBoard(): void {
+  private createInMemoryBoard(numberOfBoards: number): void {
     const providers = [
       new DiamondButtonProvider(),
       new BaseProvider(),
@@ -221,7 +223,7 @@ export class BoardsService {
         pairs: 1,
       }),
     ];
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < numberOfBoards; i++) {
       const config: BoardConfig = {
         height: 15,
         width: 15,
