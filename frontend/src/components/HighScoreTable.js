@@ -5,8 +5,9 @@ import Table from "../blocks/Table";
 const delay = 5000; // 5 sec
 const url = "api/highscores";
 
-export default () => {
-  const highScores = useFetchRepeatedly(url, delay, []);
+export default ({ seasonName, currentSeason }) => {
+  const highScores = useFetchRepeatedly(`${url}/${seasonName}`, delay, []);
+  const isCurrentSeason = seasonName == currentSeason ? true : false;
 
   return (
     <Table>
@@ -16,16 +17,20 @@ export default () => {
           <Table.Th radiusLeft width={70}>
             Name
           </Table.Th>
-          <Table.Th radiusRight>Score</Table.Th>
+          <Table.Th radiusRight>
+            {isCurrentSeason ? "Score" : "Placement"}
+          </Table.Th>
         </Table.Tr>
       </Table.Thead>
 
       <Table.Tbody>
-        {highScores.map(bot => {
+        {highScores.map((bot, index) => {
           return (
-            <Table.Tr key={bot.botName}>
+            <Table.Tr key={index}>
               <Table.Td>{bot.botName}</Table.Td>
-              <Table.Td textRight>{bot.score}</Table.Td>
+              <Table.Td textRight>
+                {isCurrentSeason ? bot.score : index + 1}
+              </Table.Td>
             </Table.Tr>
           );
         })}
