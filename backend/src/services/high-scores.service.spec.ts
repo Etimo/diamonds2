@@ -7,12 +7,22 @@ import { getRepositoryToken } from "@nestjs/typeorm";
 import { MetricsService } from "./metrics.service";
 import { SeasonsService } from "./seasons.service";
 import { SeasonsEntity } from "../db/models/seasons.entity";
+import { SeasonDto } from "src/models/season.dto";
 
 describe("HighScoresService", () => {
   let highScoresService: HighScoresService;
   let seasonService: SeasonsService;
   let testBotName: string = "testBot";
+  let seasonId = "c43eee94-f363-4097-85e2-db3b48ed2d79";
   let repositoryMock: MockType<Repository<HighScoreEntity>>;
+  let repositoryMock1: MockType<Repository<SeasonsEntity>>;
+
+  let currentSeason = {
+    id: seasonId,
+    name: "Off Season",
+    startDate: new Date(),
+    endDate: new Date(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -36,6 +46,7 @@ describe("HighScoresService", () => {
     highScoresService = module.get<HighScoresService>(HighScoresService);
     seasonService = module.get<SeasonsService>(SeasonsService);
     repositoryMock = module.get(getRepositoryToken(HighScoreEntity));
+    repositoryMock1 = module.get(getRepositoryToken(SeasonsEntity));
     jest.clearAllMocks();
   });
 
@@ -48,7 +59,7 @@ describe("HighScoresService", () => {
     let newHighScoreDto = {
       botName: testBotName,
       score: 44,
-      season: "Off Season",
+      seasonId: "Off Season",
     };
 
     //Mocking find from repository
@@ -60,6 +71,28 @@ describe("HighScoresService", () => {
           resolve(savedPackage);
         }, 1500);
       }),
+    );
+
+    //Mocking find from seasonsService
+    const execute = jest.fn();
+    const where = jest.fn(() => ({ execute }));
+    const set = jest.fn(() => ({ where }));
+    const update = jest.fn(() => ({ set }));
+
+    const getOne = jest.fn(
+      () =>
+        new Promise<SeasonDto>((resolve, reject) => {
+          var savedPackage: SeasonDto = currentSeason;
+
+          setTimeout(() => {
+            resolve(savedPackage);
+          }, 500);
+        }),
+    );
+    const where2 = jest.fn(() => ({ getOne }));
+
+    repositoryMock1.createQueryBuilder.mockImplementation(
+      jest.fn(() => ({ where: where2 })),
     );
 
     //Insert new HighScore
@@ -78,7 +111,7 @@ describe("HighScoresService", () => {
     let bot = {
       botName: testBotName,
       score: 100,
-      season: "Off Season",
+      seasonId: "Off Season",
     };
 
     repositoryMock.find.mockReturnValue(
@@ -102,24 +135,40 @@ describe("HighScoresService", () => {
     let botLowScore = {
       botName: testBotName,
       score: 44,
-      season: "Off Season",
+      seasonId: "Off Season",
     };
     let botHighScore = {
       botName: testBotName,
       score: 84,
-      season: "Off Season",
+      seasonId: "Off Season",
     };
+
+    const execute = jest.fn();
+    const where = jest.fn(() => ({ execute }));
+    const set = jest.fn(() => ({ where }));
+    const update = jest.fn(() => ({ set }));
+
+    const getOneSeason = jest.fn(
+      () =>
+        new Promise<SeasonDto>((resolve, reject) => {
+          var savedPackage: SeasonDto = currentSeason;
+
+          setTimeout(() => {
+            resolve(savedPackage);
+          }, 500);
+        }),
+    );
+    const whereSeason = jest.fn(() => ({ getOne: getOneSeason }));
+
+    repositoryMock1.createQueryBuilder.mockImplementation(
+      jest.fn(() => ({ where: whereSeason })),
+    );
 
     //insert first botLowScore
     await highScoresService.addOrUpdate(botLowScore);
 
     expect(repositoryMock.save).toHaveBeenCalledWith(botLowScore);
     expect(repositoryMock.save).toHaveBeenCalledTimes(1);
-
-    const execute = jest.fn();
-    const where = jest.fn(() => ({ execute }));
-    const set = jest.fn(() => ({ where }));
-    const update = jest.fn(() => ({ set }));
 
     const getOne = jest.fn(
       () =>
@@ -164,24 +213,40 @@ describe("HighScoresService", () => {
     let botHighScore = {
       botName: testBotName,
       score: 5,
-      season: "Off Season",
+      seasonId: "Off Season",
     };
     let botLowScore = {
       botName: testBotName,
       score: 4,
-      season: "Off Season",
+      seasonId: "Off Season",
     };
+
+    const execute = jest.fn();
+    const where = jest.fn(() => ({ execute }));
+    const set = jest.fn(() => ({ where }));
+    const update = jest.fn(() => ({ set }));
+
+    const getOneSeason = jest.fn(
+      () =>
+        new Promise<SeasonDto>((resolve, reject) => {
+          var savedPackage: SeasonDto = currentSeason;
+
+          setTimeout(() => {
+            resolve(savedPackage);
+          }, 500);
+        }),
+    );
+    const whereSeason = jest.fn(() => ({ getOne: getOneSeason }));
+
+    repositoryMock1.createQueryBuilder.mockImplementation(
+      jest.fn(() => ({ where: whereSeason })),
+    );
 
     await highScoresService.addOrUpdate(botHighScore);
 
     //insert botHighScore
     expect(repositoryMock.save).toHaveBeenCalledWith(botHighScore);
     expect(repositoryMock.save).toHaveBeenCalledTimes(1);
-
-    const execute = jest.fn();
-    const where = jest.fn(() => ({ execute }));
-    const set = jest.fn(() => ({ where }));
-    const update = jest.fn(() => ({ set }));
 
     const getOne = jest.fn(
       () =>

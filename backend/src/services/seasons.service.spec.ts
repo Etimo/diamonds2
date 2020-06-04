@@ -138,7 +138,7 @@ describe("SeasonsService", () => {
     let currentSeason = await seasonsService.getCurrentSeason();
 
     expect(currentSeason.name).toEqual("Test Season");
-    expect(currentSeason.id).toEqual("1234");
+    expect(currentSeason.id).toEqual(seasonId);
   });
 });
 

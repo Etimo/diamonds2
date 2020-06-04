@@ -46,7 +46,7 @@ export class BoardsService {
         this.highscoresService.addOrUpdate({
           botName,
           score,
-          season: currentSeason.id,
+          seasonId: currentSeason.id,
         });
       });
     });

@@ -2,13 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { SeasonsEntity } from "../db/models/seasons.entity";
-import { ISeason } from "../interfaces/season.interface";
 import { SeasonDto } from "../models/season.dto";
 
 @Injectable()
 export class SeasonsService {
-  private seasons: ISeason[] = [];
-
   constructor(
     @InjectRepository(SeasonsEntity)
     private readonly repo: Repository<SeasonsEntity>,
@@ -24,10 +21,12 @@ export class SeasonsService {
       return SeasonDto.fromEntity(currentSeason);
     }
 
-    return await this.repo
+    const offSeason = await this.repo
       .createQueryBuilder("seasons")
       .where("seasons.name = 'Off Season'")
       .getOne();
+
+    return SeasonDto.fromEntity(offSeason);
   }
 
   public async all() {

@@ -7,13 +7,13 @@ export class HighscoreDto {
   @ApiModelProperty()
   score: number;
   @ApiModelProperty()
-  season: string;
+  seasonId: string;
 
   public static from(dto: Partial<HighscoreDto>) {
     const highScoreObj = new HighscoreDto();
     highScoreObj.botName = dto.botName;
     highScoreObj.score = dto.score;
-    highScoreObj.season = dto.season;
+    highScoreObj.seasonId = dto.seasonId;
     return highScoreObj;
   }
 
@@ -21,7 +21,7 @@ export class HighscoreDto {
     return this.from({
       botName: entity.botName,
       score: entity.score,
-      season: entity.seasonId,
+      seasonId: entity.seasonId,
     });
   }
 }
