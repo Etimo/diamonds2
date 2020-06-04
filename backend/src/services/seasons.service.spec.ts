@@ -8,6 +8,7 @@ import { SeasonDto } from "../models/season.dto";
 describe("SeasonsService", () => {
   let seasonsService: SeasonsService;
   let repositoryMock: MockType<Repository<SeasonsEntity>>;
+  let seasonId = "c43eee94-f363-4097-85e2-db3b48ed2d79";
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -51,7 +52,7 @@ describe("SeasonsService", () => {
     let futureDate = todaysDate.setDate(todaysDate.getDate() + 10);
 
     let testSeason = {
-      id: "1234",
+      id: seasonId,
       name: "Test Season",
       startDate: new Date(yesterdaysDate),
       endDate: new Date(futureDate),
@@ -107,7 +108,7 @@ describe("SeasonsService", () => {
     let futureDate = todaysDate.setDate(todaysDate.getDate() + 10);
 
     let testSeason = {
-      id: "1234",
+      id: seasonId,
       name: "Test Season",
       startDate: new Date(yesterdaysDate),
       endDate: new Date(futureDate),

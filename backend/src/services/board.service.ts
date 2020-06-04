@@ -33,7 +33,7 @@ export class BoardsService {
     private metricsService: MetricsService,
     private seasonsService: SeasonsService,
     private logger: CustomLogger,
-    @Inject("NUMBER") private numberOfBoards,
+    @Inject("NUMBER_OF_BOARDS") private numberOfBoards,
   ) {
     this.createInMemoryBoard(this.numberOfBoards);
 
