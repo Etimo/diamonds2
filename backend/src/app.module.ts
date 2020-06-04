@@ -57,6 +57,10 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     HighScoresService,
     MetricsService,
     SeasonsService,
+    {
+      provide: "NUMBER",
+      useValue: 1,
+    },
   ],
 })
 export class AppModule {}

@@ -7,7 +7,6 @@ import { SeasonDto } from "../models/season.dto";
 
 describe("SeasonsService", () => {
   let seasonsService: SeasonsService;
-  let testBotName: string = "testBot";
   let repositoryMock: MockType<Repository<SeasonsEntity>>;
 
   beforeEach(async () => {

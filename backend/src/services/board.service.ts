@@ -1,4 +1,4 @@
-import { Injectable, Scope, Logger } from "@nestjs/common";
+import { Injectable, Scope, Logger, Inject } from "@nestjs/common";
 import { OperationQueueBoard } from "../gameengine/operation-queue-board";
 import { BotsService } from "./bots.service";
 import { HighScoresService } from "./high-scores.service";
@@ -33,9 +33,9 @@ export class BoardsService {
     private metricsService: MetricsService,
     private seasonsService: SeasonsService,
     private logger: CustomLogger,
-    private numberOfBoards: number = 1,
+    @Inject("NUMBER") private numberOfBoards,
   ) {
-    this.createInMemoryBoard(numberOfBoards);
+    this.createInMemoryBoard(this.numberOfBoards);
 
     this.boards.forEach(board => {
       board.registerSessionFinishedCallback(async (botName, score) => {

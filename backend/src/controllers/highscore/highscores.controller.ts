@@ -34,9 +34,4 @@ export class HighscoresController {
   async find(@Param("season") season: string): Promise<HighscoreDto[]> {
     return await this.highScoresService.allBySeason(season);
   }
-
-  @Post()
-  async updateSeasons() {
-    return this.highScoresService.updateHighscores();
-  }
 }

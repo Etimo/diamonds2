@@ -118,13 +118,4 @@ export class HighScoresService {
       .where("botName = :botName", { botName: dto.botName })
       .execute();
   }
-
-  public async updateHighscores() {
-    return await this.repo
-      .createQueryBuilder()
-      .update("high_scores")
-      .set({ season: "Linköping VT 2020" })
-      .where("season = null")
-      .execute();
-  }
 }

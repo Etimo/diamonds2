@@ -25,6 +25,7 @@ describe("BoardsService", () => {
   const dummyBoardToken = "dummy";
   const dummyBotId = "dummyId";
   let boardsService: BoardsService;
+  let numberOfBoards: number = 2;
   let repositoryMock: MockType<Repository<HighScoreEntity>>;
   let repositoryMock2: MockType<Repository<BotRegistrationsEntity>>;
   let repositoryMock3: MockType<Repository<SeasonsEntity>>;
@@ -50,12 +51,15 @@ describe("BoardsService", () => {
           useValue: null,
           provide: MetricsService,
         },
+        {
+          useValue: 2,
+          provide: "NUMBER",
+        },
       ],
     }).compile();
     highScoresService = module.get<HighScoresService>(HighScoresService);
     botsService = module.get<BotsService>(BotsService);
     seasonsService = module.get<SeasonsService>(SeasonsService);
-
     repositoryMock = module.get(getRepositoryToken(HighScoreEntity));
     repositoryMock2 = module.get(getRepositoryToken(BotRegistrationsEntity));
     repositoryMock3 = module.get(getRepositoryToken(SeasonsEntity));
