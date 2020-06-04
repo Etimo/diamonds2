@@ -22,7 +22,7 @@ export default () => {
   };
 
   const onSeasonChange = event => {
-    setSeasonId(event.target.key);
+    setSeasonId(event.target.value);
   };
 
   return (
@@ -33,7 +33,10 @@ export default () => {
         <Layout.Tables>
           <BoardPicker value={boardId} onChange={onBoardChange} />
           <PlayerTable bots={bots} boardId={boardId} />
-          <SeasonPicker value={currentSeason.name} onChange={onSeasonChange} />
+          <SeasonPicker
+            value={seasonId ? seasonId : currentSeason.id}
+            onChange={onSeasonChange}
+          />
           <HighScoreTable
             seasonId={seasonId ? seasonId : currentSeason.id}
             currentSeasonId={currentSeason.id}

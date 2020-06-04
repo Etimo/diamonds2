@@ -9,7 +9,7 @@ const SeasonPicker = ({ onChange, value }) => {
       <Select.Title>Select Season</Select.Title>
       <Select.Picker onChange={onChange} value={value}>
         {seasons.map(season => (
-          <option key={season.id} value={season.name}>
+          <option key={season.id} value={season.id}>
             {season.name}
           </option>
         ))}
