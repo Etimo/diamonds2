@@ -96,11 +96,11 @@ export class HighScoresService {
       .then(highScores => highScores.map(e => HighscoreDto.fromEntity(e)));
   }
 
-  public async allBySeason(season: string) {
+  public async allBySeasonId(seasonId: string) {
     return await this.repo
       .find({
         where: {
-          season,
+          seasonId,
         },
         order: {
           score: "DESC",

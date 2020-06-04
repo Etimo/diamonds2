@@ -30,8 +30,8 @@ export class HighscoresController {
     isArray: true,
     type: HighscoreDto,
   })
-  @Get(":season")
-  async find(@Param("season") season: string): Promise<HighscoreDto[]> {
-    return await this.highScoresService.allBySeason(season);
+  @Get(":seasonId")
+  async find(@Param("season") seasonId: string): Promise<HighscoreDto[]> {
+    return await this.highScoresService.allBySeasonId(seasonId);
   }
 }
