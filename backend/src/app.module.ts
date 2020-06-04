@@ -58,7 +58,7 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     MetricsService,
     SeasonsService,
     {
-      provide: "NUMBER",
+      provide: "NUMBER_OF_BOARDS",
       useValue: 1,
     },
   ],

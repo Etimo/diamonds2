@@ -52,7 +52,7 @@ describe("BoardsService", () => {
         },
         {
           useValue: 2,
-          provide: "NUMBER",
+          provide: "NUMBER_OF_BOARDS",
         },
       ],
     }).compile();
