@@ -25,7 +25,6 @@ describe("BoardsService", () => {
   const dummyBoardToken = "dummy";
   const dummyBotId = "dummyId";
   let boardsService: BoardsService;
-  let numberOfBoards: number = 2;
   let repositoryMock: MockType<Repository<HighScoreEntity>>;
   let repositoryMock2: MockType<Repository<BotRegistrationsEntity>>;
   let repositoryMock3: MockType<Repository<SeasonsEntity>>;
