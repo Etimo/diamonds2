@@ -11,6 +11,15 @@ export class SeasonsService {
     private readonly repo: Repository<SeasonsEntity>,
   ) {}
 
+  public async getOffSeason() {
+    const offSeason = await this.repo
+      .createQueryBuilder("seasons")
+      .where("seasons.name = 'Off Season'")
+      .getOne();
+
+    return SeasonDto.fromEntity(offSeason);
+  }
+
   public async getCurrentSeason() {
     const currentSeason = await this.repo
       .createQueryBuilder("seasons")
@@ -21,12 +30,7 @@ export class SeasonsService {
       return SeasonDto.fromEntity(currentSeason);
     }
 
-    const offSeason = await this.repo
-      .createQueryBuilder("seasons")
-      .where("seasons.name = 'Off Season'")
-      .getOne();
-
-    return SeasonDto.fromEntity(offSeason);
+    return this.getOffSeason();
   }
 
   public async all() {

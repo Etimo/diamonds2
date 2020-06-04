@@ -29,7 +29,7 @@ describe("SeasonsService", () => {
     expect(seasonsService).toBeDefined();
   });
 
-  it("should get one item in list", async () => {
+  it("should get no items in list", async () => {
     //Mocking find from repository
     repositoryMock.find.mockReturnValue(
       new Promise<SeasonDto[]>((resolve, reject) => {
@@ -43,19 +43,15 @@ describe("SeasonsService", () => {
 
     let all = await seasonsService.all();
 
-    expect(all.length).toEqual(1);
+    expect(all.length).toEqual(0);
   });
 
-  it("should get two item in list", async () => {
-    let todaysDate = new Date();
-    let yesterdaysDate = todaysDate.setDate(todaysDate.getDate() - 1);
-    let futureDate = todaysDate.setDate(todaysDate.getDate() + 10);
-
+  it("should get one item in list", async () => {
     let testSeason = {
       id: seasonId,
       name: "Test Season",
-      startDate: new Date(yesterdaysDate),
-      endDate: new Date(futureDate),
+      startDate: new Date(),
+      endDate: new Date(),
     };
     //Mocking find from repository
     repositoryMock.find.mockReturnValue(
@@ -70,11 +66,16 @@ describe("SeasonsService", () => {
 
     let all = await seasonsService.all();
 
-    expect(all.length).toEqual(2);
+    expect(all.length).toEqual(1);
   });
 
   it("should get off season, exists no other seasons", async () => {
-    //Mocking find from repository
+    const offSeason = {
+      id: seasonId,
+      name: "Off Season",
+      startDate: new Date(),
+      endDate: new Date(),
+    };
 
     const execute = jest.fn();
     const where = jest.fn(() => ({ execute }));
@@ -97,21 +98,21 @@ describe("SeasonsService", () => {
       jest.fn(() => ({ where: where2 })),
     );
 
+    // Mock getOffSeason
+    const getOffSeason = (SeasonsService.prototype.getOffSeason = jest.fn());
+    getOffSeason.mockReturnValue(offSeason);
+
     let currentSeason = await seasonsService.getCurrentSeason();
 
     expect(currentSeason.name).toEqual("Off Season");
   });
 
   it("should return Test Season", async () => {
-    let todaysDate = new Date();
-    let yesterdaysDate = todaysDate.setDate(todaysDate.getDate() - 1);
-    let futureDate = todaysDate.setDate(todaysDate.getDate() + 10);
-
     let testSeason = {
       id: seasonId,
       name: "Test Season",
-      startDate: new Date(yesterdaysDate),
-      endDate: new Date(futureDate),
+      startDate: new Date(),
+      endDate: new Date(),
     };
 
     const execute = jest.fn();

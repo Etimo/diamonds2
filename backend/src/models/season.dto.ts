@@ -22,6 +22,7 @@ export class SeasonDto {
 
   public static fromEntity(entity: SeasonsEntity) {
     return this.from({
+      id: entity.id,
       name: entity.name,
       startDate: entity.startDate,
       endDate: entity.endDate,
