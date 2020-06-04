@@ -19,7 +19,7 @@ export class SeasonsController {
     return this.seasonsService.all();
   }
 
-  @Get("/currentSeason")
+  @Get("/current")
   async getCurrentSeason(): Promise<SeasonDto> {
     return this.seasonsService.getCurrentSeason();
   }
