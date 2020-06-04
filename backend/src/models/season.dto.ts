@@ -28,13 +28,4 @@ export class SeasonDto {
       endDate: entity.endDate,
     });
   }
-
-  public static offSeason() {
-    const seasonObj = new SeasonDto();
-    seasonObj.id = "1";
-    seasonObj.name = "Off Season";
-    seasonObj.startDate = new Date();
-    seasonObj.endDate = new Date();
-    return seasonObj;
-  }
 }

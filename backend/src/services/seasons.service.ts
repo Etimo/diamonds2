@@ -4,7 +4,6 @@ import { Repository } from "typeorm";
 import { SeasonsEntity } from "../db/models/seasons.entity";
 import { ISeason } from "../interfaces/season.interface";
 import { SeasonDto } from "../models/season.dto";
-import ConflictError from "../errors/conflict.error";
 
 @Injectable()
 export class SeasonsService {
@@ -24,19 +23,20 @@ export class SeasonsService {
     if (currentSeason) {
       return SeasonDto.fromEntity(currentSeason);
     }
-    return SeasonDto.offSeason();
+
+    return await this.repo
+      .createQueryBuilder("seasons")
+      .where("seasons.name = 'Off Season'")
+      .getOne();
   }
 
   public async all() {
-    let seasons = this.repo
+    return this.repo
       .find({
         order: {
           createTimeStamp: "DESC",
         },
       })
       .then(highScores => highScores.map(e => SeasonDto.fromEntity(e)));
-    // Adding offseason
-    (await seasons).push(SeasonDto.offSeason());
-    return seasons;
   }
 }
