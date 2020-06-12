@@ -1,4 +1,4 @@
-import { Injectable, Scope, Logger } from "@nestjs/common";
+import { Injectable, Scope, Logger, Inject } from "@nestjs/common";
 import { OperationQueueBoard } from "../gameengine/operation-queue-board";
 import { BotsService } from "./bots.service";
 import { HighScoresService } from "./high-scores.service";
@@ -20,6 +20,7 @@ import { BotProvider } from "../gameengine/gameobjects/bot/bot-provider";
 import { BoardConfig } from "../gameengine/board-config";
 import { TeleportProvider } from "../gameengine/gameobjects/teleport/teleport-provider";
 import { MetricsService } from "./metrics.service";
+import { SeasonsService } from "./seasons.service";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
@@ -30,19 +31,22 @@ export class BoardsService {
     private botsService: BotsService,
     private highscoresService: HighScoresService,
     private metricsService: MetricsService,
+    private seasonsService: SeasonsService,
     private logger: CustomLogger,
-    private numberOfBoards: number = 1,
+    @Inject("NUMBER_OF_BOARDS") private numberOfBoards,
   ) {
-    this.createInMemoryBoard(numberOfBoards);
+    this.createInMemoryBoard(this.numberOfBoards);
 
     this.boards.forEach(board => {
-      board.registerSessionFinishedCallback((botName, score) => {
+      board.registerSessionFinishedCallback(async (botName, score) => {
         if (this.metricsService) {
           this.metricsService.decPlayersTotal(board.getId());
         }
+        const currentSeason = await this.seasonsService.getCurrentSeason();
         this.highscoresService.addOrUpdate({
           botName,
           score,
+          seasonId: currentSeason.id,
         });
       });
     });

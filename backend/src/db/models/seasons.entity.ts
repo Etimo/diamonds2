@@ -1,18 +1,18 @@
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({ name: "high_scores" })
-export class HighScoreEntity {
+@Entity({ name: "seasons" })
+export class SeasonsEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column({ type: "varchar", length: 300 })
-  botName: string;
+  name: string;
 
-  @Column({ type: "int" })
-  score: number;
+  @Column({ type: "timestamptz" })
+  startDate: Date;
 
-  @Column({ type: "uuid" })
-  seasonId: string;
+  @Column({ type: "timestamptz" })
+  endDate: Date;
 
   @Column({ type: "timestamptz", default: () => "CURRENT_TIMESTAMP" })
   createTimeStamp: Date;

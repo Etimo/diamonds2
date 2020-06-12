@@ -13,23 +13,32 @@ import { IBot } from "../interfaces/bot.interface";
 import NotFoundError from "../errors/not-found.error";
 import SilentLogger from "../gameengine/util/silent-logger";
 import { MetricsService } from "./metrics.service";
+import { SeasonsService } from "./seasons.service";
+import { SeasonsEntity } from "../db/models/seasons.entity";
 import ConflictError from "../errors/conflict.error";
 
 describe("BoardsService", () => {
   let botsService: BotsService;
   let highScoresService: HighScoresService;
+  let seasonsService: SeasonsService;
   const dummyBoardId = 1111111;
   const dummyBoardToken = "dummy";
   const dummyBotId = "dummyId";
   let boardsService: BoardsService;
   let repositoryMock: MockType<Repository<HighScoreEntity>>;
   let repositoryMock2: MockType<Repository<BotRegistrationsEntity>>;
+  let repositoryMock3: MockType<Repository<SeasonsEntity>>;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         BotsService,
         {
           provide: getRepositoryToken(BotRegistrationsEntity),
+          useFactory: repositoryMockFactory,
+        },
+        SeasonsService,
+        {
+          provide: getRepositoryToken(SeasonsEntity),
           useFactory: repositoryMockFactory,
         },
         HighScoresService,
@@ -41,17 +50,23 @@ describe("BoardsService", () => {
           useValue: null,
           provide: MetricsService,
         },
+        {
+          useValue: 2,
+          provide: "NUMBER_OF_BOARDS",
+        },
       ],
     }).compile();
     highScoresService = module.get<HighScoresService>(HighScoresService);
     botsService = module.get<BotsService>(BotsService);
-
+    seasonsService = module.get<SeasonsService>(SeasonsService);
     repositoryMock = module.get(getRepositoryToken(HighScoreEntity));
     repositoryMock2 = module.get(getRepositoryToken(BotRegistrationsEntity));
+    repositoryMock3 = module.get(getRepositoryToken(SeasonsEntity));
     boardsService = new BoardsService(
       botsService,
       highScoresService,
       null,
+      seasonsService,
       new SilentLogger() as CustomLogger,
       2,
     );
@@ -63,6 +78,7 @@ describe("BoardsService", () => {
     expect(highScoresService).toBeDefined();
     expect(botsService).toBeDefined();
     expect(boardsService).toBeDefined();
+    expect(seasonsService).toBeDefined();
   });
 
   it("Should throw UnauthorizedError when bot not exists", async () => {
