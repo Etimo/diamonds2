@@ -9,7 +9,7 @@ export class seasons1591271803639 implements MigrationInterface {
       undefined,
     );
     await queryRunner.query(
-      `ALTER TABLE "high_scores" ADD "seasonId" uuid NOT NULL`,
+      `ALTER TABLE "high_scores" ADD "seasonId" uuid`,
       undefined,
     );
   }

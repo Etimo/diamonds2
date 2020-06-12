@@ -11,7 +11,7 @@ export class HighScoreEntity {
   @Column({ type: "int" })
   score: number;
 
-  @Column({ type: "uuid" })
+  @Column({ type: "uuid", nullable: true })
   seasonId: string;
 
   @Column({ type: "timestamptz", default: () => "CURRENT_TIMESTAMP" })
