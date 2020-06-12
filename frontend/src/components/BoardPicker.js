@@ -9,8 +9,10 @@ const BoardPicker = ({ onChange, value }) => {
     <Select>
       <Select.Title>Select Board</Select.Title>
       <Select.Picker onChange={onChange} value={value}>
-        {ids.map((id) => (
-          <option value={id}>{id}</option>
+        {ids.map(id => (
+          <option key={id} value={id}>
+            {id}
+          </option>
         ))}
       </Select.Picker>
     </Select>
