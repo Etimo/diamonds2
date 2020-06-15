@@ -18,43 +18,42 @@ export class addHighscores1591772929217 implements MigrationInterface {
     const season2017 = seasons.find(
       season => season.name === "Linköping VT 2017",
     );
-    const highScores2017 = require("./2017-highscores.json");
+    const highScores2017 = require("../data/2017-highscores.json");
     await this.addOldHighScores(queryRunner, highScores2017, season2017);
 
     const season2018 = seasons.find(
       season => season.name === "Linköping VT 2018",
     );
-    const highScores2018 = require("./2018-highscores.json");
+    const highScores2018 = require("../data/2018-highscores.json");
     await this.addOldHighScores(queryRunner, highScores2018, season2018);
 
     const season2019 = seasons.find(
       season => season.name === "Linköping VT 2019",
     );
-    const highScores2019 = require("./2019-highscores.json");
+    const highScores2019 = require("../data/2019-highscores.json");
     await this.addOldHighScores(queryRunner, highScores2019, season2019);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     const seasons = await this.getAllSeasons(queryRunner);
-    const highScores = require("./highscores.json");
 
     // Delete old highscores from db
     const season2017 = seasons.find(
       season => season.name === "Linköping VT 2017",
     );
-    const highScores2017 = require("./2017-highscores.json");
+    const highScores2017 = require("../data/2017-highscores.json");
     await this.deleteOldHighScores(queryRunner, highScores2017, season2017);
 
     const season2018 = seasons.find(
       season => season.name === "Linköping VT 2018",
     );
-    const highScores2018 = require("./2018-highscores.json");
+    const highScores2018 = require("../data/2018-highscores.json");
     await this.deleteOldHighScores(queryRunner, highScores2018, season2018);
 
     const season2019 = seasons.find(
       season => season.name === "Linköping VT 2019",
     );
-    const highScores2019 = require("./2019-highscores.json");
+    const highScores2019 = require("../data/2019-highscores.json");
     await this.deleteOldHighScores(queryRunner, highScores2019, season2019);
 
     // Remove season id from 2020 highscores
