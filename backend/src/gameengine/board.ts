@@ -292,9 +292,6 @@ export class Board {
     );
     gameObjectsPrev.forEach(g => g.onGameObjectLeft(gameObject, this));
 
-    // Update position of game object
-    gameObject.position = dest;
-
     // Notify game objects in new position that we are entering the new position
     const gameObjectsDest = this.getGameObjectsOnPosition(dest);
     this.logger.debug(
@@ -302,6 +299,10 @@ export class Board {
       "entered",
       JSON.stringify(gameObject.position),
     );
+
+    // Update position of game object
+    gameObject.position = dest;
+
     gameObjectsDest.forEach(g => g.onGameObjectEntered(gameObject, this));
 
     return true;
