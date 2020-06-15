@@ -1,0 +1,314 @@
+[
+  {
+    "_id": "8aabbe8b-8cc3-428d-bf38-fd6d96ef6f75",
+    "BotName": "DW2",
+    "Score": 45,
+    "SessionFinishedAt": "2019-03-22T12:16:55.009Z"
+  },
+  {
+    "_id": "1a3d9ed2-bcd9-444a-accd-84d2bc04e0c6",
+    "BotName": "Arty",
+    "Score": 208,
+    "SessionFinishedAt": "2019-03-25T17:46:07.944Z"
+  },
+  {
+    "_id": "a860e171-b66d-46d8-acb7-f02420dbbb5b",
+    "BotName": "devLotto",
+    "Score": 205,
+    "SessionFinishedAt": "2019-03-26T09:50:21.366Z"
+  },
+  {
+    "_id": "bfe1b4e2-f139-4437-9b41-83f9c861bb3c",
+    "BotName": "Pikachu",
+    "Score": 103,
+    "SessionFinishedAt": "2019-03-26T18:04:09.095Z"
+  },
+  {
+    "_id": "0d96b1c7-9559-460d-a775-6bfccf726442",
+    "BotName": "Jens",
+    "Score": 115,
+    "SessionFinishedAt": "2019-03-27T15:23:26.821Z"
+  },
+  {
+    "_id": "12ff3c47-9370-471d-8560-52e910c2b705",
+    "BotName": "Darth Vader",
+    "Score": 131,
+    "SessionFinishedAt": "2019-03-28T19:42:19.899Z"
+  },
+  {
+    "_id": "56bcb4c6-beaa-4759-9877-230dad8d7015",
+    "BotName": "Mirre",
+    "Score": 95,
+    "SessionFinishedAt": "2019-03-31T05:15:04.795Z"
+  },
+  {
+    "_id": "60a042ac-c976-469a-b43f-f5be9f33d9d7",
+    "BotName": "devLotto2",
+    "Score": 25,
+    "SessionFinishedAt": "2019-04-01T00:33:55.016Z"
+  },
+  {
+    "_id": "c5bc857d-6fec-47e2-8606-b80b961f1fe9",
+    "BotName": "DahlBot",
+    "Score": 172,
+    "SessionFinishedAt": "2019-04-01T14:18:11.019Z"
+  },
+  {
+    "_id": "c615109d-7332-475b-8dc7-986f54fea3ce",
+    "BotName": "Luka",
+    "Score": 6,
+    "SessionFinishedAt": "2019-04-02T21:55:33.262Z"
+  },
+  {
+    "_id": "3fe0ae36-81d2-4604-a899-1c71637dd78c",
+    "BotName": "test",
+    "Score": 23,
+    "SessionFinishedAt": "2019-04-02T22:34:31.138Z"
+  },
+  {
+    "_id": "a112b774-b968-48c8-8bb4-b6130388e22b",
+    "BotName": "Gustavv",
+    "Score": 10,
+    "SessionFinishedAt": "2019-04-02T23:33:19.811Z"
+  },
+  {
+    "_id": "f8fc8d4e-843a-4646-8d7f-7cb99de91055",
+    "BotName": "hikari",
+    "Score": 6,
+    "SessionFinishedAt": "2019-04-02T23:46:14.515Z"
+  },
+  {
+    "_id": "889eca3a-c1a2-445d-b856-bf5b31af9de4",
+    "BotName": "jI7rhBHgT0",
+    "Score": 55,
+    "SessionFinishedAt": "2019-04-03T07:59:42.015Z"
+  },
+  {
+    "_id": "4dd4ff9c-c738-4f60-aa64-07aa3b02c38b",
+    "BotName": "otz",
+    "Score": 45,
+    "SessionFinishedAt": "2019-04-03T08:01:43.678Z"
+  },
+  {
+    "_id": "a453a8d7-07aa-4fb7-9ea4-848fdcb3df30",
+    "BotName": "LukasBot",
+    "Score": 43,
+    "SessionFinishedAt": "2019-04-03T10:56:45.616Z"
+  },
+  {
+    "_id": "22dcde7d-99db-42eb-8d80-440fab2e39ef",
+    "BotName": "GustavFilip",
+    "Score": 183,
+    "SessionFinishedAt": "2019-04-03T13:39:11.097Z"
+  },
+  {
+    "_id": "c5cb6dfb-bf37-4d1e-abd7-de35ef13498d",
+    "BotName": "slowstart",
+    "Score": 173,
+    "SessionFinishedAt": "2019-04-03T16:30:31.090Z"
+  },
+  {
+    "_id": "5755eb71-e789-4f0b-84ef-456b65c28b41",
+    "BotName": "matte",
+    "Score": 6,
+    "SessionFinishedAt": "2019-04-03T20:15:58.269Z"
+  },
+  {
+    "_id": "9b8c292b-b570-499f-91e3-8a80b498ca9a",
+    "BotName": "Botsluts\u00e5ngest",
+    "Score": 31,
+    "SessionFinishedAt": "2019-04-04T08:52:35.372Z"
+  },
+  {
+    "_id": "d8d026ca-bc18-421a-89ba-5d5f23459967",
+    "BotName": "derfla",
+    "Score": 53,
+    "SessionFinishedAt": "2019-04-04T10:52:36.292Z"
+  },
+  {
+    "_id": "ed3b99fb-179e-40a3-a201-f4cfc9173602",
+    "BotName": "Etimo4",
+    "Score": 22,
+    "SessionFinishedAt": "2019-04-04T11:10:17.463Z"
+  },
+  {
+    "_id": "3d1c1f1f-6d20-4196-a25e-79865987e917",
+    "BotName": "GustavFilip1337",
+    "Score": 169,
+    "SessionFinishedAt": "2019-04-04T13:38:50.282Z"
+  },
+  {
+    "_id": "29f5e4b5-bbcb-4396-b936-c92c6e8e169b",
+    "BotName": "All your base is belong to us",
+    "Score": 8,
+    "SessionFinishedAt": "2019-04-04T14:28:35.743Z"
+  },
+  {
+    "_id": "a2abdda2-82ef-4460-bffb-a0cec61a1059",
+    "BotName": "Fuddu",
+    "Score": 10,
+    "SessionFinishedAt": "2019-04-04T16:19:23.945Z"
+  },
+  {
+    "_id": "1c382c02-25d7-43c3-93f6-b465c32c7f47",
+    "BotName": "mattr",
+    "Score": 1,
+    "SessionFinishedAt": "2019-04-04T20:00:23.504Z"
+  },
+  {
+    "_id": "969bad70-0b57-4713-a90c-ec821e73628a",
+    "BotName": "miniwa",
+    "Score": 161,
+    "SessionFinishedAt": "2019-04-04T21:16:11.834Z"
+  },
+  {
+    "_id": "f9923cfc-b525-4fd0-a4ae-f46994cdbed7",
+    "BotName": "foobdar",
+    "Score": 14,
+    "SessionFinishedAt": "2019-04-04T22:04:17.229Z"
+  },
+  {
+    "_id": "1b2ae4f4-0f38-41c1-874c-f24a9d252d7d",
+    "BotName": "I",
+    "Score": 45,
+    "SessionFinishedAt": "2019-04-05T15:47:28.480Z"
+  },
+  {
+    "_id": "be4908a3-bf9d-4a8c-ba0e-6440520e9dfd",
+    "BotName": "Me",
+    "Score": 5,
+    "SessionFinishedAt": "2019-04-05T17:23:01.662Z"
+  },
+  {
+    "_id": "89f52780-628a-493e-9786-e845ecce0a24",
+    "BotName": "Give",
+    "Score": 3,
+    "SessionFinishedAt": "2019-04-05T17:54:58.247Z"
+  },
+  {
+    "_id": "6817dfe8-e550-4e1b-b6ad-1af85a56aa1b",
+    "BotName": "Hug",
+    "Score": 1,
+    "SessionFinishedAt": "2019-04-05T17:59:49.061Z"
+  },
+  {
+    "_id": "68686437-ef49-41b8-bfcf-0116d60b4337",
+    "BotName": "affeproffs",
+    "Score": 206,
+    "SessionFinishedAt": "2019-04-05T19:47:57.796Z"
+  },
+  {
+    "_id": "dc9963e0-47b2-4d91-80dd-ca3e7f6f64e9",
+    "BotName": "SW",
+    "Score": 4,
+    "SessionFinishedAt": "2019-04-05T20:49:57.477Z"
+  },
+  {
+    "_id": "fea58256-1ffc-4c65-94c6-a427b60faa7c",
+    "BotName": "ResetgudN",
+    "Score": 10,
+    "SessionFinishedAt": "2019-04-06T00:01:47.014Z"
+  },
+  {
+    "_id": "7b2e4fc4-60ca-4c2f-9756-307751c79742",
+    "BotName": "affe v2",
+    "Score": 220,
+    "SessionFinishedAt": "2019-04-06T00:45:33.532Z"
+  },
+  {
+    "_id": "ab02d87c-a15f-4e52-b7ad-5a2eaeda9bdd",
+    "BotName": "Etimo5",
+    "Score": 8,
+    "SessionFinishedAt": "2019-04-06T08:02:44.756Z"
+  },
+  {
+    "_id": "37d958a9-a195-4403-8007-7e7431dcd81a",
+    "BotName": "Etimo6",
+    "Score": 10,
+    "SessionFinishedAt": "2019-04-06T08:06:49.721Z"
+  },
+  {
+    "_id": "76a80bc7-ac72-4db8-8613-27905361a57a",
+    "BotName": "5",
+    "Score": 11,
+    "SessionFinishedAt": "2019-04-07T00:57:04.399Z"
+  },
+  {
+    "_id": "8906c76a-ae9c-4d67-b9bb-f3c0e193153c",
+    "BotName": "s-bot",
+    "Score": 140,
+    "SessionFinishedAt": "2019-04-07T14:51:10.764Z"
+  },
+  {
+    "_id": "d99cc06e-377d-45af-b333-cbe17adf11d5",
+    "BotName": ".",
+    "Score": 17,
+    "SessionFinishedAt": "2019-04-07T17:05:49.921Z"
+  },
+  {
+    "_id": "990b28a2-ff21-49cc-8a87-0e3b9bbfd2c0",
+    "BotName": "IP",
+    "Score": 195,
+    "SessionFinishedAt": "2019-04-08T14:24:17.825Z"
+  },
+  {
+    "_id": "1ff4a182-a691-42a5-aa86-e37bc5894e07",
+    "BotName": "Nalo",
+    "Score": 82,
+    "SessionFinishedAt": "2019-04-09T12:14:34.208Z"
+  },
+  {
+    "_id": "b7bfd8d1-61b3-46b8-8767-b75403b11ef7",
+    "BotName": "LMeMuZJgPY",
+    "Score": 55,
+    "SessionFinishedAt": "2019-04-20T19:36:05.871Z"
+  },
+  {
+    "_id": "b97474a7-8e00-44ca-bdf4-b89e5601294d",
+    "BotName": "tema2",
+    "Score": 12,
+    "SessionFinishedAt": "2019-10-14T17:01:09.029Z"
+  },
+  {
+    "_id": "1491f67e-041a-4fc6-816f-6243a8e686fe",
+    "BotName": "tema4",
+    "Score": 13,
+    "SessionFinishedAt": "2019-11-04T08:42:46.636Z"
+  },
+  {
+    "_id": "593530af-1a42-4394-86a3-48ce892117c6",
+    "BotName": "tema3",
+    "Score": 9,
+    "SessionFinishedAt": "2019-11-04T10:28:07.812Z"
+  },
+  {
+    "_id": "4403e442-75c3-48fe-82fa-1a33aee346b1",
+    "BotName": "tema1",
+    "Score": 3,
+    "SessionFinishedAt": "2019-11-05T13:40:13.481Z"
+  },
+  {
+    "_id": "1452821f-9df6-435c-ace1-f832f83ee734",
+    "BotName": "seal",
+    "Score": 1,
+    "SessionFinishedAt": "2020-03-11T18:34:29.187Z"
+  },
+  {
+    "_id": "4b54bd27-e5ae-480f-a876-4dacff24b832",
+    "BotName": "rontgen_",
+    "Score": 59,
+    "SessionFinishedAt": "2020-04-28T17:46:19.720Z"
+  },
+  {
+    "_id": "a66c01d4-cf9d-4870-b8a6-5a90d560fe2e",
+    "BotName": "asd1",
+    "Score": 10,
+    "SessionFinishedAt": "2020-04-28T18:49:13.538Z"
+  },
+  {
+    "_id": "49694c05-4471-4932-9cb2-6154c9c9e301",
+    "BotName": "testerfester",
+    "Score": 5,
+    "SessionFinishedAt": "2020-04-28T19:44:50.965Z"
+  }
+]
