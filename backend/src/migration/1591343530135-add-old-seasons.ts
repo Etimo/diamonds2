@@ -1,6 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class addOldSeasons1591343530135 implements MigrationInterface {
+  name = "addOldSeasons1591343530135";
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.manager
       .createQueryBuilder()

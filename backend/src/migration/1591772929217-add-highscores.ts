@@ -1,6 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class addHighscores1591772929217 implements MigrationInterface {
+  name = "addHighscores1591772929217";
   public async up(queryRunner: QueryRunner): Promise<any> {
     // Update current highscores to season 2020
     const seasons = await this.getAllSeasons(queryRunner);
