@@ -36,10 +36,17 @@ export class BotGameObject extends AbstractGameObject {
     };
   }
 
-  canGameObjectEnter(gameObject: AbstractGameObject, board: Board): boolean {
+  onGameObjectEntered(gameObject: AbstractGameObject, board: Board) {
     if (gameObject instanceof BotGameObject) {
-      return false;
+      const otherBot = gameObject as BotGameObject;
+
+      // I am sent back to base
+      this.position = this.base;
+
+      // Also they steal some diamonds from me
+      const canSteal = Math.min(this.diamonds, otherBot.inventorySize - otherBot.diamonds);
+      this.diamonds = Math.max(this.diamonds - canSteal, 0);
+      otherBot.diamonds += canSteal;
     }
-    return true;
   }
 }
