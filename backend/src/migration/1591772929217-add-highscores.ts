@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class addHighscores1591772929217 implements MigrationInterface {
   name = "addHighscores1591772929217";
-  public async up(queryRunner: QueryRunner): Promise<any> {
+  public async up(queryRunner: QueryRunner): Promise<void> {
     // Update current highscores to season 2020
     const seasons = await this.getAllSeasons(queryRunner);
     const season = seasons.find(season => season.name === "Linköping VT 2020");
@@ -34,7 +34,7 @@ export class addHighscores1591772929217 implements MigrationInterface {
     await this.addOldHighScores(queryRunner, highScores2019, season2019);
   }
 
-  public async down(queryRunner: QueryRunner): Promise<any> {
+  public async down(queryRunner: QueryRunner): Promise<void> {
     const seasons = await this.getAllSeasons(queryRunner);
     const highScores = require("./highscores.json");
 

@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class addOldSeasons1591343530135 implements MigrationInterface {
   name = "addOldSeasons1591343530135";
-  public async up(queryRunner: QueryRunner): Promise<any> {
+  public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.manager
       .createQueryBuilder()
       .insert()
@@ -48,5 +48,5 @@ export class addOldSeasons1591343530135 implements MigrationInterface {
       .execute();
   }
 
-  public async down(queryRunner: QueryRunner): Promise<any> {}
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }
