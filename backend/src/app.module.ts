@@ -25,10 +25,10 @@ const dbConfig: TypeOrmModuleOptions = {
   username: process.env["TYPEORM_USERNAME"],
   password: process.env["TYPEORM_PASSWORD"],
   database: process.env["TYPEORM_DATABASE"],
-  synchronize: true,
+  synchronize: process.env["ENVIRONMENT"] === "development",
   entities: [HighScoreEntity, BotRegistrationsEntity, SeasonsEntity],
   migrationsTableName: "migration",
-  migrations: ["./src/migration/*.{ts,js}"],
+  migrations: ["./migration/*.{ts,js}"],
   ssl: false,
 };
 console.log("DB Config", dbConfig.host, dbConfig.username);
