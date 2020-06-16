@@ -15,5 +15,6 @@ COPY package.json yarn.lock ./
 RUN yarn install --production
 COPY tsconfig.json ./
 COPY ormconfig.prod.js ./ormconfig.js
+COPY /src/data /app/dist/data
 EXPOSE 5000
 CMD ["yarn", "start:prod"]
