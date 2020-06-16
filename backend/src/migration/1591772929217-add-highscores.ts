@@ -12,7 +12,7 @@ export class addHighscores1591772929217 implements MigrationInterface {
       .set({
         seasonId: season.id,
       })
-      .where("highScores.seasonId is NULL")
+      .where("high_scores.seasonId is null")
       .execute();
 
     // Add old highscores to db
