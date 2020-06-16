@@ -7,7 +7,7 @@ const dbConfig = {
   database: process.env["TYPEORM_DATABASE"] || "postgres",
   entities: ["**/*.entity{.ts,.js}"],
   migrationsTableName: "migration",
-  migrations: ["dist/migration/*.ts"],
+  migrations: ["dist/migration/*{.ts,.js}"],
   cli: {
     entitiesDir: "dist/db",
     migrationsDir: "dist/migration",
