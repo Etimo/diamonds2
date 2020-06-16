@@ -16,5 +16,6 @@ RUN yarn install --production
 COPY tsconfig.json ./
 COPY ormconfig.prod.js ./ormconfig.js
 COPY /src/data /app/dist/data
+COPY /src/migration /app/dist/migration
 EXPOSE 5000
 CMD ["yarn", "start:prod"]
