@@ -1,6 +1,6 @@
-# Simple JS bot
+# Simple Node bot
 
-```yarn link
+```sudo npm link
 
 ```
 

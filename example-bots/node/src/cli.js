@@ -7,19 +7,22 @@ function parseArgumentsIntoOptions(rawArgs) {
       "--name": String,
       "--email": String,
       "--token": String,
+      "--logic": String,
       "-n": "--name",
       "-e": "--email",
-      "-t": "--token"
+      "-t": "--token",
+      "-l": "--logic",
     },
     {
-      argv: rawArgs.slice(2)
+      argv: rawArgs.slice(2),
     }
   );
   return {
     name: args["--name"] || "",
     email: args["--email"] || "",
     token: args["--token"] || "",
-    action: args._[0]
+    logic: args["--logic"] || "",
+    action: args._[0],
   };
 }
 
@@ -28,22 +31,22 @@ export function cli(args) {
 
   console.log(options);
   validateArgs(options);
-  const { name, email, token, action } = options;
+  const { name, email, token, logic, action } = options;
   switch (action) {
     case "register":
       registerBot(name, email);
       break;
     case "play":
-      playGame(token);
+      playGame(token, logic);
       break;
     default:
       shutDown("Please provide a valid action. [register, play]");
   }
 }
 
-function playGame(token) {
+function playGame(token, logic) {
   try {
-    play(token);
+    play(token, logic);
   } catch (error) {}
 }
 
@@ -54,9 +57,9 @@ function registerBot(name, email) {
 }
 
 function validateArgs(options) {
-  const { name, email, token, action } = options;
-  if (action === "play" && token === "") {
-    shutDown("Please provide a valid token");
+  const { name, email, token, logic, action } = options;
+  if (action === "play" && (token === "" || logic == "")) {
+    shutDown("Please provide a valid token and logic");
   }
 
   if (action === "register" && (name === "" || email === "")) {
