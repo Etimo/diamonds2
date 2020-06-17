@@ -7,12 +7,15 @@ import { BotsService } from "./services/bots.service";
 import { HighscoresController } from "./controllers/highscore/highscores.controller";
 import { BoardsController } from "./controllers/boards/boards.controller";
 import { BotsController } from "./controllers/bots/bots.controller";
+import { SeasonsController } from "./controllers/seasons/seasons.controller";
 import { CustomLogger } from "./logger";
 import { BoardsService } from "./services/board.service";
 import { HighScoresService } from "./services/high-scores.service";
+import { SeasonsService } from "./services/seasons.service";
 
 import { HighScoreEntity } from "./db/models/highScores.entity";
 import { BotRegistrationsEntity } from "./db/models/botRegistrations.entity";
+import { SeasonsEntity } from "./db/models/seasons.entity";
 import { MetricsService } from "./services/metrics.service";
 
 const dbConfig: TypeOrmModuleOptions = {
@@ -22,19 +25,28 @@ const dbConfig: TypeOrmModuleOptions = {
   username: process.env["TYPEORM_USERNAME"],
   password: process.env["TYPEORM_PASSWORD"],
   database: process.env["TYPEORM_DATABASE"],
-  synchronize: true,
-  entities: [HighScoreEntity, BotRegistrationsEntity],
+  synchronize: process.env["ENVIRONMENT"] === "development",
+  entities: [HighScoreEntity, BotRegistrationsEntity, SeasonsEntity],
   migrationsTableName: "migration",
-  migrations: ["./src/migration/*.{ts,js}"],
+  migrations: ["./migration/*.{ts,js}"],
   ssl: false,
 };
 console.log("DB Config", dbConfig.host, dbConfig.username);
 @Module({
-  controllers: [BotsController, BoardsController, HighscoresController],
+  controllers: [
+    BotsController,
+    BoardsController,
+    HighscoresController,
+    SeasonsController,
+  ],
   imports: [
     TypeOrmModule.forRoot(dbConfig),
 
-    TypeOrmModule.forFeature([HighScoreEntity, BotRegistrationsEntity]),
+    TypeOrmModule.forFeature([
+      HighScoreEntity,
+      BotRegistrationsEntity,
+      SeasonsEntity,
+    ]),
   ],
   providers: [
     CustomLogger,
@@ -44,6 +56,11 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     ValidatorService,
     HighScoresService,
     MetricsService,
+    SeasonsService,
+    {
+      provide: "NUMBER_OF_BOARDS",
+      useValue: 1,
+    },
   ],
 })
 export class AppModule {}

@@ -1,4 +1,4 @@
-import { Injectable, Scope, Logger } from "@nestjs/common";
+import { Injectable, Scope, Logger, Inject } from "@nestjs/common";
 import { OperationQueueBoard } from "../gameengine/operation-queue-board";
 import { BotsService } from "./bots.service";
 import { HighScoresService } from "./high-scores.service";
@@ -21,6 +21,7 @@ import { BoardConfig } from "../gameengine/board-config";
 import { TeleportProvider } from "../gameengine/gameobjects/teleport/teleport-provider";
 import { MetricsService } from "./metrics.service";
 import { TeleportRelocationProvider } from "../gameengine/gameobjects/teleport-relocation-provider/teleport-relocation-provider";
+import { SeasonsService } from "./seasons.service";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
@@ -31,18 +32,22 @@ export class BoardsService {
     private botsService: BotsService,
     private highscoresService: HighScoresService,
     private metricsService: MetricsService,
+    private seasonsService: SeasonsService,
     private logger: CustomLogger,
+    @Inject("NUMBER_OF_BOARDS") private numberOfBoards,
   ) {
-    this.createInMemoryBoard();
+    this.createInMemoryBoard(this.numberOfBoards);
 
     this.boards.forEach(board => {
-      board.registerSessionFinishedCallback((botName, score) => {
+      board.registerSessionFinishedCallback(async (botName, score) => {
         if (this.metricsService) {
           this.metricsService.decPlayersTotal(board.getId());
         }
+        const currentSeason = await this.seasonsService.getCurrentSeason();
         this.highscoresService.addOrUpdate({
           botName,
           score,
+          seasonId: currentSeason.id,
         });
       });
     });
@@ -82,11 +87,12 @@ export class BoardsService {
       throw new NotFoundError("Board not found");
     }
 
-    const boardBot = board.getBot(botToken);
-
-    if (boardBot) {
-      throw new ConflictError("Already on board");
-    }
+    // Check if bot is on any board
+    this.boards.forEach(b => {
+      if (b.getBot(botToken)) {
+        throw new ConflictError("Already playing");
+      }
+    });
 
     const result = await board.enqueueJoin(bot);
     if (!result) {
@@ -199,7 +205,7 @@ export class BoardsService {
   /**
    * Create an example board for debugging purpose.
    */
-  private createInMemoryBoard(): void {
+  private createInMemoryBoard(numberOfBoards: number): void {
     const providers = [
       new DiamondButtonProvider(),
       new BaseProvider(),
@@ -221,7 +227,7 @@ export class BoardsService {
         seconds: 10,
       }),
     ];
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < numberOfBoards; i++) {
       const config: BoardConfig = {
         height: 15,
         width: 15,
