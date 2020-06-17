@@ -6,29 +6,44 @@ export function registrationSuccessful(bot) {
   shutDown();
 }
 
-export function registrationFailed(name, email) {
+export const registrationFailed = (name, email) => {
   console.log("Registration failed");
   console.log("Name: ", name);
   console.log("Email: ", email);
   shutDown();
-}
+};
 
-export function invalidLogic() {
+export const invalidLogic = () => {
   console.log("Please provide a valid logic.");
   shutDown();
-}
+};
 
-export function couldNotJoinBoard() {
+export const couldNotJoinBoard = () => {
   console.log("Could not join board");
   console.log("Bot is probably already playing on the board");
   shutDown();
-}
+};
 
-export function botDoesNotExistOnBoard() {
+export const botDoesNotExistOnBoard = () => {
   console.log("Shutting down!");
   shutDown();
-}
+};
 
-function shutDown() {
+export const registerInvalidParameters = () => {
+  console.log("Please provide a valid name and email");
+  shutDown();
+};
+
+export const playInvalidParameters = () => {
+  console.log("Please provide a valid token and logic");
+  shutDown();
+};
+
+export const invalidAction = () => {
+  console.log("Please provide a valid action. [register, play]");
+  shutDown();
+};
+
+const shutDown = () => {
   process.exit();
-}
+};

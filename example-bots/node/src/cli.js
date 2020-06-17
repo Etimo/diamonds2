@@ -1,7 +1,12 @@
 import arg from "arg";
 import { register, play } from "./main";
+import {
+  registerInvalidParameters,
+  playInvalidParameters,
+  invalidAction,
+} from "./messages";
 
-function parseArgumentsIntoOptions(rawArgs) {
+const parseArgumentsIntoOptions = (rawArgs) => {
   const args = arg(
     {
       "--name": String,
@@ -24,9 +29,9 @@ function parseArgumentsIntoOptions(rawArgs) {
     logic: args["--logic"] || "",
     action: args._[0],
   };
-}
+};
 
-export function cli(args) {
+export const cli = (args) => {
   const options = parseArgumentsIntoOptions(args);
 
   console.log(options);
@@ -40,34 +45,25 @@ export function cli(args) {
       playGame(token, logic);
       break;
     default:
-      shutDown("Please provide a valid action. [register, play]");
+      invalidAction();
   }
-}
+};
 
-function playGame(token, logic) {
-  try {
-    play(token, logic);
-  } catch (error) {}
-}
+const playGame = (token, logic) => {
+  play(token, logic);
+};
 
-function registerBot(name, email) {
-  try {
-    register(name, email);
-  } catch (error) {}
-}
+const registerBot = (name, email) => {
+  register(name, email);
+};
 
-function validateArgs(options) {
+const validateArgs = (options) => {
   const { name, email, token, logic, action } = options;
   if (action === "play" && (token === "" || logic == "")) {
-    shutDown("Please provide a valid token and logic");
+    playInvalidParameters();
   }
 
   if (action === "register" && (name === "" || email === "")) {
-    shutDown("Please provide a valid name and email");
+    registerInvalidParameters();
   }
-}
-
-function shutDown(errorMessage) {
-  console.log(errorMessage);
-  process.exit();
-}
+};

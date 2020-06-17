@@ -9,22 +9,21 @@ import { invalidLogic, couldNotJoinBoard } from "./messages";
 
 const logics = { firstDiamondLogic: getFirstDiamond };
 
-export async function register(name, email) {
+export const register = async (name, email) => {
   const bot = await registerBot(name, email);
   if (bot) {
     registrationSuccessful(bot);
   } else {
     registrationFailed(name, email);
   }
-}
+};
 
-export async function play(token, logic) {
+export const play = async (token, logic) => {
   const logicFunction = getLogic(logic);
   if (!logicFunction) {
     invalidLogic();
   }
   let bot = await getBot(token);
-  console.log(bot);
 
   // Join board
   let board = await joinBoard(token);
@@ -46,9 +45,9 @@ export async function play(token, logic) {
     board = await moveBotOnBoard(board.id, bot.token, direction);
     await sleep(board.minimumDelayBetweenMoves * 10);
   }
-}
+};
 
-function getTargetPosition(bot, board, logicFunction) {
+const getTargetPosition = (bot, board, logicFunction) => {
   if (
     !bot.targetPosition ||
     (positionIsSame(bot.targetPosition, bot.position) && bot.diamonds < 5)
@@ -62,12 +61,12 @@ function getTargetPosition(bot, board, logicFunction) {
 
   // We should not change target position
   return false;
-}
+};
 
-function getLogic(logic) {
+const getLogic = (logic) => {
   const logicArray = Object.entries(logics).find((item) => item[0] === logic);
   if (logicArray) {
     return logicArray[1];
   }
   return null;
-}
+};

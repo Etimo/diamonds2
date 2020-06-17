@@ -1,4 +1,4 @@
-export function getDirection(bot) {
+export const getDirection = (bot) => {
   const x = bot.targetPosition.x - bot.position.x;
   if (x !== 0) {
     return moveHorizontally(x);
@@ -10,18 +10,18 @@ export function getDirection(bot) {
   // We only get to this point if we have four diamonds
   // and try to fetch a Red Diamond (2 points)
   return false;
-}
+};
 
-function moveHorizontally(x) {
+const moveHorizontally = (x) => {
   if (x > 0) {
     return "EAST";
   }
   return "WEST";
-}
+};
 
-function moveVertically(y) {
+const moveVertically = (y) => {
   if (y > 0) {
     return "SOUTH";
   }
   return "NORTH";
-}
+};
