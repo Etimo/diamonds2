@@ -29,7 +29,7 @@ Register multiple bots and play them all at once if you like!
 
 ## Different logic controllers
 
-- `src/logic/firstDiamond.js`
+- `src/logic/firstDiamond.js` = firstDiamondLogic
 
 All logics contains a function called that is called to calculate the next target position given a board state.
 
