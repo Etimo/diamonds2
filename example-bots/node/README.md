@@ -33,4 +33,4 @@ Register multiple bots and play them all at once if you like!
 
 All logics contains a function called that is called to calculate the next target position given a board state.
 
-You can use any of these two implementations as a start for your own implementation.
+You can use any the current implementation as a start for your own implementation.
