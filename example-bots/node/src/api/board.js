@@ -1,23 +1,21 @@
 import { client } from "./client";
 import { Board } from "../models/board";
+import { logResponseError } from "./utils";
 
-export const joinBoard = async (token) => {
+export const joinBoard = async (token, boardId) => {
   try {
-    const { data } = await client.post("/boards/1/join", {
+    const { data } = await client.post(`/boards/${boardId}/join`, {
       botToken: token,
     });
-    // return board class
     return Board.dataToBoard(data.data);
   } catch (error) {
-    console.log(error);
+    logResponseError(error);
   }
 };
 
 export const getBoard = async (boardId) => {
   try {
     const { data } = await client.get(`/boards/${boardId}`);
-    console.log("BOARD");
-    console.log(data.data);
     return Board.dataToBoard(data.data);
   } catch (error) {
     return false;
@@ -30,7 +28,6 @@ export const moveBotOnBoard = async (id, token, direction) => {
       botToken: token,
       direction: direction,
     });
-    console.log(data);
     return Board.dataToBoard(data.data);
   } catch (error) {
     // Fetch board if move fails

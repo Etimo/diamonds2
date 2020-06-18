@@ -1,4 +1,5 @@
 export const getDirection = (bot) => {
+  // Returns the direction the bot should move to reach the targetPosition
   const x = bot.targetPosition.x - bot.position.x;
   if (x !== 0) {
     return moveHorizontally(x);

@@ -1,6 +1,9 @@
 # Simple Node bot
 
-```sudo npm link
+```
+
+yarn install
+sudo npm link
 
 ```
 
@@ -18,14 +21,16 @@ When you have a token you can start a new game session (or continue an existing 
 
 `bot play --token <token> --logic <logic>`
 
-The bot will play using the logic controller provided until game over. You can then run the bot again without having to register a new one.
+Provide `--board <number>` if you want to join a specific board. Default is board 1.
+
+The bot will play using the logic you provide until game over. You can then run the bot again without having to register a new one.
 
 Register multiple bots and play them all at once if you like!
 
 ## Different logic controllers
 
-- `game/logic/default.js`
+- `src/logic/firstDiamond.js`
 
-All controllers implement a method called `next_move` that is called to calculate the next move given a board state.
+All logics contains a function called that is called to calculate the next target position given a board state.
 
 You can use any of these two implementations as a start for your own implementation.

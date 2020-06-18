@@ -1,47 +1,51 @@
+import chalk from "chalk";
+
 export function registrationSuccessful(bot) {
-  console.log("Registration successful");
-  console.log("Name: ", bot.name);
-  console.log("Email: ", bot.email);
-  console.log("Token: ", bot.token);
+  console.log(chalk.green("Registration successful"));
+  console.log(chalk.blue("Name: ", bot.name));
+  console.log(chalk.blue("Email: ", bot.email));
+  console.log(chalk.blue("Token: ", bot.token));
   shutDown();
 }
 
 export const registrationFailed = (name, email) => {
-  console.log("Registration failed");
-  console.log("Name: ", name);
-  console.log("Email: ", email);
+  console.log(chalk.red("Registration failed"));
+  console.log(chalk.blue("Name: ", name));
+  console.log(chalk.blue("Email: ", email));
   shutDown();
 };
 
 export const invalidLogic = () => {
-  console.log("Please provide a valid logic.");
+  console.log(chanl.red("Please provide a valid logic."));
   shutDown();
 };
 
 export const couldNotJoinBoard = () => {
-  console.log("Could not join board");
-  console.log("Bot is probably already playing on the board");
-  shutDown();
-};
-
-export const botDoesNotExistOnBoard = () => {
-  console.log("Shutting down!");
+  console.log(chalk.red("Could not join board"));
   shutDown();
 };
 
 export const registerInvalidParameters = () => {
-  console.log("Please provide a valid name and email");
+  console.log(chalk.red("Please provide a valid name and email"));
   shutDown();
 };
 
 export const playInvalidParameters = () => {
-  console.log("Please provide a valid token and logic");
+  console.log(chalk.red("Please provide a valid token and logic"));
   shutDown();
 };
 
 export const invalidAction = () => {
-  console.log("Please provide a valid action. [register, play]");
+  console.log(chalk.red("Please provide a valid action. [register, play]"));
   shutDown();
+};
+
+export const gameStarted = () => {
+  console.log(chalk.blue("Bot joined game!"));
+};
+
+export const gameEnded = () => {
+  console.log(chalk.blue("Bot left game!"));
 };
 
 const shutDown = () => {

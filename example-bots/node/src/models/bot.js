@@ -1,4 +1,4 @@
-import { botDoesNotExistOnBoard } from "../messages";
+import { gameEnded } from "../messages";
 
 export class Bot {
   constructor(name, email, token) {
@@ -25,7 +25,7 @@ export class Bot {
     );
 
     if (!bot) {
-      botDoesNotExistOnBoard();
+      gameEnded();
     }
 
     this.position = bot.position;

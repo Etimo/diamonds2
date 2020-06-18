@@ -5,7 +5,7 @@ import { registrationSuccessful, registrationFailed } from "./messages";
 import { getDirection } from "./logic/utils";
 import { getFirstDiamond } from "./logic/firstDiamondLogic";
 import { positionIsSame } from "./utils";
-import { invalidLogic, couldNotJoinBoard } from "./messages";
+import { invalidLogic, couldNotJoinBoard, gameStarted } from "./messages";
 
 const logics = { firstDiamondLogic: getFirstDiamond };
 
@@ -18,7 +18,9 @@ export const register = async (name, email) => {
   }
 };
 
-export const play = async (token, logic) => {
+export const play = async (token, logic, boardId) => {
+  gameStarted();
+  // Gets the provided logic
   const logicFunction = getLogic(logic);
   if (!logicFunction) {
     invalidLogic();
@@ -26,7 +28,7 @@ export const play = async (token, logic) => {
   let bot = await getBot(token);
 
   // Join board
-  let board = await joinBoard(token);
+  let board = await joinBoard(token, boardId);
   if (!board) {
     couldNotJoinBoard();
   }
@@ -48,6 +50,8 @@ export const play = async (token, logic) => {
 };
 
 const getTargetPosition = (bot, board, logicFunction) => {
+  // Get targetPosition if position is null (just started)
+  // or if position is the same as targetPosition and diamonds is less then 5 (we still have space in the inventory)
   if (
     !bot.targetPosition ||
     (positionIsSame(bot.targetPosition, bot.position) && bot.diamonds < 5)
@@ -55,6 +59,7 @@ const getTargetPosition = (bot, board, logicFunction) => {
     return logicFunction(bot, board);
   }
 
+  // Change targetPosition to base if inventory is full (return diamonds)
   if (bot.diamonds === 5) {
     return bot.base;
   }
