@@ -17,7 +17,7 @@ import { HighScoreEntity } from "./db/models/highScores.entity";
 import { BotRegistrationsEntity } from "./db/models/botRegistrations.entity";
 import { SeasonsEntity } from "./db/models/seasons.entity";
 import { MetricsService } from "./services/metrics.service";
-import { AutoScaleMiddleware } from "./middlewares/autoscaleBoards";
+import { AutoScaleMiddleware } from "./middlewares/auto-scale-boards.middleware";
 
 const dbConfig: TypeOrmModuleOptions = {
   type: "postgres",

@@ -4,9 +4,15 @@ import { BoardsService } from "../services/board.service";
 
 @Injectable()
 export class AutoScaleMiddleware implements NestMiddleware {
-  private requestCount: number = 0;
-  private controlAt: Date = this.setControlAt();
-  constructor(private boardsService: BoardsService) {}
+  constructor(
+    private boardsService: BoardsService,
+    private requestCount: number = 0,
+    private controlAt: Date = null,
+  ) {
+    if (!this.controlAt) {
+      this.controlAt = this.setControlAt();
+    }
+  }
 
   use(req: Request, res: Response, next: Function): void {
     this.autoScaleBoards();
@@ -49,12 +55,11 @@ export class AutoScaleMiddleware implements NestMiddleware {
     let futureNumberOfBoards = 0;
 
     // Default number of boards is 4.
-    if (this.requestCount < 300) {
+    if (this.requestCount < 4800) {
       futureNumberOfBoards = 4;
     } else {
       // 1 board per/1200 request. Round off to next integer.
       futureNumberOfBoards = Math.ceil(this.requestCount / 1200);
-      futureNumberOfBoards = 7;
     }
 
     return futureNumberOfBoards - currentNumberOfBoards;
