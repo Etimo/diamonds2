@@ -60,7 +60,7 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     SeasonsService,
     {
       provide: "NUMBER_OF_BOARDS",
-      useValue: 1,
+      useValue: 4,
     },
   ],
 })
