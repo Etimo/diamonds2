@@ -8,6 +8,7 @@ import { EnvelopeInterceptor } from "./interceptors/envelope.interceptor";
 import { CustomLogger } from "./logger";
 import bodyParser = require("body-parser");
 import * as apiMetrics from "prometheus-api-metrics";
+import { autoscaleBoards } from "./middlewares/autoscaleBoards";
 
 async function bootstrap() {
   const logger = new CustomLogger();
@@ -17,6 +18,7 @@ async function bootstrap() {
   app.use(bodyParser.json());
   app.use(compression());
   app.use(apiMetrics());
+  app.use(autoscaleBoards);
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalInterceptors(new EnvelopeInterceptor(logger));
