@@ -16,7 +16,7 @@ describe("AutoScaleBourdsMiddleWare", () => {
   let highScoresService: HighScoresService;
   let botsService: BotsService;
   let seasonsService: SeasonsService;
-  let autoScaleBourdsMiddleWare: AutoScaleMiddleware;
+  let autoScaleBoardsMiddleware: AutoScaleMiddleware;
 
   beforeEach(async () => {
     Board.setNextId(1);
@@ -50,12 +50,12 @@ describe("AutoScaleBourdsMiddleWare", () => {
   });
 
   it("should 0 boards", () => {
-    autoScaleBourdsMiddleWare = createMiddleware(
+    autoScaleBoardsMiddleware = createMiddleware(
       boardsService,
       1500,
       getNewDate(-3),
     );
-    autoScaleBourdsMiddleWare.autoScaleBoards();
+    autoScaleBoardsMiddleware.autoScaleBoards();
 
     const boards = boardsService.getAll();
 
@@ -63,12 +63,12 @@ describe("AutoScaleBourdsMiddleWare", () => {
   });
 
   it("should 7 boards", () => {
-    autoScaleBourdsMiddleWare = createMiddleware(
+    autoScaleBoardsMiddleware = createMiddleware(
       boardsService,
       8000,
       getNewDate(-3),
     );
-    autoScaleBourdsMiddleWare.autoScaleBoards();
+    autoScaleBoardsMiddleware.autoScaleBoards();
 
     const boards = boardsService.getAll();
 
@@ -76,12 +76,12 @@ describe("AutoScaleBourdsMiddleWare", () => {
   });
 
   it("should 12 boards", () => {
-    autoScaleBourdsMiddleWare = createMiddleware(
+    autoScaleBoardsMiddleware = createMiddleware(
       boardsService,
       14000,
       getNewDate(-3),
     );
-    autoScaleBourdsMiddleWare.autoScaleBoards();
+    autoScaleBoardsMiddleware.autoScaleBoards();
 
     const boards = boardsService.getAll();
 
@@ -89,12 +89,12 @@ describe("AutoScaleBourdsMiddleWare", () => {
   });
 
   it("should return 4 boards", () => {
-    autoScaleBourdsMiddleWare = createMiddleware(
+    autoScaleBoardsMiddleware = createMiddleware(
       boardsService,
       14000,
       getNewDate(1),
     );
-    autoScaleBourdsMiddleWare.autoScaleBoards();
+    autoScaleBoardsMiddleware.autoScaleBoards();
 
     const boards = boardsService.getAll();
 
@@ -102,24 +102,24 @@ describe("AutoScaleBourdsMiddleWare", () => {
   });
 
   it("should return 7", () => {
-    autoScaleBourdsMiddleWare = createMiddleware(
+    autoScaleBoardsMiddleware = createMiddleware(
       boardsService,
       14000,
       getNewDate(-2),
     );
     // Adding boards with middleware
-    autoScaleBourdsMiddleWare.autoScaleBoards();
+    autoScaleBoardsMiddleware.autoScaleBoards();
 
     let boards = boardsService.getAll();
 
     expect(boards.length).toEqual(12);
-    autoScaleBourdsMiddleWare = createMiddleware(
+    autoScaleBoardsMiddleware = createMiddleware(
       boardsService,
       8000,
       getNewDate(-2),
     );
     // Removing boards with middleware
-    autoScaleBourdsMiddleWare.autoScaleBoards();
+    autoScaleBoardsMiddleware.autoScaleBoards();
 
     boards = boardsService.getAll();
     expect(boards.length).toEqual(7);
