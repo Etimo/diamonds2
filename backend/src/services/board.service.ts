@@ -37,7 +37,7 @@ export class BoardsService {
   ) {
     this.createInMemoryBoard(this.numberOfBoards);
 
-    this.boards.forEach(board => {
+    this.boards.forEach((board) => {
       board.registerSessionFinishedCallback(async (botName, score) => {
         if (this.metricsService) {
           this.metricsService.decPlayersTotal(board.getId());
@@ -56,7 +56,7 @@ export class BoardsService {
    * Return all boards.
    */
   public getAll(): BoardDto[] {
-    return this.boards.map(b => this.getAsDto(b));
+    return this.boards.map((b) => this.getAsDto(b));
   }
 
   /**
@@ -87,7 +87,7 @@ export class BoardsService {
     }
 
     // Check if bot is on any board
-    this.boards.forEach(b => {
+    this.boards.forEach((b) => {
       if (b.getBot(botToken)) {
         throw new ConflictError("Already playing");
       }
@@ -152,7 +152,7 @@ export class BoardsService {
   }
 
   private getBoardById(id: number): OperationQueueBoard {
-    return this.boards.find(b => b.getId() === id);
+    return this.boards.find((b) => b.getId() === id);
   }
 
   /**
@@ -184,13 +184,13 @@ export class BoardsService {
       width: board.width,
       height: board.height,
       minimumDelayBetweenMoves: board.getConfig().minimumDelayBetweenMoves,
-      features: board.gameObjectProviders.map(gop => {
+      features: board.gameObjectProviders.map((gop) => {
         return {
           name: gop.constructor.name,
           config: gop.config,
         };
       }),
-      gameObjects: board.getAllGameObjects().map(g => {
+      gameObjects: board.getAllGameObjects().map((g) => {
         return {
           id: g.id,
           position: g.position,
@@ -204,7 +204,7 @@ export class BoardsService {
   /**
    * Create an example board for debugging purpose.
    */
-  private createInMemoryBoard(numberOfBoards: number): void {
+  public createInMemoryBoard(numberOfBoards: number): void {
     const providers = [
       new DiamondButtonProvider(),
       new BaseProvider(),
@@ -233,5 +233,38 @@ export class BoardsService {
       const board = new OperationQueueBoard(config, providers, this.logger);
       this.boards.push(board);
     }
+  }
+
+  public removeEmptyBoards(numberOfBoards: number) {
+    // Fetches empty boards (No bot playing) in reverse order.
+    // Removing X number of boards that are empty.
+    const removeIndex = [];
+    this.boards.forEach((board, index) => {
+      if (Object.keys(board.getBots()).length === 0) {
+        // Do not remove board 1
+        if (board.getId() != 1) {
+          removeIndex.push(index);
+        }
+      }
+    });
+
+    // Read backwards (Removing the higher ids first)
+    removeIndex
+      .slice()
+      .reverse()
+      .forEach((removeIndex, index) => {
+        if (index < numberOfBoards) {
+          this.boards.splice(removeIndex, 1);
+        }
+      });
+    // Fetch the highest board id.
+    const nextId = Math.max.apply(
+      Math,
+      this.boards.map(function (board) {
+        return board.getId();
+      }),
+    );
+    // Set nextId to avoid gaps in the id sequence
+    Board.setNextId(nextId + 1);
   }
 }

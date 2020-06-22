@@ -34,6 +34,14 @@ export class Board {
   }
 
   /**
+   * Set next id - We need this to avoid huge gaps in the ids.
+   * @param nextId
+   */
+  static setNextId(nextId: number): void {
+    Board.nextId = nextId;
+  }
+
+  /**
    * Register a new callback that will be triggered whenever a game session is finished.
    *
    * @param callback
@@ -49,7 +57,7 @@ export class Board {
    */
   unregisterSessionFinishedCallback(callback: Function) {
     this.sessionFinishedCallbacks = this.sessionFinishedCallbacks.filter(
-      c => c !== callback,
+      (c) => c !== callback,
     );
   }
 
@@ -80,6 +88,14 @@ export class Board {
   }
 
   /**
+   * Return all bots on board
+   * @returns All bots
+   */
+  getBots(): Object {
+    return this.bots;
+  }
+
+  /**
    * Try to perform a move for a bot on the board.
    *
    * @param bot The bot to move.
@@ -88,7 +104,7 @@ export class Board {
    */
   public async move(bot: IBot, delta: IPosition) {
     const botGameObject = this.getGameObjectsByType(BotGameObject).find(
-      b => b.name === bot.botName,
+      (b) => b.name === bot.botName,
     );
 
     if (botGameObject) {
@@ -105,10 +121,10 @@ export class Board {
    * @param bot
    */
   private createNewExpirationTimer(bot: IBot) {
-    const id = setTimeout(_ => {
+    const id = setTimeout((_) => {
       this.logger.debug(`Purge bot ${bot.botName}`);
       const botGameObject = this.getGameObjectsByType(BotGameObject).find(
-        b => b.name === bot.botName,
+        (b) => b.name === bot.botName,
       );
       if (!botGameObject) {
         return;
@@ -118,7 +134,7 @@ export class Board {
       delete this.bots[bot.token];
 
       // Notify all session finished callbacks
-      this.sessionFinishedCallbacks.forEach(sfc =>
+      this.sessionFinishedCallbacks.forEach((sfc) =>
         sfc(botGameObject.name, botGameObject.score),
       );
       this.removeGameObject(botGameObject);
@@ -134,7 +150,7 @@ export class Board {
    * @returns True if the cell is empty, false otherwise.
    */
   isCellEmpty(x: number, y: number): boolean {
-    return !this.gameObjects.some(g => g.x === x && g.y === y);
+    return !this.gameObjects.some((g) => g.x === x && g.y === y);
   }
 
   registerGameObjectForCallbackLoop(
@@ -143,7 +159,7 @@ export class Board {
   ) {
     if (!(interval in this.callbackLoopsRegistered)) {
       // Setup new interval in callbackloops
-      const id = setInterval(_ => {
+      const id = setInterval((_) => {
         // TODO: add lock
         this.logger.debug(`Callback loop triggered for interval ${interval}`);
         this.callbackLoopsRegistered[
@@ -167,7 +183,7 @@ export class Board {
       // Remove from collection
       this.callbackLoopsRegistered[interval] = this.callbackLoopsRegistered[
         interval
-      ].filter(g => g != gameObject);
+      ].filter((g) => g != gameObject);
 
       // TODO: Stop interval timer if empty?
       if (this.callbackLoopsRegistered[interval].length === 0) {
@@ -253,7 +269,7 @@ export class Board {
    * @param p The position
    */
   getGameObjectsOnPosition(p: IPosition): AbstractGameObject[] {
-    return this.gameObjects.filter(g => g.x === p.x && g.y === p.y);
+    return this.gameObjects.filter((g) => g.x === p.x && g.y === p.y);
   }
 
   trySetGameObjectPosition(
@@ -264,7 +280,7 @@ export class Board {
   ): boolean {
     // Check if the moving object already been here during this request
     if (gameObject.hasAlreadyBeenHere(dest)) {
-      this.gameObjects.forEach(o => o.clearPositions());
+      this.gameObjects.forEach((o) => o.clearPositions());
       return false;
     }
 
@@ -290,7 +306,7 @@ export class Board {
       "left",
       JSON.stringify(gameObject.position),
     );
-    gameObjectsPrev.forEach(g => g.onGameObjectLeft(gameObject, this));
+    gameObjectsPrev.forEach((g) => g.onGameObjectLeft(gameObject, this));
 
     // Notify game objects in new position that we are entering the new position
     const gameObjectsDest = this.getGameObjectsOnPosition(dest);
@@ -303,19 +319,19 @@ export class Board {
     // Update position of game object
     gameObject.position = dest;
 
-    gameObjectsDest.forEach(g => g.onGameObjectEntered(gameObject, this));
+    gameObjectsDest.forEach((g) => g.onGameObjectEntered(gameObject, this));
 
     return true;
   }
 
   canGameObjectEnter(gameObject: AbstractGameObject, dest: IPosition): boolean {
     const gameObjects = this.getGameObjectsOnPosition(dest);
-    return !gameObjects.some(g => !g.canGameObjectEnter(gameObject, this));
+    return !gameObjects.some((g) => !g.canGameObjectEnter(gameObject, this));
   }
 
   canGameObjectLeave(gameObject: AbstractGameObject, dest: IPosition): boolean {
     const gameObjects = this.getGameObjectsOnPosition(dest);
-    return !gameObjects.some(g => !g.canGameObjectLeave(gameObject, this));
+    return !gameObjects.some((g) => !g.canGameObjectLeave(gameObject, this));
   }
 
   /**
@@ -326,7 +342,7 @@ export class Board {
   getGameObjectsByType<T extends AbstractGameObject>(
     t: new (...args: any[]) => T,
   ): T[] {
-    return this.gameObjects.filter(g => g instanceof t).map(g => g as T);
+    return this.gameObjects.filter((g) => g instanceof t).map((g) => g as T);
   }
 
   /**
@@ -336,7 +352,7 @@ export class Board {
    */
   removeGameObject(gameObject: AbstractGameObject) {
     gameObject.onGameObjectRemoved(this);
-    this.gameObjects = this.gameObjects.filter(g => g !== gameObject);
+    this.gameObjects = this.gameObjects.filter((g) => g !== gameObject);
     this.notifyProvidersGameObjectsRemoved([gameObject]);
   }
 
@@ -346,9 +362,9 @@ export class Board {
   removeGameObjectsByType<T extends AbstractGameObject>(
     t: new (...args: any[]) => T,
   ) {
-    this.gameObjects.forEach(g => g.onGameObjectRemoved(this));
-    const removed = this.gameObjects.filter(g => g instanceof t);
-    this.gameObjects = this.gameObjects.filter(g => !(g instanceof t));
+    this.gameObjects.forEach((g) => g.onGameObjectRemoved(this));
+    const removed = this.gameObjects.filter((g) => g instanceof t);
+    this.gameObjects = this.gameObjects.filter((g) => !(g instanceof t));
     this.notifyProvidersGameObjectsRemoved(removed);
   }
 
@@ -356,31 +372,31 @@ export class Board {
     this.logger.debug(
       `notifyProvidersGameObjectsRemoved ${this.getLogString(gameObjects)}`,
     );
-    this.gameObjectProviders.forEach(p =>
+    this.gameObjectProviders.forEach((p) =>
       p.onGameObjectsRemoved(this, gameObjects),
     );
   }
 
   getLogString(gameObjects: AbstractGameObject[]): string {
-    return JSON.stringify(gameObjects.map(g => g.toLogString()));
+    return JSON.stringify(gameObjects.map((g) => g.toLogString()));
   }
 
   private notifyProvidersGameObjectsAdded(gameObjects: AbstractGameObject[]) {
     this.logger.debug(
       `notifyProvidersGameObjectsAdded ${this.getLogString(gameObjects)}`,
     );
-    this.gameObjectProviders.forEach(p =>
+    this.gameObjectProviders.forEach((p) =>
       p.onGameObjectsAdded(this, gameObjects),
     );
   }
 
   private notifyProvidersBoardInitialized() {
     this.logger.debug("notifyProvidersBoardInitialized");
-    this.gameObjectProviders.forEach(p => p.onBoardInitialized(this));
+    this.gameObjectProviders.forEach((p) => p.onBoardInitialized(this));
   }
 
   private notifyProvidersBoardBotJoined(bot: IBot) {
-    this.gameObjectProviders.forEach(p => p.onBotJoined(bot, this));
+    this.gameObjectProviders.forEach((p) => p.onBotJoined(bot, this));
   }
 
   private destinationIsOutOfBounds(destination: IPosition): boolean {
@@ -408,6 +424,6 @@ export class Board {
       message,
       JSON.stringify(payload),
     );
-    this.gameObjects.forEach(g => g.onEvent(this, sender, message, payload));
+    this.gameObjects.forEach((g) => g.onEvent(this, sender, message, payload));
   }
 }
