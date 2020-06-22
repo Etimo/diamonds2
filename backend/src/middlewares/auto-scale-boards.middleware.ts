@@ -58,7 +58,7 @@ export class AutoScaleMiddleware implements NestMiddleware {
     if (this.requestCount < 4800) {
       futureNumberOfBoards = 4;
     } else {
-      // 1 board per/1200 request. Round off to next integer.
+      // 1 board/1200 requests. Round off to next integer.
       futureNumberOfBoards = Math.ceil(this.requestCount / 1200);
     }
 
