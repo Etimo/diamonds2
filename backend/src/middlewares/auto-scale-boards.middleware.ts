@@ -4,13 +4,11 @@ import { BoardsService } from "../services/board.service";
 
 @Injectable()
 export class AutoScaleMiddleware implements NestMiddleware {
-  constructor(
-    private boardsService: BoardsService,
-    private requestCount: number = 0,
-    private controlAt: Date = null,
-  ) {
+  private requestCount: number = 0;
+  private controlAt: Date = null;
+  constructor(private boardsService: BoardsService) {
     if (!this.controlAt) {
-      this.controlAt = this.setControlAt();
+      this.setControlAt(1);
     }
   }
 
@@ -22,7 +20,7 @@ export class AutoScaleMiddleware implements NestMiddleware {
   autoScaleBoards(): void {
     if (new Date() >= this.controlAt) {
       const addOrRemoveNumber = this.calculateAddOrRemoval();
-
+      console.log("ADD REMOVE");
       if (addOrRemoveNumber < 0) {
         this.removeBoardIfNoPlayers(addOrRemoveNumber * -1);
       }
@@ -30,16 +28,16 @@ export class AutoScaleMiddleware implements NestMiddleware {
         this.createNewBoard(addOrRemoveNumber);
       }
       this.requestCount = 0;
-      this.controlAt = this.setControlAt();
+      this.setControlAt(1);
     }
-
+    console.log(this.requestCount);
     this.requestCount++;
   }
 
-  setControlAt(): Date {
+  setControlAt(minutes: number): void {
     const now = new Date();
-    now.setMinutes(now.getMinutes() + 1);
-    return new Date(now);
+    now.setMinutes(now.getMinutes() + minutes);
+    this.controlAt = new Date(now);
   }
 
   removeBoardIfNoPlayers(numberOfBoards: number): void {
@@ -63,5 +61,9 @@ export class AutoScaleMiddleware implements NestMiddleware {
     }
 
     return futureNumberOfBoards - currentNumberOfBoards;
+  }
+  // Using this to mock during tests
+  setRequestCount(requests: number): void {
+    this.requestCount = requests;
   }
 }

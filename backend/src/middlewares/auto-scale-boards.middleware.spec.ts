@@ -28,19 +28,10 @@ describe("AutoScaleBourdsMiddleWare", () => {
       new SilentLogger() as CustomLogger,
       4,
     );
+    autoScaleBoardsMiddleware = new AutoScaleMiddleware(boardsService);
 
     jest.clearAllMocks();
   });
-
-  const createMiddleware = (boardsService, requests, date) => {
-    return new AutoScaleMiddleware(boardsService, requests, date);
-  };
-
-  const getNewDate = minutes => {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() + minutes);
-    return new Date(now);
-  };
 
   it("should be defined", () => {
     expect(highScoresService).toBeDefined;
@@ -50,11 +41,8 @@ describe("AutoScaleBourdsMiddleWare", () => {
   });
 
   it("should 0 boards", () => {
-    autoScaleBoardsMiddleware = createMiddleware(
-      boardsService,
-      1500,
-      getNewDate(-3),
-    );
+    autoScaleBoardsMiddleware.setRequestCount(1500);
+    autoScaleBoardsMiddleware.setControlAt(-3);
     autoScaleBoardsMiddleware.autoScaleBoards();
 
     const boards = boardsService.getAll();
@@ -62,12 +50,9 @@ describe("AutoScaleBourdsMiddleWare", () => {
     expect(boards.length).toEqual(4);
   });
 
-  it("should 7 boards", () => {
-    autoScaleBoardsMiddleware = createMiddleware(
-      boardsService,
-      8000,
-      getNewDate(-3),
-    );
+  it("should return 7 boards", () => {
+    autoScaleBoardsMiddleware.setRequestCount(8000);
+    autoScaleBoardsMiddleware.setControlAt(-3);
     autoScaleBoardsMiddleware.autoScaleBoards();
 
     const boards = boardsService.getAll();
@@ -76,11 +61,8 @@ describe("AutoScaleBourdsMiddleWare", () => {
   });
 
   it("should 12 boards", () => {
-    autoScaleBoardsMiddleware = createMiddleware(
-      boardsService,
-      14000,
-      getNewDate(-3),
-    );
+    autoScaleBoardsMiddleware.setRequestCount(14000);
+    autoScaleBoardsMiddleware.setControlAt(-3);
     autoScaleBoardsMiddleware.autoScaleBoards();
 
     const boards = boardsService.getAll();
@@ -89,11 +71,8 @@ describe("AutoScaleBourdsMiddleWare", () => {
   });
 
   it("should return 4 boards", () => {
-    autoScaleBoardsMiddleware = createMiddleware(
-      boardsService,
-      14000,
-      getNewDate(1),
-    );
+    autoScaleBoardsMiddleware.setRequestCount(14000);
+    autoScaleBoardsMiddleware.setControlAt(1);
     autoScaleBoardsMiddleware.autoScaleBoards();
 
     const boards = boardsService.getAll();
@@ -102,22 +81,16 @@ describe("AutoScaleBourdsMiddleWare", () => {
   });
 
   it("should return 7", () => {
-    autoScaleBoardsMiddleware = createMiddleware(
-      boardsService,
-      14000,
-      getNewDate(-2),
-    );
+    autoScaleBoardsMiddleware.setRequestCount(14000);
+    autoScaleBoardsMiddleware.setControlAt(-2);
     // Adding boards with middleware
     autoScaleBoardsMiddleware.autoScaleBoards();
 
     let boards = boardsService.getAll();
 
     expect(boards.length).toEqual(12);
-    autoScaleBoardsMiddleware = createMiddleware(
-      boardsService,
-      8000,
-      getNewDate(-2),
-    );
+    autoScaleBoardsMiddleware.setRequestCount(8000);
+    autoScaleBoardsMiddleware.setControlAt(-2);
     // Removing boards with middleware
     autoScaleBoardsMiddleware.autoScaleBoards();
 

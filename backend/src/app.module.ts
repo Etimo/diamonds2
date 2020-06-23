@@ -66,6 +66,6 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AutoScaleMiddleware).forRoutes("*");
+    consumer.apply(AutoScaleMiddleware).forRoutes("*/move");
   }
 }
