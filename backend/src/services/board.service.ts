@@ -20,6 +20,7 @@ import { BotProvider } from "../gameengine/gameobjects/bot/bot-provider";
 import { BoardConfig } from "../gameengine/board-config";
 import { TeleportProvider } from "../gameengine/gameobjects/teleport/teleport-provider";
 import { MetricsService } from "./metrics.service";
+import { TeleportRelocationProvider } from "../gameengine/gameobjects/teleport-relocation-provider/teleport-relocation-provider";
 import { SeasonsService } from "./seasons.service";
 
 @Injectable({ scope: Scope.DEFAULT })
@@ -221,6 +222,9 @@ export class BoardsService {
       }),
       new TeleportProvider({
         pairs: 1,
+      }),
+      new TeleportRelocationProvider({
+        seconds: 10,
       }),
     ];
     for (let i = 0; i < numberOfBoards; i++) {
