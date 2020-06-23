@@ -19,7 +19,6 @@ describe("AutoScaleBourdsMiddleWare", () => {
   let autoScaleBoardsMiddleware: AutoScaleMiddleware;
 
   beforeEach(async () => {
-    Board.setNextId(1);
     boardsService = new BoardsService(
       botsService,
       highScoresService,

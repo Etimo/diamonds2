@@ -230,7 +230,12 @@ export class BoardsService {
         minimumDelayBetweenMoves: 100,
         sessionLength: 60,
       };
-      const board = new OperationQueueBoard(config, providers, this.logger);
+      const board = new OperationQueueBoard(
+        this.getNextBoardId(),
+        config,
+        providers,
+        this.logger,
+      );
       this.boards.push(board);
     }
   }
@@ -257,14 +262,20 @@ export class BoardsService {
           this.boards.splice(removeIndex, 1);
         }
       });
-    // Fetch the highest board id.
-    const nextId = Math.max.apply(
+  }
+
+  private getNextBoardId() {
+    // Fetch the highest board id
+    // Returns 1 if no boards are created yet.
+    if (this.boards.length === 0) {
+      return 1;
+    }
+    const highestId = Math.max.apply(
       Math,
       this.boards.map(function(board) {
         return board.getId();
       }),
     );
-    // Set nextId to avoid gaps in the id sequence
-    Board.setNextId(nextId + 1);
+    return highestId + 1;
   }
 }

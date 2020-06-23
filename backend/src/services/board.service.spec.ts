@@ -126,7 +126,6 @@ describe("BoardsService", () => {
   });
 
   it("Should remove not remove board 1 and 3", async () => {
-    Board.setNextId(1);
     spyOn(botsService, "get").and.returnValue({} as IBot);
     newBoardsService = new BoardsService(
       botsService,
@@ -146,7 +145,6 @@ describe("BoardsService", () => {
   });
 
   it("Should remove all boards except board 1", async () => {
-    Board.setNextId(1);
     spyOn(botsService, "get").and.returnValue({} as IBot);
     newBoardsService = new BoardsService(
       botsService,

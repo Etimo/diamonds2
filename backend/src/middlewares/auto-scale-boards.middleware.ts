@@ -5,12 +5,8 @@ import { BoardsService } from "../services/board.service";
 @Injectable()
 export class AutoScaleMiddleware implements NestMiddleware {
   private requestCount: number = 0;
-  private controlAt: Date = null;
-  constructor(private boardsService: BoardsService) {
-    if (!this.controlAt) {
-      this.setControlAt(1);
-    }
-  }
+  private controlAt: Date = new Date(Date.now() + 1 * 60 * 1000);
+  constructor(private boardsService: BoardsService) {}
 
   use(req: Request, res: Response, next: Function): void {
     this.autoScaleBoards();
@@ -33,9 +29,9 @@ export class AutoScaleMiddleware implements NestMiddleware {
   }
 
   setControlAt(minutes: number): void {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() + minutes);
-    this.controlAt = new Date(now);
+    // Control requestCount every X minute
+    // (-minutes can be used during test cases to trigger autoScaleBoards)
+    this.controlAt = new Date(Date.now() + minutes * 60 * 1000);
   }
 
   removeBoardsIfNoPlayers(numberOfBoards: number): void {
