@@ -21,10 +21,10 @@ export class AutoScaleMiddleware implements NestMiddleware {
     if (new Date() >= this.controlAt) {
       const addOrRemoveNumber = this.calculateAddOrRemoval();
       if (addOrRemoveNumber < 0) {
-        this.removeBoardIfNoPlayers(addOrRemoveNumber * -1);
+        this.removeBoardsIfNoPlayers(addOrRemoveNumber * -1);
       }
       if (addOrRemoveNumber > 0) {
-        this.createNewBoard(addOrRemoveNumber);
+        this.createNewBoards(addOrRemoveNumber);
       }
       this.requestCount = 0;
       this.setControlAt(1);
@@ -38,12 +38,12 @@ export class AutoScaleMiddleware implements NestMiddleware {
     this.controlAt = new Date(now);
   }
 
-  removeBoardIfNoPlayers(numberOfBoards: number): void {
+  removeBoardsIfNoPlayers(numberOfBoards: number): void {
     this.boardsService.removeEmptyBoards(numberOfBoards);
   }
 
-  createNewBoard(numberOfBoards: number): void {
-    this.boardsService.createInMemoryBoard(numberOfBoards);
+  createNewBoards(numberOfBoards: number): void {
+    this.boardsService.createInMemoryBoards(numberOfBoards);
   }
 
   calculateAddOrRemoval(): number {

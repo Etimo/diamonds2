@@ -35,7 +35,7 @@ export class BoardsService {
     private logger: CustomLogger,
     @Inject("NUMBER_OF_BOARDS") private numberOfBoards,
   ) {
-    this.createInMemoryBoard(this.numberOfBoards);
+    this.createInMemoryBoards(this.numberOfBoards);
 
     this.boards.forEach(board => {
       board.registerSessionFinishedCallback(async (botName, score) => {
@@ -204,7 +204,7 @@ export class BoardsService {
   /**
    * Create an example board for debugging purpose.
    */
-  public createInMemoryBoard(numberOfBoards: number): void {
+  public createInMemoryBoards(numberOfBoards: number): void {
     const providers = [
       new DiamondButtonProvider(),
       new BaseProvider(),
