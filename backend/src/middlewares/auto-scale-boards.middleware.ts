@@ -20,7 +20,6 @@ export class AutoScaleMiddleware implements NestMiddleware {
   autoScaleBoards(): void {
     if (new Date() >= this.controlAt) {
       const addOrRemoveNumber = this.calculateAddOrRemoval();
-      console.log("ADD REMOVE");
       if (addOrRemoveNumber < 0) {
         this.removeBoardIfNoPlayers(addOrRemoveNumber * -1);
       }
@@ -30,7 +29,6 @@ export class AutoScaleMiddleware implements NestMiddleware {
       this.requestCount = 0;
       this.setControlAt(1);
     }
-    console.log(this.requestCount);
     this.requestCount++;
   }
 
