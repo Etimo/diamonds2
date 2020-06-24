@@ -6,6 +6,7 @@ export default function createTestBoard(
   providers: AbstractGameObjectProvider[] = [],
 ): Board {
   return new Board(
+    1,
     {
       height: 10,
       width: 10,

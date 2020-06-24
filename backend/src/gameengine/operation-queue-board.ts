@@ -17,11 +17,12 @@ export class OperationQueueBoard extends Board {
   private opQueue;
 
   constructor(
+    id: number,
     config: BoardConfig,
     gameObjectProviders: AbstractGameObjectProvider[],
     protected logger: any,
   ) {
-    super(config, gameObjectProviders, logger);
+    super(id, config, gameObjectProviders, logger);
     this.setupOperationQueue();
   }
 

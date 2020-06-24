@@ -6,8 +6,7 @@ import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-p
 import { BotGameObject } from "./gameobjects/bot/bot";
 
 export class Board {
-  private static nextId = 1;
-  private readonly _id: number = Board.nextId++;
+  private readonly _id: number;
   private bots: Object = {};
   /** List of game objects on the board. */
   private gameObjects: AbstractGameObject[] = [];
@@ -19,10 +18,12 @@ export class Board {
   private botMoves = {};
 
   constructor(
+    id: number,
     public config: BoardConfig,
     public gameObjectProviders: AbstractGameObjectProvider[],
     protected logger: any,
   ) {
+    this._id = id;
     this.notifyProvidersBoardInitialized();
   }
 
@@ -77,6 +78,14 @@ export class Board {
    */
   getBot(token: string): IBot {
     return this.bots[token];
+  }
+
+  /**
+   * Return all bots on board
+   * @returns All bots
+   */
+  getBots(): Object {
+    return this.bots;
   }
 
   /**

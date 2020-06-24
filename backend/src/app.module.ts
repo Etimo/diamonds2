@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, NestModule, MiddlewareConsumer } from "@nestjs/common";
 import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
 
 import { IdService } from "./services/id.service";
@@ -17,6 +17,7 @@ import { HighScoreEntity } from "./db/models/highScores.entity";
 import { BotRegistrationsEntity } from "./db/models/botRegistrations.entity";
 import { SeasonsEntity } from "./db/models/seasons.entity";
 import { MetricsService } from "./services/metrics.service";
+import { AutoScaleMiddleware } from "./middlewares/auto-scale-boards.middleware";
 
 const dbConfig: TypeOrmModuleOptions = {
   type: "postgres",
@@ -59,8 +60,12 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     SeasonsService,
     {
       provide: "NUMBER_OF_BOARDS",
-      useValue: 1,
+      useValue: 4,
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AutoScaleMiddleware).forRoutes("*/move");
+  }
+}

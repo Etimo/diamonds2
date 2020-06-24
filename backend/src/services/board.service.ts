@@ -36,7 +36,7 @@ export class BoardsService {
     private logger: CustomLogger,
     @Inject("NUMBER_OF_BOARDS") private numberOfBoards,
   ) {
-    this.createInMemoryBoard(this.numberOfBoards);
+    this.createInMemoryBoards(this.numberOfBoards);
 
     this.boards.forEach(board => {
       board.registerSessionFinishedCallback(async (botName, score) => {
@@ -205,7 +205,7 @@ export class BoardsService {
   /**
    * Create an example board for debugging purpose.
    */
-  private createInMemoryBoard(numberOfBoards: number): void {
+  public createInMemoryBoards(numberOfBoards: number): void {
     const providers = [
       new DiamondButtonProvider(),
       new BaseProvider(),
@@ -234,8 +234,52 @@ export class BoardsService {
         minimumDelayBetweenMoves: 100,
         sessionLength: 60,
       };
-      const board = new OperationQueueBoard(config, providers, this.logger);
+      const board = new OperationQueueBoard(
+        this.getNextBoardId(),
+        config,
+        providers,
+        this.logger,
+      );
       this.boards.push(board);
     }
+  }
+
+  public removeEmptyBoards(numberOfBoards: number) {
+    // Fetches empty boards (No bot playing).
+    // Removing X number of boards that are empty.
+    const removeIndex = [];
+    this.boards.forEach((board, index) => {
+      if (Object.keys(board.getBots()).length === 0) {
+        // Do not remove board 1
+        if (board.getId() != 1) {
+          removeIndex.push(index);
+        }
+      }
+    });
+
+    // Read backwards (Removing the higher ids first)
+    removeIndex
+      .slice()
+      .reverse()
+      .forEach((removeIndex, index) => {
+        if (index < numberOfBoards) {
+          this.boards.splice(removeIndex, 1);
+        }
+      });
+  }
+
+  private getNextBoardId() {
+    // Fetch the highest board id
+    // Returns 1 if no boards are created yet.
+    if (this.boards.length === 0) {
+      return 1;
+    }
+    const highestId = Math.max.apply(
+      Math,
+      this.boards.map(function(board) {
+        return board.getId();
+      }),
+    );
+    return highestId + 1;
   }
 }
