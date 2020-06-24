@@ -27,6 +27,12 @@ export class MetricsService {
     help: "Number of times a highscore improved",
   });
 
+  private boardsTotal = new Prometheus.Gauge({
+    name: "boards_total",
+    help: "Number of boards",
+    labelNames: ["board"],
+  });
+
   incBotsRegistered() {
     this.botsRegistered.inc();
   }
@@ -61,5 +67,11 @@ export class MetricsService {
       board: boardId,
     });
     this.playersTotal.dec();
+  }
+  incBoardsTotal() {
+    this.boardsTotal.inc();
+  }
+  decBoardsTotal() {
+    this.boardsTotal.dec();
   }
 }

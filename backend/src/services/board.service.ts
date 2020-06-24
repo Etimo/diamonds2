@@ -241,6 +241,9 @@ export class BoardsService {
         this.logger,
       );
       this.boards.push(board);
+      if (this.metricsService) {
+        this.metricsService.incBoardsTotal();
+      }
     }
   }
 
@@ -264,6 +267,9 @@ export class BoardsService {
       .forEach((removeIndex, index) => {
         if (index < numberOfBoards) {
           this.boards.splice(removeIndex, 1);
+          if (this.metricsService) {
+            this.metricsService.decBoardsTotal();
+          }
         }
       });
   }

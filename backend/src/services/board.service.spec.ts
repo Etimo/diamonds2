@@ -125,7 +125,7 @@ describe("BoardsService", () => {
     ).rejects.toThrowError(NotFoundError);
   });
 
-  it("Should remove not remove board 1 and 3", async () => {
+  it("Should not remove board 1 and 3", async () => {
     spyOn(botsService, "get").and.returnValue({} as IBot);
     newBoardsService = new BoardsService(
       botsService,
