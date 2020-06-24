@@ -38,10 +38,6 @@ export abstract class AbstractGameObject {
     return null;
   }
 
-  public hasAlreadyBeenHere(position: IPosition): boolean {
-    return this.positions.some(p => position.x === p.x && position.y === p.y);
-  }
-
   public clearPositions(): void {
     this.positions = [this.position];
   }

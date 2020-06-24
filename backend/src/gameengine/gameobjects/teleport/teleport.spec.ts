@@ -22,7 +22,8 @@ beforeEach(() => {
 });
 
 test("Stepping on a teleporter moves bot to position of paired teleporter", () => {
-  const bot = new BotGameObject({ x: 0, y: 0 });
+  const bot = new BotGameObject({ x: 0, y: 1 });
+  bot.position = { x: 0, y: 0 };
 
   teleporterToEnter.onGameObjectEntered(bot, board);
 

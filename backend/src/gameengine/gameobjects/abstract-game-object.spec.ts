@@ -62,20 +62,6 @@ describe("multiple positions", () => {
 
     expect(go.previousPosition).toBeNull();
   });
-
-  test("hasAlreadyBeenHere returns true when position has been in path", () => {
-    go.position = { x: 2, y: 4 };
-    go.position = { x: 3, y: 5 };
-
-    expect(go.hasAlreadyBeenHere({ x: 2, y: 4 })).toBeTruthy();
-  });
-
-  test("hasAlreadyBeenHere returns false otherwise", () => {
-    go.position = { x: 2, y: 4 };
-    go.position = { x: 3, y: 5 };
-
-    expect(go.hasAlreadyBeenHere({ x: 8, y: 7 })).toBeFalsy();
-  });
 });
 
 test("has null properties by default", () => {

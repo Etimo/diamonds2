@@ -262,12 +262,6 @@ export class Board {
     skipLeaveCheck = false,
     skipEnterCheck = false,
   ): boolean {
-    // Check if the moving object already been here during this request
-    if (gameObject.hasAlreadyBeenHere(dest)) {
-      this.gameObjects.forEach(o => o.clearPositions());
-      return false;
-    }
-
     // Check if we can leave the current position
     if (!(skipLeaveCheck || this.canGameObjectLeave(gameObject, dest))) {
       this.logger.debug("Not allowed to leave");
