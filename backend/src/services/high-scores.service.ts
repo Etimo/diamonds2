@@ -97,6 +97,8 @@ export class HighScoresService {
   }
 
   public async allBySeasonId(seasonId: string) {
+    const currentSeason = await this.seasonService.getCurrentSeason();
+    const limit = seasonId === currentSeason.id ? 50 : 20;
     return await this.repo
       .find({
         where: {
@@ -105,6 +107,7 @@ export class HighScoresService {
         order: {
           score: "DESC",
         },
+        take: limit,
       })
       .then(highScores => highScores.map(e => HighscoreDto.fromEntity(e)));
   }
