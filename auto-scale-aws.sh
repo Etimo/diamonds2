@@ -34,6 +34,9 @@ else
     new_instance_type=$instance_type_small
 fi
 
+# Set to always micro - Testing
+new_instance_type=$instance_type_micro
+
 echo "InstanceType should be $new_instance_type"
 
 # Exit if the type is the same
@@ -46,10 +49,6 @@ fi
 echo "Current type: $instance_type"
 echo "New type: $new_instance_type"
 
-# Just testing - exiting now
-exit 1;
-exit 1;
-
 
 # Stop instance
 echo "Stopping instance"
@@ -61,11 +60,6 @@ instance_info=$(aws ec2 describe-instances --instance-ids  $instance_id --query 
 
 status=$(jq '.[0][0].Status' <<< $instance_info)
 status=$(remove_double_quotes "$status")
-
-
-echo "Instance status: $status"
-# Just testing - exiting now
-exit 1;
 
 #Is the instance still running?
 if [ "$status" == "running" ]; then
