@@ -28,7 +28,7 @@ response=$(curl http://diamonds.etimo.se/api/seasons/current)
 current_season=$(jq '.data.name'  <<< $response)
 current_season=$(remove_double_quotes "$current_season")
 
-if [ "$current_season" = "$off_season" ]; then
+if [ "$current_season" == "$off_season" ]; then
     new_instance_type=$instance_type_micro
 else
     new_instance_type=$instance_type_small
@@ -37,7 +37,7 @@ fi
 echo "InstanceType should be $new_instance_type"
 
 # Exit if the type is the same
-if [ "$instance_type" = "$new_instance_type" ]; then 
+if [ "$instance_type" == "$new_instance_type" ]; then
     echo "Type is same, exiting cronjob"
     exit 1; 
 fi
@@ -68,7 +68,7 @@ echo "Instance status: $status"
 exit 1;
 
 #Is the instance still running?
-if [ "$status" = "running" ]; then 
+if [ "$status" == "running" ]; then
     echo "Instance is still running"
     exit 1; 
 fi
