@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Restarts AWS instance and changes the volume
-# Volume will be changed to t2.small if current season is "Off season"
-# The volume will be t2.medium if another season is active.
+# Restarts AWS instance and changes the instance type
+# Instance type will be changed to t2.micro if current season is "Off season"
+# The instance type will be t2.small if another season is active.
 
 
 # Using this function to remove double quotes from strings
@@ -16,7 +16,7 @@ instance_type_small="t2.small"
 instance_id="i-0ae22e94380789482"
 
 
-# Get instance volume
+# Get instance type
 instance_info=$(aws ec2 describe-instances --instance-ids  $instance_id --query "Reservations[*].Instances[*].{Status:State.Name,Instancetype:InstanceType}")
 instance_type=$(jq '.[0][0].Instancetype' <<< $instance_info)
 instance_type=$(remove_double_quotes "$instance_type")
@@ -75,11 +75,11 @@ fi
 
 echo "Instance is stopped!"
         
-# Change volume
+# Change instance type
 aws ec2 modify-instance-attribute --instance-id $instance_id --instance-type "{\"Value\": \"$new_instance_type\"}"
 echo "Instance type changed to $new_instance_type"
 
-# Not checking if volume is correct because we need to start the instance again anyway!
+# Not checking if instance type is correct because we need to start the instance again anyway!
 
 # Start instance
 aws ec2 start-instances --instance-ids $instance_id
@@ -87,4 +87,4 @@ echo "Instance started again"
 
 
 #Start docker containers! Need to try this!
-https://stackoverflow.com/questions/58141265/how-to-auto-restart-a-docker-compose-cluster-when-ec2-instance-reboots
+# https://stackoverflow.com/questions/58141265/how-to-auto-restart-a-docker-compose-cluster-when-ec2-instance-reboots
