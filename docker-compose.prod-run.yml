@@ -13,12 +13,11 @@ services:
       - ./data/certbot/www:/var/www/certbot
 
   certbot:
-    image: certbot/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-
+    image: certbot/certbot:latest
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h & wait $${!}; done;'"
     volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+      - ./frontend/data/certbot/conf:/etc/letsencrypt
+      - ./frontend/data/certbot/www:/var/www/certbot
 
   backend:
     image: etimodanielwinther/diamonds2_backend:${DIAMONDS_DOCKER_TAG}
