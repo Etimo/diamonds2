@@ -7,7 +7,6 @@ services:
     command: /bin/sh -c "nginx -g 'daemon off;'"
     ports:
       - 80:80
-    restart: always
 
   backend:
     image: etimodanielwinther/diamonds2_backend:${DIAMONDS_DOCKER_TAG}
