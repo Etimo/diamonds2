@@ -26,7 +26,7 @@ echo "InstanceType is $instance_type"
 # Fetch current_seanson. 
 response=$(curl http://diamonds.etimo.se/api/seasons/current)
 current_season=$(jq '.data.name'  <<< $response)
-current_season=$(remove_double_quotes "$CURRENT_SEASON")
+current_season=$(remove_double_quotes "$current_season")
 
 if [ "$current_season" = "$off_season" ]; then
     new_instance_type=$instance_type_micro
@@ -81,7 +81,7 @@ echo "Instance type changed to $new_instance_type"
 
 # Not checking if volume is correct because we need to start the instance again anyway!
 
-# START INSTANCE
+# Start instance
 aws ec2 start-instances --instance-ids $instance_id
 echo "Instance started again"
 
