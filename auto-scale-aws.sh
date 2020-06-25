@@ -13,7 +13,12 @@ remove_double_quotes() {
 off_season="Off season"
 instance_type_micro="t2.micro"
 instance_type_small="t2.small"
-instance_id="i-0ae22e94380789482"
+instance_id=$AWS_INSTANCE_ID
+
+if [ -z "$instance_id" ]; then
+    echo "Instance id not found"
+    exit 1
+fi
 
 
 # Get instance type
