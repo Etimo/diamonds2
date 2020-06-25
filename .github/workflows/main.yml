@@ -108,6 +108,7 @@ jobs:
             git fetch
             git checkout --progress --force ${{ github.sha }}
             docker-compose down
+            docker system prune -af
             source ~/.bash_profile
             DIAMONDS_DOCKER_TAG=develop-${{ github.sha }} docker-compose -f docker-compose.prod-run.yml up -d
 
