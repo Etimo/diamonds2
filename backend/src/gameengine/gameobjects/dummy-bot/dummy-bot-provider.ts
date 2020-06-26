@@ -35,6 +35,7 @@ export class DummyBotProvider extends BotProvider {
       dummyBot.diamonds = bot.diamonds;
       dummyBot.score = bot.score;
       dummyBot.inventorySize = bot.inventorySize;
+      dummyBot.canTackle = bot.canTackle;
       dummyBot.name = bot.name;
 
       board.registerGameObjectForCallbackLoop(dummyBot, 1000);

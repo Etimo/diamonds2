@@ -219,6 +219,7 @@ export class BoardsService {
       // }),
       new BotProvider({
         inventorySize: 5,
+        canTackle: true,
       }),
       new TeleportProvider({
         pairs: 1,

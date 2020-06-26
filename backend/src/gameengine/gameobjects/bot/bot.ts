@@ -7,6 +7,7 @@ export interface BotGameObjectProperties {
   diamonds: number;
   timeJoined: Date;
   inventorySize: number;
+  canTackle: boolean;
   score: number;
   name: string;
   nextMoveAvailableAt: Date;
@@ -19,6 +20,7 @@ export class BotGameObject extends AbstractGameObject {
   timeJoined: Date;
   expiresAt: Date;
   inventorySize: number;
+  canTackle: boolean;
   score: number;
   name: string;
   nextMoveAvailableAt: Date;
@@ -30,6 +32,7 @@ export class BotGameObject extends AbstractGameObject {
       nextMoveAvailableAt: this.nextMoveAvailableAt,
       name: this.name,
       inventorySize: this.inventorySize,
+      canTackle: this.canTackle,
       millisecondsLeft: this.expiresAt.getTime() - new Date().getTime(),
       timeJoined: this.timeJoined,
       base: this.base,
@@ -40,13 +43,31 @@ export class BotGameObject extends AbstractGameObject {
     if (gameObject instanceof BotGameObject) {
       const otherBot = gameObject as BotGameObject;
 
+      // Return if the entering bot is not allowed to tackle (should not happen)
+      if (!otherBot.canTackle) {
+        return;
+      }
+
       // I am sent back to base
       this.position = this.base;
 
       // Also they steal some diamonds from me
-      const canSteal = Math.min(this.diamonds, otherBot.inventorySize - otherBot.diamonds);
+      const canSteal = Math.min(
+        this.diamonds,
+        otherBot.inventorySize - otherBot.diamonds,
+      );
       this.diamonds = Math.max(this.diamonds - canSteal, 0);
       otherBot.diamonds += canSteal;
     }
+  }
+  canGameObjectEnter(gameObject: AbstractGameObject, board: Board): boolean {
+    if (gameObject instanceof BotGameObject) {
+      const otherBot = gameObject as BotGameObject;
+
+      if (otherBot.canTackle) {
+        return true;
+      }
+    }
+    return false;
   }
 }

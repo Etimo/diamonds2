@@ -9,6 +9,10 @@ export interface BotProviderConfig {
    * The maximum number of diamonds a bot can carry at the same time.
    */
   inventorySize: number;
+  /**
+   * The bot can tackle other bots.
+   */
+  canTackle: boolean;
 }
 
 export class BotProvider extends AbstractGameObjectProvider<BotProviderConfig> {
@@ -34,6 +38,7 @@ export class BotProvider extends AbstractGameObjectProvider<BotProviderConfig> {
     botGameObject.diamonds = 0;
     botGameObject.score = 0;
     botGameObject.inventorySize = this.config.inventorySize;
+    botGameObject.canTackle = this.config.canTackle;
     botGameObject.name = data.botName;
     return botGameObject;
   }
