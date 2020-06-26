@@ -10,10 +10,13 @@ remove_double_quotes() {
     echo $(sed -e 's/^"//' -e 's/"$//' <<<"$1")
 }
 
-fetch_status() {
-    instance_info=$(aws ec2 describe-instances --instance-ids  $instance_id --query "Reservations[*].Instances[*].{Status:State.Name,Instancetype:InstanceType}")
+# Fetching instance type and status
+fetch_instance_information() {
+    instance_info=$(aws ec2 describe-instances --instance-ids  $1 --query "Reservations[*].Instances[*].{Status:State.Name,Instancetype:InstanceType}")
     status=$(jq '.[0][0].Status' <<< $instance_info)
     status=$(remove_double_quotes "$status")
+    instance_type=$(jq '.[0][0].Instancetype' <<< $instance_info)
+    instance_type=$(remove_double_quotes "$instance_type")
 }
 
 # We might need to load env variables (DIAMONDS_AWS_INSTANCE_ID)
@@ -28,13 +31,9 @@ if [ -z "$instance_id" ]; then
     exit 1
 fi
 
-
 # Get instance type
-instance_info=$(aws ec2 describe-instances --instance-ids  $instance_id --query "Reservations[*].Instances[*].{Status:State.Name,Instancetype:InstanceType}")
-instance_type=$(jq '.[0][0].Instancetype' <<< $instance_info)
-instance_type=$(remove_double_quotes "$instance_type")
+fetch_instance_information $instance_id
 echo "InstanceType is $instance_type"
-
 
 # Fetch current_seanson. 
 response=$(curl http://diamonds.etimo.se/api/seasons/current)
@@ -47,7 +46,7 @@ else
     new_instance_type=$instance_type_small
 fi
 
-# Set to always micro - Testing
+# Set to always small - Testing
 new_instance_type=$instance_type_small
 
 echo "InstanceType should be $new_instance_type"
@@ -59,22 +58,18 @@ if [ "$instance_type" == "$new_instance_type" ]; then
     exit 1;
 fi
 
-
-
-
 echo "Current type: $instance_type"
 echo "New type: $new_instance_type"
 
+# Set to always micro - Testing
 new_instance_type=$instance_type_micro
 
 # Stop instance
 echo "Stopping instance"
 aws ec2 stop-instances --instance-ids $instance_id
 
-
-
 # Control that the instance is stopped!
-fetch_status
+fetch_instance_information $instance_id
 
 #Waiting for the instance to be stopped. (total 100sec)
 sleeps=0
@@ -83,12 +78,10 @@ do
     echo $status
     sleep 20
     sleeps=$((sleeps + 1))
-    fetch_status
+    fetch_instance_information $instance_id
     if [ "$sleeps" == 5 ]; then exit 1; fi
 done
 
-
-echo "$status"
 echo "Instance is stopped!"
         
 # Change instance type
