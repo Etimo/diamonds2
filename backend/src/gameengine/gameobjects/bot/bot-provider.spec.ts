@@ -10,6 +10,7 @@ let data = {};
 beforeEach(() => {
   provider = new BotProvider({
     inventorySize: 5,
+    canTackle: true,
   });
   board = createTestBoard();
   data = {
@@ -53,6 +54,14 @@ test("Initilizes inventorySize when creating bot", () => {
   const bot = board.getGameObjectsByType(BotGameObject)[0];
 
   expect(bot.inventorySize).toBe(5);
+});
+
+test("Initilizes tackle when creating bot", () => {
+  provider.onBotJoined(data, board);
+
+  const bot = board.getGameObjectsByType(BotGameObject)[0];
+
+  expect(bot.canTackle).toBe(true);
 });
 
 test("Initilizes name when creating bot", () => {
