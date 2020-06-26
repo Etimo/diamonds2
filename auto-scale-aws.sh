@@ -19,7 +19,8 @@ fetch_instance_information() {
     instance_type=$(remove_double_quotes "$instance_type")
 }
 
-# We might need to load env variables (DIAMONDS_AWS_INSTANCE_ID)
+# Setting home directory when running cronjob
+export HOME=/root
 
 off_season="Off season"
 instance_type_micro="t2.micro"
