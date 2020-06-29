@@ -9,6 +9,7 @@ let board: Board;
 beforeEach(() => {
   provider = new DummyBotProvider({
     inventorySize: 5,
+    canTackle: true,
     count: 1,
     prefix: "DummyBot",
   });
@@ -26,6 +27,7 @@ test("Creates dummy bots when board initializes", () => {
 test("Creates configured number of dummy bots when board initializes", () => {
   provider = new DummyBotProvider({
     inventorySize: 5,
+    canTackle: true,
     count: 2,
     prefix: "DummyBot",
   });

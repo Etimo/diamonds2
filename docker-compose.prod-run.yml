@@ -3,6 +3,7 @@ version: "3.7"
 services:
   frontend:
     image: etimodanielwinther/diamonds2_frontend:${DIAMONDS_DOCKER_TAG}
+    restart: always
     command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
     ports:
       - 80:80
@@ -21,6 +22,7 @@ services:
 
   backend:
     image: etimodanielwinther/diamonds2_backend:${DIAMONDS_DOCKER_TAG}
+    restart: always
     command: /bin/sh -c "yarn run typeorm:migration:run && yarn start:prod"
     environment:
       - ENVIRONMENT=production

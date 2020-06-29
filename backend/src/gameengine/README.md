@@ -67,6 +67,7 @@ const providers = [
     }),
     new BotProvider({
         inventorySize: 5,
+        canTackle: true,
     }),
     new DummyBotProvider()
 ];
