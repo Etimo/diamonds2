@@ -38,6 +38,7 @@ describe("sessionFinishedCallbacks and join", () => {
   beforeEach(() => {
     provider = new BotProvider({
       inventorySize: 5,
+      canTackle: true,
     });
     board = createTestBoard([provider]);
   });
