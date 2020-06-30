@@ -1,0 +1,252 @@
+[
+  {
+    "_id": "baa60e3b-3641-4e47-a35c-12dde15d8af4",
+    "BotName": "Daniel",
+    "Score": 67
+  },
+  {
+    "_id": "e821df6b-4fa3-4133-b942-fa7828299c2a",
+    "BotName": "Jens-Peter",
+    "Score": 46
+  },
+  {
+    "_id": "94ed1f67-d0a9-4045-9cdd-f6fee1338270",
+    "BotName": "JP",
+    "Score": 55
+  },
+  {
+    "_id": "4c12ffd6-aecd-4adc-a7c9-1eff8d0e4b8c",
+    "BotName": "Anders",
+    "Score": 3
+  },
+  {
+    "_id": "92ec5253-a1e8-430c-9622-1b7c67d1044e",
+    "BotName": "l33t",
+    "Score": 20
+  },
+  {
+    "_id": "d7664d54-3b10-4d62-8101-2f3d8151f070",
+    "BotName": "Winther",
+    "Score": 20
+  },
+  {
+    "_id": "4aafffec-e1c7-45e9-86b3-66cc1a890663",
+    "BotName": "Patrick",
+    "Score": 13
+  },
+  {
+    "_id": "0e211ed5-1ee9-4d0a-970a-d6d3936069c8",
+    "BotName": "Glenn",
+    "Score": 87
+  },
+  {
+    "_id": "33c11941-b5c8-410b-a33c-70db6e277e05",
+    "BotName": "JH",
+    "Score": 1
+  },
+  {
+    "_id": "73821669-489d-45ee-9e9e-ed5351c8e797",
+    "BotName": "Johan Bergstr\u00f6m",
+    "Score": 49
+  },
+  {
+    "_id": "acfabb37-36e1-43e8-84d2-c30b5731c646",
+    "BotName": "Pata",
+    "Score": 97
+  },
+  {
+    "_id": "ddd17184-dc5f-45f9-9196-dcb4d5746704",
+    "BotName": "test1",
+    "Score": 38
+  },
+  {
+    "_id": "451a37f5-3c57-4e17-a1a2-013de9061be8",
+    "BotName": "Lukas",
+    "Score": 170
+  },
+  {
+    "_id": "a4f4acf6-376e-4073-9a66-60f7ec1b7de3",
+    "BotName": "Helper1",
+    "Score": 54
+  },
+  {
+    "_id": "e7ff53b9-2d77-45ab-897d-c2cfcf3a7238",
+    "BotName": "Helper2",
+    "Score": 53
+  },
+  {
+    "_id": "fe1b44c8-23fc-4199-8570-0b4814967fff",
+    "BotName": "Woopsie",
+    "Score": 141
+  },
+  {
+    "_id": "f6bc9cd3-81c8-456f-9ef3-5a9ab5249b28",
+    "BotName": "Botten",
+    "Score": 77
+  },
+  {
+    "_id": "6cafac06-e18d-44db-8e64-506b663ce6d4",
+    "BotName": "zbot",
+    "Score": 35
+  },
+  {
+    "_id": "b3414352-f4ff-4257-bcd6-90a84a0d50f0",
+    "BotName": "alarmfase",
+    "Score": 66
+  },
+  {
+    "_id": "f155cad4-8132-46d3-8eae-3627f4c8f9ec",
+    "BotName": "webjocke",
+    "Score": 129
+  },
+  {
+    "_id": "d5747ca3-2b70-43c1-a282-34f31eb7767d",
+    "BotName": "ellegamee",
+    "Score": 50
+  },
+  {
+    "_id": "6a10454c-539d-48a4-9464-6aba3ad6f060",
+    "BotName": "magja",
+    "Score": 120
+  },
+  {
+    "_id": "fb94aa2b-1c33-4711-bb8e-31bfd0fafa7f",
+    "BotName": "Arty",
+    "Score": 150
+  },
+  {
+    "_id": "a26f2a04-9a61-4a79-94ea-840891c2bd33",
+    "BotName": "sockebot",
+    "Score": 114
+  },
+  {
+    "_id": "14b26ea1-86f8-47cb-a039-bca19863d309",
+    "BotName": "Mirre",
+    "Score": 100
+  },
+  {
+    "_id": "b495795e-9d05-4125-beca-2744f2387acd",
+    "BotName": "Multiboten2",
+    "Score": 49
+  },
+  {
+    "_id": "e214fbe7-6d2a-467d-869d-d9082bf318aa",
+    "BotName": "Multiboten1",
+    "Score": 129
+  },
+  {
+    "_id": "e492521d-af21-42f2-ae7e-5a01e518f90b",
+    "BotName": "Multiboten3",
+    "Score": 40
+  },
+  {
+    "_id": "8d3af69a-f493-45e5-948b-5fee3585e9ee",
+    "BotName": "benjibot",
+    "Score": 112
+  },
+  {
+    "_id": "c4da9e07-2481-49e7-9e63-3a532721f86e",
+    "BotName": "StopIt",
+    "Score": 80
+  },
+  {
+    "_id": "938cc4a8-480c-4c6b-8d56-51d3568f8189",
+    "BotName": "kakalaka",
+    "Score": 32
+  },
+  {
+    "_id": "c006371f-5d8c-4bb5-a5cd-b95c589366f3",
+    "BotName": "benjibott",
+    "Score": 77
+  },
+  {
+    "_id": "a216c756-5bd2-4801-8ce2-c308c1af80f6",
+    "BotName": "Vidar",
+    "Score": 159
+  },
+  {
+    "_id": "90cc0c24-1b8d-46a1-a54f-d9668c14ad24",
+    "BotName": "MinBot",
+    "Score": 80
+  },
+  {
+    "_id": "ee5e031b-1b27-4bfd-87f5-4da355457a4d",
+    "BotName": "deniii",
+    "Score": 50
+  },
+  {
+    "_id": "e60b27c2-f8d1-4bbe-984a-230392e072e4",
+    "BotName": "Trump_Wall_2",
+    "Score": 3
+  },
+  {
+    "_id": "32b8b0b1-7b80-49ac-9ed8-29fc0ea6973d",
+    "BotName": "Trump_Wall_3",
+    "Score": 1
+  },
+  {
+    "_id": "1aa0e25f-9fcf-4601-a5af-badd08fbdbe9",
+    "BotName": "Trump_Wall_6",
+    "Score": 1
+  },
+  {
+    "_id": "f9d07ea6-da2d-48e2-924c-9be568303cdf",
+    "BotName": "Trump_Wall_9",
+    "Score": 1
+  },
+  {
+    "_id": "303184b5-8c64-4750-9d07-cea6790092e0",
+    "BotName": "David",
+    "Score": 117
+  },
+  {
+    "_id": "b20a5a85-c1f7-4e57-8304-9550dec909f8",
+    "BotName": "Trump_Wall_0",
+    "Score": 1
+  },
+  {
+    "_id": "85038ddb-8e96-44e6-b825-54748f454f98",
+    "BotName": "Trump_Wall_7",
+    "Score": 1
+  },
+  {
+    "_id": "8434e1fc-0e67-4a41-9ccb-c1f603ffb177",
+    "BotName": "SuperBot21",
+    "Score": 10
+  },
+  {
+    "_id": "05aa43d9-dfb2-48f4-af32-7d0abc09a944",
+    "BotName": "EtimoTeo",
+    "Score": 5
+  },
+  {
+    "_id": "cff31c5c-773a-4d00-91b1-1c75e734bee1",
+    "BotName": "Middlebot329277",
+    "Score": 1
+  },
+  {
+    "_id": "14ceb1e8-609c-416f-96a0-b790689a6cbd",
+    "BotName": "Middlebot32927712",
+    "Score": 5
+  },
+  {
+    "_id": "a8f65a8c-ec0d-4518-b609-1e2906a3e172",
+    "BotName": "Middlebot32924",
+    "Score": 13
+  },
+  {
+    "_id": "6a5b144c-4132-4fd6-89c9-31cfe607f561",
+    "BotName": "Middlebot33",
+    "Score": 30
+  },
+  {
+    "_id": "8bd06523-5382-4280-b3e4-649008900b2b",
+    "BotName": "Middlebot888",
+    "Score": 2
+  },
+  {
+    "_id": "dfc2ffa8-6011-47ff-acd8-72e24f4bd860",
+    "BotName": "Middlebot989",
+    "Score": 10
+  }
+]

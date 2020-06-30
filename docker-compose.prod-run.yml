@@ -1,0 +1,49 @@
+version: "3.7"
+
+services:
+  frontend:
+    image: etimodanielwinther/diamonds2_frontend:${DIAMONDS_DOCKER_TAG}
+    restart: always
+    command: '/bin/sh -c
+      ''while :; do sleep 6h & wait $${!}; nginx -s reload; done
+      & nginx -g "daemon off;"'''
+    ports:
+      - 80:80
+      - 443:443
+
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+
+  certbot:
+    image: certbot/certbot:latest
+    entrypoint: "/bin/sh -c
+      'trap exit TERM;
+      while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h & wait $${!}; done;'"
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+
+  backend:
+    image: etimodanielwinther/diamonds2_backend:${DIAMONDS_DOCKER_TAG}
+    restart: always
+    command: /bin/sh -c "yarn run typeorm:migration:run && yarn start:prod"
+    environment:
+      - ENVIRONMENT=production
+      - TYPEORM_HOST
+      - TYPEORM_PORT
+      - TYPEORM_DATABASE
+      - TYPEORM_USERNAME
+      - TYPEORM_PASSWORD
+      - PORT=5000
+    ports:
+      - 8081:5000
+
+  bots:
+    image: etimodanielwinther/diamonds2_bots:${DIAMONDS_DOCKER_TAG}
+    restart: always
+    volumes:
+      - bot-data:/bot-data
+
+volumes:
+  bot-data:

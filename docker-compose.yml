@@ -1,0 +1,61 @@
+version: "3.7"
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      target: "develop"
+    command: /bin/sh -c "yarn run start"
+    volumes:
+      - ./frontend/src:/app/src
+      - /app/node_modules
+    ports:
+      - 8080:3000
+
+  backend:
+    build:
+      context: ./backend
+      target: "develop"
+    command: /bin/sh -c " yarn run start:dev"
+    volumes:
+      - ./backend/src:/app/src
+      - /app/node_modules
+    environment:
+      ENVIRONMENT: development
+      TYPEORM_HOST: database
+      TYPEORM_PORT: 5432
+      TYPEORM_USERNAME: postgres
+      TYPEORM_PASSWORD: postgres
+      TYPEORM_DATABASE: postgres
+      PORT: 5000
+    ports:
+      - 8081:5000
+
+  bots:
+    build:
+      context: ./example-bots/python
+    restart: always
+    volumes:
+      - bot-data:/bot-data
+
+  database:
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8082:8080
+
+volumes:
+  db-data:
+  bot-data:

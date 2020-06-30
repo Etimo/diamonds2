@@ -1,0 +1,145 @@
+name: CI/CD
+on:
+  - pull_request
+  - push
+jobs:
+  test-backend:
+    name: Test backend
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - name: Install dependencies
+        run: yarn --cwd=backend install
+      - name: Run tests with coverage report
+        run: yarn --cwd=backend run test:coverage --forceExit
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./backend/coverage/lcov.info
+
+  # test-frontend:
+  #   name: Test frontend
+  #   runs-on: ubuntu-18.04
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: '12.x'
+  #     - name: Install dependencies
+  #       run: yarn --cwd=frontend install
+  # - name: Run tests
+  #   run: yarn --cwd=frontend test
+
+  # Test that building local dev env using docker works
+  test-build:
+    name: Build for dev env
+    runs-on: ubuntu-18.04
+    steps:
+      - run: echo "Ref ${{ github.ref }}"
+      - uses: actions/checkout@v1
+      - name: Build docker image
+        run: docker-compose -f docker-compose.yml build
+
+  # Build and push production images
+  build-prod:
+    name: Build for prod env
+    runs-on: ubuntu-18.04
+    if: github.ref == 'refs/heads/develop'
+    needs:
+      - test-backend
+      - test-build
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build docker image
+        run: docker-compose -f docker-compose.prod-build.yml build
+      - name: Extract branch name
+        shell: bash
+        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')"
+      - name: Print current branch name
+        run: echo "${BRANCH_NAME}"
+      - name: Docker login
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+      - name: Tag docker images
+        run: |
+          docker tag diamonds2_frontend:latest etimodanielwinther/diamonds2_frontend:latest-${BRANCH_NAME}
+          docker tag diamonds2_frontend:latest etimodanielwinther/diamonds2_frontend:${BRANCH_NAME}-${{ github.sha }}
+          docker tag diamonds2_backend:latest etimodanielwinther/diamonds2_backend:latest-${BRANCH_NAME}
+          docker tag diamonds2_backend:latest etimodanielwinther/diamonds2_backend:${BRANCH_NAME}-${{ github.sha }}
+          docker tag diamonds2_bots:latest etimodanielwinther/diamonds2_bots:latest-${BRANCH_NAME}
+          docker tag diamonds2_bots:latest etimodanielwinther/diamonds2_bots:${BRANCH_NAME}-${{ github.sha }}
+      - name: Push docker images
+        run: |
+          docker push etimodanielwinther/diamonds2_frontend:latest-${BRANCH_NAME}
+          docker push etimodanielwinther/diamonds2_frontend:${BRANCH_NAME}-${{ github.sha }}
+          docker push etimodanielwinther/diamonds2_backend:latest-${BRANCH_NAME}
+          docker push etimodanielwinther/diamonds2_backend:${BRANCH_NAME}-${{ github.sha }}
+          docker push etimodanielwinther/diamonds2_bots:latest-${BRANCH_NAME}
+          docker push etimodanielwinther/diamonds2_bots:${BRANCH_NAME}-${{ github.sha }}
+
+  # When pushing code to develop we want to deploy latest develop images to test environment
+  deploy-test:
+    name: Deploy
+    needs: build-prod
+    runs-on: ubuntu-18.04
+    if: github.ref == 'refs/heads/develop'
+    steps:
+      - uses: chrnorm/deployment-action@releases/v1
+        name: Create GitHub deployment
+        id: deployment
+        with:
+          token: "${{ github.token }}"
+          target-url: http://${{ secrets.DEPLOY_TEST_HOST }}
+          environment: test
+          initial_status: "in_progress"
+
+      - name: Execute remote command
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_TEST_HOST }}
+          USERNAME: ${{ secrets.DEPLOY_TEST_USERNAME }}
+          PORT: 22
+          KEY: ${{ secrets.DEPLOY_TEST_KEY }}
+          script: |
+            cd diamonds2
+            git fetch
+            git checkout --progress --force ${{ github.sha }}
+            docker-compose down
+            docker system prune -af
+            source ~/.bash_profile
+            DIAMONDS_DOCKER_TAG=develop-${{ github.sha }} docker-compose -f docker-compose.prod-run.yml up -d
+
+      - name: Update deployment status (success)
+        if: success()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target-url: http://${{ secrets.DEPLOY_TEST_HOST }}
+          state: "success"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+
+      - name: Update deployment status (failure)
+        if: failure()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target-url: http://${{ secrets.DEPLOY_TEST_HOST }}
+          state: "failure"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+  # Deploy production images to production
+  # deploy-prod:
+  #   name: Deploy
+  #   needs: tag-and-push
+  #   runs-on: ubuntu-18.04
+  #   steps:
+  #     - name: Executing remote command
+  #       uses: appleboy/ssh-action@master
+  #       with:
+  #         host: ${{ secrets.DEPLOY_TEST_HOST }}
+  #         USERNAME: ${{ secrets.DEPLOY_TEST_USERNAME }}
+  #         PORT: 22
+  #         KEY: ${{ secrets.DEPLOY_TEST_KEY }}
+  #         script: ls

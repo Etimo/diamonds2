@@ -1,5 +1,4 @@
 class Board(object):
-
     def __init__(self, data):
         self.id = data["id"]
         self.width = data["width"]
@@ -14,6 +13,5 @@ class Board(object):
 
     def get_bot(self, bot):
         for item in self.bots:
-            if item["properties"]["name"] == bot.name:
+            if item.get("properties", {}).get("name") == bot.name:
                 return item
-

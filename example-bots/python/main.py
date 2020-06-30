@@ -11,7 +11,7 @@ from game.logic.random_diamond import RandomDiamondLogic
 from colorama import init, Fore, Back, Style
 
 init()
-BASE_URL = "http://diamonds.etimo.se/api"
+BASE_URL = "http://localhost:8081/api"
 CONTROLLERS = {
     "Random": RandomLogic,
     "FirstDiamond": FirstDiamondLogic,
@@ -25,27 +25,33 @@ CONTROLLERS = {
 ###############################################################################
 parser = argparse.ArgumentParser(description="Diamonds example bot")
 group = parser.add_mutually_exclusive_group()
-group.add_argument("--token",
+group.add_argument(
+    "--token",
     help="A bot token to use when running using an existing bot",
-    action="store")
-group.add_argument("--name",
-    help="The name of the bot to register",
-    action="store")
-parser.add_argument("--email",
-    help="The email of the bot to register",
-    action="store")
-parser.add_argument("--board",
-    help="Id of the board to join",
-    action="store")
-parser.add_argument("--time-factor",
+    action="store",
+)
+group.add_argument(
+    "--name", help="The name of the bot to register", action="store")
+parser.add_argument(
+    "--email", help="The email of the bot to register", action="store")
+parser.add_argument("--board", help="Id of the board to join", action="store")
+parser.add_argument(
+    "--time-factor",
     help="A factor to multiply each move command with. If you want to run the bot in a slower mode e.g. use --time-factor=5 to multiply each delay with 5.",
     default=1,
-    action="store")
-parser.add_argument("--logic",
-    help="The logic controller to use. Valid options are: {}".format(", ".join(list(CONTROLLERS.keys()))),
-    action="store")
-group = parser.add_argument_group('API connection')
-group.add_argument('--host', action="store", default=BASE_URL, help="Default: {}".format(BASE_URL))
+    action="store",
+)
+parser.add_argument(
+    "--logic",
+    help="The logic controller to use. Valid options are: {}".format(
+        ", ".join(list(CONTROLLERS.keys()))
+    ),
+    action="store",
+)
+group = parser.add_argument_group("API connection")
+group.add_argument(
+    "--host", action="store", default=BASE_URL, help="Default: {}".format(BASE_URL)
+)
 args = parser.parse_args()
 
 time_factor = int(args.time_factor)
@@ -62,11 +68,17 @@ if logic_controller not in CONTROLLERS:
 ###############################################################################
 if not args.token:
     bot = Bot(args.email, args.name, api)
-    result = bot.register()
-    if result.status_code == 200:
+    resp, status = bot.register()
+    if status == 200:
         print("")
-        print(Style.BRIGHT + "Bot registered. Token: {}".format(bot.bot_token) + Style.RESET_ALL)
+        print(
+            Style.BRIGHT
+            + "Bot registered. Token: {}".format(bot.bot_token)
+            + Style.RESET_ALL
+        )
         args.token = bot.bot_token
+        with open(".token-" + bot.name, "w") as f:
+            f.write(bot.bot_token)
     else:
         print("Unable to register bot")
         exit(1)
@@ -79,6 +91,9 @@ if not args.token:
 bot = Bot("", "", api)
 bot.bot_token = args.token
 bot.get_my_info()
+if not bot.name:
+    print("Bot does not exist.")
+    exit(1)
 print("Welcome back", bot.name)
 
 # Setup variables
@@ -97,13 +112,13 @@ if not current_board_id:
     for board in boards:
         # Try to join board
         current_board_id = board.id
-        result = bot.join(current_board_id)
-        if result.status_code == 200:
+        resp, status = bot.join(current_board_id)
+        if status == 200:
             break
 else:
     # Try to join the one we specified
-    result = bot.join(current_board_id)
-    if result.status_code != 200:
+    resp, status = bot.join(current_board_id)
+    if status != 200:
         current_board_id = None
 
 # Did we manage to join a board?
@@ -132,15 +147,12 @@ while True:
     delta_x, delta_y = bot_logic.next_move(board_bot, board)
 
     # Try to perform move
-    result = bot.move(current_board_id, delta_x, delta_y)
-    if result.status_code == 409:
+    resp, status = bot.move(current_board_id, delta_x, delta_y)
+    if status == 409 or status == 403:
         # Read new board state
         board = bot.get_board(current_board_id)
-    elif result.status_code == 403:
-        # Game over, we are not allowed to move anymore
-        break
     else:
-        board = Board(result.json())
+        board = Board(resp)
 
     # Get new state
     board_bot = board.get_bot(bot)
