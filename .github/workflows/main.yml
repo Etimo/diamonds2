@@ -48,7 +48,7 @@ jobs:
   build-prod:
     name: Build for prod env
     runs-on: ubuntu-18.04
-    if: github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/master'
     needs:
       - test-backend
       - test-build
