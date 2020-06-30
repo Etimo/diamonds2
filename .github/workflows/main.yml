@@ -80,12 +80,12 @@ jobs:
           docker push etimodanielwinther/diamonds2_bots:latest-${BRANCH_NAME}
           docker push etimodanielwinther/diamonds2_bots:${BRANCH_NAME}-${{ github.sha }}
 
-  # When pushing code to develop we want to deploy latest develop images to test environment
+  # When pushing code to master we want to deploy latest master images to test environment
   deploy-test:
     name: Deploy
     needs: build-prod
     runs-on: ubuntu-18.04
-    if: github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/master'
     steps:
       - uses: chrnorm/deployment-action@releases/v1
         name: Create GitHub deployment
@@ -110,7 +110,7 @@ jobs:
             docker-compose down
             docker system prune -af
             source ~/.bash_profile
-            DIAMONDS_DOCKER_TAG=develop-${{ github.sha }} docker-compose -f docker-compose.prod-run.yml up -d
+            DIAMONDS_DOCKER_TAG=master-${{ github.sha }} docker-compose -f docker-compose.prod-run.yml up -d
 
       - name: Update deployment status (success)
         if: success()
