@@ -59,7 +59,7 @@ export class BotsController {
   @ApiResponse({
     status: 200,
     description: "Bot was succesfully returned",
-    type: BotRegistrationDto,
+    type: BotRegistrationPublicDto,
   })
   @ApiResponse({
     status: 404,
