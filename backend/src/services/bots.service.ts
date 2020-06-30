@@ -104,12 +104,12 @@ export class BotsService {
       .getOne();
 
     // Don't return bots with no password
-    if (existBot || existBot.password) {
+    if (existBot && existBot.password) {
       // Return bot if password is correct
       if (await bcrypt.compare(botRecoveryDto.password, existBot.password)) {
         return BotRegistrationPublicDto.fromEntity(existBot);
       }
     }
-    return Promise.reject(new NotFoundError("Invalid email or pasword"));
+    return Promise.reject(new NotFoundError("Invalid email or password"));
   }
 }

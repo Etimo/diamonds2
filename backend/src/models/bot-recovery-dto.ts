@@ -1,5 +1,5 @@
 import { ApiModelProperty } from "@nestjs/swagger";
-import { IsEmail, IsString } from "class-validator";
+import { IsEmail, IsString, MinLength } from "class-validator";
 export class BotRecoveryDto {
   @ApiModelProperty({
     description: "The email of the bot you have registered",
@@ -11,5 +11,6 @@ export class BotRecoveryDto {
     description: "The password for your bot.",
   })
   @IsString()
+  @MinLength(1)
   readonly password: string;
 }
