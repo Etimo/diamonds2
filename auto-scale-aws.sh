@@ -19,8 +19,10 @@ fetch_instance_information() {
     instance_type=$(remove_double_quotes "$instance_type")
 }
 
+# Set env variables.
+source ~/.bash_profile
 # Setting home directory when running cronjob
-export HOME=/root
+export HOME=/home/ec2-user
 
 off_season="Off season"
 instance_type_micro="t2.micro"
