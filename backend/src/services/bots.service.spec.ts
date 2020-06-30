@@ -186,8 +186,6 @@ describe("BotsService", () => {
   });
 
   it("Get bot with email and password", async () => {
-    // Hashing here because beforeInsert is not triggered in tests.
-    //const hashedPassword = await bcrypt.hash("123456", 10);
     const data = {
       email: "hel22lo@world.se",
       botName: "bot122",
