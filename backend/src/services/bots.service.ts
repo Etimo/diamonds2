@@ -75,10 +75,10 @@ export class BotsService {
   public async create(
     dto: BotRegistrationDto,
   ): Promise<BotRegistrationPublicDto> {
-    // Need to create the object to trigger BeforeInsert!
-    const bot = this.repo.create(dto);
+    // Hashing password
+    dto.password = await bcrypt.hash(dto.password, 10);
     return await this.repo
-      .save(bot)
+      .save(dto)
       .then(botRegistrationsEntity =>
         BotRegistrationPublicDto.fromEntity(botRegistrationsEntity),
       );
@@ -103,10 +103,9 @@ export class BotsService {
       })
       .getOne();
 
-    if (existBot) {
+    // Don't return bots with no password
+    if (existBot || existBot.password) {
       // Return bot if password is correct
-      console.log(existBot.password);
-      console.log(botRecoveryDto.password);
       if (await bcrypt.compare(botRecoveryDto.password, existBot.password)) {
         return BotRegistrationPublicDto.fromEntity(existBot);
       }

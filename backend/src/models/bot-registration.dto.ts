@@ -28,5 +28,5 @@ export class BotRegistrationDto {
     description: "The password for your bot (Old bots don't have a password).",
   })
   @IsString()
-  readonly password: string;
+  password: string;
 }

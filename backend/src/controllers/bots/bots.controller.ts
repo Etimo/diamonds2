@@ -58,14 +58,14 @@ export class BotsController {
 
   @ApiResponse({
     status: 200,
-    description: "Bot was succesfully fetched",
+    description: "Bot was succesfully returned",
     type: BotRegistrationDto,
   })
   @ApiResponse({
     status: 404,
     description: "Bot not found",
   })
-  @Post("/token")
+  @Post("/recover")
   async fetch(
     @Body() botRecoveryDto: BotRecoveryDto,
   ): Promise<BotRegistrationPublicDto> {

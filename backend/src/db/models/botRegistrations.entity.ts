@@ -20,8 +20,4 @@ export class BotRegistrationsEntity {
 
   @Column({ type: "varchar", nullable: true })
   password: string;
-
-  @BeforeInsert() async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
-  }
 }

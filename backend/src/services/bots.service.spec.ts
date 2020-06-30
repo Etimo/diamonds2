@@ -45,11 +45,6 @@ describe("BotsService", () => {
       password: "123456",
     };
 
-    const create = jest.fn(() => {
-      var savedPackage: BotRegistrationDto = data;
-      return savedPackage;
-    });
-
     const save = jest.fn(
       () =>
         new Promise<BotRegistrationDto>((resolve, reject) => {
@@ -61,7 +56,6 @@ describe("BotsService", () => {
         }),
     );
 
-    repositoryMock.create.mockImplementation(create);
     repositoryMock.save.mockImplementation(save);
 
     await botsService.add(data);
@@ -103,11 +97,6 @@ describe("BotsService", () => {
       password: "123456",
     };
 
-    const create = jest.fn(() => {
-      var savedPackage: BotRegistrationDto = data;
-      return savedPackage;
-    });
-
     const save = jest.fn(
       () =>
         new Promise<BotRegistrationDto>((resolve, reject) => {
@@ -119,7 +108,6 @@ describe("BotsService", () => {
         }),
     );
 
-    repositoryMock.create.mockImplementation(create);
     repositoryMock.save.mockImplementation(save);
 
     await botsService.add(data);
@@ -161,11 +149,6 @@ describe("BotsService", () => {
       password: "123456",
     };
 
-    const create = jest.fn(() => {
-      var savedPackage: BotRegistrationDto = data;
-      return savedPackage;
-    });
-
     const save = jest.fn(
       () =>
         new Promise<BotRegistrationDto>((resolve, reject) => {
@@ -177,7 +160,6 @@ describe("BotsService", () => {
         }),
     );
 
-    repositoryMock.create.mockImplementation(create);
     repositoryMock.save.mockImplementation(save);
 
     const result: BotRegistrationPublicDto = await botsService.add(data);
@@ -205,25 +187,19 @@ describe("BotsService", () => {
 
   it("Get bot with email and password", async () => {
     // Hashing here because beforeInsert is not triggered in tests.
-    const hashedPassword = await bcrypt.hash("123456", 10);
+    //const hashedPassword = await bcrypt.hash("123456", 10);
     const data = {
       email: "hel22lo@world.se",
       botName: "bot122",
-      password: hashedPassword,
+      password: "123456",
     };
-
-    const create = jest.fn(() => {
-      var test = new BotRegistrationsEntity();
-      test.botName = data.botName;
-      test.email = data.email;
-      test.password = data.password;
-      return test;
-    });
+    const hashedPassword = await bcrypt.hash(data.password, 10);
 
     const save = jest.fn(
       () =>
         new Promise<BotRegistrationDto>((resolve, reject) => {
           var savedPackage: BotRegistrationDto = data;
+          savedPackage.password = hashedPassword;
 
           setTimeout(() => {
             resolve(savedPackage);
@@ -231,7 +207,6 @@ describe("BotsService", () => {
         }),
     );
 
-    repositoryMock.create.mockImplementation(create);
     repositoryMock.save.mockImplementation(save);
 
     const result: BotRegistrationPublicDto = await botsService.add(data);
@@ -267,16 +242,13 @@ describe("BotsService", () => {
       botName: "bot122",
       password: "123456",
     };
-
-    const create = jest.fn(() => {
-      var savedPackage: BotRegistrationDto = data;
-      return savedPackage;
-    });
+    const hashedPassword = await bcrypt.hash(data.password, 10);
 
     const save = jest.fn(
       () =>
         new Promise<BotRegistrationDto>((resolve, reject) => {
           var savedPackage: BotRegistrationDto = data;
+          savedPackage.password = hashedPassword;
 
           setTimeout(() => {
             resolve(savedPackage);
@@ -284,7 +256,6 @@ describe("BotsService", () => {
         }),
     );
 
-    repositoryMock.create.mockImplementation(create);
     repositoryMock.save.mockImplementation(save);
 
     const result: BotRegistrationPublicDto = await botsService.add(data);
@@ -320,24 +291,19 @@ describe("BotsService", () => {
       botName: "bot122",
       password: "123456",
     };
-
-    const create = jest.fn(() => {
-      var savedPackage: BotRegistrationDto = data;
-      return savedPackage;
-    });
+    const hashedPassword = await bcrypt.hash(data.password, 10);
 
     const save = jest.fn(
       () =>
         new Promise<BotRegistrationDto>((resolve, reject) => {
           var savedPackage: BotRegistrationDto = data;
+          savedPackage.password = hashedPassword;
 
           setTimeout(() => {
             resolve(savedPackage);
           }, 500);
         }),
     );
-
-    repositoryMock.create.mockImplementation(create);
     repositoryMock.save.mockImplementation(save);
 
     const result: BotRegistrationPublicDto = await botsService.add(data);
@@ -375,7 +341,6 @@ export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
     find: jest.fn(entity => entity),
     update: jest.fn(),
     save: jest.fn(),
-    create: jest.fn(),
     createQueryBuilder: jest.fn(() => ({
       where: jest.fn(() => ({ getOne: jest.fn(entity => entity) })),
       getOne: jest.fn(),
