@@ -9,8 +9,8 @@ import { invalidLogic, couldNotJoinBoard, gameStarted } from "./messages";
 
 const logics = { firstDiamondLogic: getFirstDiamond };
 
-export const register = async (name, email) => {
-  const bot = await registerBot(name, email);
+export const register = async (name, email, password) => {
+  const bot = await registerBot(name, email, password);
   if (bot) {
     registrationSuccessful(bot);
   } else {
@@ -68,8 +68,8 @@ const getTargetPosition = (bot, board, logicFunction) => {
   return false;
 };
 
-const getLogic = (logic) => {
-  const logicArray = Object.entries(logics).find((item) => item[0] === logic);
+const getLogic = logic => {
+  const logicArray = Object.entries(logics).find(item => item[0] === logic);
   if (logicArray) {
     return logicArray[1];
   }

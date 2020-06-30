@@ -26,7 +26,7 @@ export const couldNotJoinBoard = () => {
 };
 
 export const registerInvalidParameters = () => {
-  console.log(chalk.red("Please provide a valid name and email"));
+  console.log(chalk.red("Please provide a valid name, email and password"));
   shutDown();
 };
 
