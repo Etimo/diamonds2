@@ -213,6 +213,7 @@ describe("BotsService", () => {
       () =>
         new Promise<BotRegistrationDto>((resolve, reject) => {
           var savedPackage: BotRegistrationDto = data;
+          savedPackage.password = hashedPassword;
 
           setTimeout(() => {
             resolve(savedPackage);
@@ -262,6 +263,7 @@ describe("BotsService", () => {
       () =>
         new Promise<BotRegistrationDto>((resolve, reject) => {
           var savedPackage: BotRegistrationDto = data;
+          savedPackage.password = hashedPassword;
 
           setTimeout(() => {
             resolve(savedPackage);
@@ -310,6 +312,7 @@ describe("BotsService", () => {
       () =>
         new Promise<BotRegistrationDto>((resolve, reject) => {
           var savedPackage: BotRegistrationDto = data;
+          savedPackage.password = hashedPassword;
 
           setTimeout(() => {
             resolve(savedPackage);
