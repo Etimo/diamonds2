@@ -5,11 +5,11 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=(diamonds.etimo.se www.diamonds.etimo.se)
+domains=(diamonds.etimo.se)
 rsa_key_size=4096
 data_path="./data/certbot"
 email="kontakt@etimo.se"
-staging=1 # Set to 1 if you're testing your setup to avoid hitting request limits
+staging=0 # Set to 1 if you're testing your setup to avoid hitting request limits
 
 if [ -d "$data_path" ]; then
   read -p "Existing data found for $domains. Continue and replace existing certificate? (y/N) " decision
@@ -77,4 +77,4 @@ docker-compose -f docker-compose.prod-run.yml run --rm --entrypoint "\
 echo
 
 echo "### Reloading nginx ..."
-docker-compose exec diamonds2_frontend_1 diamonds2_frontend_1 -s reload
+docker  exec diamonds2_frontend_1 nginx -s reload
