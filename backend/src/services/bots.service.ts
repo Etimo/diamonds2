@@ -7,6 +7,9 @@ import { Repository } from "typeorm";
 import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
 import { BotRegistrationPublicDto } from "../models/bot-registration-public.dto";
 import { MetricsService } from "./metrics.service";
+import { BotRecoveryDto } from "src/models/bot-recovery-dto";
+import * as bcrypt from "bcrypt";
+import NotFoundError from "../errors/not-found.error";
 
 @Injectable()
 export class BotsService {
@@ -72,8 +75,10 @@ export class BotsService {
   public async create(
     dto: BotRegistrationDto,
   ): Promise<BotRegistrationPublicDto> {
+    // Need to create the object to trigger BeforeInsert!
+    const bot = this.repo.create(dto);
     return await this.repo
-      .save(dto)
+      .save(bot)
       .then(botRegistrationsEntity =>
         BotRegistrationPublicDto.fromEntity(botRegistrationsEntity),
       );
@@ -86,5 +91,26 @@ export class BotsService {
       .from("bot_registrations")
       .where("botName = :botName", { botName: dto.botName })
       .execute();
+  }
+
+  public async getByEmailAndPassword(
+    botRecoveryDto: BotRecoveryDto,
+  ): Promise<BotRegistrationPublicDto> {
+    const existBot = await this.repo
+      .createQueryBuilder("botRegistrations")
+      .where("botRegistrations.email = :email", {
+        email: botRecoveryDto.email,
+      })
+      .getOne();
+
+    if (existBot) {
+      // Return bot if password is correct
+      console.log(existBot.password);
+      console.log(botRecoveryDto.password);
+      if (await bcrypt.compare(botRecoveryDto.password, existBot.password)) {
+        return BotRegistrationPublicDto.fromEntity(existBot);
+      }
+    }
+    return Promise.reject(new NotFoundError("Invalid email or pasword"));
   }
 }

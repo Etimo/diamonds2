@@ -5,6 +5,7 @@ import { BotRegistrationDto } from "src/models/bot-registration.dto";
 import { BotsService } from "src/services/bots.service";
 import { IBot } from "src/interfaces/bot.interface";
 import { BotRegistrationPublicDto } from "src/models/bot-registration-public.dto";
+import { BotRecoveryDto } from "src/models/bot-recovery-dto";
 
 @ApiUseTags("Bots")
 @Controller("api/bots")
@@ -53,5 +54,21 @@ export class BotsController {
   @Get(":token")
   async find(@Param("token") token: string): Promise<BotRegistrationPublicDto> {
     return await this.botService.get(token);
+  }
+
+  @ApiResponse({
+    status: 200,
+    description: "Bot was succesfully fetched",
+    type: BotRegistrationDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: "Bot not found",
+  })
+  @Post("/token")
+  async fetch(
+    @Body() botRecoveryDto: BotRecoveryDto,
+  ): Promise<BotRegistrationPublicDto> {
+    return await this.botService.getByEmailAndPassword(botRecoveryDto);
   }
 }
