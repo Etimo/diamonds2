@@ -18,6 +18,6 @@ export class BotRegistrationsEntity {
   @Column({ type: "timestamptz", default: () => "CURRENT_TIMESTAMP" })
   updateTimeStamp: Date;
 
-  @Column({ type: "varchar", nullable: true })
+  @Column({ type: "varchar", length: 300 })
   password: string;
 }
