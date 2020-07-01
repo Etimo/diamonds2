@@ -23,5 +23,10 @@ export class addPassword1593585305080 implements MigrationInterface {
       `ALTER TABLE "bot_registrations" DROP COLUMN "password"`,
       undefined,
     );
+
+    await queryRunner.query(
+      `INSERT INTO "bot_registrations" SELECT * FROM bot_registrations_old`,
+      undefined,
+    );
   }
 }
