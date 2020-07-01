@@ -5,7 +5,7 @@ export class addPassword1593585305080 implements MigrationInterface {
   name = "addPassword1593585305080";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    // Deleting all "old" bots. They have to register them again with a password.
+    // Deleting all 'old' bots. They have to register them again with a password.
     await queryRunner.manager
       .createQueryBuilder()
       .delete()
