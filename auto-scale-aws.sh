@@ -49,9 +49,6 @@ else
     new_instance_type=$instance_type_small
 fi
 
-# Set to always small - Testing
-new_instance_type=$instance_type_small
-
 echo "InstanceType should be $new_instance_type"
 
 
@@ -63,9 +60,6 @@ fi
 
 echo "Current type: $instance_type"
 echo "New type: $new_instance_type"
-
-# Set to always micro - Testing
-new_instance_type=$instance_type_micro
 
 # Stop instance
 echo "Stopping instance"
