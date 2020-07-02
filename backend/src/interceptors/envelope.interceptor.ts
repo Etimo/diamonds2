@@ -24,6 +24,9 @@ export class EnvelopeInterceptor<T> implements NestInterceptor<T, Response<T>> {
 
     return next.handle().pipe(
       map(data => {
+        if (req.url.includes("/api/slack/")) {
+          return data;
+        }
         return {
           statusCode: res.status,
           timestamp: new Date().toISOString(),
