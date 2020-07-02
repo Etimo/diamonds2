@@ -26,6 +26,6 @@ export class SlackController {
   @Post("/seasons")
   @HttpCode(200)
   async listAll(@Body() input: {}) {
-    return this.slackServide.getAllSeasons();
+    return this.slackServide.getAllSeasons(input);
   }
 }
