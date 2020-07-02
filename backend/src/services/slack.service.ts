@@ -52,12 +52,12 @@ export class SlackService {
 
   private formatSeasons(seasons) {
     return {
+      type: "modal",
       title: {
         type: "plain_text",
         text: "Diamonds",
         emoji: true,
       },
-      type: "modal",
       close: {
         type: "plain_text",
         text: "Cancel",
