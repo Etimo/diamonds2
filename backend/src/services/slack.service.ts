@@ -16,27 +16,41 @@ export class SlackService {
   }
 
   private formatSeasonBlocks(seasons) {
-    return seasons.map(season => {
+    return seasons.flatMap(season => {
       console.log(season);
-      return {
-        type: "section",
-        text: {
-          type: "mrkdwn",
-          text: `*${season.name}*\n${season.startDate} - ${season.endDate}\n Hello season ${season.name}`,
+      return [
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: `*${season.name}*`,
+          },
         },
-        accessory: {
-          type: "image",
-          image_url:
-            "https://s3-media3.fl.yelpcdn.com/bphoto/c7ed05m9lC2EmA3Aruue7A/o.jpg",
-          alt_text: "alt text for image",
+        {
+          type: "context",
+          elements: [
+            {
+              type: "mrkdwn",
+              text: `${new Date(season.startDate).toISOString()}`,
+            },
+            {
+              type: "mrkdwn",
+              text: "-",
+            },
+            {
+              type: "mrkdwn",
+              text: `${new Date(season.endDate).toISOString()}`,
+            },
+          ],
         },
-      };
+        {
+          type: "divider",
+        },
+      ];
     });
   }
 
   private formatSeasons(seasons) {
-    const seasonBlocks = this.formatSeasonBlocks(seasons);
-    console.log(seasonBlocks);
     return {
       title: {
         type: "plain_text",
@@ -53,14 +67,15 @@ export class SlackService {
         {
           type: "section",
           text: {
-            type: "mrkdwn",
-            text: "Hello, you can find all seasons below!",
+            type: "plain_text",
+            text: "A list of all seasons!",
+            emoji: true,
           },
         },
         {
           type: "divider",
         },
-        seasonBlocks,
+        ...this.formatSeasonBlocks(seasons),
       ],
     };
   }
