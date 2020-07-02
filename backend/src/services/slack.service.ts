@@ -16,7 +16,7 @@ export class SlackService {
     const view = this.createBody(input.trigger_id, seasons);
     const headers = {
       "Content-type": "application/json",
-      Authorization: input.token,
+      Authorization: `Bearer ${input.token}`,
     };
     axios
       .post("https://slack.com/api/views.open", view, { headers: headers })
