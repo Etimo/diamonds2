@@ -1,12 +1,5 @@
 import { Body, Controller, Get, HttpCode, Param, Post } from "@nestjs/common";
 import { ApiResponse, ApiUseTags } from "@nestjs/swagger";
-import { BoardDto } from "src/models/board.dto";
-import { JoinInputDto } from "src/models/join-input.dto";
-import { MoveInputDto } from "src/models/move-input.dto";
-import { BoardsService } from "src/services/board.service";
-import { SeasonsService } from "src/services/seasons.service";
-import { BotsService } from "src/services/bots.service";
-import { SeasonDto } from "src/models/season.dto";
 import { SlackService } from "src/services/slack.service";
 
 @ApiUseTags("Slack")
@@ -15,17 +8,44 @@ export class SlackController {
   constructor(private slackServide: SlackService) {}
 
   /**
-   * Return all seasons.
+   * Return all seasons in a slack modal.
    */
   @ApiResponse({
     status: 200,
-    description: "Returns seasons",
-    isArray: true,
-    type: SeasonDto,
+    description: "Shows a slack modal with all seasons",
   })
   @Post("/seasons")
   @HttpCode(200)
   async listAll(@Body() input: {}) {
     return this.slackServide.getAllSeasons(input);
+  }
+
+  /**
+   * Return a slack modal to add seasons
+   */
+  @ApiResponse({
+    status: 200,
+    description: "Shows a slack modal to add seasons",
+  })
+  @Post("/season")
+  @HttpCode(200)
+  async addSeasonModal(@Body() input: {}) {
+    return this.slackServide.getSeasonModal(input);
+  }
+
+  /**
+   * Someone has interacted with a modal on slack - Returns OK/ERROR
+   */
+  @ApiResponse({
+    status: 200,
+    description:
+      "Inforamtion from slack that someone has interacted with a modal",
+  })
+  @Post("/interact")
+  @HttpCode(200)
+  async interact(@Body() input: {}) {
+    console.log("INTERACT");
+    console.log(input);
+    return "ok";
   }
 }
