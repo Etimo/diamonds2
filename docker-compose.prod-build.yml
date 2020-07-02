@@ -21,6 +21,7 @@ services:
       - TYPEORM_USERNAME
       - TYPEORM_PASSWORD
       - PORT=5000
+      - SLACK_ACCESS_TOKEN
     ports:
       - 8081:5000
 
