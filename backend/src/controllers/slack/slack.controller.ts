@@ -7,15 +7,12 @@ import { BoardsService } from "src/services/board.service";
 import { SeasonsService } from "src/services/seasons.service";
 import { BotsService } from "src/services/bots.service";
 import { SeasonDto } from "src/models/season.dto";
+import { SlackService } from "src/services/slack.service";
 
 @ApiUseTags("Slack")
 @Controller("api/slack")
 export class SlackController {
-  constructor(
-    private boardsService: BoardsService,
-    private seasonsService: SeasonsService,
-    botsService: BotsService,
-  ) {}
+  constructor(private slackServide: SlackService) {}
 
   /**
    * Return all seasons.
@@ -27,8 +24,7 @@ export class SlackController {
     type: SeasonDto,
   })
   @Post("/seasons")
-  async listAll(@Body() input: {}): Promise<SeasonDto[]> {
-    console.log(input);
-    return this.seasonsService.all();
+  async listAll(@Body() input: {}) {
+    return this.slackServide.getAllSeasons();
   }
 }

@@ -40,6 +40,6 @@ export class SeasonsService {
           createTimeStamp: "DESC",
         },
       })
-      .then(highScores => highScores.map(e => SeasonDto.fromEntity(e)));
+      .then(seasons => seasons.map(e => SeasonDto.fromEntity(e)));
   }
 }

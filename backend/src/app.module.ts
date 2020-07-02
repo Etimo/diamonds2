@@ -19,6 +19,7 @@ import { BotRegistrationsEntity } from "./db/models/botRegistrations.entity";
 import { SeasonsEntity } from "./db/models/seasons.entity";
 import { MetricsService } from "./services/metrics.service";
 import { AutoScaleMiddleware } from "./middlewares/auto-scale-boards.middleware";
+import { SlackService } from "./services/slack.service";
 
 const dbConfig: TypeOrmModuleOptions = {
   type: "postgres",
@@ -60,6 +61,7 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     HighScoresService,
     MetricsService,
     SeasonsService,
+    SlackService,
     {
       provide: "NUMBER_OF_BOARDS",
       useValue: 4,
