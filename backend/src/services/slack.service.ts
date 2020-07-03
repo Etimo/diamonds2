@@ -39,7 +39,18 @@ export class SlackService {
 
   private async addSeason(payload) {
     console.log("ADDING SEASON");
-    console.log(payload);
-    return "Season added";
+    const startDate = this.parseValues(payload, "start_date", "selected_date");
+    const endDate = this.parseValues(payload, "end_date", "selected_date");
+    const name = this.parseValues(payload, "season_name", "value");
+    console.log(startDate);
+    console.log(endDate);
+    console.log(name);
+    return;
+  }
+
+  private parseValues(payload, obj, value) {
+    const object = payload.state.values[obj],
+      key = Object.keys(object)[0];
+    return obj[key][value];
   }
 }
