@@ -119,7 +119,7 @@ export const createAddSeasonBody = trigger_id => {
           },
           label: {
             type: "plain_text",
-            text: "Enter a season name",
+            text: "Season name",
             emoji: true,
           },
         },
