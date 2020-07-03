@@ -51,6 +51,6 @@ export class SlackService {
   private parseValues(payload, obj, value) {
     const object = payload.state.values[obj],
       key = Object.keys(object)[0];
-    return obj[key][value];
+    return object[key][value];
   }
 }
