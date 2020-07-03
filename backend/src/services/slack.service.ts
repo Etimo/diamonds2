@@ -17,6 +17,8 @@ export class SlackService {
   }
 
   public async getSeasonModal(input) {
+    console.log("GET SEASON MODAL");
+    console.log(input);
     const view = createAddSeasonBody(input.trigger_id);
     return await showModal(view);
   }

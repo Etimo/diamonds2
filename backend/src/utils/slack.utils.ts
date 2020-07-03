@@ -39,7 +39,7 @@ const formatSeasonBlocks = seasons => {
         elements: [
           {
             type: "mrkdwn",
-            text: `${new Date(season.startDate).toISOString()}`,
+            text: new Date(season.startDate).toISOString().substring(0, 10),
           },
           {
             type: "mrkdwn",
@@ -47,7 +47,7 @@ const formatSeasonBlocks = seasons => {
           },
           {
             type: "mrkdwn",
-            text: `${new Date(season.endDate).toISOString()}`,
+            text: new Date(season.endDate).toISOString().substring(0, 10),
           },
         ],
       },
@@ -144,7 +144,9 @@ export const createAddSeasonBody = trigger_id => {
           type: "input",
           element: {
             type: "datepicker",
-            initial_date: new Date(Date.now() + 3600 * 30 * 1000 * 24), // Adds 30 days in ms
+            initial_date: new Date(Date.now() + 3600 * 30 * 1000 * 24) // Adds 30 days in ms
+              .toISOString()
+              .substring(0, 10),
             placeholder: {
               type: "plain_text",
               text: "Select a date",
