@@ -49,7 +49,7 @@ export class SlackService {
   }
 
   private parseValues(payload, obj, value) {
-    const object = payload.state.values[obj],
+    const object = payload.view.state.values[obj],
       key = Object.keys(object)[0];
     return object[key][value];
   }
