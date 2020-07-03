@@ -27,8 +27,10 @@ export class SlackService {
   public async handleInteract(input) {
     console.log("CALLBACK ID");
     const payload = JSON.parse(input.payload);
-    console.log(payload.callback_id);
-    switch (payload.callback_id) {
+    console.log("parsed payload");
+    console.log(payload);
+    console.log(payload.view.callback_id);
+    switch (payload.view.callback_id) {
       case "add_season":
         return await this.addSeason(input);
       default:
