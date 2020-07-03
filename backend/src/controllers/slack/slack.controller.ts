@@ -30,7 +30,7 @@ export class SlackController {
   @Post("/season")
   @HttpCode(200)
   async addSeasonModal(@Body() input: {}) {
-    return this.slackService.getSeasonModal(input);
+    return await this.slackService.getSeasonModal(input);
   }
 
   /**
@@ -44,6 +44,21 @@ export class SlackController {
   @Post("/interact/add-season")
   @HttpCode(200)
   async interact(@Body() input: {}) {
-    return this.slackService.handleInteract(input);
+    console.log("INTERACT1");
+    console.log(input);
+    return await this.slackService.handleInteract(input);
+  }
+
+  @ApiResponse({
+    status: 200,
+    description:
+      "Inforamtion from slack that someone has interacted with a modal",
+  })
+  @Post("/interact")
+  @HttpCode(200)
+  async interact2(@Body() input: {}) {
+    console.log("INTERACT2");
+    console.log(input);
+    return await this.slackService.handleInteract(input);
   }
 }
