@@ -167,3 +167,12 @@ export const createAddSeasonBody = trigger_id => {
     },
   };
 };
+
+export const returnError = error => {
+  return {
+    response_action: "errors",
+    errors: {
+      error: error,
+    },
+  };
+};

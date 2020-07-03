@@ -4,6 +4,7 @@ import {
   createSeasonsBody,
   createAddSeasonBody,
   showModal,
+  returnError,
 } from "../utils/slack.utils";
 
 @Injectable()
@@ -24,16 +25,17 @@ export class SlackService {
   }
 
   public async handleInteract(input) {
-    switch (input.callback_id) {
+    switch (input.payload.callback_id) {
       case "add_season":
         return this.addSeason(input);
       default:
-        return;
+        return returnError("Could not handle input");
     }
   }
 
   private async addSeason(input) {
     console.log("ADDING SEASON");
     console.log(input);
+    return "Season added";
   }
 }

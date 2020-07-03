@@ -41,23 +41,10 @@ export class SlackController {
     description:
       "Inforamtion from slack that someone has interacted with a modal",
   })
-  @Post("/interact/add-season")
+  @Post("/interact")
   @HttpCode(200)
   async interact(@Body() input: {}) {
     console.log("INTERACT1");
-    console.log(input);
-    return await this.slackService.handleInteract(input);
-  }
-
-  @ApiResponse({
-    status: 200,
-    description:
-      "Inforamtion from slack that someone has interacted with a modal",
-  })
-  @Post("/interact")
-  @HttpCode(200)
-  async interact2(@Body() input: {}) {
-    console.log("INTERACT2");
     console.log(input);
     return await this.slackService.handleInteract(input);
   }
