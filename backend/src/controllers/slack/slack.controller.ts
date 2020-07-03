@@ -41,7 +41,7 @@ export class SlackController {
     description:
       "Inforamtion from slack that someone has interacted with a modal",
   })
-  @Post("/interact")
+  @Post("/interact/add-season")
   @HttpCode(200)
   async interact(@Body() input: {}) {
     return this.slackService.handleInteract(input);

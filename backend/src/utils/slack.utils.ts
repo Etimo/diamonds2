@@ -96,7 +96,7 @@ export const createAddSeasonBody = trigger_id => {
     trigger_id: trigger_id,
     view: {
       type: "modal",
-      callback_id: "add_season",
+      callback_id: "add-season",
       submit: {
         type: "plain_text",
         text: "Submit",
