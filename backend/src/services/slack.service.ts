@@ -23,5 +23,17 @@ export class SlackService {
     return await showModal(view);
   }
 
-  public async addSeason(input) {}
+  public async handleInteract(input) {
+    switch (input.callback_id) {
+      case "add_season":
+        return this.addSeason(input);
+      default:
+        return;
+    }
+  }
+
+  private async addSeason(input) {
+    console.log("ADDING SEASON");
+    console.log(input);
+  }
 }

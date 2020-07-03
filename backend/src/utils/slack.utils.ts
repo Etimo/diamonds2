@@ -96,6 +96,7 @@ export const createAddSeasonBody = trigger_id => {
     trigger_id: trigger_id,
     view: {
       type: "modal",
+      callback_id: "add_season",
       submit: {
         type: "plain_text",
         text: "Submit",
@@ -114,6 +115,7 @@ export const createAddSeasonBody = trigger_id => {
       blocks: [
         {
           type: "input",
+          block_id: "season_name",
           element: {
             type: "plain_text_input",
           },
@@ -125,6 +127,7 @@ export const createAddSeasonBody = trigger_id => {
         },
         {
           type: "input",
+          block_id: "start_date",
           element: {
             type: "datepicker",
             initial_date: new Date().toISOString().substring(0, 10),
@@ -142,6 +145,7 @@ export const createAddSeasonBody = trigger_id => {
         },
         {
           type: "input",
+          block_id: "end_date",
           element: {
             type: "datepicker",
             initial_date: new Date(Date.now() + 3600 * 30 * 1000 * 24) // Adds 30 days in ms

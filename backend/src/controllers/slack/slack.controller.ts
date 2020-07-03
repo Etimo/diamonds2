@@ -5,7 +5,7 @@ import { SlackService } from "src/services/slack.service";
 @ApiUseTags("Slack")
 @Controller("api/slack")
 export class SlackController {
-  constructor(private slackServide: SlackService) {}
+  constructor(private slackService: SlackService) {}
 
   /**
    * Return all seasons in a slack modal.
@@ -17,7 +17,7 @@ export class SlackController {
   @Post("/seasons")
   @HttpCode(200)
   async listAll(@Body() input: {}) {
-    return this.slackServide.getAllSeasons(input);
+    return this.slackService.getAllSeasons(input);
   }
 
   /**
@@ -30,7 +30,7 @@ export class SlackController {
   @Post("/season")
   @HttpCode(200)
   async addSeasonModal(@Body() input: {}) {
-    return this.slackServide.getSeasonModal(input);
+    return this.slackService.getSeasonModal(input);
   }
 
   /**
@@ -44,8 +44,6 @@ export class SlackController {
   @Post("/interact")
   @HttpCode(200)
   async interact(@Body() input: {}) {
-    console.log("INTERACT");
-    console.log(input);
-    return "ok";
+    return this.slackService.handleInteract(input);
   }
 }
