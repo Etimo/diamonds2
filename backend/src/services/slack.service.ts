@@ -25,9 +25,11 @@ export class SlackService {
   }
 
   public async handleInteract(input) {
+    console.log("CALLBACK ID");
+    console.log(input.payload.callback_id);
     switch (input.payload.callback_id) {
       case "add_season":
-        return this.addSeason(input);
+        return await this.addSeason(input);
       default:
         return returnError("Could not handle input");
     }
