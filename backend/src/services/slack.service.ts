@@ -30,17 +30,16 @@ export class SlackService {
     console.log("parsed payload");
     console.log(payload);
     console.log(payload.view.callback_id);
-    switch (payload.view.callback_id) {
-      case "add_season":
-        return await this.addSeason(input);
-      default:
-        return returnError("Could not handle input");
+
+    if (payload.view.callback_id === "add-season") {
+      return await this.addSeason(payload);
     }
+    return returnError("Could not process input");
   }
 
-  private async addSeason(input) {
+  private async addSeason(payload) {
     console.log("ADDING SEASON");
-    console.log(input);
+    console.log(payload);
     return "Season added";
   }
 }
