@@ -11,7 +11,7 @@ export class AuthorizationService {
     const slackSigningSecret = process.env["SLACK_SIGNING_SECRET"];
     const slackSignature = request.headers["x-slack-signature"];
     const requestBody = qs.stringify(request.body, { format: "RFC1738" });
-    const timestamp = request.headers["x-slack-request-timestamp"].toString();
+    const timestamp = request.headers["x-slack-request-timestamp"];
 
     if (!timestamp || !slackSignature) {
       this.throwUnauthorized();
@@ -19,7 +19,7 @@ export class AuthorizationService {
     const time = Math.floor(new Date().getTime() / 1000);
 
     // Ignore request if its older than 5 min.
-    if (Math.abs(time - parseInt(timestamp)) > 300) {
+    if (Math.abs(time - parseInt(timestamp.toString())) > 300) {
       this.throwUnauthorized();
     }
 
