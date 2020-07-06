@@ -6,7 +6,7 @@ import {
   showModal,
   slackError,
 } from "../utils/slack.utils";
-import { SeasonDto } from "src/models/season.dto";
+import { SeasonDto } from "../models/season.dto";
 
 @Injectable()
 export class SlackService {
@@ -27,7 +27,7 @@ export class SlackService {
     const payload = JSON.parse(input.payload);
 
     if (payload.view.callback_id === "add-season") {
-      // Using try/catch to catch errors and return them in slack error foramt.
+      // Using try/catch to catch errors and return them in slack error format.
       try {
         const season = await this.addSeason(payload);
         if (season instanceof SeasonDto) {
@@ -41,9 +41,9 @@ export class SlackService {
   }
 
   private async addSeason(payload) {
-    const startDate = this.parseValues(payload, "start_date", "selected_date");
-    const endDate = this.parseValues(payload, "end_date", "selected_date");
-    const name = this.parseValues(payload, "season_name", "value");
+    const startDate = this.parseValue(payload, "start_date", "selected_date");
+    const endDate = this.parseValue(payload, "end_date", "selected_date");
+    const name = this.parseValue(payload, "season_name", "value");
     const season = SeasonDto.create({
       name,
       startDate: new Date(startDate),
@@ -52,7 +52,7 @@ export class SlackService {
     return await this.seasonsService.add(season);
   }
 
-  private parseValues(payload, obj, value) {
+  private parseValue(payload, obj, value) {
     const object = payload.view.state.values[obj],
       key = Object.keys(object)[0];
     return object[key][value];
