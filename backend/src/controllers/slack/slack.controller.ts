@@ -34,7 +34,7 @@ export class SlackController {
   }
 
   /**
-   * Someone has interacted with a modal on slack - Returns OK/ERROR
+   * Someone has interacted with a modal on slack - Returns noting if OK, slack error if an error occured
    */
   @ApiResponse({
     status: 200,
@@ -44,8 +44,6 @@ export class SlackController {
   @Post("/interact")
   @HttpCode(200)
   async interact(@Body() input: {}) {
-    console.log("INTERACT1");
-    console.log(input);
     return await this.slackService.handleInteract(input);
   }
 }

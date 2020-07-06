@@ -168,11 +168,11 @@ export const createAddSeasonBody = trigger_id => {
   };
 };
 
-export const returnError = error => {
+export const slackError = (errorTag, message) => {
   return {
     response_action: "errors",
     errors: {
-      error: error,
+      [errorTag]: message,
     },
   };
 };

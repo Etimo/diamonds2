@@ -4,8 +4,9 @@ import {
   createSeasonsBody,
   createAddSeasonBody,
   showModal,
-  returnError,
+  slackError,
 } from "../utils/slack.utils";
+import { SeasonDto } from "../models/season.dto";
 
 @Injectable()
 export class SlackService {
@@ -18,37 +19,40 @@ export class SlackService {
   }
 
   public async getSeasonModal(input) {
-    console.log("GET SEASON MODAL");
-    console.log(input);
     const view = createAddSeasonBody(input.trigger_id);
     return await showModal(view);
   }
 
   public async handleInteract(input) {
-    console.log("CALLBACK ID");
     const payload = JSON.parse(input.payload);
-    console.log("parsed payload");
-    console.log(payload);
-    console.log(payload.view.callback_id);
 
     if (payload.view.callback_id === "add-season") {
-      return await this.addSeason(payload);
+      // Using try/catch to catch errors and return them in slack error format.
+      try {
+        const season = await this.addSeason(payload);
+        if (season instanceof SeasonDto) {
+          return;
+        }
+      } catch (error) {
+        return slackError(error.errorTag, error.message);
+      }
     }
-    return returnError("Could not process input");
+    return slackError("season_name", "Could not process input");
   }
 
   private async addSeason(payload) {
-    console.log("ADDING SEASON");
-    const startDate = this.parseValues(payload, "start_date", "selected_date");
-    const endDate = this.parseValues(payload, "end_date", "selected_date");
-    const name = this.parseValues(payload, "season_name", "value");
-    console.log(startDate);
-    console.log(endDate);
-    console.log(name);
-    return;
+    const startDate = this.parseValue(payload, "start_date", "selected_date");
+    const endDate = this.parseValue(payload, "end_date", "selected_date");
+    const name = this.parseValue(payload, "season_name", "value");
+    const season = SeasonDto.create({
+      name,
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
+    });
+    return await this.seasonsService.add(season);
   }
 
-  private parseValues(payload, obj, value) {
+  private parseValue(payload, obj, value) {
     const object = payload.view.state.values[obj],
       key = Object.keys(object)[0];
     return object[key][value];
