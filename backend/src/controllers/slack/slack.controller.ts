@@ -1,4 +1,13 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Req,
+} from "@nestjs/common";
+import { Request } from "express";
 import { ApiResponse, ApiUseTags } from "@nestjs/swagger";
 import { SlackService } from "src/services/slack.service";
 
@@ -43,7 +52,9 @@ export class SlackController {
   })
   @Post("/interact")
   @HttpCode(200)
-  async interact(@Body() input: {}) {
+  async interact(@Req() request: Request, @Body() input: {}) {
+    console.log("HEADERS");
+    console.log(request.headers);
     return await this.slackService.handleInteract(input);
   }
 }
