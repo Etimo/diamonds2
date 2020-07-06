@@ -9,15 +9,16 @@ import {
 } from "@nestjs/common";
 import { Request } from "express";
 import { ApiResponse, ApiUseTags } from "@nestjs/swagger";
-import { SlackService } from "src/services/slack.service";
-import * as crypto from "crypto";
-import * as qs from "qs";
-import UnauthorizedError from "src/errors/unauthorized.error";
+import { SlackService } from "../../services/slack.service";
+import { AuthorizationService } from "../../services/authorization.service";
 
 @ApiUseTags("Slack")
 @Controller("api/slack")
 export class SlackController {
-  constructor(private slackService: SlackService) {}
+  constructor(
+    private slackService: SlackService,
+    private authorizationService: AuthorizationService,
+  ) {}
 
   /**
    * Return all seasons in a slack modal.
@@ -60,47 +61,7 @@ export class SlackController {
   @Post("/interact")
   @HttpCode(200)
   async interact(@Req() request: Request, @Body() input: {}) {
-    await this.validateSlackRequest(request);
+    await this.authorizationService.isSlackRequest(request);
     return await this.slackService.handleInteract(input);
-  }
-
-  async validateSlackRequest(request) {
-    // Validating that the request was send from slack.
-    const slackSigningSecret = process.env["SLACK_SIGNING_SECRET"];
-    let slackSignature = request.headers["x-slack-signature"];
-    let requestBody = qs.stringify(request.body, { format: "RFC1738" });
-    const timestamp = request.headers["x-slack-request-timestamp"];
-
-    const time = Math.floor(new Date().getTime() / 1000);
-
-    // Ignore request if its older than 5 min.
-    if (Math.abs(time - timestamp) > 300) {
-      throw new UnauthorizedError(
-        "You are not authorized to call this endpoint.",
-      );
-    }
-
-    // Create my signature with request data and slackSigningSecret
-    let sigBasestring = "v0:" + timestamp + ":" + requestBody;
-    let mySignature =
-      "v0=" +
-      crypto
-        .createHmac("sha256", slackSigningSecret)
-        .update(sigBasestring, "utf8")
-        .digest("hex");
-
-    // Compare my signature with x-slack-signature
-    if (
-      !crypto.timingSafeEqual(
-        Buffer.from(mySignature, "utf8"),
-        Buffer.from(slackSignature, "utf8"),
-      )
-    ) {
-      console.log("SIGNING ERROR");
-      throw new UnauthorizedError(
-        "You are not authorized to call this endpoint.",
-      );
-    }
-    console.log("SIGNING OK");
   }
 }

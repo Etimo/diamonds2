@@ -13,6 +13,7 @@ import { CustomLogger } from "./logger";
 import { BoardsService } from "./services/board.service";
 import { HighScoresService } from "./services/high-scores.service";
 import { SeasonsService } from "./services/seasons.service";
+import { AuthorizationService } from "./services/authorization.service";
 
 import { HighScoreEntity } from "./db/models/highScores.entity";
 import { BotRegistrationsEntity } from "./db/models/botRegistrations.entity";
@@ -62,6 +63,7 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     MetricsService,
     SeasonsService,
     SlackService,
+    AuthorizationService,
     {
       provide: "NUMBER_OF_BOARDS",
       useValue: 4,
