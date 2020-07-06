@@ -4,6 +4,8 @@ import { SeasonsEntity } from "../db/models/seasons.entity";
 import { TestingModule, Test } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { SeasonDto } from "../models/season.dto";
+import ConflictError from "../errors/conflict.error";
+import ForbiddenError from "../errors/forbidden.error";
 
 describe("SeasonsService", () => {
   let seasonsService: SeasonsService;
@@ -140,6 +142,125 @@ describe("SeasonsService", () => {
 
     expect(currentSeason.name).toEqual("Test Season");
     expect(currentSeason.id).toEqual(seasonId);
+  });
+
+  it("Should add season", async () => {
+    const dto = SeasonDto.create({
+      name: "test",
+      startDate: new Date("2018-01-01"),
+      endDate: new Date("2018-02-01"),
+    });
+
+    spyOn<any>(seasonsService, "nameExists").and.returnValue(false);
+    spyOn<any>(seasonsService, "dateCollision").and.returnValue(false);
+
+    const save = jest.fn(
+      () =>
+        new Promise<SeasonDto>((resolve, reject) => {
+          var savedPackage: SeasonDto = dto;
+
+          setTimeout(() => {
+            resolve(savedPackage);
+          }, 500);
+        }),
+    );
+
+    repositoryMock.save.mockImplementation(save);
+
+    const season = await seasonsService.add(dto);
+    expect(season.name).toEqual("test");
+  });
+
+  it("Adding season, fails with startDate larger then endDate", async () => {
+    const dto = SeasonDto.create({
+      name: "test",
+      startDate: new Date("2020-01-01"),
+      endDate: new Date("2018-02-01"),
+    });
+
+    spyOn<any>(seasonsService, "nameExists").and.returnValue(false);
+    spyOn<any>(seasonsService, "dateCollision").and.returnValue(false);
+
+    const save = jest.fn(
+      () =>
+        new Promise<SeasonDto>((resolve, reject) => {
+          var savedPackage: SeasonDto = dto;
+
+          setTimeout(() => {
+            resolve(savedPackage);
+          }, 500);
+        }),
+    );
+
+    repositoryMock.save.mockImplementation(save);
+
+    await expect(seasonsService.add(dto)).rejects.toThrowError(ForbiddenError);
+  });
+
+  it("Adding season, fails with date collision", async () => {
+    const dto = SeasonDto.create({
+      name: "test",
+      startDate: new Date("2018-01-01"),
+      endDate: new Date("2018-02-01"),
+    });
+
+    const collisionSeason = SeasonDto.create({
+      name: "test",
+      startDate: new Date("2018-01-01"),
+      endDate: new Date("2018-02-01"),
+    });
+
+    spyOn<any>(seasonsService, "nameExists").and.returnValue(false);
+    spyOn<any>(seasonsService, "dateCollision").and.returnValue(
+      collisionSeason,
+    );
+
+    const save = jest.fn(
+      () =>
+        new Promise<SeasonDto>((resolve, reject) => {
+          var savedPackage: SeasonDto = dto;
+
+          setTimeout(() => {
+            resolve(savedPackage);
+          }, 500);
+        }),
+    );
+
+    repositoryMock.save.mockImplementation(save);
+
+    await expect(seasonsService.add(dto)).rejects.toThrowError(ConflictError);
+  });
+
+  it("Adding season, fails with name exists", async () => {
+    const dto = SeasonDto.create({
+      name: "test",
+      startDate: new Date("2018-01-01"),
+      endDate: new Date("2018-02-01"),
+    });
+
+    const nameExists = SeasonDto.create({
+      name: "test",
+      startDate: new Date("2018-01-01"),
+      endDate: new Date("2018-02-01"),
+    });
+
+    spyOn<any>(seasonsService, "nameExists").and.returnValue(nameExists);
+    spyOn<any>(seasonsService, "dateCollision").and.returnValue(false);
+
+    const save = jest.fn(
+      () =>
+        new Promise<SeasonDto>((resolve, reject) => {
+          var savedPackage: SeasonDto = dto;
+
+          setTimeout(() => {
+            resolve(savedPackage);
+          }, 500);
+        }),
+    );
+
+    repositoryMock.save.mockImplementation(save);
+
+    await expect(seasonsService.add(dto)).rejects.toThrowError(ConflictError);
   });
 });
 
