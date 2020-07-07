@@ -39,11 +39,8 @@ export class AuthorizationService {
         Buffer.from(slackSignature.toString(), "utf8"),
       )
     ) {
-      console.log("SIGNING ERROR");
       this.throwUnauthorized();
     }
-
-    console.log("SIGNING OK");
   }
 
   private throwUnauthorized() {
