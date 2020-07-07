@@ -117,13 +117,19 @@ export class BoardsService {
     }
 
     // Get bot to move from board
-    const bot = board.getBot(botToken);
+    let bot = board.getBot(botToken);
     if (!bot) {
       throw new UnauthorizedError("Invalid botToken");
     }
 
     // Rate limit moves
     if (this.moveIsRateLimited(board, bot)) {
+      if (this.tooManyRateLimitViolations(board, bot)) {
+        await board.removeBot(bot, 1);
+        throw new ConflictError(
+          `You have been removed from the board due to more then 10 rate limit violations.`,
+        );
+      }
       const delay = board.getConfig().minimumDelayBetweenMoves;
       throw new ConflictError(`Minimum delay between moves: (${delay} ms`);
     }
@@ -149,7 +155,11 @@ export class BoardsService {
     const lastMove = board.getLastMove(bot);
     const timeBetweenMoves = board.getConfig().minimumDelayBetweenMoves;
     const now = Date.now();
-    return lastMove > now - timeBetweenMoves;
+    const violation = lastMove > now - timeBetweenMoves;
+    if (violation) {
+      board.updateRateLimitViolations(bot);
+    }
+    return violation;
   }
 
   private getBoardById(id: number): OperationQueueBoard {
@@ -288,5 +298,9 @@ export class BoardsService {
       }),
     );
     return highestId + 1;
+  }
+
+  private tooManyRateLimitViolations(board, bot) {
+    return board.getRateLimitViolations(bot) > 10;
   }
 }
