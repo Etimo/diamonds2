@@ -10,6 +10,8 @@ import { MetricsService } from "./metrics.service";
 import NotFoundError from "../errors/not-found.error";
 import { BotRecoveryDto } from "../models/bot-recovery.dto";
 import * as bcrypt from "bcrypt";
+import { BotPasswordDto } from "../models/bot-password.dto";
+import ForbiddenError from "../errors/forbidden.error";
 
 describe("BotsService", () => {
   let botsService: BotsService;
@@ -332,6 +334,109 @@ describe("BotsService", () => {
     await expect(
       botsService.getByEmailAndPassword(botRecoveryDto),
     ).rejects.toBeInstanceOf(NotFoundError);
+  });
+
+  it("Add password should fail, incorrect token", async () => {
+    const data = {
+      email: "hel22lo@world.se",
+      botName: "bot122",
+      password: "123456",
+    };
+
+    const getOne = jest.fn(
+      () =>
+        new Promise<BotRegistrationDto>((resolve, reject) => {
+          var savedPackage: BotRegistrationDto = null;
+
+          setTimeout(() => {
+            resolve(savedPackage);
+          }, 500);
+        }),
+    );
+    const where2 = jest.fn(() => ({ getOne }));
+
+    repositoryMock.createQueryBuilder.mockImplementation(
+      jest.fn(() => ({ where: where2 })),
+    );
+
+    const botPasswordDto: BotPasswordDto = {
+      token: "asd",
+      password: "123456",
+    };
+    await expect(
+      botsService.addPassword(botPasswordDto),
+    ).rejects.toBeInstanceOf(NotFoundError);
+  });
+
+  it("Add password should fail, password already exist", async () => {
+    const data = {
+      email: "hel22lo@world.se",
+      botName: "bot122",
+      password: "123456",
+    };
+    const getOne = jest.fn(
+      () =>
+        new Promise<BotRegistrationDto>((resolve, reject) => {
+          var savedPackage: BotRegistrationDto = data;
+
+          setTimeout(() => {
+            resolve(savedPackage);
+          }, 500);
+        }),
+    );
+    const where2 = jest.fn(() => ({ getOne }));
+
+    repositoryMock.createQueryBuilder.mockImplementation(
+      jest.fn(() => ({ where: where2 })),
+    );
+
+    const botPasswordDto: BotPasswordDto = {
+      token: "test@test.se",
+      password: "123456",
+    };
+    await expect(
+      botsService.addPassword(botPasswordDto),
+    ).rejects.toBeInstanceOf(ForbiddenError);
+  });
+
+  it("Add password should return bot", async () => {
+    const data = {
+      email: "hel22lo@world.se",
+      botName: "bot122",
+      password: null,
+      token: "123",
+      createTimeStamp: new Date(),
+      updateTimeStamp: new Date(),
+    };
+
+    const execute = jest.fn();
+    const where = jest.fn(() => ({ execute }));
+    const set = jest.fn(() => ({ where }));
+    const update = jest.fn(() => ({ set }));
+
+    const getOne = jest.fn(
+      () =>
+        new Promise<BotRegistrationDto>((resolve, reject) => {
+          var savedPackage: BotRegistrationsEntity = data;
+
+          setTimeout(() => {
+            resolve(savedPackage);
+          }, 500);
+        }),
+    );
+    const where2 = jest.fn(() => ({ getOne }));
+
+    repositoryMock.createQueryBuilder.mockImplementation(
+      jest.fn(() => ({ update: update, where: where2 })),
+    );
+
+    const botPasswordDto: BotPasswordDto = {
+      token: "test@test.se",
+      password: "123456",
+    };
+    await expect(
+      botsService.addPassword(botPasswordDto),
+    ).resolves.toBeInstanceOf(BotRegistrationPublicDto);
   });
 });
 

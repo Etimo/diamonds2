@@ -7,11 +7,11 @@ import { Repository } from "typeorm";
 import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
 import { BotRegistrationPublicDto } from "../models/bot-registration-public.dto";
 import { MetricsService } from "./metrics.service";
-import { BotRecoveryDto } from "src/models/bot-recovery.dto";
+import { BotRecoveryDto } from "../models/bot-recovery.dto";
 import * as bcrypt from "bcrypt";
 import NotFoundError from "../errors/not-found.error";
-import { BotPasswordDto } from "src/models/bot-password.dto";
-import ForbiddenError from "src/errors/forbidden.error";
+import { BotPasswordDto } from "../models/bot-password.dto";
+import ForbiddenError from "../errors/forbidden.error";
 
 @Injectable()
 export class BotsService {
@@ -78,7 +78,7 @@ export class BotsService {
     dto: BotRegistrationDto,
   ): Promise<BotRegistrationPublicDto> {
     // Hashing password
-    dto.password = await bcrypt.hash(dto.password, 10);
+    dto.password = await this.hashPassword(dto.password);
     return await this.repo
       .save(dto)
       .then(botRegistrationsEntity =>
@@ -124,7 +124,6 @@ export class BotsService {
         token: botPasswordDto.token,
       })
       .getOne();
-
     if (!existBot) {
       return Promise.reject(new NotFoundError("Bot not found"));
     }
@@ -132,8 +131,7 @@ export class BotsService {
     if (existBot.password) {
       return Promise.reject(new ForbiddenError("Bot already has a password"));
     }
-
-    const hashedPassword = await bcrypt.hash(botPasswordDto.password, 10);
+    const hashedPassword = await this.hashPassword(botPasswordDto.password);
     await this.repo
       .createQueryBuilder()
       .update("bot_registrations")
@@ -144,5 +142,9 @@ export class BotsService {
       .execute();
 
     return BotRegistrationPublicDto.fromEntity(existBot);
+  }
+
+  private async hashPassword(password: string): Promise<string> {
+    return await bcrypt.hash(password, 10);
   }
 }
