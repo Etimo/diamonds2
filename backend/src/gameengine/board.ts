@@ -16,6 +16,7 @@ export class Board {
   /** List of callbacks that are triggerred whenever a session is finished. */
   private sessionFinishedCallbacks: Function[] = [];
   private botMoves = {};
+  private botRateLimitViolations = {};
 
   constructor(
     id: number,
@@ -72,6 +73,17 @@ export class Board {
   }
 
   /**
+   * Remove a bot from the board after a specific time
+   *
+   * @param bot The bot to remove to the board.
+   * @param time Remove bot after time.
+   */
+  async removeBot(bot: IBot, time: number) {
+    // Remove bot after X time
+    this.createNewExpirationTimer(bot, time);
+  }
+
+  /**
    * Return a bot on the board matching the given token.
    *
    * @param token The token of the bot to find.
@@ -113,25 +125,30 @@ export class Board {
    * Create a new timer that will clear out a bot from the board when their session finishes.
    * @param bot
    */
-  private createNewExpirationTimer(bot: IBot) {
-    const id = setTimeout(_ => {
-      this.logger.debug(`Purge bot ${bot.botName}`);
-      const botGameObject = this.getGameObjectsByType(BotGameObject).find(
-        b => b.name === bot.botName,
-      );
-      if (!botGameObject) {
-        return;
-      }
+  private createNewExpirationTimer(bot: IBot, time: number = null) {
+    const id = setTimeout(
+      _ => {
+        this.logger.debug(`Purge bot ${bot.botName}`);
+        const botGameObject = this.getGameObjectsByType(BotGameObject).find(
+          b => b.name === bot.botName,
+        );
+        if (!botGameObject) {
+          return;
+        }
 
-      // Remove locally
-      delete this.bots[bot.token];
+        // Remove locally
+        delete this.bots[bot.token];
+        delete this.botMoves[bot.botName];
+        delete this.botRateLimitViolations[bot.botName];
 
-      // Notify all session finished callbacks
-      this.sessionFinishedCallbacks.forEach(sfc =>
-        sfc(botGameObject.name, botGameObject.score),
-      );
-      this.removeGameObject(botGameObject);
-    }, this.config.sessionLength * 1000);
+        // Notify all session finished callbacks
+        this.sessionFinishedCallbacks.forEach(sfc =>
+          sfc(botGameObject.name, botGameObject.score),
+        );
+        this.removeGameObject(botGameObject);
+      },
+      time ? time : this.config.sessionLength * 1000,
+    );
     return id;
   }
 
@@ -398,6 +415,17 @@ export class Board {
 
   updateLastMove(bot: IBot) {
     this.botMoves[bot.botName] = Date.now();
+  }
+
+  getRateLimitViolations(bot: IBot) {
+    return this.botRateLimitViolations[bot.botName];
+  }
+
+  updateRateLimitViolations(bot: IBot) {
+    if (!this.botRateLimitViolations[bot.botName]) {
+      this.botRateLimitViolations[bot.botName] = 1;
+    }
+    this.botRateLimitViolations[bot.botName] += 1;
   }
 
   notifyGameObjectEvent(
