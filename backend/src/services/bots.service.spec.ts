@@ -8,7 +8,7 @@ import { getRepositoryToken } from "@nestjs/typeorm";
 import { BotRegistrationPublicDto } from "../models/bot-registration-public.dto";
 import { MetricsService } from "./metrics.service";
 import NotFoundError from "../errors/not-found.error";
-import { BotRecoveryDto } from "../models/bot-recovery-dto";
+import { BotRecoveryDto } from "../models/bot-recovery.dto";
 import * as bcrypt from "bcrypt";
 
 describe("BotsService", () => {

@@ -5,7 +5,8 @@ import { BotRegistrationDto } from "src/models/bot-registration.dto";
 import { BotsService } from "src/services/bots.service";
 import { IBot } from "src/interfaces/bot.interface";
 import { BotRegistrationPublicDto } from "src/models/bot-registration-public.dto";
-import { BotRecoveryDto } from "src/models/bot-recovery-dto";
+import { BotRecoveryDto } from "src/models/bot-recovery.dto";
+import { BotPasswordDto } from "src/models/bot-password.dto";
 
 @ApiUseTags("Bots")
 @Controller("api/bots")
@@ -70,5 +71,25 @@ export class BotsController {
     @Body() botRecoveryDto: BotRecoveryDto,
   ): Promise<BotRegistrationPublicDto> {
     return await this.botService.getByEmailAndPassword(botRecoveryDto);
+  }
+
+  @ApiResponse({
+    status: 200,
+    description: "Password was succesfully added, returning bot",
+    type: BotRegistrationPublicDto,
+  })
+  @ApiResponse({
+    status: 403,
+    description: "Not allowed to change password if a password already exists",
+  })
+  @ApiResponse({
+    status: 404,
+    description: "Bot not found",
+  })
+  @Post("/password")
+  async addPassword(
+    @Body() botPasswordDto: BotPasswordDto,
+  ): Promise<BotRegistrationPublicDto> {
+    return await this.botService.addPassword(botPasswordDto);
   }
 }

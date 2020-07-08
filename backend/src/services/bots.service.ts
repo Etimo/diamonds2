@@ -7,9 +7,11 @@ import { Repository } from "typeorm";
 import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
 import { BotRegistrationPublicDto } from "../models/bot-registration-public.dto";
 import { MetricsService } from "./metrics.service";
-import { BotRecoveryDto } from "src/models/bot-recovery-dto";
+import { BotRecoveryDto } from "src/models/bot-recovery.dto";
 import * as bcrypt from "bcrypt";
 import NotFoundError from "../errors/not-found.error";
+import { BotPasswordDto } from "src/models/bot-password.dto";
+import ForbiddenError from "src/errors/forbidden.error";
 
 @Injectable()
 export class BotsService {
@@ -111,5 +113,36 @@ export class BotsService {
       }
     }
     return Promise.reject(new NotFoundError("Invalid email or password"));
+  }
+
+  public async addPassword(
+    botPasswordDto: BotPasswordDto,
+  ): Promise<BotRegistrationPublicDto> {
+    const existBot = await this.repo
+      .createQueryBuilder("botRegistrations")
+      .where("botRegistrations.token = :token", {
+        token: botPasswordDto.token,
+      })
+      .getOne();
+
+    if (!existBot) {
+      return Promise.reject(new NotFoundError("Bot not found"));
+    }
+
+    if (existBot.password) {
+      return Promise.reject(new ForbiddenError("Bot already has a password"));
+    }
+
+    const hashedPassword = await bcrypt.hash(botPasswordDto.password, 10);
+    await this.repo
+      .createQueryBuilder()
+      .update("bot_registrations")
+      .set({ password: hashedPassword })
+      .where("token = :token", {
+        token: botPasswordDto.token,
+      })
+      .execute();
+
+    return BotRegistrationPublicDto.fromEntity(existBot);
   }
 }
