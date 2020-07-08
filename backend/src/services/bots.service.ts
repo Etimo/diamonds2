@@ -7,6 +7,11 @@ import { Repository } from "typeorm";
 import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
 import { BotRegistrationPublicDto } from "../models/bot-registration-public.dto";
 import { MetricsService } from "./metrics.service";
+import { BotRecoveryDto } from "../models/bot-recovery.dto";
+import * as bcrypt from "bcrypt";
+import NotFoundError from "../errors/not-found.error";
+import { BotPasswordDto } from "../models/bot-password.dto";
+import ForbiddenError from "../errors/forbidden.error";
 
 @Injectable()
 export class BotsService {
@@ -72,6 +77,8 @@ export class BotsService {
   public async create(
     dto: BotRegistrationDto,
   ): Promise<BotRegistrationPublicDto> {
+    // Hashing password
+    dto.password = await this.hashPassword(dto.password);
     return await this.repo
       .save(dto)
       .then(botRegistrationsEntity =>
@@ -86,5 +93,58 @@ export class BotsService {
       .from("bot_registrations")
       .where("botName = :botName", { botName: dto.botName })
       .execute();
+  }
+
+  public async getByEmailAndPassword(
+    botRecoveryDto: BotRecoveryDto,
+  ): Promise<BotRegistrationPublicDto> {
+    const existBot = await this.repo
+      .createQueryBuilder("botRegistrations")
+      .where("botRegistrations.email = :email", {
+        email: botRecoveryDto.email,
+      })
+      .getOne();
+
+    // Don't return bots with no password
+    if (existBot && existBot.password) {
+      // Return bot if password is correct
+      if (await bcrypt.compare(botRecoveryDto.password, existBot.password)) {
+        return BotRegistrationPublicDto.fromEntity(existBot);
+      }
+    }
+    return Promise.reject(new NotFoundError("Invalid email or password"));
+  }
+
+  public async addPassword(
+    botPasswordDto: BotPasswordDto,
+  ): Promise<BotRegistrationPublicDto> {
+    const existBot = await this.repo
+      .createQueryBuilder("botRegistrations")
+      .where("botRegistrations.token = :token", {
+        token: botPasswordDto.token,
+      })
+      .getOne();
+    if (!existBot) {
+      return Promise.reject(new NotFoundError("Bot not found"));
+    }
+
+    if (existBot.password) {
+      return Promise.reject(new ForbiddenError("Bot already has a password"));
+    }
+    const hashedPassword = await this.hashPassword(botPasswordDto.password);
+    await this.repo
+      .createQueryBuilder()
+      .update("bot_registrations")
+      .set({ password: hashedPassword })
+      .where("token = :token", {
+        token: botPasswordDto.token,
+      })
+      .execute();
+
+    return BotRegistrationPublicDto.fromEntity(existBot);
+  }
+
+  private async hashPassword(password: string): Promise<string> {
+    return await bcrypt.hash(password, 10);
   }
 }

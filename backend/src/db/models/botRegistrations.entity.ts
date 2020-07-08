@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert } from "typeorm";
 
 @Entity({ name: "bot_registrations" })
 export class BotRegistrationsEntity {
@@ -16,4 +16,7 @@ export class BotRegistrationsEntity {
 
   @Column({ type: "timestamptz", default: () => "CURRENT_TIMESTAMP" })
   updateTimeStamp: Date;
+
+  @Column({ type: "varchar", length: 300, nullable: true })
+  password: string;
 }

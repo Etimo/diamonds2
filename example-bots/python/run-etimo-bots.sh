@@ -3,7 +3,7 @@
 BACKEND=backend
 URL=http://$BACKEND:5000/api
 run() {
-    pipenv run python main.py --logic FirstDiamond --email=$1 --name=$2 --host=$URL &
+    pipenv run python main.py --logic FirstDiamond --email=$1 --name=$2 --password=$3 --host=$URL &
 }
 
 echo Waiting for server to start...
@@ -28,7 +28,7 @@ if [ $tokens != "0" ]; then
 else
     # Create new bots
     for bot in etimo1 etimo2; do
-        pipenv run python main.py --logic RandomDiamond --email=$bot@etimo.se --name=$bot --host=$URL &
+        pipenv run python main.py --logic RandomDiamond --email=$bot@etimo.se --name=$bot --password=123456 --host=$URL &
         sleep 10
     done
     cp .token* /bot-data

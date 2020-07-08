@@ -12,7 +12,7 @@ export class BotRegistrationPublicDto {
   email: string;
   @ApiModelProperty({
     description:
-      "Your unique, and secret, token. Use this as a password for all other requests.",
+      "Your unique, and secret, token. Use this for all your requests.",
   })
   token: string;
 

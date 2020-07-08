@@ -23,4 +23,10 @@ export class BotRegistrationDto {
   @MinLength(1)
   @MaxLength(10)
   readonly botName: string;
+
+  @ApiModelProperty({
+    description: "The password for your bot (Old bots don't have a password).",
+  })
+  @IsString()
+  password: string;
 }

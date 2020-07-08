@@ -3,10 +3,10 @@ import { register, play } from "./main";
 import {
   registerInvalidParameters,
   playInvalidParameters,
-  invalidAction,
+  invalidAction
 } from "./messages";
 
-const parseArgumentsIntoOptions = (rawArgs) => {
+const parseArgumentsIntoOptions = rawArgs => {
   const args = arg(
     {
       "--name": String,
@@ -14,14 +14,16 @@ const parseArgumentsIntoOptions = (rawArgs) => {
       "--token": String,
       "--logic": String,
       "--board": Number,
+      "--password": String,
       "-n": "--name",
       "-e": "--email",
       "-t": "--token",
       "-b": "--board",
       "-l": "--logic",
+      "-p": "--password"
     },
     {
-      argv: rawArgs.slice(2),
+      argv: rawArgs.slice(2)
     }
   );
   return {
@@ -30,17 +32,18 @@ const parseArgumentsIntoOptions = (rawArgs) => {
     token: args["--token"] || "",
     logic: args["--logic"] || "",
     board: args["--board"] || 1,
-    action: args._[0],
+    password: args["--password"] || "",
+    action: args._[0]
   };
 };
 
-export const cli = (args) => {
+export const cli = args => {
   const options = parseArgumentsIntoOptions(args);
   validateArgs(options);
-  const { name, email, token, logic, board, action } = options;
+  const { name, email, token, logic, board, password, action } = options;
   switch (action) {
     case "register":
-      registerBot(name, email);
+      registerBot(name, email, password);
       break;
     case "play":
       playGame(token, logic, board);
@@ -54,17 +57,20 @@ const playGame = (token, logic, boardId) => {
   play(token, logic, boardId);
 };
 
-const registerBot = (name, email) => {
-  register(name, email);
+const registerBot = (name, email, password) => {
+  register(name, email, password);
 };
 
-const validateArgs = (options) => {
-  const { name, email, token, logic, board, action } = options;
+const validateArgs = options => {
+  const { name, email, token, logic, board, password, action } = options;
   if (action === "play" && (token === "" || logic == "")) {
     playInvalidParameters();
   }
 
-  if (action === "register" && (name === "" || email === "" || !board)) {
+  if (
+    action === "register" &&
+    (name === "" || email === "" || password == "" || !board)
+  ) {
     registerInvalidParameters();
   }
 };
