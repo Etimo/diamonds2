@@ -19,4 +19,7 @@ export class BotRegistrationsEntity {
 
   @Column({ type: "varchar", length: 300, nullable: true })
   password: string;
+
+  @Column({ type: "uuid", nullable: true })
+  teamId: string;
 }
