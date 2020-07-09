@@ -45,7 +45,7 @@ describe("BotsService", () => {
       email: "hello@world.se",
       botName: "bot1",
       password: "123456",
-      teamAbbreviation: "liu",
+      team: "liu",
     };
 
     const save = jest.fn(
@@ -87,7 +87,7 @@ describe("BotsService", () => {
         email: data.email,
         botName: "other bot",
         password: "123456",
-        teamAbbreviation: "liu",
+        team: "liu",
       }),
     ).rejects.toBeInstanceOf(ConflictError);
 
@@ -99,7 +99,7 @@ describe("BotsService", () => {
       email: "hello@world.se",
       botName: "bot1",
       password: "123456",
-      teamAbbreviation: "liu",
+      team: "liu",
     };
 
     const save = jest.fn(
@@ -141,7 +141,7 @@ describe("BotsService", () => {
         email: "other@world.se",
         botName: data.botName,
         password: "123456",
-        teamAbbreviation: "liu",
+        team: "liu",
       }),
     ).rejects.toBeInstanceOf(ConflictError);
 
@@ -153,7 +153,7 @@ describe("BotsService", () => {
       email: "hel22lo@world.se",
       botName: "bot122",
       password: "123456",
-      teamAbbreviation: "liu",
+      team: "liu",
     };
 
     const save = jest.fn(
@@ -197,7 +197,7 @@ describe("BotsService", () => {
       email: "hel22lo@world.se",
       botName: "bot122",
       password: "123456",
-      teamAbbreviation: "liu",
+      team: "liu",
     };
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
@@ -248,7 +248,7 @@ describe("BotsService", () => {
       email: "hel22lo@world.se",
       botName: "bot122",
       password: "123456",
-      teamAbbreviation: "liu",
+      team: "liu",
     };
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
@@ -299,7 +299,7 @@ describe("BotsService", () => {
       email: "hel22lo@world.se",
       botName: "bot122",
       password: "123456",
-      teamAbbreviation: "liu",
+      team: "liu",
     };
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
@@ -381,7 +381,7 @@ describe("BotsService", () => {
       email: "hel22lo@world.se",
       botName: "bot122",
       password: "123456",
-      teamAbbreviation: "liu",
+      team: "liu",
     };
     const getOne = jest.fn(
       () =>
@@ -414,7 +414,7 @@ describe("BotsService", () => {
       botName: "bot122",
       password: null,
       token: "123",
-      teamId: "liu",
+      team: "liu",
       createTimeStamp: new Date(),
       updateTimeStamp: new Date(),
     };
