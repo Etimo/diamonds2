@@ -94,7 +94,8 @@ export class HighScoresService {
   public async allBySeasonId(seasonId: string) {
     const currentSeason = await this.seasonService.getCurrentSeason();
     const limit = seasonId === currentSeason.id ? 50 : 20;
-    const hs = await this.repo
+    // Using joins to fetch logotypeUrl that related to the bots team.
+    const highScores = await this.repo
       .createQueryBuilder(this.entityHighScores)
       .select(this.entityHighScores)
       .where("highScores.seasonId = :seasonId", { seasonId: seasonId })
@@ -108,9 +109,7 @@ export class HighScoresService {
       .take(limit)
       .execute();
 
-    const result = hs.map(e => HighscoreDto.fromRawDataObject(e));
-    console.log(result);
-    return result;
+    return highScores.map(e => HighscoreDto.fromRawDataObject(e));
   }
 
   public async create(dto: HighscoreDto): Promise<HighscoreDto> {
