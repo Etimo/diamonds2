@@ -22,6 +22,7 @@ import { TeamsEntity } from "./db/models/teams.entity";
 import { MetricsService } from "./services/metrics.service";
 import { AutoScaleMiddleware } from "./middlewares/auto-scale-boards.middleware";
 import { SlackService } from "./services/slack.service";
+import { TeamsService } from "./services/teams.service";
 
 const dbConfig: TypeOrmModuleOptions = {
   type: "postgres",
@@ -71,6 +72,7 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     SeasonsService,
     SlackService,
     AuthorizationService,
+    TeamsService,
     {
       provide: "NUMBER_OF_BOARDS",
       useValue: 4,
