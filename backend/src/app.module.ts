@@ -18,6 +18,7 @@ import { AuthorizationService } from "./services/authorization.service";
 import { HighScoreEntity } from "./db/models/highScores.entity";
 import { BotRegistrationsEntity } from "./db/models/botRegistrations.entity";
 import { SeasonsEntity } from "./db/models/seasons.entity";
+import { TeamsEntity } from "./db/models/teams.entity";
 import { MetricsService } from "./services/metrics.service";
 import { AutoScaleMiddleware } from "./middlewares/auto-scale-boards.middleware";
 import { SlackService } from "./services/slack.service";
@@ -51,6 +52,7 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
       HighScoreEntity,
       BotRegistrationsEntity,
       SeasonsEntity,
+      TeamsEntity,
     ]),
   ],
   providers: [
