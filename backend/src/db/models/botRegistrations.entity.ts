@@ -21,5 +21,5 @@ export class BotRegistrationsEntity {
   password: string;
 
   @Column({ type: "uuid", nullable: true })
-  teamId: string;
+  team: string;
 }

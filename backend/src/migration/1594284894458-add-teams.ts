@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class addTeams1594282891361 implements MigrationInterface {
-  name = "addTeams1594282891361";
+export class addTeams1594284894458 implements MigrationInterface {
+  name = "addTeams1594284894458";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -9,14 +9,14 @@ export class addTeams1594282891361 implements MigrationInterface {
       undefined,
     );
     await queryRunner.query(
-      `ALTER TABLE "bot_registrations" ADD "teamId" uuid`,
+      `ALTER TABLE "bot_registrations" ADD "team" uuid`,
       undefined,
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `ALTER TABLE "bot_registrations" DROP COLUMN "teamId"`,
+      `ALTER TABLE "bot_registrations" DROP COLUMN "team"`,
       undefined,
     );
     await queryRunner.query(`DROP TABLE "teams"`, undefined);
