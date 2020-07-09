@@ -8,17 +8,6 @@ import { HighscoreDto } from "src/models/highscore.dto";
 export class HighscoresController {
   constructor(private highScoresService: HighScoresService) {}
 
-  @ApiResponse({
-    status: 200,
-    description: "Returns highscores",
-    isArray: true,
-    type: HighscoreDto,
-  })
-  @Get()
-  async listAll(): Promise<HighscoreDto[]> {
-    return this.highScoresService.all();
-  }
-
   /**
    * Returns all highscores on a specific season.
    *

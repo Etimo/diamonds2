@@ -5,6 +5,10 @@ import { Repository } from "typeorm";
 import { HighScoreEntity } from "../db/models/highScores.entity";
 import { MetricsService } from "./metrics.service";
 import { SeasonsService } from "./seasons.service";
+import { TeamsService } from "./teams.service";
+import { TeamDto } from "src/models/team.dto";
+import { BotRegistrationsEntity } from "src/db/models/botRegistrations.entity";
+import { TeamsEntity } from "src/db/models/teams.entity";
 
 @Injectable()
 export class HighScoresService {
@@ -17,6 +21,7 @@ export class HighScoresService {
     private readonly repo: Repository<HighScoreEntity>,
     private metricsService: MetricsService,
     private seasonService: SeasonsService,
+    private teamsService: TeamsService,
   ) {}
 
   public async addOrUpdate(input: HighscoreDto): Promise<boolean> {
@@ -86,30 +91,26 @@ export class HighScoresService {
     this.highScores[index] = newScore;
   }
 
-  public async all() {
-    return await this.repo
-      .find({
-        order: {
-          score: "DESC",
-        },
-      })
-      .then(highScores => highScores.map(e => HighscoreDto.fromEntity(e)));
-  }
-
   public async allBySeasonId(seasonId: string) {
     const currentSeason = await this.seasonService.getCurrentSeason();
     const limit = seasonId === currentSeason.id ? 50 : 20;
-    return await this.repo
-      .find({
-        where: {
-          seasonId,
-        },
-        order: {
-          score: "DESC",
-        },
-        take: limit,
-      })
-      .then(highScores => highScores.map(e => HighscoreDto.fromEntity(e)));
+    const hs = await this.repo
+      .createQueryBuilder(this.entityHighScores)
+      .select(this.entityHighScores)
+      .where("highScores.seasonId = :seasonId", { seasonId: seasonId })
+      .leftJoin(
+        BotRegistrationsEntity,
+        "bot",
+        "highScores.botName = bot.botName",
+      )
+      .leftJoinAndSelect(TeamsEntity, "teams", "bot.team = teams.id")
+      .orderBy("score", "DESC")
+      .take(limit)
+      .execute();
+
+    const result = hs.map(e => HighscoreDto.fromRawDataObject(e));
+    console.log(result);
+    return result;
   }
 
   public async create(dto: HighscoreDto): Promise<HighscoreDto> {

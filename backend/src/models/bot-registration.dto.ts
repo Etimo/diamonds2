@@ -33,6 +33,5 @@ export class BotRegistrationDto {
   @ApiModelProperty({
     description: "The abbreviation of the team you want to join.",
   })
-  @IsString()
   team: string;
 }
