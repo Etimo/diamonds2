@@ -4,8 +4,8 @@ import { Repository } from "typeorm";
 import { TeamsEntity } from "../db/models/teams.entity";
 import { TeamDto } from "../models/team.dto";
 import ForbiddenError from "../errors/forbidden.error";
-import ConflictError from "src/errors/conflict.error";
-import NotFoundError from "src/errors/not-found.error";
+import ConflictError from "../errors/conflict.error";
+import NotFoundError from "../errors/not-found.error";
 
 @Injectable()
 export class TeamsService {

@@ -17,6 +17,8 @@ import { SeasonsService } from "./seasons.service";
 import { SeasonsEntity } from "../db/models/seasons.entity";
 import ConflictError from "../errors/conflict.error";
 import { Board } from "../gameengine/board";
+import { TeamsService } from "./teams.service";
+import { TeamsEntity } from "../db/models/teams.entity";
 
 describe("BoardsService", () => {
   let botsService: BotsService;
@@ -51,6 +53,11 @@ describe("BoardsService", () => {
         {
           useValue: null,
           provide: MetricsService,
+        },
+        TeamsService,
+        {
+          provide: getRepositoryToken(TeamsEntity),
+          useFactory: repositoryMockFactory,
         },
         {
           useValue: 2,

@@ -5,10 +5,8 @@ import { Repository } from "typeorm";
 import { HighScoreEntity } from "../db/models/highScores.entity";
 import { MetricsService } from "./metrics.service";
 import { SeasonsService } from "./seasons.service";
-import { TeamsService } from "./teams.service";
-import { TeamDto } from "src/models/team.dto";
-import { BotRegistrationsEntity } from "src/db/models/botRegistrations.entity";
-import { TeamsEntity } from "src/db/models/teams.entity";
+import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
+import { TeamsEntity } from "../db/models/teams.entity";
 
 @Injectable()
 export class HighScoresService {
@@ -21,7 +19,6 @@ export class HighScoresService {
     private readonly repo: Repository<HighScoreEntity>,
     private metricsService: MetricsService,
     private seasonService: SeasonsService,
-    private teamsService: TeamsService,
   ) {}
 
   public async addOrUpdate(input: HighscoreDto): Promise<boolean> {

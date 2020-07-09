@@ -12,10 +12,13 @@ import { BotRecoveryDto } from "../models/bot-recovery.dto";
 import * as bcrypt from "bcrypt";
 import { BotPasswordDto } from "../models/bot-password.dto";
 import ForbiddenError from "../errors/forbidden.error";
+import { TeamsService } from "./teams.service";
+import { TeamsEntity } from "../db/models/teams.entity";
 
 describe("BotsService", () => {
   let botsService: BotsService;
   let repositoryMock: MockType<Repository<BotRegistrationsEntity>>;
+  let repositoryMock1: MockType<Repository<TeamsEntity>>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -29,10 +32,16 @@ describe("BotsService", () => {
           provide: getRepositoryToken(BotRegistrationsEntity),
           useFactory: repositoryMockFactory,
         },
+        TeamsService,
+        {
+          provide: getRepositoryToken(TeamsEntity),
+          useFactory: repositoryMockFactory,
+        },
       ],
     }).compile();
     botsService = module.get<BotsService>(BotsService);
     repositoryMock = module.get(getRepositoryToken(BotRegistrationsEntity));
+    repositoryMock1 = module.get(getRepositoryToken(TeamsEntity));
     jest.clearAllMocks();
   });
 
@@ -45,7 +54,7 @@ describe("BotsService", () => {
       email: "hello@world.se",
       botName: "bot1",
       password: "123456",
-      team: "liu",
+      team: null,
     };
 
     const save = jest.fn(
@@ -99,7 +108,7 @@ describe("BotsService", () => {
       email: "hello@world.se",
       botName: "bot1",
       password: "123456",
-      team: "liu",
+      team: null,
     };
 
     const save = jest.fn(
@@ -153,7 +162,7 @@ describe("BotsService", () => {
       email: "hel22lo@world.se",
       botName: "bot122",
       password: "123456",
-      team: "liu",
+      team: null,
     };
 
     const save = jest.fn(
@@ -197,7 +206,7 @@ describe("BotsService", () => {
       email: "hel22lo@world.se",
       botName: "bot122",
       password: "123456",
-      team: "liu",
+      team: null,
     };
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
@@ -248,7 +257,7 @@ describe("BotsService", () => {
       email: "hel22lo@world.se",
       botName: "bot122",
       password: "123456",
-      team: "liu",
+      team: null,
     };
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
@@ -299,7 +308,7 @@ describe("BotsService", () => {
       email: "hel22lo@world.se",
       botName: "bot122",
       password: "123456",
-      team: "liu",
+      team: null,
     };
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
@@ -381,7 +390,7 @@ describe("BotsService", () => {
       email: "hel22lo@world.se",
       botName: "bot122",
       password: "123456",
-      team: "liu",
+      team: null,
     };
     const getOne = jest.fn(
       () =>
