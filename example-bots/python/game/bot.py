@@ -5,10 +5,11 @@ import hashlib
 
 
 class Bot(object):
-    def __init__(self, email, name, password, api):
+    def __init__(self, email, name, password, team, api):
         self.email = email
         self.name = name
         self.password = password
+        self.team = team
         self.api = api
         
 
@@ -30,7 +31,7 @@ class Bot(object):
             self.name = resp["botName"]
 
     def register(self):
-        resp, status = self.api.bots_register(self.name, self.email, self.password)
+        resp, status = self.api.bots_register(self.name, self.email, self.password, self.team)
 
         if status == 200:
             self.bot_token = resp["token"]
