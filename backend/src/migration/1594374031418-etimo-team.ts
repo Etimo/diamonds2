@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class etimoTeam1594374031418 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
-    const team = await queryRunner.manager
+    const teamEtimo = await queryRunner.manager
       .createQueryBuilder()
       .insert()
       .into("teams")
@@ -10,12 +10,22 @@ export class etimoTeam1594374031418 implements MigrationInterface {
         abbreviation: "etimo",
         name: "Etimo",
         logotypeUrl:
-          "https://etimo.se/static/564f0f6e1560864c9cd98c9e514b07a6/69585/etimo-logo.png",
+          "https://etimo-diamonds.s3.eu-north-1.amazonaws.com/images/etimoLogo.png",
       })
       .execute();
 
-    console.log(team);
-    // maybe need to fetch the team
+    const teamLiu = await queryRunner.manager
+      .createQueryBuilder()
+      .insert()
+      .into("teams")
+      .values({
+        abbreviation: "liu",
+        name: "Linköpings Universitet",
+        logotypeUrl:
+          "https://etimo-diamonds.s3.eu-north-1.amazonaws.com/images/liuLogo.png",
+      })
+      .execute();
+
     await queryRunner.manager
       .createQueryBuilder()
       .update("bot_registrations")
@@ -24,7 +34,16 @@ export class etimoTeam1594374031418 implements MigrationInterface {
         nameTwo: "etimo2",
       })
       .set({
-        team: team["raw"][0]["id"],
+        team: teamEtimo["raw"][0]["id"],
+      })
+      .execute();
+
+    await queryRunner.manager
+      .createQueryBuilder()
+      .update("bot_registrations")
+      .where("team IS NULL")
+      .set({
+        team: teamLiu["raw"][0]["id"],
       })
       .execute();
   }
@@ -41,11 +60,16 @@ export class etimoTeam1594374031418 implements MigrationInterface {
 
     await queryRunner.manager
       .createQueryBuilder()
-      .update("bot_registrations")
-      .where("botName = :nameOne OR botName = :nameTwo", {
-        nameOne: "etimo1",
-        nameTwo: "etimo2",
+      .delete()
+      .from("high_scores")
+      .where("abbreviation = :abbreviation", {
+        abbreviation: "liu",
       })
+      .execute();
+
+    await queryRunner.manager
+      .createQueryBuilder()
+      .update("bot_registrations")
       .set({
         team: null,
       })
