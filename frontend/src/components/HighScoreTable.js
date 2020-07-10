@@ -17,6 +17,7 @@ export default ({ seasonId, currentSeasonId }) => {
           <Table.Th radiusLeft width={70}>
             Name
           </Table.Th>
+          <Table.Th width={70}>Team</Table.Th>
           <Table.Th radiusRight>
             {isCurrentSeason ? "Score" : "Placement"}
           </Table.Th>
@@ -28,6 +29,9 @@ export default ({ seasonId, currentSeasonId }) => {
           return (
             <Table.Tr key={index}>
               <Table.Td>{bot.botName}</Table.Td>
+              <Table.Td>
+                <Table.Img src={bot.teamLogotype}></Table.Img>
+              </Table.Td>
               <Table.Td textRight>
                 {isCurrentSeason ? bot.score : index + 1}
               </Table.Td>
