@@ -30,7 +30,7 @@ export default ({ seasonId, currentSeasonId }) => {
             <Table.Tr key={index}>
               <Table.Td>{bot.botName}</Table.Td>
               <Table.Td>
-                <Table.Img src={bot.teamLogotype}></Table.Img>
+                <Table.LogoImg src={bot.teamLogotype}></Table.LogoImg>
               </Table.Td>
               <Table.Td textRight>
                 {isCurrentSeason ? bot.score : index + 1}
