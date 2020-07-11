@@ -37,15 +37,6 @@ export class etimoTeam1594374031418 implements MigrationInterface {
         team: teamEtimo["raw"][0]["id"],
       })
       .execute();
-
-    await queryRunner.manager
-      .createQueryBuilder()
-      .update("bot_registrations")
-      .where("team IS NULL")
-      .set({
-        team: teamLiu["raw"][0]["id"],
-      })
-      .execute();
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
@@ -70,6 +61,10 @@ export class etimoTeam1594374031418 implements MigrationInterface {
     await queryRunner.manager
       .createQueryBuilder()
       .update("bot_registrations")
+      .where("botName = :nameOne OR botName = :nameTwo", {
+        nameOne: "etimo1",
+        nameTwo: "etimo2",
+      })
       .set({
         team: null,
       })
