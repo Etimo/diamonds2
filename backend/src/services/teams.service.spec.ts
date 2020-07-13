@@ -115,7 +115,7 @@ describe("SeasonsService", () => {
     ).resolves.toHaveProperty("name");
   });
 
-  it("getByAbbreviation, should throw not dound error", async () => {
+  it("getByAbbreviation, should throw not found error", async () => {
     //Mocking find from seasonsService
     const execute = jest.fn();
     const where = jest.fn(() => ({ execute }));
