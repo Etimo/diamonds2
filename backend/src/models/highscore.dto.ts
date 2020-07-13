@@ -31,7 +31,6 @@ export class HighscoreDto {
   public static fromRawDataObject(data: {}) {
     // Used by allBySeasonId in hishscore service
     // Data includes raw data from highScore table and teams table.
-    console.log(data);
     return this.from({
       botName: data["highScores_botName"],
       score: data["highScores_score"],
