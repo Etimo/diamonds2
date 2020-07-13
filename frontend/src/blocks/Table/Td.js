@@ -4,5 +4,4 @@ export default styled.td`
   padding: 10px;
   text-align: left;
   height: 50px;
-  width: 50px;
 `;
