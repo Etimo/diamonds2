@@ -2,7 +2,7 @@
 
 # Restarts AWS instance and changes the instance type
 # Instance type will be changed to t2.micro if current season is "Off season"
-# The instance type will be t2.small if another season is active.
+# The instance type will be c5.xlarge if another season is active.
 
 
 # Using this function to remove double quotes from strings
@@ -26,7 +26,7 @@ export HOME=/home/ec2-user
 
 off_season="Off season"
 instance_type_micro="t2.micro"
-instance_type_small="t2.small"
+instance_type_large="c5.xlarge"
 instance_id=$DIAMONDS_AWS_INSTANCE_ID
 
 if [ -z "$instance_id" ]; then
@@ -46,7 +46,7 @@ current_season=$(remove_double_quotes "$current_season")
 if [ "$current_season" == "$off_season" ]; then
     new_instance_type=$instance_type_micro
 else
-    new_instance_type=$instance_type_small
+    new_instance_type=$instance_type_large
 fi
 
 echo "InstanceType should be $new_instance_type"
