@@ -9,6 +9,7 @@ import { BoardsController } from "./controllers/boards/boards.controller";
 import { BotsController } from "./controllers/bots/bots.controller";
 import { SeasonsController } from "./controllers/seasons/seasons.controller";
 import { SlackController } from "./controllers/slack/slack.controller";
+import { TeamsController } from "./controllers/teams/teams.controller";
 import { CustomLogger } from "./logger";
 import { BoardsService } from "./services/board.service";
 import { HighScoresService } from "./services/high-scores.service";
@@ -50,6 +51,7 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     HighscoresController,
     SeasonsController,
     SlackController,
+    TeamsController,
   ],
   imports: [
     TypeOrmModule.forRoot(dbConfig),

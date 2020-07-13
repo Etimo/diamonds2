@@ -14,6 +14,16 @@ export class TeamsService {
     private readonly repo: Repository<TeamsEntity>,
   ) {}
 
+  public async all() {
+    return this.repo
+      .find({
+        order: {
+          createTimeStamp: "DESC",
+        },
+      })
+      .then(teams => teams.map(e => TeamDto.fromEntity(e)));
+  }
+
   public async add(dto: TeamDto) {
     await this.validateInput(dto);
     return await this.create(dto);
