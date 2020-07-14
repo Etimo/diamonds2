@@ -39,9 +39,10 @@ fetch_instance_information $instance_id
 echo "InstanceType is $instance_type"
 
 # Fetch current_seanson. 
-response=$(curl http://diamonds.etimo.se/api/seasons/current)
+response=$(curl https://diamonds.etimo.se/api/seasons/current)
 current_season=$(jq '.data.name'  <<< $response)
 current_season=$(remove_double_quotes "$current_season")
+
 
 if [ "$current_season" == "$off_season" ]; then
     new_instance_type=$instance_type_micro
