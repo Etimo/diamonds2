@@ -7,7 +7,7 @@ import { MetricsService } from "./metrics.service";
 import { SeasonsService } from "./seasons.service";
 import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
 import { TeamsEntity } from "../db/models/teams.entity";
-import { HighscorePublicDto } from "../models/highscore-public.dto copy";
+import { HighscorePublicDto } from "../models/highscore-public.dto";
 
 @Injectable()
 export class HighScoresService {

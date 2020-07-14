@@ -8,7 +8,7 @@ export class HighscorePublicDto {
   @ApiModelProperty()
   seasonId: string;
   @ApiModelProperty()
-  teamLogotype?: string;
+  teamLogotype: string;
 
   public static from(dto: Partial<HighscorePublicDto>) {
     const highScoreObj = new HighscorePublicDto();
