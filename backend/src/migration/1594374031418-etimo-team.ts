@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class etimoTeam1594374031418 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
-    const teamEtimo = await queryRunner.manager
+    await queryRunner.manager
       .createQueryBuilder()
       .insert()
       .into("teams")
@@ -14,7 +14,7 @@ export class etimoTeam1594374031418 implements MigrationInterface {
       })
       .execute();
 
-    const teamLiu = await queryRunner.manager
+    await queryRunner.manager
       .createQueryBuilder()
       .insert()
       .into("teams")
@@ -26,6 +26,10 @@ export class etimoTeam1594374031418 implements MigrationInterface {
       })
       .execute();
 
+    const teamEtimo = await queryRunner.query(
+      "SELECT * FROM teams WHERE abbreviation = 'etimo'",
+    );
+
     await queryRunner.manager
       .createQueryBuilder()
       .update("bot_registrations")
@@ -34,7 +38,7 @@ export class etimoTeam1594374031418 implements MigrationInterface {
         nameTwo: "etimo2",
       })
       .set({
-        team: teamEtimo["raw"][0]["id"],
+        team: teamEtimo[0]["id"],
       })
       .execute();
   }
