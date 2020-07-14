@@ -5,6 +5,9 @@ import { Repository } from "typeorm";
 import { HighScoreEntity } from "../db/models/highScores.entity";
 import { MetricsService } from "./metrics.service";
 import { SeasonsService } from "./seasons.service";
+import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
+import { TeamsEntity } from "../db/models/teams.entity";
+import { HighscorePublicDto } from "../models/highscore-public.dto";
 
 @Injectable()
 export class HighScoresService {
@@ -86,30 +89,25 @@ export class HighScoresService {
     this.highScores[index] = newScore;
   }
 
-  public async all() {
-    return await this.repo
-      .find({
-        order: {
-          score: "DESC",
-        },
-      })
-      .then(highScores => highScores.map(e => HighscoreDto.fromEntity(e)));
-  }
-
   public async allBySeasonId(seasonId: string) {
     const currentSeason = await this.seasonService.getCurrentSeason();
     const limit = seasonId === currentSeason.id ? 50 : 20;
-    return await this.repo
-      .find({
-        where: {
-          seasonId,
-        },
-        order: {
-          score: "DESC",
-        },
-        take: limit,
-      })
-      .then(highScores => highScores.map(e => HighscoreDto.fromEntity(e)));
+    // Using joins to fetch logotypeUrl that related to the bots team.
+    const highScores = await this.repo
+      .createQueryBuilder(this.entityHighScores)
+      .select(this.entityHighScores)
+      .where("highScores.seasonId = :seasonId", { seasonId: seasonId })
+      .leftJoin(
+        BotRegistrationsEntity,
+        "bot",
+        "highScores.botName = bot.botName",
+      )
+      .leftJoinAndSelect(TeamsEntity, "teams", "bot.team = teams.id")
+      .orderBy("score", "DESC")
+      .take(limit)
+      .execute();
+
+    return highScores.map(e => HighscorePublicDto.fromRawDataObject(e));
   }
 
   public async create(dto: HighscoreDto): Promise<HighscoreDto> {

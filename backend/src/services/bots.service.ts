@@ -12,6 +12,7 @@ import * as bcrypt from "bcrypt";
 import NotFoundError from "../errors/not-found.error";
 import { BotPasswordDto } from "../models/bot-password.dto";
 import ForbiddenError from "../errors/forbidden.error";
+import { TeamsService } from "./teams.service";
 
 @Injectable()
 export class BotsService {
@@ -21,6 +22,7 @@ export class BotsService {
     @InjectRepository(BotRegistrationsEntity)
     private readonly repo: Repository<BotRegistrationsEntity>,
     private metricsService: MetricsService,
+    private teamsService: TeamsService,
   ) {}
 
   public async add(
@@ -33,6 +35,12 @@ export class BotsService {
       return Promise.reject(
         new ConflictError("Email and/or name already exists"),
       );
+    }
+
+    // Fetching the teamId
+    if (input.team) {
+      const team = await this.teamsService.getByAbbreviation(input.team);
+      input.team = team.id;
     }
 
     if (this.metricsService) {

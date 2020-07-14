@@ -15,12 +15,14 @@ const parseArgumentsIntoOptions = rawArgs => {
       "--logic": String,
       "--board": Number,
       "--password": String,
+      "--team": String,
       "-n": "--name",
       "-e": "--email",
       "-t": "--token",
       "-b": "--board",
       "-l": "--logic",
-      "-p": "--password"
+      "-p": "--password",
+      "-T": "--team"
     },
     {
       argv: rawArgs.slice(2)
@@ -33,6 +35,7 @@ const parseArgumentsIntoOptions = rawArgs => {
     logic: args["--logic"] || "",
     board: args["--board"] || 1,
     password: args["--password"] || "",
+    team: args["--team"] || null,
     action: args._[0]
   };
 };
@@ -40,10 +43,10 @@ const parseArgumentsIntoOptions = rawArgs => {
 export const cli = args => {
   const options = parseArgumentsIntoOptions(args);
   validateArgs(options);
-  const { name, email, token, logic, board, password, action } = options;
+  const { name, email, token, logic, board, password, team, action } = options;
   switch (action) {
     case "register":
-      registerBot(name, email, password);
+      registerBot(name, email, password, team);
       break;
     case "play":
       playGame(token, logic, board);
@@ -57,8 +60,8 @@ const playGame = (token, logic, boardId) => {
   play(token, logic, boardId);
 };
 
-const registerBot = (name, email, password) => {
-  register(name, email, password);
+const registerBot = (name, email, password, team) => {
+  register(name, email, password, team);
 };
 
 const validateArgs = options => {

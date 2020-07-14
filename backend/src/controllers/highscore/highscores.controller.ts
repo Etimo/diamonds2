@@ -1,23 +1,12 @@
 import { Controller, Get, Body, Post, Param } from "@nestjs/common";
 import { ApiUseTags, ApiResponse } from "@nestjs/swagger";
 import { HighScoresService } from "src/services/high-scores.service";
-import { HighscoreDto } from "src/models/highscore.dto";
+import { HighscorePublicDto } from "src/models/highscore-public.dto";
 
 @ApiUseTags("Highscores")
 @Controller("api/highscores")
 export class HighscoresController {
   constructor(private highScoresService: HighScoresService) {}
-
-  @ApiResponse({
-    status: 200,
-    description: "Returns highscores",
-    isArray: true,
-    type: HighscoreDto,
-  })
-  @Get()
-  async listAll(): Promise<HighscoreDto[]> {
-    return this.highScoresService.all();
-  }
 
   /**
    * Returns all highscores on a specific season.
@@ -28,10 +17,12 @@ export class HighscoresController {
     status: 200,
     description: "Returns highscores by season",
     isArray: true,
-    type: HighscoreDto,
+    type: HighscorePublicDto,
   })
   @Get(":seasonId")
-  async find(@Param("seasonId") seasonId: string): Promise<HighscoreDto[]> {
+  async find(
+    @Param("seasonId") seasonId: string,
+  ): Promise<HighscorePublicDto[]> {
     return await this.highScoresService.allBySeasonId(seasonId);
   }
 }

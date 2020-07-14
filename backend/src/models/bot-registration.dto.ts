@@ -29,4 +29,9 @@ export class BotRegistrationDto {
   })
   @IsString()
   password: string;
+
+  @ApiModelProperty({
+    description: "The abbreviation of the team you want to join.",
+  })
+  team: string;
 }

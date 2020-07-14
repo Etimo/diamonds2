@@ -2,12 +2,13 @@ import { client } from "./client";
 import { Bot } from "../models/bot";
 import { logResponseError } from "./utils";
 
-export const registerBot = async (inputName, inputEmail, password) => {
+export const registerBot = async (inputName, inputEmail, password, team) => {
   try {
     const { data } = await client.post("/bots", {
       email: inputEmail,
       botName: inputName,
-      password: password
+      password: password,
+      team: team
     });
     const { botName, email, token } = data.data;
     return new Bot(botName, email, token);

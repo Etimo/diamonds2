@@ -7,7 +7,7 @@ import { getRepositoryToken } from "@nestjs/typeorm";
 import { MetricsService } from "./metrics.service";
 import { SeasonsService } from "./seasons.service";
 import { SeasonsEntity } from "../db/models/seasons.entity";
-import { SeasonDto } from "src/models/season.dto";
+import { SeasonDto } from "../models/season.dto";
 
 describe("HighScoresService", () => {
   let highScoresService: HighScoresService;
@@ -108,7 +108,7 @@ describe("HighScoresService", () => {
   });
 
   it("getBotScore", async () => {
-    let bot = {
+    let highscore = {
       botName: testBotName,
       score: 100,
       seasonId: "Off Season",
@@ -116,7 +116,7 @@ describe("HighScoresService", () => {
 
     repositoryMock.find.mockReturnValue(
       new Promise<HighscoreDto[]>((resolve, reject) => {
-        var savedPackage: HighscoreDto[] = [bot];
+        var savedPackage: HighscoreDto[] = [highscore];
 
         setTimeout(() => {
           resolve(savedPackage);
@@ -124,9 +124,9 @@ describe("HighScoresService", () => {
       }),
     );
 
-    expect(await highScoresService.getBotScore(bot)).toEqual([bot]);
+    expect(await highScoresService.getBotScore(highscore)).toEqual([highscore]);
     expect(repositoryMock.find).toHaveBeenCalledWith({
-      where: [{ botName: bot.botName }],
+      where: [{ botName: highscore.botName }],
     });
   });
 

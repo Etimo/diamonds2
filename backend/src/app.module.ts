@@ -9,6 +9,7 @@ import { BoardsController } from "./controllers/boards/boards.controller";
 import { BotsController } from "./controllers/bots/bots.controller";
 import { SeasonsController } from "./controllers/seasons/seasons.controller";
 import { SlackController } from "./controllers/slack/slack.controller";
+import { TeamsController } from "./controllers/teams/teams.controller";
 import { CustomLogger } from "./logger";
 import { BoardsService } from "./services/board.service";
 import { HighScoresService } from "./services/high-scores.service";
@@ -18,9 +19,11 @@ import { AuthorizationService } from "./services/authorization.service";
 import { HighScoreEntity } from "./db/models/highScores.entity";
 import { BotRegistrationsEntity } from "./db/models/botRegistrations.entity";
 import { SeasonsEntity } from "./db/models/seasons.entity";
+import { TeamsEntity } from "./db/models/teams.entity";
 import { MetricsService } from "./services/metrics.service";
 import { AutoScaleMiddleware } from "./middlewares/auto-scale-boards.middleware";
 import { SlackService } from "./services/slack.service";
+import { TeamsService } from "./services/teams.service";
 
 const dbConfig: TypeOrmModuleOptions = {
   type: "postgres",
@@ -30,7 +33,12 @@ const dbConfig: TypeOrmModuleOptions = {
   password: process.env["TYPEORM_PASSWORD"],
   database: process.env["TYPEORM_DATABASE"],
   synchronize: process.env["ENVIRONMENT"] === "development",
-  entities: [HighScoreEntity, BotRegistrationsEntity, SeasonsEntity],
+  entities: [
+    HighScoreEntity,
+    BotRegistrationsEntity,
+    SeasonsEntity,
+    TeamsEntity,
+  ],
   migrationsTableName: "migration",
   migrations: ["./migration/*.{ts,js}"],
   ssl: false,
@@ -43,6 +51,7 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     HighscoresController,
     SeasonsController,
     SlackController,
+    TeamsController,
   ],
   imports: [
     TypeOrmModule.forRoot(dbConfig),
@@ -51,6 +60,7 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
       HighScoreEntity,
       BotRegistrationsEntity,
       SeasonsEntity,
+      TeamsEntity,
     ]),
   ],
   providers: [
@@ -64,6 +74,7 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     SeasonsService,
     SlackService,
     AuthorizationService,
+    TeamsService,
     {
       provide: "NUMBER_OF_BOARDS",
       useValue: 4,

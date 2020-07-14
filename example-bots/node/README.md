@@ -11,7 +11,10 @@ sudo npm link
 
 First you need to register one or more bots if not already done. This can be done using the following command:
 
-`bot register --name <name> --email <email> --password <password`
+`bot register --name <name> --email <email> --password <password> --team <team>`
+
+Add the team abbreviation of the team you want your bot to be a part of.
+You can see a list of all teams at diamonds.etimo.se/teams.
 
 The application will print out a token if the registration was successful. Don't loose this token, you have to use this token to control your bot.
 

@@ -16,7 +16,7 @@ export const registrationFailed = (name, email) => {
 };
 
 export const invalidLogic = () => {
-  console.log(chanl.red("Please provide a valid logic."));
+  console.log(chalk.red("Please provide a valid logic."));
   shutDown();
 };
 
