@@ -26,23 +26,20 @@ export default () => {
   };
 
   return (
-    <Layout>
-      <Header />
-      <Layout.Game>
-        <GameBoard rows={rows} />
-        <Layout.Tables>
-          <BoardPicker value={boardId} onChange={onBoardChange} />
-          <PlayerTable bots={bots} boardId={boardId} />
-          <SeasonPicker
-            value={seasonId ? seasonId : currentSeason.id}
-            onChange={onSeasonChange}
-          />
-          <HighScoreTable
-            seasonId={seasonId ? seasonId : currentSeason.id}
-            currentSeasonId={currentSeason.id}
-          />
-        </Layout.Tables>
-      </Layout.Game>
-    </Layout>
+    <Layout.Game>
+      <GameBoard rows={rows} />
+      <Layout.Tables>
+        <BoardPicker value={boardId} onChange={onBoardChange} />
+        <PlayerTable bots={bots} boardId={boardId} />
+        <SeasonPicker
+          value={seasonId ? seasonId : currentSeason.id}
+          onChange={onSeasonChange}
+        />
+        <HighScoreTable
+          seasonId={seasonId ? seasonId : currentSeason.id}
+          currentSeasonId={currentSeason.id}
+        />
+      </Layout.Tables>
+    </Layout.Game>
   );
 };

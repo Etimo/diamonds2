@@ -1,14 +1,13 @@
 import React from "react";
 import Header from "../blocks/Header";
 import { etimoLogo } from "../images";
-import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 const teamsOrGameLink = location => {
-  if (location.pathname === "/") {
-    return <Link to="/teams">Teams</Link>;
+  if (location.pathname === "/teams") {
+    return <Header.Link href="/">Game</Header.Link>;
   }
-  return <Link to="/">Game</Link>;
+  return <Header.Link href="/teams">Teams</Header.Link>;
 };
 
 export default () => {
@@ -16,7 +15,7 @@ export default () => {
   return (
     <Header>
       <Header.Logo alt="etimoLogo" src={etimoLogo} />
-      <Header.Title>Etimo Diamonds</Header.Title>
+      <Header.Title>Diamonds</Header.Title>
       {teamsOrGameLink(location)}
       <Header.Link
         target="_blank"
