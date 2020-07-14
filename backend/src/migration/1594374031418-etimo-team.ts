@@ -36,7 +36,7 @@ export class etimoTeam1594374031418 implements MigrationInterface {
       .set({
         team: teamEtimo[0]["id"],
       })
-      .where("botName = 'etimo1' OR botName = 'etimo2'")
+      .where("email = 'etimo1@etimo.se' OR email = 'etimo2@etimo.se'")
       .execute();
   }
 
@@ -62,16 +62,10 @@ export class etimoTeam1594374031418 implements MigrationInterface {
     await queryRunner.manager
       .createQueryBuilder()
       .update("bot_registrations")
-      .where(
-        "bot_registrations.botName = :nameOne OR bot_registrations.botName = :nameTwo",
-        {
-          nameOne: "etimo1",
-          nameTwo: "etimo2",
-        },
-      )
       .set({
         team: null,
       })
+      .where("email = 'etimo1@etimo.se' OR email = 'etimo2@etimo.se'")
       .execute();
   }
 }
