@@ -5,8 +5,7 @@ import Teams from "./pages/teams";
 import Layout from "./blocks/Layout";
 import Header from "./components/Header";
 
-export default ({ props, history }) => {
-  console.log(props);
+export default () => {
   return (
     <Router>
       <Layout>
