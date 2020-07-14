@@ -57,7 +57,7 @@ export class TeamsService {
       );
     }
     // Check if name, abbreviation or url already exist.
-    // Separate checks to return proper error
+    // Separate checks to return proper error.
     let [
       nameExists,
       abbreviationExists,
