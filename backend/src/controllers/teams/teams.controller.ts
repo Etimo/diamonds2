@@ -10,7 +10,7 @@ export class TeamsController {
 
   @ApiResponse({
     status: 200,
-    description: "Returns seasons",
+    description: "Returns a list of all teams",
     isArray: true,
     type: TeamDto,
   })
