@@ -7,6 +7,7 @@ import { MetricsService } from "./metrics.service";
 import { SeasonsService } from "./seasons.service";
 import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
 import { TeamsEntity } from "../db/models/teams.entity";
+import { HighscorePublicDto } from "../models/highscore-public.dto copy";
 
 @Injectable()
 export class HighScoresService {
@@ -106,7 +107,7 @@ export class HighScoresService {
       .take(limit)
       .execute();
 
-    return highScores.map(e => HighscoreDto.fromRawDataObject(e));
+    return highScores.map(e => HighscorePublicDto.fromRawDataObject(e));
   }
 
   public async create(dto: HighscoreDto): Promise<HighscoreDto> {

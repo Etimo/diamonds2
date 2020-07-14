@@ -112,7 +112,6 @@ describe("HighScoresService", () => {
       botName: testBotName,
       score: 100,
       seasonId: "Off Season",
-      teamLogotype: null,
     };
 
     repositoryMock.find.mockReturnValue(
