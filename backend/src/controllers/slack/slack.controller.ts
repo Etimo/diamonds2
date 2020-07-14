@@ -51,8 +51,7 @@ export class SlackController {
    */
   @ApiResponse({
     status: 200,
-    description:
-      "Inforamtion from slack that someone has interacted with a modal",
+    description: "No body if OK",
   })
   @ApiResponse({
     status: 401,
