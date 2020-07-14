@@ -36,6 +36,8 @@ parser.add_argument(
     "--email", help="The email of the bot to register", action="store")
 parser.add_argument(
     "--password", help="The password of the bot to register", action="store")
+parser.add_argument(
+    "--team", help="The team of the bot to register", action="store")
 parser.add_argument("--board", help="Id of the board to join", action="store")
 parser.add_argument(
     "--time-factor",
@@ -69,7 +71,7 @@ if logic_controller not in CONTROLLERS:
 #
 ###############################################################################
 if not args.token:
-    bot = Bot(args.email, args.name, args.password, api)
+    bot = Bot(args.email, args.name, args.password, args.team, api)
     resp, status = bot.register()
     if status == 200:
         print("")
@@ -90,7 +92,7 @@ if not args.token:
 # Setup bot using token and play game
 #
 ###############################################################################
-bot = Bot("", "", "", api)
+bot = Bot("", "", "", "", api)
 bot.bot_token = args.token
 bot.get_my_info()
 if not bot.name:

@@ -9,8 +9,8 @@ import { invalidLogic, couldNotJoinBoard, gameStarted } from "./messages";
 
 const logics = { firstDiamondLogic: getFirstDiamond };
 
-export const register = async (name, email, password) => {
-  const bot = await registerBot(name, email, password);
+export const register = async (name, email, password, team) => {
+  const bot = await registerBot(name, email, password, team);
   if (bot) {
     registrationSuccessful(bot);
   } else {

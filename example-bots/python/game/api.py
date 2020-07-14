@@ -29,8 +29,8 @@ class Api(object):
         response = self._req("/bots/{}".format(bot_token), "get", {})
         return self._return_response_and_status(response)
 
-    def bots_register(self, name, email, password):
-        response = self._req("/bots", "post", {"email": email, "botName": name, "password": password})
+    def bots_register(self, name, email, password, team):
+        response = self._req("/bots", "post", {"email": email, "botName": name, "password": password, "team": team})
         return self._return_response_and_status(response)
 
     def boards_list(self):

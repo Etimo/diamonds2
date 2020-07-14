@@ -12,10 +12,14 @@ import { BotRecoveryDto } from "../models/bot-recovery.dto";
 import * as bcrypt from "bcrypt";
 import { BotPasswordDto } from "../models/bot-password.dto";
 import ForbiddenError from "../errors/forbidden.error";
+import { TeamsService } from "./teams.service";
+import { TeamsEntity } from "../db/models/teams.entity";
+import { TeamDto } from "../models/team.dto";
 
 describe("BotsService", () => {
   let botsService: BotsService;
   let repositoryMock: MockType<Repository<BotRegistrationsEntity>>;
+  let repositoryMock1: MockType<Repository<TeamsEntity>>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -29,10 +33,16 @@ describe("BotsService", () => {
           provide: getRepositoryToken(BotRegistrationsEntity),
           useFactory: repositoryMockFactory,
         },
+        TeamsService,
+        {
+          provide: getRepositoryToken(TeamsEntity),
+          useFactory: repositoryMockFactory,
+        },
       ],
     }).compile();
     botsService = module.get<BotsService>(BotsService);
     repositoryMock = module.get(getRepositoryToken(BotRegistrationsEntity));
+    repositoryMock1 = module.get(getRepositoryToken(TeamsEntity));
     jest.clearAllMocks();
   });
 
@@ -45,6 +55,7 @@ describe("BotsService", () => {
       email: "hello@world.se",
       botName: "bot1",
       password: "123456",
+      team: null,
     };
 
     const save = jest.fn(
@@ -86,6 +97,7 @@ describe("BotsService", () => {
         email: data.email,
         botName: "other bot",
         password: "123456",
+        team: "liu",
       }),
     ).rejects.toBeInstanceOf(ConflictError);
 
@@ -97,6 +109,7 @@ describe("BotsService", () => {
       email: "hello@world.se",
       botName: "bot1",
       password: "123456",
+      team: null,
     };
 
     const save = jest.fn(
@@ -138,6 +151,7 @@ describe("BotsService", () => {
         email: "other@world.se",
         botName: data.botName,
         password: "123456",
+        team: "liu",
       }),
     ).rejects.toBeInstanceOf(ConflictError);
 
@@ -149,6 +163,7 @@ describe("BotsService", () => {
       email: "hel22lo@world.se",
       botName: "bot122",
       password: "123456",
+      team: null,
     };
 
     const save = jest.fn(
@@ -192,6 +207,7 @@ describe("BotsService", () => {
       email: "hel22lo@world.se",
       botName: "bot122",
       password: "123456",
+      team: null,
     };
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
@@ -242,6 +258,7 @@ describe("BotsService", () => {
       email: "hel22lo@world.se",
       botName: "bot122",
       password: "123456",
+      team: null,
     };
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
@@ -292,6 +309,7 @@ describe("BotsService", () => {
       email: "hel22lo@world.se",
       botName: "bot122",
       password: "123456",
+      team: null,
     };
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
@@ -373,6 +391,7 @@ describe("BotsService", () => {
       email: "hel22lo@world.se",
       botName: "bot122",
       password: "123456",
+      team: null,
     };
     const getOne = jest.fn(
       () =>
@@ -405,6 +424,7 @@ describe("BotsService", () => {
       botName: "bot122",
       password: null,
       token: "123",
+      team: "liu",
       createTimeStamp: new Date(),
       updateTimeStamp: new Date(),
     };
@@ -416,7 +436,7 @@ describe("BotsService", () => {
 
     const getOne = jest.fn(
       () =>
-        new Promise<BotRegistrationDto>((resolve, reject) => {
+        new Promise<BotRegistrationsEntity>((resolve, reject) => {
           var savedPackage: BotRegistrationsEntity = data;
 
           setTimeout(() => {
@@ -437,6 +457,116 @@ describe("BotsService", () => {
     await expect(
       botsService.addPassword(botPasswordDto),
     ).resolves.toBeInstanceOf(BotRegistrationPublicDto);
+  });
+
+  it("Add and get bot with team", async () => {
+    const data = {
+      email: "hel22lo@world.se",
+      botName: "bot122",
+      password: "123456",
+      team: "etimo",
+    };
+
+    const team = {
+      id: "123123",
+      abbreviation: "etimo",
+      name: "Etimo",
+      logotypeUrl: "asdasd",
+    };
+
+    const save = jest.fn(
+      () =>
+        new Promise<BotRegistrationDto>((resolve, reject) => {
+          var savedPackage: BotRegistrationDto = data;
+
+          setTimeout(() => {
+            resolve(savedPackage);
+          }, 500);
+        }),
+    );
+
+    let getOne = jest.fn(
+      () =>
+        new Promise<TeamDto>((resolve, reject) => {
+          var savedPackage: TeamDto = team;
+
+          setTimeout(() => {
+            resolve(savedPackage);
+          }, 500);
+        }),
+    );
+
+    let where = jest.fn(() => ({ getOne }));
+
+    repositoryMock1.createQueryBuilder.mockImplementation(
+      jest.fn(() => ({ where: where })),
+    );
+
+    repositoryMock.save.mockImplementation(save);
+
+    const result: BotRegistrationPublicDto = await botsService.add(data);
+
+    const getOne2 = jest.fn(
+      () =>
+        new Promise<BotRegistrationDto>((resolve, reject) => {
+          var savedPackage: BotRegistrationDto = data;
+
+          setTimeout(() => {
+            resolve(savedPackage);
+          }, 500);
+        }),
+    );
+
+    const where2 = jest.fn(() => ({ getOne: getOne2 }));
+
+    repositoryMock.createQueryBuilder.mockImplementation(
+      jest.fn(() => ({ where: where2 })),
+    );
+
+    await expect(botsService.get(result.token)).resolves.toHaveProperty(
+      "email",
+    );
+  });
+
+  it("Add and get bot with team, throw not found error - Team does not exist", async () => {
+    const data = {
+      email: "hel22lo@world.se",
+      botName: "bot122",
+      password: "123456",
+      team: "zxczxc",
+    };
+
+    const save = jest.fn(
+      () =>
+        new Promise<BotRegistrationDto>((resolve, reject) => {
+          var savedPackage: BotRegistrationDto = data;
+
+          setTimeout(() => {
+            resolve(savedPackage);
+          }, 500);
+        }),
+    );
+
+    let getOne = jest.fn(
+      () =>
+        new Promise<TeamDto>((resolve, reject) => {
+          var savedPackage: TeamDto = null;
+
+          setTimeout(() => {
+            resolve(savedPackage);
+          }, 500);
+        }),
+    );
+
+    let where = jest.fn(() => ({ getOne }));
+
+    repositoryMock1.createQueryBuilder.mockImplementation(
+      jest.fn(() => ({ where: where })),
+    );
+
+    repositoryMock.save.mockImplementation(save);
+
+    await expect(botsService.add(data)).rejects.toThrow(NotFoundError);
   });
 });
 

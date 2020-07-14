@@ -6,6 +6,7 @@ import Th from "./Th";
 import Tr from "./Tr";
 import Td from "./Td";
 import Img from "./Img";
+import LogoImg from "./LogoImg";
 
 const Table = styled.table`
   border-collapse: collapse;
@@ -19,5 +20,6 @@ Table.Th = Th;
 Table.Tr = Tr;
 Table.Td = Td;
 Table.Img = Img;
+Table.LogoImg = LogoImg;
 
 export default Table;
