@@ -40,9 +40,8 @@ export class SlackService {
 
   public async handleInteract(input) {
     const payload = JSON.parse(input.payload);
-
+    // Try/catch to catch errors and return them in slack error format.
     if (payload.view.callback_id === "add-season") {
-      // Try/catch to catch errors and return them in slack error format.
       try {
         const season = await this.addSeason(payload);
         if (season instanceof SeasonDto) {
@@ -55,7 +54,6 @@ export class SlackService {
     }
 
     if (payload.view.callback_id === "add-team") {
-      // Try/catch to catch errors and return them in slack error format.
       try {
         console.log("ADD TEAM");
         return;
