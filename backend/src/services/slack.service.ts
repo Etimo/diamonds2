@@ -5,7 +5,7 @@ import {
   getSeasonListBody,
   getAddSeasonBody,
 } from "../utils/slack/season.utils";
-import { getTeamListBody } from "../utils/slack/teams.utils";
+import { getTeamListBody, getAddTeamBody } from "../utils/slack/teams.utils";
 import { showModal, slackError } from "../utils/slack/utils";
 import { SeasonDto } from "../models/season.dto";
 
@@ -33,11 +33,15 @@ export class SlackService {
     return await showModal(view);
   }
 
+  public async getTeamModal(input) {
+    const view = getAddTeamBody(input.trigger_id);
+    return await showModal(view);
+  }
+
   public async handleInteract(input) {
     const payload = JSON.parse(input.payload);
-
+    // Try/catch to catch errors and return them in slack error format.
     if (payload.view.callback_id === "add-season") {
-      // Try/catch to catch errors and return them in slack error format.
       try {
         const season = await this.addSeason(payload);
         if (season instanceof SeasonDto) {
@@ -46,8 +50,18 @@ export class SlackService {
       } catch (error) {
         return slackError(error.errorTag, error.message);
       }
+      return slackError("season_name", "Could not process input");
     }
-    return slackError("season_name", "Could not process input");
+
+    if (payload.view.callback_id === "add-team") {
+      try {
+        console.log("ADD TEAM");
+        return;
+      } catch (error) {
+        return slackError(error.errorTag, error.message);
+      }
+    }
+    return "An error occured!";
   }
 
   private async addSeason(payload) {
