@@ -9,7 +9,7 @@ import ForbiddenError from "../errors/forbidden.error";
 import { SeasonsService } from "./seasons.service";
 import { repositoryMockFactory } from "./board.service.spec";
 import { TeamsService } from "./teams.service";
-import { TeamsEntity } from "src/db/models/teams.entity";
+import { TeamsEntity } from "../db/models/teams.entity";
 
 describe("SeasonsService", () => {
   let slackService: SlackService;
