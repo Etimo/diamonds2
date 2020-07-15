@@ -60,6 +60,19 @@ export class SlackController {
   }
 
   /**
+   * Return a slack modal to add team
+   */
+  @ApiResponse({
+    status: 200,
+    description: "Shows a slack modal to add seasons",
+  })
+  @Post("/team")
+  @HttpCode(200)
+  async addTeamModal(@Body() input: {}) {
+    return await this.slackService.getTeamModal(input);
+  }
+
+  /**
    * Someone has interacted with a modal on slack - Returns noting if OK, slack error if an error occured
    */
   @ApiResponse({
