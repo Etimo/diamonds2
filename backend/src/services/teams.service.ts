@@ -89,16 +89,16 @@ export class TeamsService {
   private getErrorPayload(nameExists, abbreviationExists, logotypeUrlExists) {
     switch (true) {
       case nameExists:
-        return { message: "Name does already exist", errorTag: "name" };
+        return { message: "Name does already exist", errorTag: "team_name" };
       case abbreviationExists:
         return {
           message: "Abbreviation does already exist",
-          errorTag: "abbreviation",
+          errorTag: "team_abbreviation",
         };
       case logotypeUrlExists:
         return {
           message: "LogotypeUrl does already exist",
-          errorTag: "logotype_url",
+          errorTag: "team_logotype_url",
         };
       default:
         return;

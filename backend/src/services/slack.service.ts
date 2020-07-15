@@ -8,6 +8,7 @@ import {
 import { getTeamListBody, getAddTeamBody } from "../utils/slack/teams.utils";
 import { showModal, slackError } from "../utils/slack/utils";
 import { SeasonDto } from "../models/season.dto";
+import { TeamDto } from "../models/team.dto";
 
 @Injectable()
 export class SlackService {
@@ -55,8 +56,10 @@ export class SlackService {
 
     if (payload.view.callback_id === "add-team") {
       try {
-        console.log("ADD TEAM");
-        return;
+        const team = this.addTeam(payload);
+        if (team instanceof TeamDto) {
+          return;
+        }
       } catch (error) {
         return slackError(error.errorTag, error.message);
       }
@@ -74,6 +77,18 @@ export class SlackService {
       endDate: new Date(endDate),
     });
     return await this.seasonsService.add(season);
+  }
+
+  private async addTeam(payload) {
+    const name = this.parseValue(payload, "team_name", "value");
+    const abbreviation = this.parseValue(payload, "team_abbreviation", "value");
+    const logotypeUrl = this.parseValue(payload, "team_logotype_url", "value");
+    const team = TeamDto.create({
+      name,
+      abbreviation,
+      logotypeUrl,
+    });
+    return await this.teamsService.add(team);
   }
 
   private parseValue(payload, obj, value) {
