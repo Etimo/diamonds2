@@ -88,6 +88,11 @@ export const getAddTeamBody = trigger_id => {
           block_id: "team_name",
           element: {
             type: "plain_text_input",
+            placeholder: {
+              type: "plain_text",
+              text: "Company/School",
+              emoji: true,
+            },
           },
           label: {
             type: "plain_text",
@@ -100,6 +105,11 @@ export const getAddTeamBody = trigger_id => {
           block_id: "team_abbreviation",
           element: {
             type: "plain_text_input",
+            placeholder: {
+              type: "plain_text",
+              text: "e.g liu",
+              emoji: true,
+            },
           },
           label: {
             type: "plain_text",
@@ -112,6 +122,11 @@ export const getAddTeamBody = trigger_id => {
           block_id: "team_logotype_url",
           element: {
             type: "plain_text_input",
+            placeholder: {
+              type: "plain_text",
+              text: "https://some.image.url",
+              emoji: true,
+            },
           },
           label: {
             type: "plain_text",
