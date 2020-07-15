@@ -5,6 +5,7 @@ import {
   getSeasonListBody,
   getAddSeasonBody,
 } from "../utils/slack/season.utils";
+import { getTeamListBody } from "../utils/slack/teams.utils";
 import { showModal, slackError } from "../utils/slack/utils";
 import { SeasonDto } from "../models/season.dto";
 
@@ -28,7 +29,7 @@ export class SlackService {
 
   public async getAllTeams(input) {
     const teams = await this.teamsService.all();
-    const view = getSeasonListBody(input.trigger_id, teams);
+    const view = getTeamListBody(input.trigger_id, teams);
     return await showModal(view);
   }
 
