@@ -8,10 +8,13 @@ import ConflictError from "../errors/conflict.error";
 import ForbiddenError from "../errors/forbidden.error";
 import { SeasonsService } from "./seasons.service";
 import { repositoryMockFactory } from "./board.service.spec";
+import { TeamsService } from "./teams.service";
+import { TeamsEntity } from "src/db/models/teams.entity";
 
 describe("SeasonsService", () => {
   let slackService: SlackService;
   let seasonsService: SeasonsService;
+  let teamsService: TeamsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -20,6 +23,11 @@ describe("SeasonsService", () => {
         SeasonsService,
         {
           provide: getRepositoryToken(SeasonsEntity),
+          useFactory: repositoryMockFactory,
+        },
+        TeamsService,
+        {
+          provide: getRepositoryToken(TeamsEntity),
           useFactory: repositoryMockFactory,
         },
       ],
@@ -31,6 +39,7 @@ describe("SeasonsService", () => {
   it("should be defined", () => {
     expect(SlackService).toBeDefined();
     expect(SeasonsService).toBeDefined();
+    expect(TeamsService).toBeDefined();
   });
 
   it("handleInteract, Should return error in slack format", async () => {
