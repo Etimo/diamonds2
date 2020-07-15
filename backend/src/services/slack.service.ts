@@ -27,7 +27,7 @@ export class SlackService {
     const payload = JSON.parse(input.payload);
 
     if (payload.view.callback_id === "add-season") {
-      // Using try/catch to catch errors and return them in slack error format.
+      // Try/catch to catch errors and return them in slack error format.
       try {
         const season = await this.addSeason(payload);
         if (season instanceof SeasonDto) {
