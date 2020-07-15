@@ -29,7 +29,7 @@ export class SlackController {
   })
   @Post("/seasons")
   @HttpCode(200)
-  async listAll(@Body() input: {}) {
+  async listAllSeasons(@Body() input: {}) {
     return this.slackService.getAllSeasons(input);
   }
 
@@ -44,6 +44,19 @@ export class SlackController {
   @HttpCode(200)
   async addSeasonModal(@Body() input: {}) {
     return await this.slackService.getSeasonModal(input);
+  }
+
+  /**
+   * Return all teams in a slack modal.
+   */
+  @ApiResponse({
+    status: 200,
+    description: "Shows a slack modal with all teams",
+  })
+  @Post("/teams")
+  @HttpCode(200)
+  async listAllTeams(@Body() input: {}) {
+    return this.slackService.getAllTeams(input);
   }
 
   /**

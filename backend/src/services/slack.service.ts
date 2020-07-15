@@ -1,25 +1,35 @@
 import { Injectable } from "@nestjs/common";
 import { SeasonsService } from "./seasons.service";
+import { TeamsService } from "./teams.service";
 import {
-  createSeasonsBody,
-  createAddSeasonBody,
-  showModal,
-  slackError,
-} from "../utils/slack.utils";
+  getSeasonListBody,
+  getAddSeasonBody,
+} from "../utils/slack/season.utils";
+import { getTeamListBody } from "../utils/slack/teams.utils";
+import { showModal, slackError } from "../utils/slack/utils";
 import { SeasonDto } from "../models/season.dto";
 
 @Injectable()
 export class SlackService {
-  constructor(private seasonsService: SeasonsService) {}
+  constructor(
+    private seasonsService: SeasonsService,
+    private teamsService: TeamsService,
+  ) {}
 
   public async getAllSeasons(input) {
     const seasons = await this.seasonsService.all();
-    const view = createSeasonsBody(input.trigger_id, seasons);
+    const view = getSeasonListBody(input.trigger_id, seasons);
     return await showModal(view);
   }
 
   public async getSeasonModal(input) {
-    const view = createAddSeasonBody(input.trigger_id);
+    const view = getAddSeasonBody(input.trigger_id);
+    return await showModal(view);
+  }
+
+  public async getAllTeams(input) {
+    const teams = await this.teamsService.all();
+    const view = getTeamListBody(input.trigger_id, teams);
     return await showModal(view);
   }
 
