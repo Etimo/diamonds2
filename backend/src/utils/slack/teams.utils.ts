@@ -5,13 +5,21 @@ const formatTeamBlocks = teams => {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `*${team.name}*\n*Abbreviation: ${team.abbreviation}*.`,
+          text: `*${team.name}*`,
         },
-        accessory: {
-          type: "image",
-          image_url: team.logotypeUrl,
-          alt_text: "Team logotype",
-        },
+      },
+      {
+        type: "context",
+        elements: [
+          {
+            type: "mrkdwn",
+            text: `Abbreviation \n *${team.abbreviation}*`,
+          },
+          {
+            type: "mrkdwn",
+            text: `Image \n ${team.logotypeUrl}`,
+          },
+        ],
       },
       {
         type: "divider",
