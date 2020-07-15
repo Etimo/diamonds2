@@ -51,8 +51,19 @@ export class SlackService {
       } catch (error) {
         return slackError(error.errorTag, error.message);
       }
+      return slackError("season_name", "Could not process input");
     }
-    return slackError("season_name", "Could not process input");
+
+    if (payload.view.callback_id === "add-team") {
+      // Try/catch to catch errors and return them in slack error format.
+      try {
+        console.log("ADD TEAM");
+        return;
+      } catch (error) {
+        return slackError(error.errorTag, error.message);
+      }
+    }
+    return "An error occured!";
   }
 
   private async addSeason(payload) {
