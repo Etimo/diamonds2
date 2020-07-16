@@ -6,6 +6,7 @@ import { TeamDto } from "../models/team.dto";
 import ForbiddenError from "../errors/forbidden.error";
 import ConflictError from "../errors/conflict.error";
 import NotFoundError from "../errors/not-found.error";
+import { URL } from "url";
 
 @Injectable()
 export class TeamsService {
@@ -77,6 +78,10 @@ export class TeamsService {
     if (errorPayload) {
       throw new ConflictError(errorPayload.message, errorPayload.errorTag);
     }
+
+    if (!this.isValidUrl(dto.logotypeUrl)) {
+      throw new ForbiddenError("Invalid url", "team_logotype_url");
+    }
   }
 
   private async exist(field: string, data: string): Promise<TeamDto> {
@@ -105,5 +110,14 @@ export class TeamsService {
       };
     }
     return false;
+  }
+
+  private isValidUrl(url) {
+    try {
+      new URL(url);
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 }
