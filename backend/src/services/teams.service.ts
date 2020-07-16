@@ -68,20 +68,13 @@ export class TeamsService {
       this.exist("teams.logotypeUrl", dto.logotypeUrl),
     ]);
 
-    console.log("NAME", nameExists);
-    console.log("ABBREVIATION", abbreviationExists);
-    console.log("LOGOTYPE", logotypeUrlExists);
-
     const errorPayload = this.getErrorPayload(
       nameExists,
       abbreviationExists,
       logotypeUrlExists,
     );
 
-    console.log("ERROR_PAYLOAD", errorPayload);
-
     if (errorPayload) {
-      console.log("CONFLICT!!!!");
       throw new ConflictError(errorPayload.message, errorPayload.errorTag);
     }
   }
