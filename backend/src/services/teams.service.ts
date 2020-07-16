@@ -26,6 +26,8 @@ export class TeamsService {
 
   public async add(dto: TeamDto) {
     await this.validateInput(dto);
+
+    return;
     return await this.create(dto);
   }
 
@@ -52,8 +54,8 @@ export class TeamsService {
   private async validateInput(dto: TeamDto) {
     if (!dto.name || !dto.abbreviation || !dto.logotypeUrl) {
       throw new ForbiddenError(
-        "The body does not contain name, startDate or endDate.",
-        "season_name",
+        "The body does not contain name, abbreviation or logotypeUrl.",
+        "team_name",
       );
     }
     // Check if name, abbreviation or url already exist.
@@ -67,6 +69,10 @@ export class TeamsService {
       this.exist("teams.abbreviation", dto.abbreviation),
       this.exist("teams.logotypeUrl", dto.logotypeUrl),
     ]);
+
+    console.log("NAME", nameExists);
+    console.log("ABBREVIATION", abbreviationExists);
+    console.log("LOGOTYPE", logotypeUrlExists);
 
     const errorPayload = this.getErrorPayload(
       nameExists,
