@@ -78,6 +78,8 @@ export class TeamsService {
       logotypeUrlExists,
     );
 
+    console.log("ERROR_PAYLOAD", errorPayload);
+
     if (errorPayload) {
       console.log("CONFLICT!!!!");
       throw new ConflictError(errorPayload.message, errorPayload.errorTag);
