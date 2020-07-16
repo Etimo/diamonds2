@@ -48,7 +48,7 @@ describe("SeasonsService", () => {
       id: "123",
       abbreviation: "etimo",
       name: "Etimo",
-      logotypeUrl: "asd",
+      logotypeUrl: "www.etimo.se",
     };
 
     const teamEntity: TeamsEntity = {
@@ -67,7 +67,7 @@ describe("SeasonsService", () => {
       id: "123",
       abbreviation: "etimo",
       name: "Etimo",
-      logotypeUrl: "asd",
+      logotypeUrl: "https://etimo.se",
     };
 
     const save = jest.fn(
@@ -85,6 +85,31 @@ describe("SeasonsService", () => {
     spyOn<any>(teamsService, "exist").and.returnValue(null);
 
     await expect(teamsService.add(team)).resolves.toHaveProperty("name");
+  });
+
+  it("add, should throw invalid url", async () => {
+    const team = {
+      id: "123",
+      abbreviation: "etimo",
+      name: "Etimo",
+      logotypeUrl: "httpsasd",
+    };
+
+    const save = jest.fn(
+      () =>
+        new Promise<TeamDto>((resolve, reject) => {
+          var savedPackage: TeamDto = team;
+
+          setTimeout(() => {
+            resolve(savedPackage);
+          }, 500);
+        }),
+    );
+
+    repositoryMock.save.mockImplementation(save);
+    spyOn<any>(teamsService, "exist").and.returnValue(null);
+
+    await expect(teamsService.add(team)).rejects.toThrowError(ForbiddenError);
   });
 
   it("getByAbbreviation, should return dto", async () => {
