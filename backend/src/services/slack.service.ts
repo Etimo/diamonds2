@@ -42,12 +42,11 @@ export class SlackService {
 
   public async handleInteract(input) {
     const payload = JSON.parse(input.payload);
-    // Try/catch to catch errors and return them in slack error format.
     const action = this.actions[payload.view.callback_id];
     if (!action) {
       throw new ForbiddenError("Not a valid callback_id");
     }
-
+    // Try/catch to catch errors and return them in slack error format.
     try {
       const obj = await action.test(payload);
       if (obj instanceof action.dto) {
