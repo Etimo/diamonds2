@@ -79,6 +79,7 @@ export class TeamsService {
     );
 
     if (errorPayload) {
+      console.log("CONFLICT!!!!");
       throw new ConflictError(errorPayload.message, errorPayload.errorTag);
     }
   }
@@ -92,14 +93,14 @@ export class TeamsService {
 
   private getErrorPayload(nameExists, abbreviationExists, logotypeUrlExists) {
     switch (true) {
-      case nameExists:
+      case nameExists instanceof TeamDto:
         return { message: "Name does already exist", errorTag: "team_name" };
-      case abbreviationExists:
+      case abbreviationExists instanceof TeamDto:
         return {
           message: "Abbreviation does already exist",
           errorTag: "team_abbreviation",
         };
-      case logotypeUrlExists:
+      case logotypeUrlExists instanceof TeamDto:
         return {
           message: "LogotypeUrl does already exist",
           errorTag: "team_logotype_url",
