@@ -51,7 +51,7 @@ describe("SeasonsService", () => {
       logotypeUrl: "asd",
     };
 
-    spyOn<any>(teamsService, "exist").and.returnValue(true);
+    spyOn<any>(teamsService, "exist").and.returnValue(TeamDto.from(team));
 
     await expect(teamsService.add(team)).rejects.toThrowError(ConflictError);
   });
