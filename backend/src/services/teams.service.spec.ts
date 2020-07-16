@@ -76,6 +76,7 @@ describe("SeasonsService", () => {
     );
 
     repositoryMock.save.mockImplementation(save);
+    spyOn<any>(teamsService, "exist").and.returnValue(null);
 
     await expect(teamsService.add(team)).resolves.toHaveProperty("name");
   });

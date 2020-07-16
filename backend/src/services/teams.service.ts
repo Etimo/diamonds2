@@ -26,8 +26,6 @@ export class TeamsService {
 
   public async add(dto: TeamDto) {
     await this.validateInput(dto);
-
-    return;
     return await this.create(dto);
   }
 
@@ -107,7 +105,7 @@ export class TeamsService {
           errorTag: "team_logotype_url",
         };
       default:
-        return;
+        return false;
     }
   }
 }
