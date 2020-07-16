@@ -9,6 +9,7 @@ import { getTeamListBody, getAddTeamBody } from "../utils/slack/teams.utils";
 import { showModal, slackError } from "../utils/slack/utils";
 import { SeasonDto } from "../models/season.dto";
 import { TeamDto } from "../models/team.dto";
+import ForbiddenError from "../errors/forbidden.error";
 
 @Injectable()
 export class SlackService {
@@ -42,29 +43,20 @@ export class SlackService {
   public async handleInteract(input) {
     const payload = JSON.parse(input.payload);
     // Try/catch to catch errors and return them in slack error format.
-    if (payload.view.callback_id === "add-season") {
-      try {
-        const season = await this.addSeason(payload);
-        if (season instanceof SeasonDto) {
-          return;
-        }
-      } catch (error) {
-        return slackError(error.errorTag, error.message);
-      }
-      return slackError("season_name", "Could not process input");
+    const action = this.actions[payload.view.callback_id];
+    if (!action) {
+      throw new ForbiddenError("Not a valid callback_id");
     }
 
-    if (payload.view.callback_id === "add-team") {
-      try {
-        const team = await this.addTeam(payload);
-        if (team instanceof TeamDto) {
-          return;
-        }
-      } catch (error) {
-        return slackError(error.errorTag, error.message);
+    try {
+      const obj = await action.test(payload);
+      if (obj instanceof action.dto) {
+        return;
       }
+    } catch (error) {
+      return slackError(error.errorTag, error.message);
     }
-    return "An error occured!";
+    return slackError(action.errorTag, "Could not process input");
   }
 
   private async addSeason(payload) {
@@ -88,6 +80,7 @@ export class SlackService {
       abbreviation,
       logotypeUrl,
     });
+    console.log("TEAM", team);
     return await this.teamsService.add(team);
   }
 
@@ -96,4 +89,17 @@ export class SlackService {
       key = Object.keys(object)[0];
     return object[key][value];
   }
+
+  private actions = {
+    "add-season": {
+      test: this.addSeason.bind(this),
+      dto: SeasonDto,
+      errorTag: "season_name",
+    },
+    "add-team": {
+      test: this.addTeam.bind(this),
+      dto: TeamDto,
+      errorTag: "team_name",
+    },
+  };
 }
