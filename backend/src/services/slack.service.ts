@@ -56,7 +56,7 @@ export class SlackService {
 
     if (payload.view.callback_id === "add-team") {
       try {
-        const team = this.addTeam(payload);
+        const team = await this.addTeam(payload);
         if (team instanceof TeamDto) {
           return;
         }
