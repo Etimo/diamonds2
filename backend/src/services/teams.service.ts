@@ -94,21 +94,23 @@ export class TeamsService {
   }
 
   private getErrorPayload(nameExists, abbreviationExists, logotypeUrlExists) {
-    switch (true) {
-      case nameExists instanceof TeamDto:
-        return { message: "Name does already exist", errorTag: "team_name" };
-      case abbreviationExists instanceof TeamDto:
-        return {
-          message: "Abbreviation does already exist",
-          errorTag: "team_abbreviation",
-        };
-      case logotypeUrlExists instanceof TeamDto:
-        return {
-          message: "LogotypeUrl does already exist",
-          errorTag: "team_logotype_url",
-        };
-      default:
-        return false;
+    if (nameExists) {
+      return { message: "Name does already exist", errorTag: "team_name" };
     }
+
+    if (abbreviationExists) {
+      return {
+        message: "Abbreviation does already exist",
+        errorTag: "team_abbreviation",
+      };
+    }
+
+    if (logotypeUrlExists) {
+      return {
+        message: "LogotypeUrl does already exist",
+        errorTag: "team_logotype_url",
+      };
+    }
+    return false;
   }
 }
