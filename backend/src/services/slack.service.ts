@@ -48,7 +48,7 @@ export class SlackService {
     }
     // Try/catch to catch errors and return them in slack error format.
     try {
-      const obj = await action.test(payload);
+      const obj = await action.function(payload);
       if (obj instanceof action.dto) {
         return;
       }
@@ -91,12 +91,12 @@ export class SlackService {
 
   private actions = {
     "add-season": {
-      test: this.addSeason.bind(this),
+      function: this.addSeason.bind(this),
       dto: SeasonDto,
       errorTag: "season_name",
     },
     "add-team": {
-      test: this.addTeam.bind(this),
+      function: this.addTeam.bind(this),
       dto: TeamDto,
       errorTag: "team_name",
     },
