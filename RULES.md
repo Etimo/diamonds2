@@ -25,3 +25,6 @@ The teleporters are enabled by the feature `TeleportProvider` in the board confi
 ## Bots and bases
 
 All bots will have a home base with their name on. This is where you have to go to drop of yourthe diamonds you are carrying.
+
+## Tackle
+Bots can tackle eachother. If bot A tackles bot B (walk into bot B's position) bot B will be sent to it's base and lose all diamonds. Bot A will recieve bot B's diamonds.
