@@ -53,7 +53,7 @@
     "ts-loader": "6",
     "ts-node": "^8.5.2",
     "tsconfig-paths": "^3.7.0",
-    "typeorm": "^0.2.20"
+    "typeorm": "^0.2.25"
   },
   "devDependencies": {
     "@nestjs/cli": "^6.12.2",
