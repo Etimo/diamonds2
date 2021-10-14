@@ -49,6 +49,8 @@ jobs:
     name: Build for prod env
     runs-on: ubuntu-18.04
     if: github.ref == 'refs/heads/master'
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
     needs:
       - test-backend
       - test-build
@@ -86,6 +88,8 @@ jobs:
     needs: build-prod
     runs-on: ubuntu-18.04
     if: github.ref == 'refs/heads/master'
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
     steps:
       - uses: chrnorm/deployment-action@releases/v1
         name: Create GitHub deployment
