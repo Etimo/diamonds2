@@ -10,7 +10,7 @@ import { showModal, slackError } from "../utils/slack/utils";
 import { SeasonDto } from "../models/season.dto";
 import { TeamDto } from "../models/team.dto";
 import ForbiddenError from "../errors/forbidden.error";
-import { BotDto } from "src/models/bot.dto";
+import { BotDto } from "../models/bot.dto";
 
 @Injectable()
 export class SlackService {
