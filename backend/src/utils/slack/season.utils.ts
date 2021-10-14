@@ -24,6 +24,16 @@ const formatSeasonBlocks = seasons => {
             text: new Date(season.endDate).toISOString().substring(0, 10),
           },
         ],
+        accessory: {
+          type: "button",
+          text: {
+            type: "plain_text",
+            text: "Visa vinnare",
+            emoji: true,
+          },
+          style: "primary",
+          value: season.id,
+        },
       },
       {
         type: "divider",
@@ -37,6 +47,7 @@ export const getSeasonListBody = (trigger_id, seasons) => {
     trigger_id: trigger_id,
     view: {
       type: "modal",
+      callback_id: "show-winners",
       title: {
         type: "plain_text",
         text: "Diamonds",

@@ -10,6 +10,7 @@ import { showModal, slackError } from "../utils/slack/utils";
 import { SeasonDto } from "../models/season.dto";
 import { TeamDto } from "../models/team.dto";
 import ForbiddenError from "../errors/forbidden.error";
+import { BotDto } from "../models/bot.dto";
 
 @Injectable()
 export class SlackService {
@@ -41,6 +42,7 @@ export class SlackService {
   }
 
   public async handleInteract(input) {
+    console.log("INTERACT", input);
     const payload = JSON.parse(input.payload);
     const action = this.actions[payload.view.callback_id];
     if (!action) {
@@ -83,6 +85,11 @@ export class SlackService {
     return await this.teamsService.add(team);
   }
 
+  private async showWinners(payload) {
+    console.log("SHOW_WINNERS", payload);
+    return await this.getAllTeams(payload);
+  }
+
   private parseValue(payload, obj, value) {
     const object = payload.view.state.values[obj],
       key = Object.keys(object)[0];
@@ -99,6 +106,11 @@ export class SlackService {
       function: this.addTeam.bind(this),
       dto: TeamDto,
       errorTag: "team_name",
+    },
+    "show-winners": {
+      function: this.showWinners.bind(this),
+      dto: BotDto,
+      errorTag: "show-winners",
     },
   };
 }
