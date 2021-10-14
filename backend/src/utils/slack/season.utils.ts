@@ -24,6 +24,16 @@ const formatSeasonBlocks = seasons => {
             text: new Date(season.endDate).toISOString().substring(0, 10),
           },
         ],
+        accessory: {
+          type: "button",
+          text: {
+            type: "plain_text",
+            text: "Visa vinnare",
+            emoji: true,
+          },
+          style: "primary",
+          value: `show_winners/${season.id}`,
+        },
       },
       {
         type: "divider",
