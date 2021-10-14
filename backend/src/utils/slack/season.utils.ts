@@ -32,7 +32,7 @@ const formatSeasonBlocks = seasons => {
             emoji: true,
           },
           style: "primary",
-          value: `show_winners/${season.id}`,
+          value: season.id,
         },
       },
       {
@@ -47,6 +47,7 @@ export const getSeasonListBody = (trigger_id, seasons) => {
     trigger_id: trigger_id,
     view: {
       type: "modal",
+      callback_id: "show-winners",
       title: {
         type: "plain_text",
         text: "Diamonds",
