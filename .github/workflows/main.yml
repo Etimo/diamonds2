@@ -58,7 +58,7 @@ jobs:
         run: docker-compose -f docker-compose.prod-build.yml build
       - name: Extract branch name
         shell: bash
-        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')"
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')" >> $GITHUB_ENV
       - name: Print current branch name
         run: echo "${BRANCH_NAME}"
       - name: Docker login
