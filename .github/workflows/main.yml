@@ -81,8 +81,8 @@ jobs:
           docker push etimodanielwinther/diamonds2_bots:${BRANCH_NAME}-${{ github.sha }}
 
   # When pushing code to master we want to deploy latest master images to test environment
-  deploy-test:
-    name: Deploy
+  deploy-prod-old:
+    name: Deploy to old account
     needs: build-prod
     runs-on: ubuntu-18.04
     if: github.ref == 'refs/heads/master'
@@ -92,8 +92,8 @@ jobs:
         id: deployment
         with:
           token: "${{ github.token }}"
-          target-url: http://${{ secrets.DEPLOY_TEST_HOST }}
-          environment: test
+          target-url: https://${{ secrets.DEPLOY_TEST_HOST }}
+          environment: prod-old
           initial_status: "in_progress"
 
       - name: Execute remote command
@@ -117,7 +117,7 @@ jobs:
         uses: chrnorm/deployment-status@releases/v1
         with:
           token: "${{ github.token }}"
-          target-url: http://${{ secrets.DEPLOY_TEST_HOST }}
+          target-url: https://${{ secrets.DEPLOY_TEST_HOST }}
           state: "success"
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
 
@@ -126,20 +126,55 @@ jobs:
         uses: chrnorm/deployment-status@releases/v1
         with:
           token: "${{ github.token }}"
-          target-url: http://${{ secrets.DEPLOY_TEST_HOST }}
+          target-url: https://${{ secrets.DEPLOY_TEST_HOST }}
           state: "failure"
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-  # Deploy production images to production
-  # deploy-prod:
-  #   name: Deploy
-  #   needs: tag-and-push
-  #   runs-on: ubuntu-18.04
-  #   steps:
-  #     - name: Executing remote command
-  #       uses: appleboy/ssh-action@master
-  #       with:
-  #         host: ${{ secrets.DEPLOY_TEST_HOST }}
-  #         USERNAME: ${{ secrets.DEPLOY_TEST_USERNAME }}
-  #         PORT: 22
-  #         KEY: ${{ secrets.DEPLOY_TEST_KEY }}
-  #         script: ls
+
+  deploy-prod-new:
+    name: Deploy to new account
+    needs: build-prod
+    runs-on: ubuntu-18.04
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - uses: chrnorm/deployment-action@releases/v1
+        name: Create GitHub deployment
+        id: deployment
+        with:
+          token: "${{ github.token }}"
+          target-url: https://todo
+          environment: prod-new
+          initial_status: "in_progress"
+
+      - name: Execute remote command
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_ETIMO_AWS_HOST }}
+          USERNAME: ${{ secrets.DEPLOY_ETIMO_AWS_USERNAME }}
+          PORT: 22
+          KEY: ${{ secrets.DEPLOY_ETIMO_AWS_KEY }}
+          script: |
+            cd diamonds2
+            git fetch
+            git checkout --progress --force ${{ github.sha }}
+            docker-compose down
+            docker system prune -af
+            source ~/.bash_profile
+            DIAMONDS_DOCKER_TAG=master-${{ github.sha }} docker-compose -f docker-compose.prod-run.yml up -d
+
+      - name: Update deployment status (success)
+        if: success()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target-url: https://todo
+          state: "success"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+
+      - name: Update deployment status (failure)
+        if: failure()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target-url: https://todo
+          state: "failure"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
