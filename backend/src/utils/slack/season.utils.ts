@@ -29,10 +29,9 @@ const formatSeasonBlocks = seasons => {
           text: {
             type: "plain_text",
             text: "Visa vinnare",
-            emoji: true,
           },
           style: "primary",
-          value: season.id,
+          value: `${season.id}`,
         },
       },
       {
