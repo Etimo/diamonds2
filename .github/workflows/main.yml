@@ -49,8 +49,6 @@ jobs:
     name: Build for prod env
     runs-on: ubuntu-18.04
     if: github.ref == 'refs/heads/master'
-    env:
-      ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
     needs:
       - test-backend
       - test-build
@@ -60,7 +58,7 @@ jobs:
         run: docker-compose -f docker-compose.prod-build.yml build
       - name: Extract branch name
         shell: bash
-        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')"
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')" >> $GITHUB_ENV
       - name: Print current branch name
         run: echo "${BRANCH_NAME}"
       - name: Docker login
@@ -88,8 +86,6 @@ jobs:
     needs: build-prod
     runs-on: ubuntu-18.04
     if: github.ref == 'refs/heads/master'
-    env:
-      ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
     steps:
       - uses: chrnorm/deployment-action@releases/v1
         name: Create GitHub deployment
