@@ -8,6 +8,7 @@ import { EnvelopeInterceptor } from "./interceptors/envelope.interceptor";
 import { CustomLogger } from "./logger";
 import bodyParser = require("body-parser");
 import * as apiMetrics from "prometheus-api-metrics";
+import { isLocal } from "./hooks/environment";
 
 async function bootstrap() {
   const logger = new CustomLogger();
@@ -21,10 +22,13 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalInterceptors(new EnvelopeInterceptor(logger));
 
+  const schema = isLocal() ? "http" : "https";
+
   const options = new DocumentBuilder()
     .setTitle("Diamonds")
     .setDescription("Diamonds API description")
     .setVersion("2.0")
+    .setSchemes(schema)
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup("docs", app, document);
