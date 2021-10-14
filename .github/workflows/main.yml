@@ -51,7 +51,6 @@ jobs:
     if: github.ref == 'refs/heads/master'
     needs:
       - test-backend
-      - test-build
     steps:
       - uses: actions/checkout@v1
       - name: Build docker image
