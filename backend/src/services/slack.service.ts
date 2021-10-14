@@ -42,6 +42,7 @@ export class SlackService {
   }
 
   public async handleInteract(input) {
+    console.log("INTERACT", input);
     const payload = JSON.parse(input.payload);
     const action = this.actions[payload.view.callback_id];
     if (!action) {
@@ -85,6 +86,7 @@ export class SlackService {
   }
 
   private async showWinners(payload) {
+    console.log("SHOW_WINNERS", payload);
     return await this.getAllTeams(payload);
   }
 
