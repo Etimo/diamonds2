@@ -24,10 +24,10 @@ The teleporters are enabled by the feature `TeleportProvider` in the board confi
 
 ## Bots and bases
 
-All bots will have a home base with their name on. This is where you have to go to drop of yourthe diamonds you are carrying.
+All bots will have a home base with their name on. This is where you have to go to drop off the diamonds you are carrying.
 
 ## Tackle
-Bots can tackle eachother. If bot A tackles bot B (walk into bot B's position) bot B will be sent to it's base and lose all diamonds. Bot A will receive bot B's diamonds. Tackle is enabled by the feature `BotProvider` in the board configuration.
+Bots can tackle eachother. If bot A tackles bot B (walk into bot B's position) bot B will be sent to its base and lose all diamonds. Bot A will receive bot B's diamonds. Tackle is enabled by the feature `BotProvider` in the board configuration.
 
 ## Request limit
-You are only allowed to send one request every X milliseconds. If you send 10 requests too fast you will be kicked from the board. Check the key `minimumDelayBetweenMoves` in the board configuration too know how long the minimum delay between moves is.
+You are only allowed to send one request every X milliseconds. If you send 10 requests too fast you will be kicked from the board. Check the key `minimumDelayBetweenMoves` in the board configuration to know how long the minimum delay between moves is.
