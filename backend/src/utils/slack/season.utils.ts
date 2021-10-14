@@ -31,7 +31,7 @@ const formatSeasonBlocks = seasons => {
             text: "Visa vinnare",
           },
           style: "primary",
-          value: season.id,
+          value: `${season.id}`,
         },
       },
       {
