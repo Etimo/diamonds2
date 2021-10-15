@@ -42,7 +42,7 @@ export class SlackService {
   private async getWinners(trigger_id, seasonId: SeasonDto["id"]) {
     const users = await this.highScoresService.allBySeasonIdPrivate(
       seasonId,
-      5,
+      10,
     );
     const season = await this.seasonsService.getSeason(seasonId);
     const view = getWinnerListBody(trigger_id, users, season);
