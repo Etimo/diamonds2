@@ -66,6 +66,9 @@ fi
 echo "Current type: $instance_type"
 echo "New type: $new_instance_type"
 
+# Notify on slack
+curl -X POST --data-urlencode "payload={\"channel\": \"#etimo-open-diamondsv2\", \"username\": \"diamonds2-autoscaler\", \"text\": \"Started scaling diamonds from $instance_type to $new_instance_type\", \"icon_emoji\": \":gem:\"}" $SLACK_NOTIFY_URL
+
 # Stop instance
 echo "Stopping instance"
 aws ec2 stop-instances --instance-ids $instance_id
