@@ -95,7 +95,7 @@ jobs:
           environment: prod
           initial_status: "in_progress"
 
-      - name: Execute remote command
+      - name: Update apps
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.DEPLOY_ETIMO_AWS_HOST }}
@@ -110,6 +110,18 @@ jobs:
             docker system prune -af
             source ~/.bash_profile
             DIAMONDS_DOCKER_TAG=master-${{ github.sha }} docker-compose -f docker-compose.prod-run.yml up -d
+
+      - name: Update autoscaler
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_ETIMO_AWS_AUTOSCALER_HOST }}
+          USERNAME: ${{ secrets.DEPLOY_ETIMO_AWS_USERNAME }}
+          PORT: 22
+          KEY: ${{ secrets.DEPLOY_ETIMO_AWS_KEY }}
+          script: |
+            cd diamonds2
+            git fetch
+            git checkout --progress --force ${{ github.sha }}
 
       - name: Update deployment status (success)
         if: success()
