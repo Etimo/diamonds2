@@ -12,6 +12,7 @@ import { TeamsService } from "./teams.service";
 import { TeamsEntity } from "../db/models/teams.entity";
 import { HighScoresService } from "./high-scores.service";
 import { HighScoreEntity } from "../db/models/highScores.entity";
+import { MetricsService } from "./metrics.service";
 
 describe("SeasonsService", () => {
   let slackService: SlackService;
@@ -37,6 +38,10 @@ describe("SeasonsService", () => {
         {
           provide: getRepositoryToken(HighScoreEntity),
           useFactory: repositoryMockFactory,
+        },
+        {
+          useValue: null,
+          provide: MetricsService,
         },
       ],
     }).compile();
