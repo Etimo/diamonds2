@@ -67,6 +67,14 @@ export class BotGameObject extends AbstractGameObject {
       if (otherBot.canTackle) {
         return true;
       }
+
+      if (
+        otherBot.base.x === this.position.x &&
+        otherBot.base.y === this.position.y
+      ) {
+        this.position = this.base;
+        return true;
+      }
     }
     return false;
   }
