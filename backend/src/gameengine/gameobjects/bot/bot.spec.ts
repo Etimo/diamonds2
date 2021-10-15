@@ -14,7 +14,9 @@ test("Has properties", () => {
 
 test("Can enter if bot is standing there", () => {
   const bot = new BotGameObject({ x: 0, y: 0 });
+  bot.base = { x: 1, y: 1 };
   const other = new BotGameObject({ x: 0, y: 0 });
+  other.base = { x: 1, y: 1 };
   other.canTackle = true;
   expect(bot.canGameObjectEnter(other, null)).toBeTruthy();
 });
@@ -75,6 +77,7 @@ test("Can't tackle bot, both canTackle false", () => {
   bot.inventorySize = 5;
   bot.canTackle = false;
   const other = new BotGameObject({ x: 0, y: 1 });
+  other.base = { x: 9, y: 5 };
   other.diamonds = 3;
   other.canTackle = false;
   other.inventorySize = 5;
@@ -91,6 +94,7 @@ test("Can't tackle bot, entering bot canTackle false", () => {
   bot.inventorySize = 5;
   bot.canTackle = true;
   const other = new BotGameObject({ x: 0, y: 1 });
+  other.base = { x: 9, y: 5 };
   other.diamonds = 3;
   other.canTackle = false;
   other.inventorySize = 5;
@@ -114,6 +118,21 @@ test("Should tackle bot, entering bot canTackle true", () => {
   const canEnter = bot.canGameObjectEnter(other, null);
 
   expect(canEnter).toBeTruthy();
+});
+
+test("Bot tries to enter bas when base is occupied", () => {
+  const bot = new BotGameObject({ x: 9, y: 5 });
+  bot.base = { x: 10, y: 5 };
+  bot.canTackle = false;
+  const other = new BotGameObject({ x: 9, y: 4 });
+  other.base = { x: 9, y: 5 };
+  other.canTackle = false;
+  other.inventorySize = 5;
+
+  const canEnter = bot.canGameObjectEnter(other, null);
+
+  expect(canEnter).toBeTruthy();
+  expect(bot.position).toEqual(bot.base);
 });
 
 // TODO Test when tackle is set to false
