@@ -39,7 +39,7 @@ fetch_instance_information $instance_id
 echo "InstanceType is $instance_type"
 
 # Fetch current_seanson.
-response=$(curl https://diamonds.etimo.se/api/seasons/current)
+response=$(curl --fail https://diamonds.etimo.se/api/seasons/current)
 if [ $? -ne 0 ]; then
   echo "Unable to get current season. Exiting"
   exit 1
