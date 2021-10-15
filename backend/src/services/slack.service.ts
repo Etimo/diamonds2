@@ -6,17 +6,20 @@ import {
   getAddSeasonBody,
 } from "../utils/slack/season.utils";
 import { getTeamListBody, getAddTeamBody } from "../utils/slack/teams.utils";
+import { getWinnerListBody } from "../utils/slack/user.utils";
 import { showModal, slackError } from "../utils/slack/utils";
 import { SeasonDto } from "../models/season.dto";
 import { TeamDto } from "../models/team.dto";
 import ForbiddenError from "../errors/forbidden.error";
 import { BotDto } from "../models/bot.dto";
+import { HighScoresService } from "./high-scores.service";
 
 @Injectable()
 export class SlackService {
   constructor(
     private seasonsService: SeasonsService,
     private teamsService: TeamsService,
+    private highScoresService: HighScoresService,
   ) {}
 
   public async getAllSeasons(input) {
@@ -36,13 +39,22 @@ export class SlackService {
     return await showModal(view);
   }
 
+  private async getWinners(trigger_id, seasonId: SeasonDto["id"]) {
+    const users = await this.highScoresService.allBySeasonIdPrivate(
+      seasonId,
+      5,
+    );
+    const season = await this.seasonsService.getSeason(seasonId);
+    const view = getWinnerListBody(trigger_id, users, season);
+    return await showModal(view, "push");
+  }
+
   public async getTeamModal(input) {
     const view = getAddTeamBody(input.trigger_id);
     return await showModal(view);
   }
 
   public async handleInteract(input) {
-    console.log("INTERACT", input);
     const payload = JSON.parse(input.payload);
     const action = this.actions[payload.view.callback_id];
     if (!action) {
@@ -86,8 +98,7 @@ export class SlackService {
   }
 
   private async showWinners(payload) {
-    console.log("SHOW_WINNERS", payload);
-    return await this.getAllTeams(payload);
+    return await this.getWinners(payload.trigger_id, payload.actions[0].value);
   }
 
   private parseValue(payload, obj, value) {
