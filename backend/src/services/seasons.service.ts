@@ -22,6 +22,15 @@ export class SeasonsService {
     return SeasonDto.fromEntity(offSeason);
   }
 
+  public async getSeason(seasonId: SeasonDto["id"]): Promise<SeasonDto> {
+    const offSeason = await this.repo
+      .createQueryBuilder("seasons")
+      .where("seasons.id = :seasonId", { seasonId: seasonId })
+      .getOne();
+
+    return SeasonDto.fromEntity(offSeason);
+  }
+
   public async getCurrentSeason() {
     const currentSeason = await this.repo
       .createQueryBuilder("seasons")
