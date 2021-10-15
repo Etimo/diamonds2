@@ -38,8 +38,12 @@ fi
 fetch_instance_information $instance_id
 echo "InstanceType is $instance_type"
 
-# Fetch current_seanson. 
+# Fetch current_seanson.
 response=$(curl https://diamonds.etimo.se/api/seasons/current)
+if [ $? -ne 0 ]; then
+  echo "Unable to get current season. Exiting"
+  exit 1
+fi
 current_season=$(jq '.data.name'  <<< $response)
 current_season=$(remove_double_quotes "$current_season")
 
@@ -81,7 +85,7 @@ do
 done
 
 echo "Instance is stopped!"
-        
+
 # Change instance type
 aws ec2 modify-instance-attribute --instance-id $instance_id --instance-type "{\"Value\": \"$new_instance_type\"}"
 echo "Instance type changed to $new_instance_type"
