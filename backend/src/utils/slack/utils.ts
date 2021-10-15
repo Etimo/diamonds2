@@ -1,8 +1,8 @@
 import axios from "axios";
 
-export const showModal = async view => {
+export const showModal = async (view, type = "open") => {
   axios
-    .post("https://slack.com/api/views.open", view, {
+    .post(`https://slack.com/api/views.${type}`, view, {
       headers: getSlackHeaders(),
     })
     .then(response => {

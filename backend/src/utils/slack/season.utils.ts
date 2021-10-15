@@ -7,6 +7,16 @@ const formatSeasonBlocks = seasons => {
           type: "mrkdwn",
           text: `*${season.name}*`,
         },
+        accessory: {
+          type: "button",
+          action_id: "show-winners",
+          text: {
+            type: "plain_text",
+            text: "Visa vinnare",
+          },
+          style: "primary",
+          value: `${season.id}`,
+        },
       },
       {
         type: "context",
@@ -24,15 +34,6 @@ const formatSeasonBlocks = seasons => {
             text: new Date(season.endDate).toISOString().substring(0, 10),
           },
         ],
-        accessory: {
-          type: "button",
-          text: {
-            type: "plain_text",
-            text: "Visa vinnare",
-          },
-          style: "primary",
-          value: `${season.id}`,
-        },
       },
       {
         type: "divider",

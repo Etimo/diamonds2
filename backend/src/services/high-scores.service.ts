@@ -8,6 +8,7 @@ import { SeasonsService } from "./seasons.service";
 import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
 import { TeamsEntity } from "../db/models/teams.entity";
 import { HighscorePublicDto } from "../models/highscore-public.dto";
+import { HighscorePrivateDto } from "../models/highscore-private.dto";
 
 @Injectable()
 export class HighScoresService {
@@ -89,24 +90,34 @@ export class HighScoresService {
     this.highScores[index] = newScore;
   }
 
-  public async allBySeasonId(seasonId: string) {
+  private async allBySeasonIdRaw(seasonId: string, limit: number = 0) {
     const currentSeason = await this.seasonService.getCurrentSeason();
-    const limit = seasonId === currentSeason.id ? 50 : 20;
+    const take = limit ? limit : seasonId === currentSeason.id ? 50 : 20;
     // Using joins to fetch logotypeUrl that related to the bots team.
     const highScores = await this.repo
       .createQueryBuilder(this.entityHighScores)
       .select(this.entityHighScores)
       .where("highScores.seasonId = :seasonId", { seasonId: seasonId })
-      .leftJoin(
+      .leftJoinAndSelect(
         BotRegistrationsEntity,
         "bot",
         "highScores.botName = bot.botName",
       )
       .leftJoinAndSelect(TeamsEntity, "teams", "bot.team = teams.id")
       .orderBy("score", "DESC")
-      .take(limit)
+      .limit(take)
       .execute();
 
+    return highScores;
+  }
+
+  public async allBySeasonIdPrivate(seasonId: string, limit: number = 0) {
+    const highScores = await this.allBySeasonIdRaw(seasonId, limit);
+    return highScores.map(e => HighscorePrivateDto.fromRawDataObject(e));
+  }
+
+  public async allBySeasonIdPublic(seasonId: string) {
+    const highScores = await this.allBySeasonIdRaw(seasonId);
     return highScores.map(e => HighscorePublicDto.fromRawDataObject(e));
   }
 

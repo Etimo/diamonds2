@@ -23,6 +23,6 @@ export class HighscoresController {
   async find(
     @Param("seasonId") seasonId: string,
   ): Promise<HighscorePublicDto[]> {
-    return await this.highScoresService.allBySeasonId(seasonId);
+    return await this.highScoresService.allBySeasonIdPublic(seasonId);
   }
 }
