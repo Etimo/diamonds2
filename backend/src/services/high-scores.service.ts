@@ -90,7 +90,7 @@ export class HighScoresService {
     this.highScores[index] = newScore;
   }
 
-  public async allBySeasonIdRaw(seasonId: string, limit: number = 0) {
+  private async allBySeasonIdRaw(seasonId: string, limit: number = 0) {
     const currentSeason = await this.seasonService.getCurrentSeason();
     const take = limit ? limit : seasonId === currentSeason.id ? 50 : 20;
     // Using joins to fetch logotypeUrl that related to the bots team.
