@@ -95,7 +95,7 @@ echo "Instance type changed to $new_instance_type"
 
 # Not checking if instance type is correct because we need to start the instance again anyway!
 
-# Start instance
+# Start instance.
 aws ec2 start-instances --instance-ids $instance_id
 echo "Instance started again"
 
