@@ -9,6 +9,7 @@ import { CustomLogger } from "../logger";
 import { Board } from "../gameengine/board";
 import { AutoScaleMiddleware } from "./auto-scale-boards.middleware";
 import { create } from "domain";
+import { BoardConfigService } from "src/services/board-config.service";
 
 describe("AutoScaleBourdsMiddleWare", () => {
   let boardsService: BoardsService;
@@ -17,6 +18,7 @@ describe("AutoScaleBourdsMiddleWare", () => {
   let botsService: BotsService;
   let seasonsService: SeasonsService;
   let autoScaleBoardsMiddleware: AutoScaleMiddleware;
+  let boardConfigService: BoardConfigService;
 
   beforeEach(async () => {
     boardsService = new BoardsService(
@@ -24,6 +26,7 @@ describe("AutoScaleBourdsMiddleWare", () => {
       highScoresService,
       null,
       seasonsService,
+      boardConfigService,
       new SilentLogger() as CustomLogger,
       4,
     );
@@ -37,6 +40,7 @@ describe("AutoScaleBourdsMiddleWare", () => {
     expect(botsService).toBeDefined;
     expect(seasonsService).toBeDefined;
     expect(boardsService).toBeDefined;
+    expect(boardConfigService).toBeDefined;
   });
 
   it("should 0 boards", () => {

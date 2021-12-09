@@ -8,19 +8,19 @@ export class AutoScaleMiddleware implements NestMiddleware {
   private controlAt: Date = new Date(Date.now() + 1 * 60 * 1000);
   constructor(private boardsService: BoardsService) {}
 
-  use(req: Request, res: Response, next: Function): void {
-    this.autoScaleBoards();
+  async use(req: Request, res: Response, next: Function): Promise<void> {
+    await this.autoScaleBoards();
     next();
   }
 
-  autoScaleBoards(): void {
+  async autoScaleBoards(): Promise<void> {
     if (new Date() >= this.controlAt) {
       const addOrRemoveNumber = this.calculateAddOrRemoval();
       if (addOrRemoveNumber < 0) {
         this.removeBoardsIfNoPlayers(addOrRemoveNumber * -1);
       }
       if (addOrRemoveNumber > 0) {
-        this.createNewBoards(addOrRemoveNumber);
+        await this.createNewBoards(addOrRemoveNumber);
       }
       this.requestCount = 0;
       this.setControlAt(1);
@@ -38,8 +38,8 @@ export class AutoScaleMiddleware implements NestMiddleware {
     this.boardsService.removeEmptyBoards(numberOfBoards);
   }
 
-  createNewBoards(numberOfBoards: number): void {
-    this.boardsService.createInMemoryBoards(numberOfBoards);
+  async createNewBoards(numberOfBoards: number): Promise<void> {
+    await this.boardsService.createInMemoryBoards(numberOfBoards);
   }
 
   calculateAddOrRemoval(): number {
