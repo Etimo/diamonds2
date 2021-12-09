@@ -1,17 +1,22 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { RecordingsEntity } from "src/db/models/recordings.entity";
+import { RecordingListDto } from "src/models/recording-list.dto";
+import { RecordingPublicDto } from "src/models/recording-public.dto";
 import { RecordingDto } from "src/models/recording.dto";
 import { Repository } from "typeorm";
+import { SeasonsService } from "./seasons.service";
 
 @Injectable()
 export class RecorderService {
   private states: Array<Array<Object>> = [];
   private stateIndex: number[] = [];
+  private entity: string = "recordings";
 
   constructor(
     @InjectRepository(RecordingsEntity)
     private readonly repo: Repository<RecordingsEntity>,
+    private seasonService: SeasonsService,
   ) {}
 
   setup(numberOfBoards: number, numberOfStates: number) {
@@ -63,5 +68,42 @@ export class RecorderService {
 
   private async create(dto: RecordingDto) {
     await this.repo.save(dto);
+  }
+
+  private async allBySeasonIdRaw(seasonId: string, limit: number = 0) {
+    return await this.repo
+      .createQueryBuilder(this.entity)
+      .select(this.entity)
+      .where("recordings.seasonId = :seasonId", { seasonId })
+      .orderBy("score", "DESC")
+      .limit(limit)
+      .execute();
+  }
+
+  // public async allBySeasonIdPrivate(seasonId: string, limit: number = 0) {
+  //   const data = await this.allBySeasonIdRaw(seasonId, limit);
+  //   return data.map(e => HighscorePrivateDto.fromRawDataObject(e));
+  // }
+
+  public async allBySeasonIdList(
+    seasonId: string,
+  ): Promise<RecordingListDto[]> {
+    const data = await this.allBySeasonIdRaw(seasonId);
+    return data.map(e => RecordingListDto.fromRawDataObject(e));
+  }
+
+  public async getById(
+    seasonId: string,
+    id: string,
+  ): Promise<RecordingPublicDto> {
+    const data = await this.repo
+      .createQueryBuilder(this.entity)
+      .select(this.entity)
+      .where("recordings.seasonId = :seasonId AND recordings.id = :id", {
+        seasonId,
+        id,
+      })
+      .execute();
+    return data.map(e => RecordingPublicDto.fromRawDataObject(e))[0];
   }
 }

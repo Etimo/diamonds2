@@ -26,6 +26,7 @@ import { SlackService } from "./services/slack.service";
 import { TeamsService } from "./services/teams.service";
 import { RecorderService } from "./services/recorder.service";
 import { RecordingsEntity } from "./db/models/recordings.entity";
+import { RecordingsController } from "./controllers/recordings/recordings.controller";
 
 const dbConfig: TypeOrmModuleOptions = {
   type: "postgres",
@@ -55,6 +56,7 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     SeasonsController,
     SlackController,
     TeamsController,
+    RecordingsController,
   ],
   imports: [
     TypeOrmModule.forRoot(dbConfig),
