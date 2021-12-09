@@ -38,7 +38,6 @@ export class BoardsService {
     @Inject("NUMBER_OF_BOARDS") private numberOfBoards,
   ) {
     this.createInMemoryBoards(this.numberOfBoards);
-    recorderService.setup(numberOfBoards, 600);
 
     this.boards.forEach(board => {
       board.registerSessionFinishedCallback(async (botName, score) => {
@@ -259,12 +258,19 @@ export class BoardsService {
         seconds: 10,
       }),
     ];
+    const sessionLength = 60;
+    const minimumDelayBetweenMoves = 100;
+    const extraFactor = 1.5;
+    const maxMoves =
+      (1000 / minimumDelayBetweenMoves) * sessionLength * extraFactor;
+    this.recorderService.setup(numberOfBoards, maxMoves);
+
     for (let i = 0; i < numberOfBoards; i++) {
       const config: BoardConfig = {
         height: 15,
         width: 15,
         minimumDelayBetweenMoves: 100,
-        sessionLength: 20,
+        sessionLength,
       };
       const board = new OperationQueueBoard(
         this.getNextBoardId(),

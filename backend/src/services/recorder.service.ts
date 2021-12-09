@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { RecordingsEntity } from "src/db/models/recordings.entity";
+import { CustomLogger } from "src/logger";
 import { RecordingListDto } from "src/models/recording-list.dto";
 import { RecordingPublicDto } from "src/models/recording-public.dto";
 import { RecordingDto } from "src/models/recording.dto";
-import { Repository } from "typeorm";
-import { SeasonsService } from "./seasons.service";
+import { LessThan, Repository } from "typeorm";
 
 @Injectable()
 export class RecorderService {
@@ -16,10 +16,13 @@ export class RecorderService {
   constructor(
     @InjectRepository(RecordingsEntity)
     private readonly repo: Repository<RecordingsEntity>,
-    private seasonService: SeasonsService,
+    private logger: CustomLogger,
   ) {}
 
   setup(numberOfBoards: number, numberOfStates: number) {
+    this.logger.info(
+      `Setting up state recorder for ${numberOfBoards} boards with ${numberOfStates} states`,
+    );
     this.states = new Array(numberOfBoards).fill(0).map(_ => {
       const arr = new Array(numberOfStates).fill(0);
       Object.seal(arr);
@@ -57,6 +60,9 @@ export class RecorderService {
     score: number;
     seasonId: string;
   }) {
+    this.logger.debug(
+      `Saving new recording for ${botName} with score ${score}`,
+    );
     await this.create({
       botName,
       score,
@@ -64,6 +70,32 @@ export class RecorderService {
       seasonId,
       recording: JSON.stringify(this.getRecording(boardIndex)),
     });
+    await this.purgeOld(seasonId);
+  }
+
+  private async purgeOld(seasonId: string) {
+    const maxEntries = 10;
+    const existing = await this.repo
+      .createQueryBuilder(this.entity)
+      .select(["recordings.score"])
+      .where("recordings.seasonId = :seasonId", { seasonId })
+      .orderBy("score", "DESC")
+      .limit(maxEntries + 1)
+      .execute();
+
+    if (existing.length > maxEntries) {
+      // Remove if we have more than 10 recordings
+      this.logger.info("Removing old recordings");
+      await this.repo
+        .createQueryBuilder()
+        .delete()
+        .from(RecordingsEntity)
+        .where({
+          seasonId,
+          score: LessThan(existing[maxEntries - 1]["recordings_score"]),
+        })
+        .execute();
+    }
   }
 
   private async create(dto: RecordingDto) {
@@ -79,11 +111,6 @@ export class RecorderService {
       .limit(limit)
       .execute();
   }
-
-  // public async allBySeasonIdPrivate(seasonId: string, limit: number = 0) {
-  //   const data = await this.allBySeasonIdRaw(seasonId, limit);
-  //   return data.map(e => HighscorePrivateDto.fromRawDataObject(e));
-  // }
 
   public async allBySeasonIdList(
     seasonId: string,
