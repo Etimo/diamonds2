@@ -19,6 +19,8 @@ import ConflictError from "../errors/conflict.error";
 import { Board } from "../gameengine/board";
 import { TeamsService } from "./teams.service";
 import { TeamsEntity } from "../db/models/teams.entity";
+import { BoardConfigService } from "./board-config.service";
+import { BoardConfigEntity } from "src/db/models/boardConfig.entity";
 
 describe("BoardsService", () => {
   let botsService: BotsService;
@@ -28,6 +30,7 @@ describe("BoardsService", () => {
   const dummyBoardToken = "dummy";
   const dummyBotId = "dummyId";
   let boardsService: BoardsService;
+  let boardConfigService: BoardConfigService;
   let newBoardsService: BoardsService;
   let repositoryMock: MockType<Repository<HighScoreEntity>>;
   let repositoryMock2: MockType<Repository<BotRegistrationsEntity>>;
@@ -59,6 +62,11 @@ describe("BoardsService", () => {
           provide: getRepositoryToken(TeamsEntity),
           useFactory: repositoryMockFactory,
         },
+        BoardConfigService,
+        {
+          provide: getRepositoryToken(BoardConfigEntity),
+          useFactory: repositoryMockFactory,
+        },
         {
           useValue: 2,
           provide: "NUMBER_OF_BOARDS",
@@ -68,6 +76,7 @@ describe("BoardsService", () => {
     highScoresService = module.get<HighScoresService>(HighScoresService);
     botsService = module.get<BotsService>(BotsService);
     seasonsService = module.get<SeasonsService>(SeasonsService);
+    boardConfigService = module.get<BoardConfigService>(BoardConfigService);
     repositoryMock = module.get(getRepositoryToken(HighScoreEntity));
     repositoryMock2 = module.get(getRepositoryToken(BotRegistrationsEntity));
     repositoryMock3 = module.get(getRepositoryToken(SeasonsEntity));
@@ -76,6 +85,7 @@ describe("BoardsService", () => {
       highScoresService,
       null,
       seasonsService,
+      boardConfigService,
       new SilentLogger() as CustomLogger,
       2,
     );
@@ -139,6 +149,7 @@ describe("BoardsService", () => {
       highScoresService,
       null,
       seasonsService,
+      boardConfigService,
       new SilentLogger() as CustomLogger,
       5,
     );
@@ -158,6 +169,7 @@ describe("BoardsService", () => {
       highScoresService,
       null,
       seasonsService,
+      boardConfigService,
       new SilentLogger() as CustomLogger,
       5,
     );
