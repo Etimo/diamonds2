@@ -290,7 +290,6 @@ export class Board {
   ): boolean {
     // Check if we can leave the current position
     if (!(skipLeaveCheck || this.canGameObjectLeave(gameObject, dest))) {
-      this.logger.debug("Not allowed to leave");
       return false;
     }
 
@@ -299,26 +298,15 @@ export class Board {
       this.destinationIsOutOfBounds(dest) ||
       !(skipEnterCheck || this.canGameObjectEnter(gameObject, dest))
     ) {
-      this.logger.debug("Not allowed to enter");
       return false;
     }
 
     // Notfy game objects in current position that we are leaving to the new position
     const gameObjectsPrev = this.getGameObjectsOnPosition(gameObject.position);
-    this.logger.debug(
-      JSON.stringify(gameObject),
-      "left",
-      JSON.stringify(gameObject.position),
-    );
     gameObjectsPrev.forEach(g => g.onGameObjectLeft(gameObject, this));
 
     // Notify game objects in new position that we are entering the new position
     const gameObjectsDest = this.getGameObjectsOnPosition(dest);
-    this.logger.debug(
-      JSON.stringify(gameObject),
-      "entered",
-      JSON.stringify(gameObject.position),
-    );
 
     // Update position of game object
     gameObject.position = dest;
@@ -373,9 +361,6 @@ export class Board {
   }
 
   private notifyProvidersGameObjectsRemoved(gameObjects: AbstractGameObject[]) {
-    this.logger.debug(
-      `notifyProvidersGameObjectsRemoved ${this.getLogString(gameObjects)}`,
-    );
     this.gameObjectProviders.forEach(p =>
       p.onGameObjectsRemoved(this, gameObjects),
     );
@@ -386,16 +371,12 @@ export class Board {
   }
 
   private notifyProvidersGameObjectsAdded(gameObjects: AbstractGameObject[]) {
-    this.logger.debug(
-      `notifyProvidersGameObjectsAdded ${this.getLogString(gameObjects)}`,
-    );
     this.gameObjectProviders.forEach(p =>
       p.onGameObjectsAdded(this, gameObjects),
     );
   }
 
   private notifyProvidersBoardInitialized() {
-    this.logger.debug("notifyProvidersBoardInitialized");
     this.gameObjectProviders.forEach(p => p.onBoardInitialized(this));
   }
 
@@ -433,12 +414,6 @@ export class Board {
     message: string,
     payload?: Object,
   ) {
-    this.logger.debug(
-      "notifyGameObjectEvent",
-      JSON.stringify(sender),
-      message,
-      JSON.stringify(payload),
-    );
     this.gameObjects.forEach(g => g.onEvent(this, sender, message, payload));
   }
 }

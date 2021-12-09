@@ -24,6 +24,8 @@ import { MetricsService } from "./services/metrics.service";
 import { AutoScaleMiddleware } from "./middlewares/auto-scale-boards.middleware";
 import { SlackService } from "./services/slack.service";
 import { TeamsService } from "./services/teams.service";
+import { RecorderService } from "./services/recorder.service";
+import { RecordingsEntity } from "./db/models/recordings.entity";
 
 const dbConfig: TypeOrmModuleOptions = {
   type: "postgres",
@@ -38,6 +40,7 @@ const dbConfig: TypeOrmModuleOptions = {
     BotRegistrationsEntity,
     SeasonsEntity,
     TeamsEntity,
+    RecordingsEntity,
   ],
   migrationsTableName: "migration",
   migrations: ["./migration/*.{ts,js}"],
@@ -61,6 +64,7 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
       BotRegistrationsEntity,
       SeasonsEntity,
       TeamsEntity,
+      RecordingsEntity,
     ]),
   ],
   providers: [
@@ -75,9 +79,14 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     SlackService,
     AuthorizationService,
     TeamsService,
+    RecorderService,
     {
       provide: "NUMBER_OF_BOARDS",
       useValue: 4,
+    },
+    {
+      provide: "RECORDABLE_STATES",
+      useValue: 1000,
     },
   ],
 })

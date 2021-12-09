@@ -24,6 +24,8 @@ export class HighScoresService {
   ) {}
 
   public async addOrUpdate(input: HighscoreDto): Promise<boolean> {
+    const seasonAllTimeBest = await this.getSeasonBestHighScore(input.seasonId);
+
     if (await this.isNewHighScore(input)) {
       await this.create(input);
       if (this.metricsService) {
@@ -31,7 +33,7 @@ export class HighScoresService {
       }
     }
 
-    return Promise.resolve(true);
+    return seasonAllTimeBest < input.score;
   }
 
   public async getBotScore(newScore: HighscoreDto) {
@@ -59,9 +61,6 @@ export class HighScoresService {
 
     if (resultSetHighScore) {
       if (resultSetHighScore.score < newScore.score) {
-        //update
-        //console.log("Update HighScore ");
-
         await this.repo
           .createQueryBuilder()
           .update("high_scores")
@@ -76,18 +75,19 @@ export class HighScoresService {
           this.metricsService.incHighscoresImproved();
         }
       } else {
-        //console.log("New HighScore is lower or equal ");
         isNew = false;
       }
-    } else {
-      //console.log("Is new HighScore  ");
     }
 
     return isNew;
   }
 
-  private updateHighScore(index: number, newScore: HighscoreDto) {
-    this.highScores[index] = newScore;
+  private async getSeasonBestHighScore(seasonId): Promise<number> {
+    const existingBest = await this.allBySeasonIdRaw(seasonId, 1);
+    if (existingBest.length === 0) {
+      return 0;
+    }
+    return existingBest[0]["highScores_score"];
   }
 
   private async allBySeasonIdRaw(seasonId: string, limit: number = 0) {
