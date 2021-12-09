@@ -1,8 +1,8 @@
 import { Controller, Get, Body, Post, Param } from "@nestjs/common";
 import { ApiUseTags, ApiResponse } from "@nestjs/swagger";
-import { RecorderService } from "src/services/recorder.service";
-import { RecordingListDto } from "src/models/recording-list.dto";
-import { RecordingPublicDto } from "src/models/recording-public.dto";
+import { RecorderService } from "../../services/recorder.service";
+import { RecordingListDto } from "../../models/recording-list.dto";
+import { RecordingPublicDto } from "../../models/recording-public.dto";
 
 @ApiUseTags("Recordings")
 @Controller("api/recordings")

@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RecordingsEntity } from "src/db/models/recordings.entity";
-import { CustomLogger } from "src/logger";
-import { RecordingListDto } from "src/models/recording-list.dto";
-import { RecordingPublicDto } from "src/models/recording-public.dto";
-import { RecordingDto } from "src/models/recording.dto";
+import { RecordingsEntity } from "../db/models/recordings.entity";
+import { CustomLogger } from "../logger";
+import { RecordingListDto } from "../models/recording-list.dto";
+import { RecordingPublicDto } from "../models/recording-public.dto";
+import { RecordingDto } from "../models/recording.dto";
 import { LessThan, Repository } from "typeorm";
 
 @Injectable()

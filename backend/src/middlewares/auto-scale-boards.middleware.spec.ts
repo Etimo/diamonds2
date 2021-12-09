@@ -1,22 +1,19 @@
 import { BoardsService } from "../services/board.service";
-import { TestingModule, Test } from "@nestjs/testing";
-import { getRepository } from "typeorm";
 import { HighScoresService } from "../services/high-scores.service";
 import { BotsService } from "../services/bots.service";
 import { SeasonsService } from "../services/seasons.service";
 import SilentLogger from "../gameengine/util/silent-logger";
 import { CustomLogger } from "../logger";
-import { Board } from "../gameengine/board";
 import { AutoScaleMiddleware } from "./auto-scale-boards.middleware";
-import { create } from "domain";
+import { RecorderService } from "src/services/recorder.service";
 
 describe("AutoScaleBourdsMiddleWare", () => {
   let boardsService: BoardsService;
-  let newBoardsService: BoardsService;
   let highScoresService: HighScoresService;
   let botsService: BotsService;
   let seasonsService: SeasonsService;
   let autoScaleBoardsMiddleware: AutoScaleMiddleware;
+  let recorderService: RecorderService;
 
   beforeEach(async () => {
     boardsService = new BoardsService(
@@ -24,6 +21,7 @@ describe("AutoScaleBourdsMiddleWare", () => {
       highScoresService,
       null,
       seasonsService,
+      recorderService,
       new SilentLogger() as CustomLogger,
       4,
     );

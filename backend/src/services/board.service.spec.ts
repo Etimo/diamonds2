@@ -1,5 +1,5 @@
 import { BoardsService } from "./board.service";
-import { Repository, SelectQueryBuilder, Connection } from "typeorm";
+import { Repository } from "typeorm";
 import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
 import { Test, TestingModule } from "@nestjs/testing";
 import { HighScoresService } from "./high-scores.service";
@@ -16,9 +16,10 @@ import { MetricsService } from "./metrics.service";
 import { SeasonsService } from "./seasons.service";
 import { SeasonsEntity } from "../db/models/seasons.entity";
 import ConflictError from "../errors/conflict.error";
-import { Board } from "../gameengine/board";
 import { TeamsService } from "./teams.service";
 import { TeamsEntity } from "../db/models/teams.entity";
+import { RecorderService } from "./recorder.service";
+import { RecordingsEntity } from "../db/models/recordings.entity";
 
 describe("BoardsService", () => {
   let botsService: BotsService;
@@ -29,18 +30,28 @@ describe("BoardsService", () => {
   const dummyBotId = "dummyId";
   let boardsService: BoardsService;
   let newBoardsService: BoardsService;
+  let recorderService: RecorderService;
   let repositoryMock: MockType<Repository<HighScoreEntity>>;
   let repositoryMock2: MockType<Repository<BotRegistrationsEntity>>;
   let repositoryMock3: MockType<Repository<SeasonsEntity>>;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        {
+          provide: CustomLogger,
+          useValue: new SilentLogger() as CustomLogger,
+        },
         BotsService,
         {
           provide: getRepositoryToken(BotRegistrationsEntity),
           useFactory: repositoryMockFactory,
         },
+        {
+          provide: getRepositoryToken(RecordingsEntity),
+          useFactory: repositoryMockFactory,
+        },
         SeasonsService,
+        RecorderService,
         {
           provide: getRepositoryToken(SeasonsEntity),
           useFactory: repositoryMockFactory,
@@ -68,6 +79,7 @@ describe("BoardsService", () => {
     highScoresService = module.get<HighScoresService>(HighScoresService);
     botsService = module.get<BotsService>(BotsService);
     seasonsService = module.get<SeasonsService>(SeasonsService);
+    recorderService = module.get<RecorderService>(RecorderService);
     repositoryMock = module.get(getRepositoryToken(HighScoreEntity));
     repositoryMock2 = module.get(getRepositoryToken(BotRegistrationsEntity));
     repositoryMock3 = module.get(getRepositoryToken(SeasonsEntity));
@@ -76,6 +88,7 @@ describe("BoardsService", () => {
       highScoresService,
       null,
       seasonsService,
+      recorderService,
       new SilentLogger() as CustomLogger,
       2,
     );
@@ -139,6 +152,7 @@ describe("BoardsService", () => {
       highScoresService,
       null,
       seasonsService,
+      recorderService,
       new SilentLogger() as CustomLogger,
       5,
     );
@@ -158,6 +172,7 @@ describe("BoardsService", () => {
       highScoresService,
       null,
       seasonsService,
+      recorderService,
       new SilentLogger() as CustomLogger,
       5,
     );

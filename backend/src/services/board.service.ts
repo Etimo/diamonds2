@@ -50,7 +50,7 @@ export class BoardsService {
           score,
           seasonId: currentSeason.id,
         });
-        if (betterScore) {
+        if (betterScore && recorderService) {
           this.recorderService.save({
             boardIndex: this.getBoardIndex(board),
             botName,
@@ -117,7 +117,7 @@ export class BoardsService {
   private returnAndSaveDto(board: Board) {
     const dto = this.getAsDto(board);
     const index = this.getBoardIndex(board);
-    this.recorderService.record(index, dto);
+    if (this.recorderService) this.recorderService.record(index, dto);
     return dto;
   }
 
@@ -260,10 +260,12 @@ export class BoardsService {
     ];
     const sessionLength = 60;
     const minimumDelayBetweenMoves = 100;
-    const extraFactor = 1.5;
-    const maxMoves =
-      (1000 / minimumDelayBetweenMoves) * sessionLength * extraFactor;
-    this.recorderService.setup(numberOfBoards, maxMoves);
+    if (this.recorderService) {
+      const extraFactor = 1.5;
+      const maxMoves =
+        (1000 / minimumDelayBetweenMoves) * sessionLength * extraFactor;
+      this.recorderService.setup(numberOfBoards, maxMoves);
+    }
 
     for (let i = 0; i < numberOfBoards; i++) {
       const config: BoardConfig = {
