@@ -9,7 +9,7 @@ import { LessThan, Repository } from "typeorm";
 import NotFoundError from "../errors/not-found.error";
 
 @Injectable()
-export class RecorderService {
+export class RecordingsService {
   private states: Array<Array<Object>> = [];
   private stateIndex: number[] = [];
   private entity: string = "recordings";

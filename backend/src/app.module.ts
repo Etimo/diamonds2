@@ -23,7 +23,7 @@ import { MetricsService } from "./services/metrics.service";
 import { AutoScaleMiddleware } from "./middlewares/auto-scale-boards.middleware";
 import { SlackService } from "./services/slack.service";
 import { TeamsService } from "./services/teams.service";
-import { RecorderService } from "./services/recorder.service";
+import { RecordingsService } from "./services/recordings.service";
 import { RecordingsEntity } from "./db/models/recordings.entity";
 import { RecordingsController } from "./controllers/recordings/recordings.controller";
 
@@ -79,7 +79,7 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     SlackService,
     AuthorizationService,
     TeamsService,
-    RecorderService,
+    RecordingsService,
     {
       provide: "NUMBER_OF_BOARDS",
       useValue: 4,

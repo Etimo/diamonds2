@@ -1,13 +1,13 @@
 import { Controller, Get, Body, Post, Param } from "@nestjs/common";
 import { ApiUseTags, ApiResponse } from "@nestjs/swagger";
-import { RecorderService } from "../../services/recorder.service";
+import { RecordingsService } from "../../services/recordings.service";
 import { RecordingListDto } from "../../models/recording-list.dto";
 import { RecordingPublicDto } from "../../models/recording-public.dto";
 
 @ApiUseTags("Recordings")
 @Controller("api/recordings")
 export class RecordingsController {
-  constructor(private recorderService: RecorderService) {}
+  constructor(private recorderService: RecordingsService) {}
 
   /**
    * Returns all highscores on a specific season.

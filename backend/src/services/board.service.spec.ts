@@ -18,7 +18,7 @@ import { SeasonsEntity } from "../db/models/seasons.entity";
 import ConflictError from "../errors/conflict.error";
 import { TeamsService } from "./teams.service";
 import { TeamsEntity } from "../db/models/teams.entity";
-import { RecorderService } from "./recorder.service";
+import { RecordingsService } from "./recordings.service";
 import { RecordingsEntity } from "../db/models/recordings.entity";
 
 describe("BoardsService", () => {
@@ -30,7 +30,7 @@ describe("BoardsService", () => {
   const dummyBotId = "dummyId";
   let boardsService: BoardsService;
   let newBoardsService: BoardsService;
-  let recorderService: RecorderService;
+  let recorderService: RecordingsService;
   let repositoryMock: MockType<Repository<HighScoreEntity>>;
   let repositoryMock2: MockType<Repository<BotRegistrationsEntity>>;
   let repositoryMock3: MockType<Repository<SeasonsEntity>>;
@@ -51,7 +51,7 @@ describe("BoardsService", () => {
           useFactory: repositoryMockFactory,
         },
         SeasonsService,
-        RecorderService,
+        RecordingsService,
         {
           provide: getRepositoryToken(SeasonsEntity),
           useFactory: repositoryMockFactory,
@@ -79,7 +79,7 @@ describe("BoardsService", () => {
     highScoresService = module.get<HighScoresService>(HighScoresService);
     botsService = module.get<BotsService>(BotsService);
     seasonsService = module.get<SeasonsService>(SeasonsService);
-    recorderService = module.get<RecorderService>(RecorderService);
+    recorderService = module.get<RecordingsService>(RecordingsService);
     repositoryMock = module.get(getRepositoryToken(HighScoreEntity));
     repositoryMock2 = module.get(getRepositoryToken(BotRegistrationsEntity));
     repositoryMock3 = module.get(getRepositoryToken(SeasonsEntity));
