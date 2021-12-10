@@ -14,16 +14,24 @@ export default () => {
   let location = useLocation();
   return (
     <Header>
-      <Header.Logo alt="etimoLogo" src={etimoLogo} />
-      <Header.Title>Diamonds</Header.Title>
-      {teamsOrGameLink(location)}
-      <Header.Link
-        target="_blank"
-        rel="noopener"
-        href="https://github.com/Etimo/diamonds2"
-      >
-        How to play
-      </Header.Link>
+      <div>
+        <Header.Logo alt="etimoLogo" src={etimoLogo} />
+      </div>
+      <div>
+        <Header.Title>Diamonds</Header.Title>
+      </div>
+      <div>
+        <div>
+          {teamsOrGameLink(location)}
+          <Header.Link
+            target="_blank"
+            rel="noopener"
+            href="https://github.com/Etimo/diamonds2"
+          >
+            How to play
+          </Header.Link>
+        </div>
+      </div>
     </Header>
   );
 };

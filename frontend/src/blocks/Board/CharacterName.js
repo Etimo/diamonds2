@@ -12,6 +12,6 @@ export default styled.div`
   margin: 0;
 
   @media only screen and (max-width: 900px) {
-    font-size: 65%;
+    font-size: 55%;
   }
 `;

@@ -11,6 +11,7 @@ import LogoImg from "./LogoImg";
 const Table = styled.table`
   border-collapse: collapse;
   margin-bottom: 1.5rem;
+  overflow-y: scroll;
 `;
 
 Table.Caption = Caption;

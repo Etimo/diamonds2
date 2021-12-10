@@ -13,6 +13,7 @@ import {
   wall,
   redButton
 } from "../images";
+import { useResize } from "../hooks";
 
 export default ({ rows }) => {
   const decideCharacter = content => {
@@ -50,38 +51,51 @@ export default ({ rows }) => {
   const bigCellSize = (90 / width).toFixed(2);
   const smallCellSize = (60 / width).toFixed(2);
 
-  return (
-    <Board>
-      {rows.map((cells, key) => {
-        return (
-          <Board.Row key={key}>
-            {cells.map((content, key) => {
-              const character = decideCharacter(content);
-              const characterName = decideCharacterName(content);
-              const shouldRotate = content.goName === "Teleporter" ? 1 : 0;
+  const [containerRef, maxWidth] = useResize({
+    root: document.querySelector("#test"),
+    rootMargin: "0px",
+    threshold: 0
+  });
 
-              return (
-                <Board.Cell
-                  key={key}
-                  bigCellSize={bigCellSize}
-                  smallCellSize={smallCellSize}
-                >
-                  {characterName && (
-                    <Board.CharacterName>{characterName}</Board.CharacterName>
-                  )}
-                  {character && (
-                    <Board.CharacterImg
-                      alt="player"
-                      src={character}
-                      rotate={shouldRotate}
-                    />
-                  )}
-                </Board.Cell>
-              );
-            })}
-          </Board.Row>
-        );
-      })}
+  return (
+    <Board id="test">
+      <div ref={containerRef} style={maxWidth}>
+        {rows.map((cells, key) => {
+          return (
+            <Board.Row key={key}>
+              {cells.map((content, key) => {
+                const character = decideCharacter(content);
+                const characterName = decideCharacterName(content);
+                const shouldRotate = content.goName === "Teleporter" ? 1 : 0;
+
+                return (
+                  <Board.Cell
+                    key={key}
+                    width={width}
+                    bigCellSize={bigCellSize}
+                    smallCellSize={smallCellSize}
+                  >
+                    <div>
+                      {characterName && (
+                        <Board.CharacterName>
+                          {characterName}
+                        </Board.CharacterName>
+                      )}
+                      {character && (
+                        <Board.CharacterImg
+                          alt="player"
+                          src={character}
+                          rotate={shouldRotate}
+                        />
+                      )}
+                    </div>
+                  </Board.Cell>
+                );
+              })}
+            </Board.Row>
+          );
+        })}
+      </div>
     </Board>
   );
 };
