@@ -9,8 +9,8 @@ import {
 } from "@nestjs/common";
 import { Request } from "express";
 import { ApiResponse, ApiUseTags } from "@nestjs/swagger";
-import { SlackService } from "../../services/slack.service";
-import { AuthorizationService } from "../../services/authorization.service";
+import { SlackService } from "../services/slack.service";
+import { AuthorizationService } from "../services/authorization.service";
 
 @ApiUseTags("Slack")
 @Controller("api/slack")
