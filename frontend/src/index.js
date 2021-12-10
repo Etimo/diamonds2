@@ -23,5 +23,6 @@ ReactDOM.render(
     <GlobalStyle />
     <App />
   </React.Fragment>,
+  // test;
   document.getElementById("root")
 );
