@@ -24,8 +24,8 @@ export class RecordingsService {
     this.logger.info(
       `Setting up state recorder for ${numberOfBoards} boards with ${numberOfStates} states`,
     );
-    this.states = new Array(numberOfBoards).fill(0).map(_ => {
-      const arr = new Array(numberOfStates).fill(0);
+    this.states = new Array(numberOfBoards).fill(null).map(_ => {
+      const arr = new Array(numberOfStates).fill(null);
       Object.seal(arr);
       return arr;
     });
@@ -39,15 +39,14 @@ export class RecordingsService {
       (this.stateIndex[boardIndex] + 1) % this.states[boardIndex].length;
   }
 
-  private getRecording(boardIndex: number): Array<Object> {
+  public getRecording(boardIndex: number): Array<Object> {
     const currentStateIndex = this.stateIndex[boardIndex];
     const states = this.states[boardIndex];
 
     return new Array(states.length)
       .fill(0)
-      .map(
-        (_, index) => states[(currentStateIndex + index + 1) % states.length],
-      );
+      .map((_, index) => states[(currentStateIndex + index) % states.length])
+      .filter(r => r);
   }
 
   async save({
