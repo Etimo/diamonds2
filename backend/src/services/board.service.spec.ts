@@ -30,7 +30,7 @@ describe("BoardsService", () => {
   const dummyBotId = "dummyId";
   let boardsService: BoardsService;
   let newBoardsService: BoardsService;
-  let recorderService: RecordingsService;
+  let recordingsService: RecordingsService;
   let repositoryMock: MockType<Repository<HighScoreEntity>>;
   let repositoryMock2: MockType<Repository<BotRegistrationsEntity>>;
   let repositoryMock3: MockType<Repository<SeasonsEntity>>;
@@ -79,7 +79,7 @@ describe("BoardsService", () => {
     highScoresService = module.get<HighScoresService>(HighScoresService);
     botsService = module.get<BotsService>(BotsService);
     seasonsService = module.get<SeasonsService>(SeasonsService);
-    recorderService = module.get<RecordingsService>(RecordingsService);
+    recordingsService = module.get<RecordingsService>(RecordingsService);
     repositoryMock = module.get(getRepositoryToken(HighScoreEntity));
     repositoryMock2 = module.get(getRepositoryToken(BotRegistrationsEntity));
     repositoryMock3 = module.get(getRepositoryToken(SeasonsEntity));
@@ -88,7 +88,7 @@ describe("BoardsService", () => {
       highScoresService,
       null,
       seasonsService,
-      recorderService,
+      recordingsService,
       new SilentLogger() as CustomLogger,
       2,
     );
@@ -152,7 +152,7 @@ describe("BoardsService", () => {
       highScoresService,
       null,
       seasonsService,
-      recorderService,
+      recordingsService,
       new SilentLogger() as CustomLogger,
       5,
     );
@@ -172,7 +172,7 @@ describe("BoardsService", () => {
       highScoresService,
       null,
       seasonsService,
-      recorderService,
+      recordingsService,
       new SilentLogger() as CustomLogger,
       5,
     );

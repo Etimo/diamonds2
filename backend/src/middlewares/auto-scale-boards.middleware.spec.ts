@@ -5,7 +5,7 @@ import { SeasonsService } from "../services/seasons.service";
 import SilentLogger from "../gameengine/util/silent-logger";
 import { CustomLogger } from "../logger";
 import { AutoScaleMiddleware } from "./auto-scale-boards.middleware";
-import { RecordingsService } from "src/services/recordings.service";
+import { RecordingsService } from "../services/recordings.service";
 
 describe("AutoScaleBourdsMiddleWare", () => {
   let boardsService: BoardsService;
@@ -13,7 +13,7 @@ describe("AutoScaleBourdsMiddleWare", () => {
   let botsService: BotsService;
   let seasonsService: SeasonsService;
   let autoScaleBoardsMiddleware: AutoScaleMiddleware;
-  let recorderService: RecordingsService;
+  let recordingsService: RecordingsService;
 
   beforeEach(async () => {
     boardsService = new BoardsService(
@@ -21,7 +21,7 @@ describe("AutoScaleBourdsMiddleWare", () => {
       highScoresService,
       null,
       seasonsService,
-      recorderService,
+      recordingsService,
       new SilentLogger() as CustomLogger,
       4,
     );

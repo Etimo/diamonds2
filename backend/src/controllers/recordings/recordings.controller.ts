@@ -7,7 +7,7 @@ import { RecordingPublicDto } from "../../models/recording-public.dto";
 @ApiUseTags("Recordings")
 @Controller("api/recordings")
 export class RecordingsController {
-  constructor(private recorderService: RecordingsService) {}
+  constructor(private recordingsService: RecordingsService) {}
 
   /**
    * Returns all highscores on a specific season.
@@ -26,7 +26,7 @@ export class RecordingsController {
   })
   @Get(":seasonId")
   async list(@Param("seasonId") seasonId: string): Promise<RecordingListDto[]> {
-    return await this.recorderService.allBySeasonIdList(seasonId);
+    return await this.recordingsService.allBySeasonIdList(seasonId);
   }
 
   /**
@@ -48,6 +48,6 @@ export class RecordingsController {
     @Param("seasonId") seasonId: string,
     @Param("id") id: string,
   ): Promise<RecordingPublicDto> {
-    return this.recorderService.getById(seasonId, id);
+    return this.recordingsService.getById(seasonId, id);
   }
 }

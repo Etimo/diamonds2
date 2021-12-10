@@ -22,7 +22,7 @@ import { TeleportProvider } from "../gameengine/gameobjects/teleport/teleport-pr
 import { MetricsService } from "./metrics.service";
 import { TeleportRelocationProvider } from "../gameengine/gameobjects/teleport-relocation-provider/teleport-relocation-provider";
 import { SeasonsService } from "./seasons.service";
-import { RecorderService } from "./recorder.service";
+import { RecordingsService } from "./recordings.service";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
@@ -33,7 +33,7 @@ export class BoardsService {
     private highscoresService: HighScoresService,
     private metricsService: MetricsService,
     private seasonsService: SeasonsService,
-    private recorderService: RecorderService,
+    private recordingsService: RecordingsService,
     private logger: CustomLogger,
     @Inject("NUMBER_OF_BOARDS") private numberOfBoards,
   ) {
@@ -50,8 +50,8 @@ export class BoardsService {
           score,
           seasonId: currentSeason.id,
         });
-        if (betterScore && recorderService) {
-          this.recorderService.save({
+        if (betterScore && recordingsService) {
+          this.recordingsService.save({
             boardIndex: this.getBoardIndex(board),
             botName,
             score,
@@ -117,7 +117,7 @@ export class BoardsService {
   private returnAndSaveDto(board: Board) {
     const dto = this.getAsDto(board);
     const index = this.getBoardIndex(board);
-    if (this.recorderService) this.recorderService.record(index, dto);
+    if (this.recordingsService) this.recordingsService.record(index, dto);
     return dto;
   }
 
@@ -260,11 +260,11 @@ export class BoardsService {
     ];
     const sessionLength = 60;
     const minimumDelayBetweenMoves = 100;
-    if (this.recorderService) {
+    if (this.recordingsService) {
       const extraFactor = 1.5;
       const maxMoves =
         (1000 / minimumDelayBetweenMoves) * sessionLength * extraFactor;
-      this.recorderService.setup(numberOfBoards, maxMoves);
+      this.recordingsService.setup(numberOfBoards, maxMoves);
     }
 
     for (let i = 0; i < numberOfBoards; i++) {
