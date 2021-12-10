@@ -5,6 +5,8 @@ import { AbstractGameObject } from "./gameobjects/abstract-game-object";
 import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
 import { BotGameObject } from "./gameobjects/bot/bot";
 
+export type SessionFinishedCallbackFunction = (bot: BotGameObject) => void;
+
 export class Board {
   private readonly _id: number;
   private bots: Object = {};
@@ -40,7 +42,7 @@ export class Board {
    *
    * @param callback
    */
-  registerSessionFinishedCallback(callback: Function) {
+  registerSessionFinishedCallback(callback: SessionFinishedCallbackFunction) {
     this.sessionFinishedCallbacks.push(callback);
   }
 
@@ -49,7 +51,7 @@ export class Board {
    *
    * @param callback
    */
-  unregisterSessionFinishedCallback(callback: Function) {
+  unregisterSessionFinishedCallback(callback: SessionFinishedCallbackFunction) {
     this.sessionFinishedCallbacks = this.sessionFinishedCallbacks.filter(
       c => c !== callback,
     );
@@ -142,9 +144,7 @@ export class Board {
         delete this.botRateLimitViolations[bot.botName];
 
         // Notify all session finished callbacks
-        this.sessionFinishedCallbacks.forEach(sfc =>
-          sfc(botGameObject.name, botGameObject.score),
-        );
+        this.sessionFinishedCallbacks.forEach(sfc => sfc(botGameObject));
         this.removeGameObject(botGameObject);
       },
       time ? time : this.config.sessionLength * 1000,
