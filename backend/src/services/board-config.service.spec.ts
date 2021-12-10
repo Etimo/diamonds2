@@ -21,37 +21,26 @@ import { TeamsService } from "./teams.service";
 import { TeamsEntity } from "../db/models/teams.entity";
 import { BoardConfigService } from "./board-config.service";
 import { BoardConfigEntity } from "../db/models/boardConfig.entity";
-import { BoardConfigDto } from "src/models/board-config.dto";
+import { SeasonDto } from "../models/season.dto";
+import { BoardConfigDto } from "../models/board-config.dto";
 
-describe("BoardsService", () => {
+describe("BoardConfigService", () => {
   let botsService: BotsService;
   let highScoresService: HighScoresService;
   let seasonsService: SeasonsService;
-  const dummyBoardId = 1111111;
-  const dummyBoardToken = "dummy";
-  const dummyBotId = "dummyId";
-  let boardsService: BoardsService;
   let boardConfigService: BoardConfigService;
-  let newBoardsService: BoardsService;
   let repositoryMock: MockType<Repository<HighScoreEntity>>;
   let repositoryMock2: MockType<Repository<BotRegistrationsEntity>>;
   let repositoryMock3: MockType<Repository<SeasonsEntity>>;
   let repositoryMock4: MockType<Repository<BoardConfigEntity>>;
-  const boardConfig = {
-    id: "test",
-    seasonId: "321",
-    inventorySize: 5,
-    canTackle: false,
-    teleporters: 1,
-    teleportRelocation: 10,
-    height: 15,
-    width: 15,
-    minimumDelayBetweenMoves: 100,
-    sessionLength: 60,
-  };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        BoardConfigService,
+        {
+          provide: getRepositoryToken(BoardConfigEntity),
+          useFactory: repositoryMockFactory,
+        },
         BotsService,
         {
           provide: getRepositoryToken(BotRegistrationsEntity),
@@ -76,11 +65,6 @@ describe("BoardsService", () => {
           provide: getRepositoryToken(TeamsEntity),
           useFactory: repositoryMockFactory,
         },
-        BoardConfigService,
-        {
-          provide: getRepositoryToken(BoardConfigEntity),
-          useFactory: repositoryMockFactory,
-        },
         {
           useValue: 2,
           provide: "NUMBER_OF_BOARDS",
@@ -95,99 +79,16 @@ describe("BoardsService", () => {
     repositoryMock2 = module.get(getRepositoryToken(BotRegistrationsEntity));
     repositoryMock3 = module.get(getRepositoryToken(SeasonsEntity));
     repositoryMock4 = module.get(getRepositoryToken(BoardConfigEntity));
-    spyOn(boardConfigService, "getCurrentBoardConfig").and.returnValue(
-      boardConfig as BoardConfigDto,
-    );
-    boardsService = new BoardsService(
-      botsService,
-      highScoresService,
-      null,
-      seasonsService,
-      boardConfigService,
-      new SilentLogger() as CustomLogger,
-      2,
-    );
-
-    newBoardsService = new BoardsService(
-      botsService,
-      highScoresService,
-      null,
-      seasonsService,
-      boardConfigService,
-      new SilentLogger() as CustomLogger,
-      5,
-    );
-
+    repositoryMock3.createQueryBuilder.mockImplementation(mockGetSeason());
+    repositoryMock4.createQueryBuilder.mockImplementation(mockGetBoardConfig());
     jest.clearAllMocks();
   });
 
   it("should be defined", () => {
     expect(highScoresService).toBeDefined();
     expect(botsService).toBeDefined();
-    expect(boardsService).toBeDefined();
     expect(seasonsService).toBeDefined();
-  });
-
-  it("Should throw UnauthorizedError when bot not exists", async () => {
-    spyOn(botsService, "get").and.returnValue(undefined);
-    await expect(
-      boardsService.join(dummyBoardId, dummyBoardToken),
-    ).rejects.toThrowError(UnauthorizedError);
-  });
-
-  it("Should throw ConflictError when bot is already present on other board", async () => {
-    const boards = boardsService.getAll();
-    spyOn(botsService, "get").and.returnValue({
-      token: dummyBoardToken,
-      botName: "name",
-      email: "email",
-    } as IBot);
-    await boardsService.join(boards[0].id, dummyBoardToken);
-
-    await expect(
-      boardsService.join(boards[1].id, dummyBoardToken),
-    ).rejects.toThrowError(ConflictError);
-  });
-
-  it("Should throw ConflictError when bot is already present on same board", async () => {
-    const boards = boardsService.getAll();
-    spyOn(botsService, "get").and.returnValue({
-      token: dummyBoardToken,
-      botName: "name",
-      email: "email",
-    } as IBot);
-    await boardsService.join(boards[0].id, dummyBoardToken);
-
-    await expect(
-      boardsService.join(boards[0].id, dummyBoardToken),
-    ).rejects.toThrowError(ConflictError);
-  });
-
-  it("Should throw NotFoundError when board not exists", async () => {
-    spyOn(botsService, "get").and.returnValue({} as IBot);
-    await expect(
-      boardsService.join(dummyBoardId, dummyBoardToken),
-    ).rejects.toThrowError(NotFoundError);
-  });
-
-  it("Should not remove board 1 and 3", async () => {
-    spyOn(botsService, "get").and.returnValue({} as IBot);
-    let boards = newBoardsService.getAll();
-    await newBoardsService.join(boards[2].id, dummyBoardToken);
-    newBoardsService.removeEmptyBoards(4);
-    boards = newBoardsService.getAll();
-    expect(boards[0].id).toEqual(1);
-    expect(boards[1].id).toEqual(3);
-    expect(boards.length).toEqual(2);
-  });
-
-  it("Should remove all boards except board 1", async () => {
-    spyOn(botsService, "get").and.returnValue({} as IBot);
-    let boards = newBoardsService.getAll();
-    newBoardsService.removeEmptyBoards(10);
-    boards = newBoardsService.getAll();
-    expect(boards[0].id).toEqual(1);
-    expect(boards.length).toEqual(1);
+    expect(boardConfigService).toBeDefined();
   });
 });
 
@@ -209,4 +110,66 @@ export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
 );
 export type MockType<T> = {
   [P in keyof T]: jest.Mock<{}>;
+};
+
+const mockGetSeason = () => {
+  let testSeason = {
+    id: "321",
+    name: "Test Season",
+    startDate: new Date(),
+    endDate: new Date(),
+  };
+
+  const execute = jest.fn();
+  const where = jest.fn(() => ({ execute }));
+  const set = jest.fn(() => ({ where }));
+  const update = jest.fn(() => ({ set }));
+
+  const getOne = jest.fn(
+    () =>
+      new Promise<SeasonDto>((resolve, reject) => {
+        var savedPackage: SeasonDto = testSeason;
+
+        setTimeout(() => {
+          resolve(savedPackage);
+        }, 500);
+      }),
+  );
+  const where2 = jest.fn(() => ({ getOne }));
+
+  return jest.fn(() => ({ where: where2 }));
+};
+
+const mockGetBoardConfig = () => {
+  let testBoardConfig = {
+    id: "321",
+    seasonId: "test 1d",
+    inventorySize: 5,
+    canTackle: false,
+    teleporters: 1,
+    teleportRelocation: 10,
+    height: 15,
+    width: 15,
+    minimumDelayBetweenMoves: 100,
+    sessionLength: 60,
+  };
+
+  const execute = jest.fn();
+  const where = jest.fn(() => ({ execute }));
+  const set = jest.fn(() => ({ where }));
+  const update = jest.fn(() => ({ set }));
+
+  const getOne = jest.fn(
+    () =>
+      new Promise<BoardConfigDto>((resolve, reject) => {
+        var savedPackage: BoardConfigDto = testBoardConfig;
+
+        setTimeout(() => {
+          resolve(savedPackage);
+        }, 500);
+      }),
+  );
+  const where2 = jest.fn(() => ({ getOne }));
+
+  return jest.fn(() => ({ where: where2 }));
 };
