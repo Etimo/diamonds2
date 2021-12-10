@@ -13,7 +13,7 @@ export default () => {
   const currentSeason = getCurrentSeason();
   const [boardId, setBoardId] = useState(1);
   const [seasonId, setSeasonId] = useState(0);
-  const delay = 250; // 0.25 s
+  const delay = 2000; // 0.25 s
 
   const [rows, bots] = useBoard(boardId, delay);
 

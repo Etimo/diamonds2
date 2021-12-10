@@ -4,7 +4,10 @@ import { etimoLogo } from "../images";
 import { useLocation } from "react-router-dom";
 
 const teamsOrGameLink = location => {
-  if (location.pathname === "/teams") {
+  if (
+    location.pathname === "/teams" ||
+    location.pathname.startsWith("/recording")
+  ) {
     return <Header.Link href="/">Game</Header.Link>;
   }
   return <Header.Link href="/teams">Teams</Header.Link>;

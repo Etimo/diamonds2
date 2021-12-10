@@ -2,7 +2,7 @@ import React from "react";
 import { useFetchRepeatedly } from "../hooks";
 import Table from "../blocks/Table";
 
-const delay = 10000; // 10 sec
+const delay = 60000; // 1 min
 const url = "api/teams";
 
 export default () => {

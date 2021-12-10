@@ -2,12 +2,14 @@ import React from "react";
 import { useFetchRepeatedly } from "../hooks";
 import Table from "../blocks/Table";
 
-const delay = 5000; // 5 sec
-const url = "api/highscores";
-
 export default ({ seasonId, currentSeasonId }) => {
-  const highScores = useFetchRepeatedly(`${url}/${seasonId}`, delay, []);
+  if (!seasonId) return null;
+
+  const highScores = useFetchRepeatedly(`api/highscores/${seasonId}`, 5000, []);
+  const recordings = useFetchRepeatedly(`api/recordings/${seasonId}`, 5000, []);
   const isCurrentSeason = seasonId == currentSeasonId ? true : false;
+
+  const getRecording = botName => recordings.find(r => r.botName === botName);
 
   return (
     <Table>
@@ -26,9 +28,24 @@ export default ({ seasonId, currentSeasonId }) => {
 
       <Table.Tbody>
         {highScores.map((bot, index) => {
+          const recording = getRecording(bot.botName);
           return (
             <Table.Tr key={index}>
-              <Table.Td>{bot.botName}</Table.Td>
+              <Table.Td>
+                {recording && (
+                  <a
+                    href={
+                      "/recording/" +
+                      seasonId +
+                      "?recordingId=" +
+                      recording.recordingId
+                    }
+                  >
+                    {bot.botName}
+                  </a>
+                )}
+                {!recording && bot.botName}
+              </Table.Td>
               <Table.Td>
                 <Table.LogoImg src={bot.teamLogotype}></Table.LogoImg>
               </Table.Td>

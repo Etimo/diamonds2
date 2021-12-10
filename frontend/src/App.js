@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Game from "./pages/game";
 import Teams from "./pages/teams";
+import Recording from "./pages/recording";
 import Layout from "./blocks/Layout";
 import Header from "./components/Header";
 
@@ -13,6 +14,9 @@ export default () => {
         <Switch>
           <Route path="/teams">
             <Teams />
+          </Route>
+          <Route path="/recording/*">
+            <Recording />
           </Route>
           <Route path="*">
             <Game />
