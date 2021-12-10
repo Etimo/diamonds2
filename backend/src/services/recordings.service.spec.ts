@@ -76,8 +76,7 @@ describe("RecordingsService", () => {
 
     it("should return data when present", async () => {
       const d = new Date(2021, 1, 1, 1, 1, 1, 1);
-      const mock = jest.spyOn(recordingsRepository, "getById");
-      mock.mockReturnValue(
+      jest.spyOn(recordingsRepository, "getById").mockReturnValue(
         new Promise(resolve =>
           resolve([
             {
@@ -107,8 +106,9 @@ describe("RecordingsService", () => {
 
   describe("allBySeasonIdList", () => {
     it("should throw error if invalid season", async () => {
-      const mock = jest.spyOn(recordingsRepository, "allBySeasonIdRaw");
-      mock.mockReturnValue(new Promise(resolve => resolve([])));
+      jest
+        .spyOn(recordingsRepository, "allBySeasonIdRaw")
+        .mockReturnValue(new Promise(resolve => resolve([])));
 
       const res = recordingsService.allBySeasonIdList("");
 
@@ -117,7 +117,6 @@ describe("RecordingsService", () => {
 
     it("should return data when present", async () => {
       const d = new Date(2021, 1, 1, 1, 1, 1, 1);
-      const mock = jest.spyOn(recordingsRepository, "allBySeasonIdRaw");
       const data = {
         recordings_id: "id",
         recordings_score: 1,
@@ -127,19 +126,24 @@ describe("RecordingsService", () => {
         recordings_botName: "Hello",
         recordings_recording: "{}",
       };
-      mock.mockReturnValue(new Promise(resolve => resolve([data])));
+      jest
+        .spyOn(recordingsRepository, "allBySeasonIdRaw")
+        .mockReturnValue(new Promise(resolve => resolve([data])));
 
       const res = await recordingsService.allBySeasonIdList("");
+
       expect(res).toEqual([RecordingListDto.fromRawDataObject(data)]);
     });
   });
 
   describe("save", () => {
     it("should create entry", async () => {
-      const mock = jest.spyOn(recordingsRepository, "create");
-      mock.mockReturnValue(new Promise(resolve => resolve(null)));
-      const mock2 = jest.spyOn(recordingsRepository, "purgeOld");
-      mock2.mockReturnValue(new Promise(resolve => resolve(undefined)));
+      const mock = jest
+        .spyOn(recordingsRepository, "create")
+        .mockReturnValue(new Promise(resolve => resolve(null)));
+      jest
+        .spyOn(recordingsRepository, "purgeOld")
+        .mockReturnValue(new Promise(resolve => resolve(undefined)));
 
       await recordingsService.save({
         boardIndex: 0,
@@ -158,10 +162,12 @@ describe("RecordingsService", () => {
     });
 
     it("should purge old", async () => {
-      const mock = jest.spyOn(recordingsRepository, "create");
-      mock.mockReturnValue(new Promise(resolve => resolve(null)));
-      const mock2 = jest.spyOn(recordingsRepository, "purgeOld");
-      mock2.mockReturnValue(new Promise(resolve => resolve(undefined)));
+      jest
+        .spyOn(recordingsRepository, "create")
+        .mockReturnValue(new Promise(resolve => resolve(null)));
+      const mock = jest
+        .spyOn(recordingsRepository, "purgeOld")
+        .mockReturnValue(new Promise(resolve => resolve(undefined)));
 
       await recordingsService.save({
         boardIndex: 0,
@@ -170,7 +176,7 @@ describe("RecordingsService", () => {
         seasonId: "id",
       });
 
-      expect(mock2).toHaveBeenCalledWith("id");
+      expect(mock).toHaveBeenCalledWith("id");
     });
   });
 });

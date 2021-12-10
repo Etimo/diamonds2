@@ -23,6 +23,7 @@ import { BoardConfigService } from "./board-config.service";
 import { BoardConfigEntity } from "../db/models/boardConfig.entity";
 import { SeasonDto } from "../models/season.dto";
 import { BoardConfigDto } from "../models/board-config.dto";
+import { HighscoresRepository } from "../db/repositories/highscores.repository";
 
 describe("BoardConfigService", () => {
   let botsService: BotsService;
@@ -36,6 +37,11 @@ describe("BoardConfigService", () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        HighscoresRepository,
+        {
+          provide: getRepositoryToken(HighScoreEntity),
+          useFactory: jest.fn(),
+        },
         BoardConfigService,
         {
           provide: getRepositoryToken(BoardConfigEntity),

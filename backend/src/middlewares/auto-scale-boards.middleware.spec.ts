@@ -18,6 +18,7 @@ import { MetricsService } from "../services/metrics.service";
 import { TeamsService } from "../services/teams.service";
 import { TeamsEntity } from "../db/models/teams.entity";
 import { BoardConfigEntity } from "../db/models/boardConfig.entity";
+import { HighscoresRepository } from "../db/repositories/highscores.repository";
 
 describe("AutoScaleBourdsMiddleWare", () => {
   let boardsService: BoardsService;
@@ -47,6 +48,11 @@ describe("AutoScaleBourdsMiddleWare", () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        HighscoresRepository,
+        {
+          provide: getRepositoryToken(HighScoreEntity),
+          useFactory: jest.fn(),
+        },
         BotsService,
         {
           provide: getRepositoryToken(BotRegistrationsEntity),

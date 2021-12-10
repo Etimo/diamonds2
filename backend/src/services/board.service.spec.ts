@@ -24,6 +24,7 @@ import { BoardConfigService } from "./board-config.service";
 import { BoardConfigEntity } from "../db/models/boardConfig.entity";
 import { BoardConfigDto } from "src/models/board-config.dto";
 import { RecordingsRepository } from "../db/repositories/recordings.repository";
+import { HighscoresRepository } from "../db/repositories/highscores.repository";
 
 describe("BoardsService", () => {
   let botsService: BotsService;
@@ -58,6 +59,11 @@ describe("BoardsService", () => {
         {
           provide: CustomLogger,
           useValue: new SilentLogger() as CustomLogger,
+        },
+        HighscoresRepository,
+        {
+          provide: getRepositoryToken(HighScoreEntity),
+          useFactory: jest.fn(),
         },
         BotsService,
         {
