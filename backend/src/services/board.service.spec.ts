@@ -20,6 +20,9 @@ import { TeamsService } from "./teams.service";
 import { TeamsEntity } from "../db/models/teams.entity";
 import { RecordingsService } from "./recordings.service";
 import { RecordingsEntity } from "../db/models/recordings.entity";
+import { BoardConfigService } from "./board-config.service";
+import { BoardConfigEntity } from "../db/models/boardConfig.entity";
+import { BoardConfigDto } from "src/models/board-config.dto";
 
 describe("BoardsService", () => {
   let botsService: BotsService;
@@ -29,11 +32,25 @@ describe("BoardsService", () => {
   const dummyBoardToken = "dummy";
   const dummyBotId = "dummyId";
   let boardsService: BoardsService;
+  let boardConfigService: BoardConfigService;
   let newBoardsService: BoardsService;
   let recordingsService: RecordingsService;
   let repositoryMock: MockType<Repository<HighScoreEntity>>;
   let repositoryMock2: MockType<Repository<BotRegistrationsEntity>>;
   let repositoryMock3: MockType<Repository<SeasonsEntity>>;
+  let repositoryMock4: MockType<Repository<BoardConfigEntity>>;
+  const boardConfig = {
+    id: "test",
+    seasonId: "321",
+    inventorySize: 5,
+    canTackle: false,
+    teleporters: 1,
+    teleportRelocation: 10,
+    height: 15,
+    width: 15,
+    minimumDelayBetweenMoves: 100,
+    sessionLength: 60,
+  };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -70,6 +87,11 @@ describe("BoardsService", () => {
           provide: getRepositoryToken(TeamsEntity),
           useFactory: repositoryMockFactory,
         },
+        BoardConfigService,
+        {
+          provide: getRepositoryToken(BoardConfigEntity),
+          useFactory: repositoryMockFactory,
+        },
         {
           useValue: 2,
           provide: "NUMBER_OF_BOARDS",
@@ -80,17 +102,34 @@ describe("BoardsService", () => {
     botsService = module.get<BotsService>(BotsService);
     seasonsService = module.get<SeasonsService>(SeasonsService);
     recordingsService = module.get<RecordingsService>(RecordingsService);
+    boardConfigService = module.get<BoardConfigService>(BoardConfigService);
     repositoryMock = module.get(getRepositoryToken(HighScoreEntity));
     repositoryMock2 = module.get(getRepositoryToken(BotRegistrationsEntity));
     repositoryMock3 = module.get(getRepositoryToken(SeasonsEntity));
+    repositoryMock4 = module.get(getRepositoryToken(BoardConfigEntity));
+    spyOn(boardConfigService, "getCurrentBoardConfig").and.returnValue(
+      boardConfig as BoardConfigDto,
+    );
     boardsService = new BoardsService(
       botsService,
       highScoresService,
       null,
       seasonsService,
       recordingsService,
+      boardConfigService,
       new SilentLogger() as CustomLogger,
       2,
+    );
+
+    newBoardsService = new BoardsService(
+      botsService,
+      highScoresService,
+      null,
+      seasonsService,
+      recordingsService,
+      boardConfigService,
+      new SilentLogger() as CustomLogger,
+      5,
     );
 
     jest.clearAllMocks();
@@ -147,15 +186,6 @@ describe("BoardsService", () => {
 
   it("Should not remove board 1 and 3", async () => {
     spyOn(botsService, "get").and.returnValue({} as IBot);
-    newBoardsService = new BoardsService(
-      botsService,
-      highScoresService,
-      null,
-      seasonsService,
-      recordingsService,
-      new SilentLogger() as CustomLogger,
-      5,
-    );
     let boards = newBoardsService.getAll();
     await newBoardsService.join(boards[2].id, dummyBoardToken);
     newBoardsService.removeEmptyBoards(4);
@@ -167,15 +197,6 @@ describe("BoardsService", () => {
 
   it("Should remove all boards except board 1", async () => {
     spyOn(botsService, "get").and.returnValue({} as IBot);
-    newBoardsService = new BoardsService(
-      botsService,
-      highScoresService,
-      null,
-      seasonsService,
-      recordingsService,
-      new SilentLogger() as CustomLogger,
-      5,
-    );
     let boards = newBoardsService.getAll();
     newBoardsService.removeEmptyBoards(10);
     boards = newBoardsService.getAll();

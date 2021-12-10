@@ -27,6 +27,8 @@ import { RecordingsService } from "./services/recordings.service";
 import { RecordingsEntity } from "./db/models/recordings.entity";
 import { RecordingsController } from "./controllers/recordings/recordings.controller";
 import { RecordingsRepository } from "./db/repositories/recordings.repository";
+import { BoardConfigService } from "./services/board-config.service";
+import { BoardConfigEntity } from "./db/models/boardConfig.entity";
 
 const dbConfig: TypeOrmModuleOptions = {
   type: "postgres",
@@ -42,6 +44,7 @@ const dbConfig: TypeOrmModuleOptions = {
     SeasonsEntity,
     TeamsEntity,
     RecordingsEntity,
+    BoardConfigEntity,
   ],
   migrationsTableName: "migration",
   migrations: ["./migration/*.{ts,js}"],
@@ -67,6 +70,7 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
       SeasonsEntity,
       TeamsEntity,
       RecordingsEntity,
+      BoardConfigEntity,
     ]),
   ],
   providers: [
@@ -82,6 +86,7 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     TeamsService,
     RecordingsService,
     RecordingsRepository,
+    BoardConfigService,
     {
       provide: "NUMBER_OF_BOARDS",
       useValue: 4,
