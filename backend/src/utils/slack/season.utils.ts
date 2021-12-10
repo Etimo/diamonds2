@@ -148,6 +148,110 @@ export const getAddSeasonBody = trigger_id => {
             emoji: true,
           },
         },
+        {
+          type: "input",
+          block_id: "inventory_size",
+          element: {
+            type: "plain_text_input",
+            initial_value: "5",
+          },
+          label: {
+            type: "plain_text",
+            text: "Inventory size",
+            emoji: true,
+          },
+        },
+        {
+          type: "input",
+          block_id: "can_tackle",
+          element: {
+            type: "plain_text_input",
+            initial_value: "true",
+          },
+          label: {
+            type: "plain_text",
+            text: "Should the bots be able to tackle? (true / false)",
+            emoji: true,
+          },
+        },
+        {
+          type: "input",
+          block_id: "teleporters",
+          element: {
+            type: "plain_text_input",
+            initial_value: "1",
+          },
+          label: {
+            type: "plain_text",
+            text: "Number of teleporters",
+            emoji: true,
+          },
+        },
+        {
+          type: "input",
+          block_id: "teleport_relocation",
+          element: {
+            type: "plain_text_input",
+            initial_value: "10",
+          },
+          label: {
+            type: "plain_text",
+            text: "How often should the teleporters reposition? (seconds)",
+            emoji: true,
+          },
+        },
+        {
+          type: "input",
+          block_id: "height",
+          element: {
+            type: "plain_text_input",
+            initial_value: "15",
+          },
+          label: {
+            type: "plain_text",
+            text: "Height of the board (columns)",
+            emoji: true,
+          },
+        },
+        {
+          type: "input",
+          block_id: "width",
+          element: {
+            type: "plain_text_input",
+            initial_value: "15",
+          },
+          label: {
+            type: "plain_text",
+            text: "Width of the board (columns)",
+            emoji: true,
+          },
+        },
+        {
+          type: "input",
+          block_id: "minimum_delay_between_moves",
+          element: {
+            type: "plain_text_input",
+            initial_value: "100",
+          },
+          label: {
+            type: "plain_text",
+            text: "How often should the bot be able to move? (milliseconds)",
+            emoji: true,
+          },
+        },
+        {
+          type: "input",
+          block_id: "session_length",
+          element: {
+            type: "plain_text_input",
+            initial_value: "60",
+          },
+          label: {
+            type: "plain_text",
+            text: "How long is the game session?",
+            emoji: true,
+          },
+        },
       ],
     },
   };

@@ -13,6 +13,8 @@ import { TeamDto } from "../models/team.dto";
 import ForbiddenError from "../errors/forbidden.error";
 import { BotDto } from "../models/bot.dto";
 import { HighScoresService } from "./high-scores.service";
+import { BoardConfigDto } from "../models/board-config.dto";
+import { BoardConfigService } from "./board-config.service";
 
 @Injectable()
 export class SlackService {
@@ -20,6 +22,7 @@ export class SlackService {
     private seasonsService: SeasonsService,
     private teamsService: TeamsService,
     private highScoresService: HighScoresService,
+    private boardConfigService: BoardConfigService,
   ) {}
 
   public async getAllSeasons(input) {
@@ -30,6 +33,7 @@ export class SlackService {
 
   public async getSeasonModal(input) {
     const view = getAddSeasonBody(input.trigger_id);
+    console.log(view);
     return await showModal(view);
   }
 
@@ -76,12 +80,42 @@ export class SlackService {
     const startDate = this.parseValue(payload, "start_date", "selected_date");
     const endDate = this.parseValue(payload, "end_date", "selected_date");
     const name = this.parseValue(payload, "season_name", "value");
-    const season = SeasonDto.create({
+    const seasonDto = SeasonDto.create({
       name,
       startDate: new Date(startDate),
       endDate: new Date(endDate),
     });
-    return await this.seasonsService.add(season);
+    const inventorySize = this.parseValue(payload, "inventory_size", "value");
+    const canTackle =
+      this.parseValue(payload, "can_tackle", "value") === "true";
+    const teleporters = this.parseValue(payload, "teleporters", "value");
+    const teleportRelocation = this.parseValue(
+      payload,
+      "teleport_relocation",
+      "value",
+    );
+    const height = this.parseValue(payload, "height", "value");
+    const width = this.parseValue(payload, "width", "value");
+    const minimumDelayBetweenMoves = this.parseValue(
+      payload,
+      "minimum_delay_between_moves",
+      "value",
+    );
+    const sessionLength = this.parseValue(payload, "session_length", "value");
+    const boardConfigDto = BoardConfigDto.create({
+      inventorySize,
+      canTackle,
+      teleporters,
+      teleportRelocation,
+      height,
+      width,
+      minimumDelayBetweenMoves,
+      sessionLength,
+    });
+    const season = await this.seasonsService.add(seasonDto);
+    boardConfigDto.seasonId = season.id;
+    const boardConfig = await this.boardConfigService.add(boardConfigDto);
+    return season;
   }
 
   private async addTeam(payload) {
