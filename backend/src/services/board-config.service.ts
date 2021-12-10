@@ -8,9 +8,9 @@ import { SeasonsService } from "./seasons.service";
 @Injectable()
 export class BoardConfigService {
   constructor(
-    private seasonsService: SeasonsService,
     @InjectRepository(BoardConfigEntity)
     private readonly repo: Repository<BoardConfigEntity>,
+    private seasonsService: SeasonsService,
   ) {}
 
   public async getCurrentBoardConfig() {
