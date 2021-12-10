@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Game from "./pages/game";
 import Teams from "./pages/teams";
 import Layout from "./blocks/Layout";
@@ -10,14 +10,10 @@ export default () => {
     <Router>
       <Layout>
         <Header />
-        <Switch>
-          <Route path="/teams">
-            <Teams />
-          </Route>
-          <Route path="*">
-            <Game />
-          </Route>
-        </Switch>
+        <Routes>
+          <Route path="/teams" element={<Teams />} />
+          <Route path="*" element={<Game />} />
+        </Routes>
       </Layout>
     </Router>
   );
