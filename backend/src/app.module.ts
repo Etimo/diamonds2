@@ -26,6 +26,7 @@ import { TeamsService } from "./services/teams.service";
 import { RecordingsService } from "./services/recordings.service";
 import { RecordingsEntity } from "./db/models/recordings.entity";
 import { RecordingsController } from "./controllers/recordings/recordings.controller";
+import { RecordingsRepository } from "./db/repositories/recordings.repository";
 
 const dbConfig: TypeOrmModuleOptions = {
   type: "postgres",
@@ -80,6 +81,7 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     AuthorizationService,
     TeamsService,
     RecordingsService,
+    RecordingsRepository,
     {
       provide: "NUMBER_OF_BOARDS",
       useValue: 4,

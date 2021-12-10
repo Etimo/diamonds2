@@ -7,16 +7,15 @@ import { RecordingPublicDto } from "../models/recording-public.dto";
 import { RecordingDto } from "../models/recording.dto";
 import { LessThan, Repository } from "typeorm";
 import NotFoundError from "../errors/not-found.error";
+import { RecordingsRepository } from "../db/repositories/recordings.repository";
 
 @Injectable()
 export class RecordingsService {
   private states: Array<Array<Object>> = [];
   private stateIndex: number[] = [];
-  private entity: string = "recordings";
 
   constructor(
-    @InjectRepository(RecordingsEntity)
-    private readonly repo: Repository<RecordingsEntity>,
+    private readonly repo: RecordingsRepository,
     private logger: CustomLogger,
   ) {}
 
@@ -63,59 +62,20 @@ export class RecordingsService {
     this.logger.debug(
       `Saving new recording for ${botName} with score ${score}`,
     );
-    await this.create({
+    await this.repo.create({
       botName,
       score,
       board: boardIndex,
       seasonId,
       recording: JSON.stringify(this.getRecording(boardIndex)),
     });
-    await this.purgeOld(seasonId);
-  }
-
-  private async purgeOld(seasonId: string) {
-    const maxEntries = 10;
-    const existing = await this.repo
-      .createQueryBuilder(this.entity)
-      .select(["recordings.score"])
-      .where("recordings.seasonId = :seasonId", { seasonId })
-      .orderBy("score", "DESC")
-      .limit(maxEntries + 1)
-      .execute();
-
-    if (existing.length > maxEntries) {
-      // Remove if we have more than 10 recordings
-      this.logger.info("Removing old recordings");
-      await this.repo
-        .createQueryBuilder()
-        .delete()
-        .from(RecordingsEntity)
-        .where({
-          seasonId,
-          score: LessThan(existing[maxEntries - 1]["recordings_score"]),
-        })
-        .execute();
-    }
-  }
-
-  private async create(dto: RecordingDto) {
-    await this.repo.save(dto);
-  }
-
-  private async allBySeasonIdRaw(seasonId: string, limit: number = 0) {
-    return await this.repo
-      .createQueryBuilder(this.entity)
-      .select(this.entity)
-      .where("recordings.seasonId = :seasonId", { seasonId })
-      .orderBy("score", "DESC")
-      .limit(limit)
-      .execute();
+    await this.repo.purgeOld(seasonId);
   }
 
   public async allBySeasonIdList(
     seasonId: string,
   ): Promise<RecordingListDto[]> {
-    const data = await this.allBySeasonIdRaw(seasonId);
+    const data = await this.repo.allBySeasonIdRaw(seasonId);
     if (data.length === 0) {
       throw new NotFoundError("Season not found");
     }
@@ -126,14 +86,7 @@ export class RecordingsService {
     seasonId: string,
     id: string,
   ): Promise<RecordingPublicDto> {
-    const data = await this.repo
-      .createQueryBuilder(this.entity)
-      .select(this.entity)
-      .where("recordings.seasonId = :seasonId AND recordings.id = :id", {
-        seasonId,
-        id,
-      })
-      .execute();
+    const data = await this.repo.getById(seasonId, id);
     if (data.length === 0) {
       throw new NotFoundError("Data not found");
     }
