@@ -1,7 +1,6 @@
 import { Module, NestModule, MiddlewareConsumer } from "@nestjs/common";
 import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
 
-import { IdService } from "./services/id.service";
 import { ValidatorService } from "./services/validator.service";
 import { BotsService } from "./services/bots.service";
 import { HighscoresController } from "./controllers/highscore/highscores.controller";
@@ -73,7 +72,6 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     CustomLogger,
     BoardsService,
     BotsService,
-    IdService,
     ValidatorService,
     HighScoresService,
     MetricsService,
@@ -85,10 +83,6 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     {
       provide: "NUMBER_OF_BOARDS",
       useValue: 4,
-    },
-    {
-      provide: "RECORDABLE_STATES",
-      useValue: 1000,
     },
   ],
 })
