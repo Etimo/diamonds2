@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { BoardConfigEntity } from "src/db/models/boardConfig.entity";
-import { BoardConfigDto } from "src/models/board-config.dto";
+import { BoardConfigEntity } from "../db/models/boardConfig.entity";
+import { BoardConfigDto } from "../models/board-config.dto";
 import { SeasonsService } from "./seasons.service";
 
 @Injectable()

@@ -20,7 +20,7 @@ import { Board } from "../gameengine/board";
 import { TeamsService } from "./teams.service";
 import { TeamsEntity } from "../db/models/teams.entity";
 import { BoardConfigService } from "./board-config.service";
-import { BoardConfigEntity } from "src/db/models/boardConfig.entity";
+import { BoardConfigEntity } from "../db/models/boardConfig.entity";
 
 describe("BoardsService", () => {
   let botsService: BotsService;
