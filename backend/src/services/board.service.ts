@@ -48,17 +48,19 @@ export class BoardsService {
               this.metricsService.decPlayersTotal(board.getId());
             }
             const currentSeason = await this.seasonsService.getCurrentSeason();
-            this.highscoresService.addOrUpdate({
+            const better = await this.highscoresService.addOrUpdate({
               botName,
               score,
               seasonId: currentSeason.id,
             });
-            this.recordingsService.save({
-              boardIndex: this.getBoardIndex(board),
-              botName,
-              score,
-              seasonId: currentSeason.id,
-            });
+            if (better) {
+              this.recordingsService.save({
+                boardIndex: this.getBoardIndex(board),
+                botName,
+                score,
+                seasonId: currentSeason.id,
+              });
+            }
           },
         );
       });
