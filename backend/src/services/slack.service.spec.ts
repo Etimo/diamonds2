@@ -17,6 +17,7 @@ import { CustomLogger } from "../logger";
 import SilentLogger from "../gameengine/util/silent-logger";
 import { RecordingsEntity } from "../db/models/recordings.entity";
 import { RecordingsRepository } from "../db/repositories/recordings.repository";
+import { HighscoresRepository } from "../db/repositories/highscores.repository";
 
 describe("SeasonsService", () => {
   let slackService: SlackService;
@@ -32,6 +33,11 @@ describe("SeasonsService", () => {
         {
           provide: getRepositoryToken(RecordingsEntity),
           useFactory: () => jest.fn(),
+        },
+        HighscoresRepository,
+        {
+          provide: getRepositoryToken(HighScoreEntity),
+          useFactory: jest.fn(),
         },
         {
           provide: getRepositoryToken(SeasonsEntity),

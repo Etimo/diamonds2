@@ -29,6 +29,7 @@ import { RecordingsController } from "./controllers/recordings/recordings.contro
 import { RecordingsRepository } from "./db/repositories/recordings.repository";
 import { BoardConfigService } from "./services/board-config.service";
 import { BoardConfigEntity } from "./db/models/boardConfig.entity";
+import { HighscoresRepository } from "./db/repositories/highscores.repository";
 
 const dbConfig: TypeOrmModuleOptions = {
   type: "postgres",
@@ -86,6 +87,7 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     TeamsService,
     RecordingsService,
     RecordingsRepository,
+    HighscoresRepository,
     BoardConfigService,
     {
       provide: "NUMBER_OF_BOARDS",
