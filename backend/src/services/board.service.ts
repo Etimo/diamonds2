@@ -22,6 +22,8 @@ import { TeleportProvider } from "../gameengine/gameobjects/teleport/teleport-pr
 import { MetricsService } from "./metrics.service";
 import { TeleportRelocationProvider } from "../gameengine/gameobjects/teleport-relocation-provider/teleport-relocation-provider";
 import { SeasonsService } from "./seasons.service";
+import { BoardConfigService } from "./board-config.service";
+import { BoardConfigDto } from "src/models/board-config.dto";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
@@ -33,22 +35,25 @@ export class BoardsService {
     private highscoresService: HighScoresService,
     private metricsService: MetricsService,
     private seasonsService: SeasonsService,
+    private boardConfigService: BoardConfigService,
     private logger: CustomLogger,
     @Inject("NUMBER_OF_BOARDS") private numberOfBoards,
   ) {
-    this.createInMemoryBoards(this.numberOfBoards);
-
-    this.boards.forEach(board => {
-      board.registerSessionFinishedCallback(async (botName, score) => {
-        if (this.metricsService) {
-          this.metricsService.decPlayersTotal(board.getId());
-        }
-        const currentSeason = await this.seasonsService.getCurrentSeason();
-        this.highscoresService.addOrUpdate({
-          botName,
-          score,
-          seasonId: currentSeason.id,
-        });
+    this.createInMemoryBoards(this.numberOfBoards).then(async () => {
+      this.boards.forEach(board => {
+        board.registerSessionFinishedCallback(
+          async (botName: any, score: any) => {
+            if (this.metricsService) {
+              this.metricsService.decPlayersTotal(board.getId());
+            }
+            const currentSeason = await this.seasonsService.getCurrentSeason();
+            this.highscoresService.addOrUpdate({
+              botName,
+              score,
+              seasonId: currentSeason.id,
+            });
+          },
+        );
       });
     });
   }
@@ -215,7 +220,8 @@ export class BoardsService {
   /**
    * Create an example board for debugging purpose.
    */
-  public createInMemoryBoards(numberOfBoards: number): void {
+  public async createInMemoryBoards(numberOfBoards: number): Promise<void> {
+    const boardConfig = await this.boardConfigService.getCurrentBoardConfig();
     const providers = [
       new DiamondButtonProvider(),
       new BaseProvider(),
@@ -228,22 +234,22 @@ export class BoardsService {
       //   inventorySize: 5,
       // }),
       new BotProvider({
-        inventorySize: 5,
-        canTackle: false,
+        inventorySize: boardConfig.inventorySize,
+        canTackle: boardConfig.canTackle,
       }),
       new TeleportProvider({
-        pairs: 1,
+        pairs: boardConfig.teleporters,
       }),
       new TeleportRelocationProvider({
-        seconds: 10,
+        seconds: boardConfig.teleportRelocation,
       }),
     ];
     for (let i = 0; i < numberOfBoards; i++) {
       const config: BoardConfig = {
-        height: 15,
-        width: 15,
-        minimumDelayBetweenMoves: 100,
-        sessionLength: 60,
+        height: boardConfig.height,
+        width: boardConfig.width,
+        minimumDelayBetweenMoves: boardConfig.minimumDelayBetweenMoves,
+        sessionLength: boardConfig.sessionLength,
       };
       const board = new OperationQueueBoard(
         this.getNextBoardId(),
@@ -300,7 +306,7 @@ export class BoardsService {
     return highestId + 1;
   }
 
-  private tooManyRateLimitViolations(board, bot) {
+  private tooManyRateLimitViolations(board: OperationQueueBoard, bot: IBot) {
     return board.getRateLimitViolations(bot) > 10;
   }
 }
