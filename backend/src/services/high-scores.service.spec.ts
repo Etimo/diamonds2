@@ -4,7 +4,6 @@ import { HighScoreEntity } from "../db/models/highScores.entity";
 import { Test, TestingModule } from "@nestjs/testing";
 import { HighscoreDto } from "../models/highscore.dto";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import { MetricsService } from "./metrics.service";
 import { SeasonsService } from "./seasons.service";
 import { SeasonsEntity } from "../db/models/seasons.entity";
 import { SeasonDto } from "../models/season.dto";
@@ -37,10 +36,6 @@ describe("HighScoresService", () => {
         {
           provide: getRepositoryToken(HighScoreEntity),
           useFactory: jest.fn(),
-        },
-        {
-          provide: MetricsService,
-          useValue: null,
         },
       ],
     }).compile();

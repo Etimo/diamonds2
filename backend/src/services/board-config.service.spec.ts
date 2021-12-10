@@ -12,7 +12,6 @@ import UnauthorizedError from "../errors/unauthorized.error";
 import { IBot } from "../interfaces/bot.interface";
 import NotFoundError from "../errors/not-found.error";
 import SilentLogger from "../gameengine/util/silent-logger";
-import { MetricsService } from "./metrics.service";
 import { SeasonsService } from "./seasons.service";
 import { SeasonsEntity } from "../db/models/seasons.entity";
 import ConflictError from "../errors/conflict.error";
@@ -61,10 +60,6 @@ describe("BoardConfigService", () => {
         {
           provide: getRepositoryToken(HighScoreEntity),
           useFactory: repositoryMockFactory,
-        },
-        {
-          useValue: null,
-          provide: MetricsService,
         },
         TeamsService,
         {

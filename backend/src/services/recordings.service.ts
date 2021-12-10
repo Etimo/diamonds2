@@ -34,7 +34,7 @@ export class RecordingsService {
       (this.stateIndex[boardIndex] + 1) % this.states[boardIndex].length;
   }
 
-  public getRecording(boardIndex: number): Array<Object> {
+  getRecording(boardIndex: number): Array<Object> {
     const currentStateIndex = this.stateIndex[boardIndex];
     const states = this.states[boardIndex];
 

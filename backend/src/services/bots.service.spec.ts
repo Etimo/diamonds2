@@ -6,7 +6,6 @@ import ConflictError from "../errors/conflict.error";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { BotRegistrationPublicDto } from "../models/bot-registration-public.dto";
-import { MetricsService } from "./metrics.service";
 import NotFoundError from "../errors/not-found.error";
 import { BotRecoveryDto } from "../models/bot-recovery.dto";
 import * as bcrypt from "bcrypt";
@@ -24,10 +23,6 @@ describe("BotsService", () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        {
-          provide: MetricsService,
-          useValue: null,
-        },
         BotsService,
         {
           provide: getRepositoryToken(BotRegistrationsEntity),

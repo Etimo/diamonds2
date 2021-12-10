@@ -19,7 +19,6 @@ import { DiamondProvider } from "../gameengine/gameobjects/diamond/diamond-provi
 import { BotProvider } from "../gameengine/gameobjects/bot/bot-provider";
 import { BoardConfig } from "../gameengine/board-config";
 import { TeleportProvider } from "../gameengine/gameobjects/teleport/teleport-provider";
-import { MetricsService } from "./metrics.service";
 import { TeleportRelocationProvider } from "../gameengine/gameobjects/teleport-relocation-provider/teleport-relocation-provider";
 import { SeasonsService } from "./seasons.service";
 import { RecordingsService } from "./recordings.service";
@@ -33,7 +32,6 @@ export class BoardsService {
   constructor(
     private botsService: BotsService,
     private highscoresService: HighScoresService,
-    private metricsService: MetricsService,
     private seasonsService: SeasonsService,
     private recordingsService: RecordingsService,
     private boardConfigService: BoardConfigService,
@@ -44,9 +42,6 @@ export class BoardsService {
       this.boards.forEach(board => {
         board.registerSessionFinishedCallback(
           async (botName: any, score: any) => {
-            if (this.metricsService) {
-              this.metricsService.decPlayersTotal(board.getId());
-            }
             const currentSeason = await this.seasonsService.getCurrentSeason();
             const better = await this.highscoresService.addOrUpdate({
               botName,
@@ -81,7 +76,7 @@ export class BoardsService {
   public getById(id: number): BoardDto {
     const board = this.getBoardById(id);
     if (board) {
-      return this.returnAndSaveDto(board);
+      return this.getAsDto(board);
     }
     throw new NotFoundError("Board not found");
   }
@@ -111,10 +106,6 @@ export class BoardsService {
     const result = await board.enqueueJoin(bot);
     if (!result) {
       throw new ConflictError("Board full");
-    }
-    if (this.metricsService) {
-      this.metricsService.incPlayersTotal(boardId);
-      this.metricsService.incSessionsStarted(boardId);
     }
     return this.returnAndSaveDto(board);
   }
@@ -163,10 +154,6 @@ export class BoardsService {
 
     if (!result) {
       throw new ForbiddenError("Move not legal");
-    }
-
-    if (this.metricsService) {
-      this.metricsService.incMovesPerformed(boardId);
     }
 
     return this.returnAndSaveDto(board);
@@ -287,9 +274,6 @@ export class BoardsService {
         this.logger,
       );
       this.boards.push(board);
-      if (this.metricsService) {
-        this.metricsService.incBoardsTotal();
-      }
     }
   }
 
@@ -313,9 +297,6 @@ export class BoardsService {
       .forEach((removeIndex, index) => {
         if (index < numberOfBoards) {
           this.boards.splice(removeIndex, 1);
-          if (this.metricsService) {
-            this.metricsService.decBoardsTotal();
-          }
         }
       });
   }

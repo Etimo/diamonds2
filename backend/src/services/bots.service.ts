@@ -6,7 +6,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
 import { BotRegistrationPublicDto } from "../models/bot-registration-public.dto";
-import { MetricsService } from "./metrics.service";
 import { BotRecoveryDto } from "../models/bot-recovery.dto";
 import * as bcrypt from "bcrypt";
 import NotFoundError from "../errors/not-found.error";
@@ -16,12 +15,9 @@ import { TeamsService } from "./teams.service";
 
 @Injectable()
 export class BotsService {
-  private bots: IBot[] = [];
-
   constructor(
     @InjectRepository(BotRegistrationsEntity)
     private readonly repo: Repository<BotRegistrationsEntity>,
-    private metricsService: MetricsService,
     private teamsService: TeamsService,
   ) {}
 
@@ -41,10 +37,6 @@ export class BotsService {
     if (input.team) {
       const team = await this.teamsService.getByAbbreviation(input.team);
       input.team = team.id;
-    }
-
-    if (this.metricsService) {
-      this.metricsService.incBotsRegistered();
     }
 
     return this.create(input);

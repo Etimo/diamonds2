@@ -103,6 +103,9 @@
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
+    "setupFiles": [
+      "../jest.setup.ts"
+    ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   }

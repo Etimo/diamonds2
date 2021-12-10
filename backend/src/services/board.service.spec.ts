@@ -1,7 +1,7 @@
 import { BoardsService } from "./board.service";
 import { Repository } from "typeorm";
 import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
-import { Test, TestingModule } from "@nestjs/testing";
+import { TestingModule } from "@nestjs/testing";
 import { HighScoresService } from "./high-scores.service";
 
 import { getRepositoryToken } from "@nestjs/typeorm";
@@ -12,19 +12,14 @@ import UnauthorizedError from "../errors/unauthorized.error";
 import { IBot } from "../interfaces/bot.interface";
 import NotFoundError from "../errors/not-found.error";
 import SilentLogger from "../gameengine/util/silent-logger";
-import { MetricsService } from "./metrics.service";
 import { SeasonsService } from "./seasons.service";
 import { SeasonsEntity } from "../db/models/seasons.entity";
 import ConflictError from "../errors/conflict.error";
-import { TeamsService } from "./teams.service";
-import { TeamsEntity } from "../db/models/teams.entity";
 import { RecordingsService } from "./recordings.service";
-import { RecordingsEntity } from "../db/models/recordings.entity";
 import { BoardConfigService } from "./board-config.service";
 import { BoardConfigEntity } from "../db/models/boardConfig.entity";
 import { BoardConfigDto } from "src/models/board-config.dto";
-import { RecordingsRepository } from "../db/repositories/recordings.repository";
-import { HighscoresRepository } from "../db/repositories/highscores.repository";
+import { createTestingModule } from "../test-utils";
 
 describe("BoardsService", () => {
   let botsService: BotsService;
@@ -37,10 +32,10 @@ describe("BoardsService", () => {
   let boardConfigService: BoardConfigService;
   let newBoardsService: BoardsService;
   let recordingsService: RecordingsService;
-  let repositoryMock: MockType<Repository<HighScoreEntity>>;
-  let repositoryMock2: MockType<Repository<BotRegistrationsEntity>>;
-  let repositoryMock3: MockType<Repository<SeasonsEntity>>;
-  let repositoryMock4: MockType<Repository<BoardConfigEntity>>;
+  let repositoryMock: jest.Mock;
+  let repositoryMock2: jest.Mock;
+  let repositoryMock3: jest.Mock;
+  let repositoryMock4: jest.Mock;
   const boardConfig = {
     id: "test",
     seasonId: "321",
@@ -54,62 +49,7 @@ describe("BoardsService", () => {
     sessionLength: 60,
   };
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        {
-          provide: CustomLogger,
-          useValue: new SilentLogger() as CustomLogger,
-        },
-        HighscoresRepository,
-        {
-          provide: getRepositoryToken(HighScoreEntity),
-          useFactory: jest.fn(),
-        },
-        BotsService,
-        {
-          provide: getRepositoryToken(BotRegistrationsEntity),
-          useFactory: repositoryMockFactory,
-        },
-        {
-          provide: getRepositoryToken(RecordingsEntity),
-          useFactory: repositoryMockFactory,
-        },
-        SeasonsService,
-        RecordingsRepository,
-        RecordingsService,
-        {
-          provide: getRepositoryToken(RecordingsEntity),
-          useFactory: () => jest.fn(),
-        },
-        {
-          provide: getRepositoryToken(SeasonsEntity),
-          useFactory: repositoryMockFactory,
-        },
-        HighScoresService,
-        {
-          provide: getRepositoryToken(HighScoreEntity),
-          useFactory: repositoryMockFactory,
-        },
-        {
-          useValue: null,
-          provide: MetricsService,
-        },
-        TeamsService,
-        {
-          provide: getRepositoryToken(TeamsEntity),
-          useFactory: repositoryMockFactory,
-        },
-        BoardConfigService,
-        {
-          provide: getRepositoryToken(BoardConfigEntity),
-          useFactory: repositoryMockFactory,
-        },
-        {
-          useValue: 2,
-          provide: "NUMBER_OF_BOARDS",
-        },
-      ],
-    }).compile();
+    const module: TestingModule = await createTestingModule();
     highScoresService = module.get<HighScoresService>(HighScoresService);
     botsService = module.get<BotsService>(BotsService);
     seasonsService = module.get<SeasonsService>(SeasonsService);
@@ -125,7 +65,6 @@ describe("BoardsService", () => {
     boardsService = new BoardsService(
       botsService,
       highScoresService,
-      null,
       seasonsService,
       recordingsService,
       boardConfigService,
@@ -136,7 +75,6 @@ describe("BoardsService", () => {
     newBoardsService = new BoardsService(
       botsService,
       highScoresService,
-      null,
       seasonsService,
       recordingsService,
       boardConfigService,
@@ -216,23 +154,3 @@ describe("BoardsService", () => {
     expect(boards.length).toEqual(1);
   });
 });
-
-//Repository functions to Mock
-// @ts-ignore
-export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
-  () => ({
-    findOne: jest.fn(entity => entity),
-    find: jest.fn(entity => entity),
-    update: jest.fn(),
-    save: jest.fn(),
-    createQueryBuilder: jest.fn(() => ({
-      where: jest.fn(() => ({ getOne: jest.fn(entity => entity) })),
-      getOne: jest.fn(),
-    })),
-    execute: jest.fn(entity => entity),
-    where: jest.fn(),
-  }),
-);
-export type MockType<T> = {
-  [P in keyof T]: jest.Mock<{}>;
-};

@@ -5,37 +5,22 @@ import { SeasonsEntity } from "../db/models/seasons.entity";
 import { SeasonDto } from "../models/season.dto";
 import ConflictError from "../errors/conflict.error";
 import ForbiddenError from "../errors/forbidden.error";
+import { SeasonsRepository } from "../db/repositories/seasons.repository";
 
 @Injectable()
 export class SeasonsService {
-  constructor(
-    @InjectRepository(SeasonsEntity)
-    private readonly repo: Repository<SeasonsEntity>,
-  ) {}
+  constructor(private readonly repo: SeasonsRepository) {}
 
   public async getOffSeason() {
-    const offSeason = await this.repo
-      .createQueryBuilder("seasons")
-      .where("seasons.name = 'Off season'")
-      .getOne();
-
-    return SeasonDto.fromEntity(offSeason);
+    return SeasonDto.fromEntity(await this.repo.getOffSeason());
   }
 
   public async getSeason(seasonId: SeasonDto["id"]): Promise<SeasonDto> {
-    const offSeason = await this.repo
-      .createQueryBuilder("seasons")
-      .where("seasons.id = :seasonId", { seasonId: seasonId })
-      .getOne();
-
-    return SeasonDto.fromEntity(offSeason);
+    return SeasonDto.fromEntity(await this.repo.getSeason(seasonId));
   }
 
   public async getCurrentSeason() {
-    const currentSeason = await this.repo
-      .createQueryBuilder("seasons")
-      .where("seasons.startDate <= now() AND seasons.endDate >= now()")
-      .getOne();
+    const currentSeason = await this.repo.getCurrentSeason();
 
     if (currentSeason) {
       return SeasonDto.fromEntity(currentSeason);
@@ -45,13 +30,7 @@ export class SeasonsService {
   }
 
   public async all() {
-    return this.repo
-      .find({
-        order: {
-          createTimeStamp: "DESC",
-        },
-      })
-      .then(seasons => seasons.map(e => SeasonDto.fromEntity(e)));
+    return (await this.repo.all()).map(e => SeasonDto.fromEntity(e));
   }
 
   public async add(dto: SeasonDto) {
@@ -72,9 +51,9 @@ export class SeasonsService {
       );
     }
 
-    let [dateCollision, nameExists] = await Promise.all([
-      this.dateCollision(dto.startDate, dto.endDate),
-      this.nameExists(dto.name),
+    const [dateCollision, nameExists] = await Promise.all([
+      this.repo.dateCollision(dto.startDate, dto.endDate),
+      this.repo.nameExists(dto.name),
     ]);
 
     if (dateCollision) {
@@ -92,29 +71,6 @@ export class SeasonsService {
     }
 
     // Add the season
-    return await this.create(dto);
-  }
-
-  public async create(dto: SeasonDto): Promise<SeasonDto> {
-    return await this.repo
-      .save(dto)
-      .then(seasonEntity => SeasonDto.fromEntity(seasonEntity));
-  }
-
-  private async nameExists(name: string) {
-    return await this.repo
-      .createQueryBuilder("seasons")
-      .where("seasons.name = :name", { name: name })
-      .getOne();
-  }
-  // Check if the new dates collides with other season dates.
-  private async dateCollision(startDate: Date, endDate: Date) {
-    return await this.repo
-      .createQueryBuilder("seasons")
-      .where(
-        "seasons.startDate <= :endDate AND seasons.endDate >= :startDate",
-        { endDate: endDate, startDate: startDate },
-      )
-      .getOne();
+    return SeasonDto.fromEntity(await this.repo.create(dto));
   }
 }
