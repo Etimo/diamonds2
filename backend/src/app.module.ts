@@ -1,7 +1,6 @@
 import { Module, NestModule, MiddlewareConsumer } from "@nestjs/common";
 import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
 
-import { IdService } from "./services/id.service";
 import { ValidatorService } from "./services/validator.service";
 import { BotsService } from "./services/bots.service";
 import { HighscoresController } from "./controllers/highscore/highscores.controller";
@@ -24,8 +23,13 @@ import { MetricsService } from "./services/metrics.service";
 import { AutoScaleMiddleware } from "./middlewares/auto-scale-boards.middleware";
 import { SlackService } from "./services/slack.service";
 import { TeamsService } from "./services/teams.service";
+import { RecordingsService } from "./services/recordings.service";
+import { RecordingsEntity } from "./db/models/recordings.entity";
+import { RecordingsController } from "./controllers/recordings/recordings.controller";
+import { RecordingsRepository } from "./db/repositories/recordings.repository";
 import { BoardConfigService } from "./services/board-config.service";
 import { BoardConfigEntity } from "./db/models/boardConfig.entity";
+import { HighscoresRepository } from "./db/repositories/highscores.repository";
 
 const dbConfig: TypeOrmModuleOptions = {
   type: "postgres",
@@ -40,6 +44,7 @@ const dbConfig: TypeOrmModuleOptions = {
     BotRegistrationsEntity,
     SeasonsEntity,
     TeamsEntity,
+    RecordingsEntity,
     BoardConfigEntity,
   ],
   migrationsTableName: "migration",
@@ -55,6 +60,7 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     SeasonsController,
     SlackController,
     TeamsController,
+    RecordingsController,
   ],
   imports: [
     TypeOrmModule.forRoot(dbConfig),
@@ -64,6 +70,7 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
       BotRegistrationsEntity,
       SeasonsEntity,
       TeamsEntity,
+      RecordingsEntity,
       BoardConfigEntity,
     ]),
   ],
@@ -71,7 +78,6 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     CustomLogger,
     BoardsService,
     BotsService,
-    IdService,
     ValidatorService,
     HighScoresService,
     MetricsService,
@@ -79,6 +85,9 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     SlackService,
     AuthorizationService,
     TeamsService,
+    RecordingsService,
+    RecordingsRepository,
+    HighscoresRepository,
     BoardConfigService,
     {
       provide: "NUMBER_OF_BOARDS",

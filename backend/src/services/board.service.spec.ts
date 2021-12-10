@@ -1,5 +1,5 @@
 import { BoardsService } from "./board.service";
-import { Repository, SelectQueryBuilder, Connection } from "typeorm";
+import { Repository } from "typeorm";
 import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
 import { Test, TestingModule } from "@nestjs/testing";
 import { HighScoresService } from "./high-scores.service";
@@ -16,12 +16,15 @@ import { MetricsService } from "./metrics.service";
 import { SeasonsService } from "./seasons.service";
 import { SeasonsEntity } from "../db/models/seasons.entity";
 import ConflictError from "../errors/conflict.error";
-import { Board } from "../gameengine/board";
 import { TeamsService } from "./teams.service";
 import { TeamsEntity } from "../db/models/teams.entity";
+import { RecordingsService } from "./recordings.service";
+import { RecordingsEntity } from "../db/models/recordings.entity";
 import { BoardConfigService } from "./board-config.service";
 import { BoardConfigEntity } from "../db/models/boardConfig.entity";
 import { BoardConfigDto } from "src/models/board-config.dto";
+import { RecordingsRepository } from "../db/repositories/recordings.repository";
+import { HighscoresRepository } from "../db/repositories/highscores.repository";
 
 describe("BoardsService", () => {
   let botsService: BotsService;
@@ -33,6 +36,7 @@ describe("BoardsService", () => {
   let boardsService: BoardsService;
   let boardConfigService: BoardConfigService;
   let newBoardsService: BoardsService;
+  let recordingsService: RecordingsService;
   let repositoryMock: MockType<Repository<HighScoreEntity>>;
   let repositoryMock2: MockType<Repository<BotRegistrationsEntity>>;
   let repositoryMock3: MockType<Repository<SeasonsEntity>>;
@@ -52,12 +56,31 @@ describe("BoardsService", () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        {
+          provide: CustomLogger,
+          useValue: new SilentLogger() as CustomLogger,
+        },
+        HighscoresRepository,
+        {
+          provide: getRepositoryToken(HighScoreEntity),
+          useFactory: jest.fn(),
+        },
         BotsService,
         {
           provide: getRepositoryToken(BotRegistrationsEntity),
           useFactory: repositoryMockFactory,
         },
+        {
+          provide: getRepositoryToken(RecordingsEntity),
+          useFactory: repositoryMockFactory,
+        },
         SeasonsService,
+        RecordingsRepository,
+        RecordingsService,
+        {
+          provide: getRepositoryToken(RecordingsEntity),
+          useFactory: () => jest.fn(),
+        },
         {
           provide: getRepositoryToken(SeasonsEntity),
           useFactory: repositoryMockFactory,
@@ -90,6 +113,7 @@ describe("BoardsService", () => {
     highScoresService = module.get<HighScoresService>(HighScoresService);
     botsService = module.get<BotsService>(BotsService);
     seasonsService = module.get<SeasonsService>(SeasonsService);
+    recordingsService = module.get<RecordingsService>(RecordingsService);
     boardConfigService = module.get<BoardConfigService>(BoardConfigService);
     repositoryMock = module.get(getRepositoryToken(HighScoreEntity));
     repositoryMock2 = module.get(getRepositoryToken(BotRegistrationsEntity));
@@ -103,6 +127,7 @@ describe("BoardsService", () => {
       highScoresService,
       null,
       seasonsService,
+      recordingsService,
       boardConfigService,
       new SilentLogger() as CustomLogger,
       2,
@@ -113,6 +138,7 @@ describe("BoardsService", () => {
       highScoresService,
       null,
       seasonsService,
+      recordingsService,
       boardConfigService,
       new SilentLogger() as CustomLogger,
       5,

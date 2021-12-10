@@ -1,16 +1,14 @@
 import { BoardsService } from "../services/board.service";
 import { Repository } from "typeorm";
 import { TestingModule, Test } from "@nestjs/testing";
-import { getRepository } from "typeorm";
 import { HighScoresService } from "../services/high-scores.service";
 import { BotsService } from "../services/bots.service";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { SeasonsService } from "../services/seasons.service";
 import SilentLogger from "../gameengine/util/silent-logger";
 import { CustomLogger } from "../logger";
-import { Board } from "../gameengine/board";
 import { AutoScaleMiddleware } from "./auto-scale-boards.middleware";
-import { create } from "domain";
+import { RecordingsService } from "../services/recordings.service";
 import { BoardConfigService } from "../services/board-config.service";
 import { BoardConfigDto } from "../models/board-config.dto";
 import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
@@ -20,14 +18,15 @@ import { MetricsService } from "../services/metrics.service";
 import { TeamsService } from "../services/teams.service";
 import { TeamsEntity } from "../db/models/teams.entity";
 import { BoardConfigEntity } from "../db/models/boardConfig.entity";
+import { HighscoresRepository } from "../db/repositories/highscores.repository";
 
 describe("AutoScaleBourdsMiddleWare", () => {
   let boardsService: BoardsService;
-  let newBoardsService: BoardsService;
   let highScoresService: HighScoresService;
   let botsService: BotsService;
   let seasonsService: SeasonsService;
   let autoScaleBoardsMiddleware: AutoScaleMiddleware;
+  let recordingsService: RecordingsService;
   let boardConfigService: BoardConfigService;
   let repositoryMock: MockType<Repository<HighScoreEntity>>;
   let repositoryMock2: MockType<Repository<BotRegistrationsEntity>>;
@@ -49,6 +48,11 @@ describe("AutoScaleBourdsMiddleWare", () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        HighscoresRepository,
+        {
+          provide: getRepositoryToken(HighScoreEntity),
+          useFactory: jest.fn(),
+        },
         BotsService,
         {
           provide: getRepositoryToken(BotRegistrationsEntity),
@@ -100,6 +104,7 @@ describe("AutoScaleBourdsMiddleWare", () => {
       highScoresService,
       null,
       seasonsService,
+      recordingsService,
       boardConfigService,
       new SilentLogger() as CustomLogger,
       4,

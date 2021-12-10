@@ -22,19 +22,20 @@ import { TeleportProvider } from "../gameengine/gameobjects/teleport/teleport-pr
 import { MetricsService } from "./metrics.service";
 import { TeleportRelocationProvider } from "../gameengine/gameobjects/teleport-relocation-provider/teleport-relocation-provider";
 import { SeasonsService } from "./seasons.service";
+import { RecordingsService } from "./recordings.service";
 import { BoardConfigService } from "./board-config.service";
 import { BoardConfigDto } from "src/models/board-config.dto";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
   private boards: OperationQueueBoard[] = [];
-  private lastMoveTimes: {};
 
   constructor(
     private botsService: BotsService,
     private highscoresService: HighScoresService,
     private metricsService: MetricsService,
     private seasonsService: SeasonsService,
+    private recordingsService: RecordingsService,
     private boardConfigService: BoardConfigService,
     private logger: CustomLogger,
     @Inject("NUMBER_OF_BOARDS") private numberOfBoards,
@@ -72,7 +73,7 @@ export class BoardsService {
   public getById(id: number): BoardDto {
     const board = this.getBoardById(id);
     if (board) {
-      return this.getAsDto(board);
+      return this.returnAndSaveDto(board);
     }
     throw new NotFoundError("Board not found");
   }
@@ -107,7 +108,14 @@ export class BoardsService {
       this.metricsService.incPlayersTotal(boardId);
       this.metricsService.incSessionsStarted(boardId);
     }
-    return this.getAsDto(board);
+    return this.returnAndSaveDto(board);
+  }
+
+  private returnAndSaveDto(board: Board) {
+    const dto = this.getAsDto(board);
+    const index = this.getBoardIndex(board);
+    if (this.recordingsService) this.recordingsService.record(index, dto);
+    return dto;
   }
 
   public async move(
@@ -153,7 +161,7 @@ export class BoardsService {
       this.metricsService.incMovesPerformed(boardId);
     }
 
-    return this.getAsDto(board);
+    return this.returnAndSaveDto(board);
   }
 
   private moveIsRateLimited(board: OperationQueueBoard, bot: IBot) {
@@ -169,6 +177,10 @@ export class BoardsService {
 
   private getBoardById(id: number): OperationQueueBoard {
     return this.boards.find(b => b.getId() === id);
+  }
+
+  private getBoardIndex(board: Board): number {
+    return this.boards.findIndex(b => b === board);
   }
 
   /**
@@ -244,12 +256,21 @@ export class BoardsService {
         seconds: boardConfig.teleportRelocation,
       }),
     ];
+    const sessionLength = boardConfig.sessionLength;
+    const minimumDelayBetweenMoves = boardConfig.minimumDelayBetweenMoves;
+    if (this.recordingsService) {
+      const extraFactor = 1.5;
+      const maxMoves =
+        (1000 / minimumDelayBetweenMoves) * sessionLength * extraFactor;
+      this.recordingsService.setup(numberOfBoards, maxMoves);
+    }
+
     for (let i = 0; i < numberOfBoards; i++) {
       const config: BoardConfig = {
         height: boardConfig.height,
         width: boardConfig.width,
-        minimumDelayBetweenMoves: boardConfig.minimumDelayBetweenMoves,
-        sessionLength: boardConfig.sessionLength,
+        minimumDelayBetweenMoves,
+        sessionLength,
       };
       const board = new OperationQueueBoard(
         this.getNextBoardId(),

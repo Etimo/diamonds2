@@ -62,6 +62,9 @@ export class CustomLogger implements LoggerService {
   debug(message: string) {
     log.debug(message);
   }
+  info(message: string) {
+    log.info(message);
+  }
   verbose(message: string) {
     log.debug(message);
   }
