@@ -4,16 +4,35 @@ import Title from "./Title";
 import Link from "./Link";
 
 const Header = styled.div`
-  display: flex;
-  width: 90%;
-  justify-content: space-between;
-  align-items: baseline;
-  margin: 1rem auto 2rem auto;
-  height: 3rem;
+  align-items: flex-end;
   border-bottom: 1px solid #e1e1e1;
+  display: flex;
+  height: 3rem;
+  justify-content: center;
+  margin: 1rem auto;
+  width: 90%;
 
-  @media only screen and (max-width: 1050px) {
-    margin-bottom: 1rem;
+  > div {
+    flex: 1;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+  }
+
+  div:first-child > img {
+    margin-right: auto;
+  }
+  div:last-child > div {
+    display: flex;
+    margin-left: auto;
+    gap: 1rem;
+    height: 100%;
+    justify-content: right;
+
+    a {
+      display: inline-block;
+      align-self: center;
+    }
   }
 `;
 

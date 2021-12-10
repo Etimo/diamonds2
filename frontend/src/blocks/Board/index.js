@@ -5,18 +5,25 @@ import CharacterName from "./CharacterName";
 import CharacterImg from "./CharacterImg";
 
 const Board = styled.div`
-  position: sticky;
-  border: 1px solid #707070;
-  top: 40px;
-  height: 100%;
-  border-radius: 4px;
+  align-items: center;
   display: flex;
   flex-direction: column;
-  margin-bottom: 1.5rem;
+  position: relative;
+  width: 70%;
 
-  @media only screen and (max-width: 1050px) {
-    position: initial;
-    top: initial;
+  @media only screen and (max-width: 768px) {
+    width: 100%;
+  }
+
+  &::after {
+    content: "";
+    padding-bottom: 100%;
+  }
+
+  > div {
+    position: absolute;
+    height: 100%;
+    width: 100%;
   }
 `;
 

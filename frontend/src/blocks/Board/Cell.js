@@ -2,19 +2,25 @@ import styled from "styled-components";
 
 export default styled.div`
   border: 1px solid #707070;
-  width: ${props => `${props.smallCellSize}vw`};
-  height: ${props => `${props.smallCellSize}vw`};
+  width: ${props => `calc(100% / ${props.width})`};
   display: flex;
-  max-width: 3.5vw;
-  max-height: 3.5vw;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  position: relative;
 
-  @media only screen and (max-width: 1050px) {
-    max-width: initial;
-    max-height: initial;
-    width: ${props => `${props.bigCellSize}vw`};
-    height: ${props => `${props.bigCellSize}vw`};
+  > div {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    position: absolute;
+    width: 100%;
+  }
+
+  &::after {
+    content: "";
+    padding-bottom: 100%;
   }
 `;

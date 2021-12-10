@@ -5,6 +5,7 @@ import Tables from "./Tables";
 const Layout = styled.div`
   display: flex;
   flex-direction: column;
+  height: 100%;
 `;
 
 Layout.Game = Game;

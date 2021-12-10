@@ -4,6 +4,7 @@ import useBoard from "./useBoard";
 import useBoardIds from "./useBoardIds";
 import useSeasons from "./useSeasons";
 import getCurrentSeason from "./getCurrentSeason";
+import useResize from "./useResize";
 
 export {
   useInterval,
@@ -11,5 +12,6 @@ export {
   useBoard,
   useBoardIds,
   useSeasons,
-  getCurrentSeason
+  getCurrentSeason,
+  useResize
 };

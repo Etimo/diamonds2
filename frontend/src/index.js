@@ -5,7 +5,7 @@ import App from "./App";
 
 const GlobalStyle = createGlobalStyle`
   html, body {
-    height: 100%;
+    height: 100vh;
     margin: 0;
   }
   html {
@@ -15,6 +15,9 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: inherit;
     font-family: 'PT Sans', sans-serif;
     color: #2C3E50;
+  }
+  #root {
+    height: 100%;
   }
 `;
 
