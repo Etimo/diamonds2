@@ -1,5 +1,4 @@
 import { SlackService } from "./slack.service";
-import { Repository } from "typeorm";
 import { SeasonsEntity } from "../db/models/seasons.entity";
 import { TestingModule, Test } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
@@ -13,18 +12,27 @@ import { TeamsEntity } from "../db/models/teams.entity";
 import { HighScoresService } from "./high-scores.service";
 import { HighScoreEntity } from "../db/models/highScores.entity";
 import { MetricsService } from "./metrics.service";
+import { RecordingsService } from "./recordings.service";
+import { CustomLogger } from "../logger";
+import SilentLogger from "../gameengine/util/silent-logger";
+import { RecordingsEntity } from "../db/models/recordings.entity";
+import { RecordingsRepository } from "../db/repositories/recordings.repository";
 
 describe("SeasonsService", () => {
   let slackService: SlackService;
   let seasonsService: SeasonsService;
-  let teamsService: TeamsService;
-  let highScoresService: HighScoresService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SlackService,
         SeasonsService,
+        RecordingsRepository,
+        RecordingsService,
+        {
+          provide: getRepositoryToken(RecordingsEntity),
+          useFactory: () => jest.fn(),
+        },
         {
           provide: getRepositoryToken(SeasonsEntity),
           useFactory: repositoryMockFactory,
@@ -42,6 +50,10 @@ describe("SeasonsService", () => {
         {
           useValue: null,
           provide: MetricsService,
+        },
+        {
+          provide: CustomLogger,
+          useValue: new SilentLogger(),
         },
       ],
     }).compile();

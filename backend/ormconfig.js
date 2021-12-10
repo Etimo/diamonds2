@@ -8,6 +8,7 @@ const dbConfig = {
   entities: ["**/*.entity{.ts,.js}"],
   migrationsTableName: "migration",
   migrations: ["src/migration/*.ts"],
+  synchronize: false,
   cli: {
     entitiesDir: "src/db",
     migrationsDir: "src/migration",

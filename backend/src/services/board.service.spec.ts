@@ -23,6 +23,7 @@ import { RecordingsEntity } from "../db/models/recordings.entity";
 import { BoardConfigService } from "./board-config.service";
 import { BoardConfigEntity } from "../db/models/boardConfig.entity";
 import { BoardConfigDto } from "src/models/board-config.dto";
+import { RecordingsRepository } from "../db/repositories/recordings.repository";
 
 describe("BoardsService", () => {
   let botsService: BotsService;
@@ -68,7 +69,12 @@ describe("BoardsService", () => {
           useFactory: repositoryMockFactory,
         },
         SeasonsService,
+        RecordingsRepository,
         RecordingsService,
+        {
+          provide: getRepositoryToken(RecordingsEntity),
+          useFactory: () => jest.fn(),
+        },
         {
           provide: getRepositoryToken(SeasonsEntity),
           useFactory: repositoryMockFactory,

@@ -1,11 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { RecordingsEntity } from "../db/models/recordings.entity";
 import { CustomLogger } from "../logger";
 import { RecordingListDto } from "../models/recording-list.dto";
 import { RecordingPublicDto } from "../models/recording-public.dto";
-import { RecordingDto } from "../models/recording.dto";
-import { LessThan, Repository } from "typeorm";
 import NotFoundError from "../errors/not-found.error";
 import { RecordingsRepository } from "../db/repositories/recordings.repository";
 
