@@ -53,6 +53,12 @@ export class BoardsService {
               score,
               seasonId: currentSeason.id,
             });
+            this.recordingsService.save({
+              boardIndex: this.getBoardIndex(board),
+              botName,
+              score,
+              seasonId: currentSeason.id,
+            });
           },
         );
       });
