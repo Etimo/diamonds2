@@ -6,6 +6,7 @@ import { RecordingListDto } from "../models/recording-list.dto";
 import { RecordingPublicDto } from "../models/recording-public.dto";
 import { RecordingDto } from "../models/recording.dto";
 import { LessThan, Repository } from "typeorm";
+import NotFoundError from "../errors/not-found.error";
 
 @Injectable()
 export class RecorderService {
@@ -116,6 +117,9 @@ export class RecorderService {
     seasonId: string,
   ): Promise<RecordingListDto[]> {
     const data = await this.allBySeasonIdRaw(seasonId);
+    if (data.length === 0) {
+      throw new NotFoundError("Season not found");
+    }
     return data.map(e => RecordingListDto.fromRawDataObject(e));
   }
 
@@ -131,6 +135,9 @@ export class RecorderService {
         id,
       })
       .execute();
+    if (data.length === 0) {
+      throw new NotFoundError("Data not found");
+    }
     return data.map(e => RecordingPublicDto.fromRawDataObject(e))[0];
   }
 }

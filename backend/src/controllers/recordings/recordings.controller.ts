@@ -41,7 +41,7 @@ export class RecordingsController {
   })
   @ApiResponse({
     status: 404,
-    description: "Recording not found",
+    description: "Recording or season not found",
   })
   @Get(":seasonId/:id")
   public find(
