@@ -176,6 +176,11 @@
   resolved "https://registry.yarnpkg.com/@digikare/nestjs-prom/-/nestjs-prom-0.2.2.tgz#270908378da13be73df3d4fbc803bf7d3de146ea"
   integrity sha512-Ygnw6dEsg97psYVi1HP7zg8HmR85IpfTU95P9xYxm4FxEokys9KFLMtTCWDuCNVJzu5R9Bc8mdIMqbMbi44NCQ==
 
+"@golevelup/ts-jest@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@golevelup/ts-jest/-/ts-jest-0.3.2.tgz#ea199827fb77cd52a0d013796460ce884f0fe7ec"
+  integrity sha512-hv+j/vau2oj5CuhY1CrTs48Qu+ZVXpm/56OzKcL2KVN8+yc0ZIMbvTIld1wbrT1RrvAuwfDmUM2s3aSy7veuwg==
+
 "@jest/console@^24.7.1", "@jest/console@^24.9.0":
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/@jest/console/-/console-24.9.0.tgz#79b1bc06fb74a8cfb01cbdedf945584b1b9707f0"
