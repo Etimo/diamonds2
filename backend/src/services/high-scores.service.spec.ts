@@ -36,4 +36,8 @@ describe("HighScoresService", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
+
+  it("should be defined", () => {
+    expect(highScoresService).toBeTruthy();
+  });
 });
