@@ -8,6 +8,7 @@ import { SeasonsService } from "./seasons.service";
 import { SeasonsEntity } from "../db/models/seasons.entity";
 import { SeasonDto } from "../models/season.dto";
 import { HighscoresRepository } from "../db/repositories/highscores.repository";
+import { createTestingModule } from "../test-utils";
 
 describe("HighScoresService", () => {
   let highScoresService: HighScoresService;
@@ -24,21 +25,7 @@ describe("HighScoresService", () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        SeasonsService,
-        {
-          provide: getRepositoryToken(SeasonsEntity),
-          useFactory: jest.fn(),
-        },
-        HighScoresService,
-        HighscoresRepository,
-        {
-          provide: getRepositoryToken(HighScoreEntity),
-          useFactory: jest.fn(),
-        },
-      ],
-    }).compile();
+    const module: TestingModule = await createTestingModule();
     highScoresService = module.get<HighScoresService>(HighScoresService);
     seasonService = module.get<SeasonsService>(SeasonsService);
     highscoresRepository = module.get<HighscoresRepository>(

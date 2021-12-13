@@ -1,53 +1,31 @@
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { TeamsEntity } from "../db/models/teams.entity";
 import { TeamDto } from "../models/team.dto";
 import ForbiddenError from "../errors/forbidden.error";
 import ConflictError from "../errors/conflict.error";
 import NotFoundError from "../errors/not-found.error";
 import { URL } from "url";
+import { TeamsRepository } from "../db/repositories/teams.repository";
 
 @Injectable()
 export class TeamsService {
-  constructor(
-    @InjectRepository(TeamsEntity)
-    private readonly repo: Repository<TeamsEntity>,
-  ) {}
+  constructor(private readonly repo: TeamsRepository) {}
 
   public async all() {
-    return this.repo
-      .find({
-        order: {
-          createTimeStamp: "DESC",
-        },
-      })
-      .then(teams => teams.map(e => TeamDto.fromEntity(e)));
+    return this.repo.all().then(teams => teams.map(e => TeamDto.fromEntity(e)));
   }
 
   public async add(dto: TeamDto) {
     await this.validateInput(dto);
-    return await this.create(dto);
+    return await this.repo.create(dto);
   }
 
   public async getByAbbreviation(abbreviation: string): Promise<TeamDto> {
-    const team = await this.repo
-      .createQueryBuilder("teams")
-      .where("teams.abbreviation = :abbreviation", {
-        abbreviation: abbreviation,
-      })
-      .getOne();
+    const team = await this.repo.getByAbbreviation(abbreviation);
 
     if (team) {
       return TeamDto.fromEntity(team);
     }
     throw new NotFoundError("Team does not exist");
-  }
-
-  private async create(dto: TeamDto): Promise<TeamDto> {
-    return await this.repo
-      .save(dto)
-      .then(teamEntity => TeamDto.fromEntity(teamEntity));
   }
 
   private async validateInput(dto: TeamDto) {
@@ -64,9 +42,9 @@ export class TeamsService {
       abbreviationExists,
       logotypeUrlExists,
     ] = await Promise.all([
-      this.exist("teams.name", dto.name),
-      this.exist("teams.abbreviation", dto.abbreviation),
-      this.exist("teams.logotypeUrl", dto.logotypeUrl),
+      this.repo.exist("teams.name", dto.name),
+      this.repo.exist("teams.abbreviation", dto.abbreviation),
+      this.repo.exist("teams.logotypeUrl", dto.logotypeUrl),
     ]);
 
     const errorPayload = this.getErrorPayload(
@@ -82,13 +60,6 @@ export class TeamsService {
     if (!this.isValidUrl(dto.logotypeUrl)) {
       throw new ForbiddenError("Invalid url", "team_logotype_url");
     }
-  }
-
-  private async exist(field: string, data: string): Promise<TeamDto> {
-    return await this.repo
-      .createQueryBuilder("teams")
-      .where(`${field} = :string`, { string: data })
-      .getOne();
   }
 
   private getErrorPayload(nameExists, abbreviationExists, logotypeUrlExists) {

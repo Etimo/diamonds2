@@ -11,8 +11,6 @@ import { HighscorePrivateDto } from "../models/highscore-private.dto";
 
 @Injectable()
 export class HighScoresService {
-  //no db
-  private highScores: HighscoreDto[] = [];
   private entityHighScores: string = "highScores";
 
   constructor(

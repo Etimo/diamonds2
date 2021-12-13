@@ -1,4 +1,4 @@
-import { Injectable, Scope, Logger, Inject } from "@nestjs/common";
+import { Injectable, Scope, Inject } from "@nestjs/common";
 import { OperationQueueBoard } from "../gameengine/operation-queue-board";
 import { BotsService } from "./bots.service";
 import { HighScoresService } from "./high-scores.service";
@@ -23,7 +23,6 @@ import { TeleportRelocationProvider } from "../gameengine/gameobjects/teleport-r
 import { SeasonsService } from "./seasons.service";
 import { RecordingsService } from "./recordings.service";
 import { BoardConfigService } from "./board-config.service";
-import { BoardConfigDto } from "src/models/board-config.dto";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
@@ -37,7 +36,9 @@ export class BoardsService {
     private boardConfigService: BoardConfigService,
     private logger: CustomLogger,
     @Inject("NUMBER_OF_BOARDS") private numberOfBoards,
-  ) {
+  ) {}
+
+  public setup() {
     this.createInMemoryBoards(this.numberOfBoards).then(async () => {
       this.boards.forEach(board => {
         board.registerSessionFinishedCallback(

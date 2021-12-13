@@ -12,12 +12,12 @@ import NotFoundError from "../errors/not-found.error";
 import { BotPasswordDto } from "../models/bot-password.dto";
 import ForbiddenError from "../errors/forbidden.error";
 import { TeamsService } from "./teams.service";
+import { BotsRepository } from "../db/repositories/bots.repository";
 
 @Injectable()
 export class BotsService {
   constructor(
-    @InjectRepository(BotRegistrationsEntity)
-    private readonly repo: Repository<BotRegistrationsEntity>,
+    private readonly repo: BotsRepository,
     private teamsService: TeamsService,
   ) {}
 
@@ -28,9 +28,7 @@ export class BotsService {
       (await this.emailExists(input.email)) ||
       (await this.nameExists(input.botName))
     ) {
-      return Promise.reject(
-        new ConflictError("Email and/or name already exists"),
-      );
+      throw new ConflictError("Email and/or name already exists");
     }
 
     // Fetching the teamId
@@ -43,34 +41,21 @@ export class BotsService {
   }
 
   public async get(token: string): Promise<BotRegistrationPublicDto> {
-    const existBot = await this.repo
-      .createQueryBuilder("botRegistrations")
-      .where("botRegistrations.token = :token", { token: token })
-      .getOne()
-      .then(botRegistrationsEntity =>
-        BotRegistrationPublicDto.fromEntity(botRegistrationsEntity),
-      );
-    return existBot;
+    return BotRegistrationPublicDto.fromEntity(
+      await this.repo.getByToken(token),
+    );
   }
 
   private async emailExists(email: string) {
     email = email.toLowerCase();
 
-    const existEmail = await this.repo
-      .createQueryBuilder("botRegistrations")
-      .where("botRegistrations.email = :email", { email: email })
-      .getOne();
-    //    console.log(!existEmail);
+    const existEmail = await this.repo.getByEmail(email);
     return existEmail;
   }
 
   private async nameExists(name: string) {
     name = name.toLowerCase();
-    const existName = await this.repo
-      .createQueryBuilder("botRegistrations")
-      .where("botRegistrations.botName = :botName", { botName: name })
-      .getOne();
-    //console.log(!firstUser);
+    const existName = await this.repo.getByName(name);
     return existName;
   }
 
@@ -79,67 +64,44 @@ export class BotsService {
   ): Promise<BotRegistrationPublicDto> {
     // Hashing password
     dto.password = await this.hashPassword(dto.password);
-    return await this.repo
-      .save(dto)
-      .then(botRegistrationsEntity =>
-        BotRegistrationPublicDto.fromEntity(botRegistrationsEntity),
-      );
+    return BotRegistrationPublicDto.fromEntity(await this.repo.create(dto));
   }
 
   public async delete(dto: BotRegistrationDto) {
-    return await this.repo
-      .createQueryBuilder()
-      .delete()
-      .from("bot_registrations")
-      .where("botName = :botName", { botName: dto.botName })
-      .execute();
+    return this.repo.deleteByName(dto.botName);
   }
 
   public async getByEmailAndPassword(
-    botRecoveryDto: BotRecoveryDto,
+    email: string,
+    password: string,
   ): Promise<BotRegistrationPublicDto> {
-    const existBot = await this.repo
-      .createQueryBuilder("botRegistrations")
-      .where("botRegistrations.email = :email", {
-        email: botRecoveryDto.email,
-      })
-      .getOne();
+    const existBot = await this.repo.getByEmail(email);
 
     // Don't return bots with no password
     if (existBot && existBot.password) {
       // Return bot if password is correct
-      if (await bcrypt.compare(botRecoveryDto.password, existBot.password)) {
+      if (await bcrypt.compare(password, existBot.password)) {
         return BotRegistrationPublicDto.fromEntity(existBot);
       }
     }
-    return Promise.reject(new NotFoundError("Invalid email or password"));
+    throw new NotFoundError("Invalid email or password");
   }
 
   public async addPassword(
     botPasswordDto: BotPasswordDto,
   ): Promise<BotRegistrationPublicDto> {
-    const existBot = await this.repo
-      .createQueryBuilder("botRegistrations")
-      .where("botRegistrations.token = :token", {
-        token: botPasswordDto.token,
-      })
-      .getOne();
+    const existBot = await this.repo.getByToken(botPasswordDto.token);
+
     if (!existBot) {
-      return Promise.reject(new NotFoundError("Bot not found"));
+      throw new NotFoundError("Bot not found");
     }
 
     if (existBot.password) {
-      return Promise.reject(new ForbiddenError("Bot already has a password"));
+      throw new ForbiddenError("Bot already has a password");
     }
+
     const hashedPassword = await this.hashPassword(botPasswordDto.password);
-    await this.repo
-      .createQueryBuilder()
-      .update("bot_registrations")
-      .set({ password: hashedPassword })
-      .where("token = :token", {
-        token: botPasswordDto.token,
-      })
-      .execute();
+    await this.repo.setPassword(botPasswordDto.token, hashedPassword);
 
     return BotRegistrationPublicDto.fromEntity(existBot);
   }

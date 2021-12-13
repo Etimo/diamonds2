@@ -70,6 +70,7 @@ describe("AutoScaleBourdsMiddleWare", () => {
       4,
     );
 
+    boardsService.setup();
     autoScaleBoardsMiddleware = new AutoScaleMiddleware(boardsService);
 
     jest.clearAllMocks();

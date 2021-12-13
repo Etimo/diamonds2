@@ -19,13 +19,20 @@ import { RecordingsService } from "./services/recordings.service";
 import { SeasonsService } from "./services/seasons.service";
 import { SlackService } from "./services/slack.service";
 import { TeamsService } from "./services/teams.service";
+import { createMock } from "@golevelup/ts-jest";
+import { Repository } from "typeorm";
+import { BoardConfigRepository } from "./db/repositories/board-config.repository";
+import { BotsRepository } from "./db/repositories/bots.repository";
+import { TeamsRepository } from "./db/repositories/teams.repository";
 
 export const createTestingModule = async (): Promise<TestingModule> => {
   const module: TestingModule = await Test.createTestingModule({
     providers: [
       BoardConfigService,
+      BoardConfigRepository,
       BoardsService,
       BotsService,
+      BotsRepository,
       HighscoresRepository,
       HighScoresService,
       RecordingsRepository,
@@ -34,40 +41,41 @@ export const createTestingModule = async (): Promise<TestingModule> => {
       SeasonsRepository,
       SlackService,
       TeamsService,
+      TeamsRepository,
       {
         provide: CustomLogger,
         useValue: new SilentLogger() as CustomLogger,
       },
       {
         provide: getRepositoryToken(HighScoreEntity),
-        useFactory: jest.fn(),
+        useValue: createMock<Repository<HighScoreEntity>>(),
       },
       {
         provide: getRepositoryToken(BotRegistrationsEntity),
-        useFactory: () => jest.fn(),
+        useValue: createMock<Repository<BotRegistrationsEntity>>(),
       },
       {
         provide: getRepositoryToken(RecordingsEntity),
-        useFactory: () => jest.fn(),
+        useValue: createMock<Repository<RecordingsEntity>>(),
       },
       {
         provide: getRepositoryToken(SeasonsEntity),
-        useFactory: () => jest.fn(),
+        useValue: createMock<Repository<SeasonsEntity>>(),
       },
       {
         provide: getRepositoryToken(HighScoreEntity),
-        useFactory: () => jest.fn(),
+        useValue: createMock<Repository<HighScoreEntity>>(),
       },
       {
         provide: getRepositoryToken(TeamsEntity),
-        useFactory: () => jest.fn(),
+        useValue: createMock<Repository<TeamsEntity>>(),
       },
       {
         provide: getRepositoryToken(BoardConfigEntity),
-        useFactory: () => jest.fn(),
+        useValue: createMock<Repository<BoardConfigEntity>>(),
       },
       {
-        useValue: 2,
+        useValue: 4,
         provide: "NUMBER_OF_BOARDS",
       },
     ],

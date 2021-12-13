@@ -1,7 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { SeasonsEntity } from "../db/models/seasons.entity";
 import { SeasonDto } from "../models/season.dto";
 import ConflictError from "../errors/conflict.error";
 import ForbiddenError from "../errors/forbidden.error";
@@ -11,7 +8,7 @@ import { SeasonsRepository } from "../db/repositories/seasons.repository";
 export class SeasonsService {
   constructor(private readonly repo: SeasonsRepository) {}
 
-  public async getOffSeason() {
+  public async getOffSeason(): Promise<SeasonDto> {
     return SeasonDto.fromEntity(await this.repo.getOffSeason());
   }
 
@@ -19,7 +16,7 @@ export class SeasonsService {
     return SeasonDto.fromEntity(await this.repo.getSeason(seasonId));
   }
 
-  public async getCurrentSeason() {
+  public async getCurrentSeason(): Promise<SeasonDto> {
     const currentSeason = await this.repo.getCurrentSeason();
 
     if (currentSeason) {
@@ -29,11 +26,11 @@ export class SeasonsService {
     return await this.getOffSeason();
   }
 
-  public async all() {
+  public async all(): Promise<SeasonDto[]> {
     return (await this.repo.all()).map(e => SeasonDto.fromEntity(e));
   }
 
-  public async add(dto: SeasonDto) {
+  public async add(dto: SeasonDto): Promise<SeasonDto> {
     // Return if values are missing
     if (!dto.name || !dto.startDate || !dto.endDate) {
       throw new ForbiddenError(
