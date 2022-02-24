@@ -45,6 +45,7 @@
     "nest": "^0.1.6",
     "pg": "^7.14.0",
     "prom-client": "^12.0.0",
+    "prometheus-api-metrics": "^2.2.3",
     "reflect-metadata": "^0.1.12",
     "rimraf": "^3.0.0",
     "rxjs": "^6.3.3",
@@ -55,7 +56,6 @@
     "typeorm": "^0.2.20"
   },
   "devDependencies": {
-    "@golevelup/ts-jest": "^0.3.2",
     "@nestjs/cli": "^6.12.2",
     "@nestjs/testing": "^6.0.0",
     "@types/express": "^4.16.0",
@@ -103,9 +103,6 @@
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
-    "setupFiles": [
-      "../jest.setup.ts"
-    ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   }

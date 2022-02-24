@@ -3,6 +3,7 @@ import { HighscoreDto } from "../models/highscore.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { HighScoreEntity } from "../db/models/highScores.entity";
+import { MetricsService } from "./metrics.service";
 import { SeasonsService } from "./seasons.service";
 import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
 import { TeamsEntity } from "../db/models/teams.entity";
@@ -11,11 +12,14 @@ import { HighscorePrivateDto } from "../models/highscore-private.dto";
 
 @Injectable()
 export class HighScoresService {
+  //no db
+  private highScores: HighscoreDto[] = [];
   private entityHighScores: string = "highScores";
 
   constructor(
     @InjectRepository(HighScoreEntity)
     private readonly repo: Repository<HighScoreEntity>,
+    private metricsService: MetricsService,
     private seasonService: SeasonsService,
   ) {}
 
@@ -24,6 +28,9 @@ export class HighScoresService {
 
     if (await this.isNewHighScore(input)) {
       await this.create(input);
+      if (this.metricsService) {
+        this.metricsService.incHighscoresImproved();
+      }
     }
 
     return seasonAllTimeBest < input.score;
@@ -64,6 +71,9 @@ export class HighScoresService {
           })
           .execute();
         isNew = false;
+        if (this.metricsService) {
+          this.metricsService.incHighscoresImproved();
+        }
       } else {
         isNew = false;
       }

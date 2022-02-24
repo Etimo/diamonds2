@@ -7,6 +7,7 @@ import { AllExceptionsFilter } from "./exception-filter";
 import { EnvelopeInterceptor } from "./interceptors/envelope.interceptor";
 import { CustomLogger } from "./logger";
 import bodyParser = require("body-parser");
+import * as apiMetrics from "prometheus-api-metrics";
 import { isLocal } from "./hooks/environment";
 
 async function bootstrap() {
@@ -16,6 +17,7 @@ async function bootstrap() {
   });
   app.use(bodyParser.json());
   app.use(compression());
+  app.use(apiMetrics());
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalInterceptors(new EnvelopeInterceptor(logger));

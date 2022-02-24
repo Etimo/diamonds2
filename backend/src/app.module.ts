@@ -19,6 +19,7 @@ import { HighScoreEntity } from "./db/models/highScores.entity";
 import { BotRegistrationsEntity } from "./db/models/botRegistrations.entity";
 import { SeasonsEntity } from "./db/models/seasons.entity";
 import { TeamsEntity } from "./db/models/teams.entity";
+import { MetricsService } from "./services/metrics.service";
 import { AutoScaleMiddleware } from "./middlewares/auto-scale-boards.middleware";
 import { SlackService } from "./services/slack.service";
 import { TeamsService } from "./services/teams.service";
@@ -53,39 +54,41 @@ const dbConfig: TypeOrmModuleOptions = {
 console.log("DB Config", dbConfig.host, dbConfig.username);
 @Module({
   controllers: [
-    BoardsController,
     BotsController,
+    BoardsController,
     HighscoresController,
-    RecordingsController,
     SeasonsController,
     SlackController,
     TeamsController,
+    RecordingsController,
   ],
   imports: [
     TypeOrmModule.forRoot(dbConfig),
+
     TypeOrmModule.forFeature([
-      BoardConfigEntity,
-      BotRegistrationsEntity,
       HighScoreEntity,
-      RecordingsEntity,
+      BotRegistrationsEntity,
       SeasonsEntity,
       TeamsEntity,
+      RecordingsEntity,
+      BoardConfigEntity,
     ]),
   ],
   providers: [
-    AuthorizationService,
-    BoardConfigService,
+    CustomLogger,
     BoardsService,
     BotsService,
-    CustomLogger,
-    HighscoresRepository,
+    ValidatorService,
     HighScoresService,
-    RecordingsRepository,
-    RecordingsService,
+    MetricsService,
     SeasonsService,
     SlackService,
+    AuthorizationService,
     TeamsService,
-    ValidatorService,
+    RecordingsService,
+    RecordingsRepository,
+    HighscoresRepository,
+    BoardConfigService,
     {
       provide: "NUMBER_OF_BOARDS",
       useValue: 4,
