@@ -3,7 +3,7 @@ import _ from "lodash";
 import { diamond } from "../images";
 import Table from "../blocks/Table";
 
-export default ({ bots, boardId }) => {
+export default ({ bots, activeBot, boardId }) => {
   return (
     <Table>
       <Table.Caption>Board {boardId} Players</Table.Caption>
@@ -20,7 +20,14 @@ export default ({ bots, boardId }) => {
         {bots.map(bot => {
           return (
             <Table.Tr key={bot.properties.name}>
-              <Table.Td>{bot.properties.name}</Table.Td>
+              {bot.properties.name === activeBot && (
+                <Table.Td>
+                  <strong>{bot.properties.name}</strong>
+                </Table.Td>
+              )}
+              {bot.properties.name !== activeBot && (
+                <Table.Td>{bot.properties.name}</Table.Td>
+              )}
               <Table.Td>
                 {_.times(bot.properties.diamonds, index => {
                   return <Table.Img key={index} alt="diamond" src={diamond} />;

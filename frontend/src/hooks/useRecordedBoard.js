@@ -30,6 +30,7 @@ const createBoard = ({ width, height, gameObjects }) => {
 };
 
 export default (seasonId, recordingId) => {
+  const [activeBot, setActiveBot] = useState(null);
   const [response, setResponse] = useState(null);
   const [rows, setRows] = useState([[]]);
   const [bots, setBots] = useState([]);
@@ -49,8 +50,8 @@ export default (seasonId, recordingId) => {
 
   useEffect(() => {
     if (!loading) {
+      setActiveBot(response.botName);
       const data = response.recording[0];
-      console.log(data);
       if (!_.isEmpty(data)) {
         setRows(createBoard(data));
         setBots(data.gameObjects.filter(b => b.type === botGameObjectName));
@@ -70,5 +71,5 @@ export default (seasonId, recordingId) => {
     }
   }, 100);
 
-  return [loading, rows, bots];
+  return [loading, rows, bots, activeBot];
 };

@@ -18,7 +18,10 @@ export default () => {
   const search = useQuery();
   const seasonId = data[0];
   const recordingId = search.get("recordingId");
-  const [loading, rows, bots] = useRecordedBoard(seasonId, recordingId);
+  const [loading, rows, bots, activeBot] = useRecordedBoard(
+    seasonId,
+    recordingId
+  );
 
   return (
     <Layout.Game>
@@ -26,8 +29,8 @@ export default () => {
         {loading && <p>Loading...</p>}
         {!loading && rows && (
           <>
-            <PlayerTable bots={bots} boardId={1} />
-            <GameBoard rows={rows} />
+            <PlayerTable bots={bots} activeBot={activeBot} boardId={1} />
+            <GameBoard rows={rows} activeBot={activeBot} />
           </>
         )}
       </Layout.Tables>

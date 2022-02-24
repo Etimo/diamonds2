@@ -15,7 +15,7 @@ import {
 } from "../images";
 import { useResize } from "../hooks";
 
-export default ({ rows }) => {
+export default ({ rows, activeBot }) => {
   const decideCharacter = content => {
     const goImgMap = {
       Teleporter: teleporter,
@@ -66,7 +66,8 @@ export default ({ rows }) => {
               {cells.map((content, key) => {
                 const character = decideCharacter(content);
                 const characterName = decideCharacterName(content);
-                const shouldRotate = content.goName === "Teleporter" ? 1 : 0;
+                const shouldRotate =
+                  content.type === "TeleportGameObject" ? 1 : 0;
 
                 return (
                   <Board.Cell
@@ -74,10 +75,13 @@ export default ({ rows }) => {
                     width={width}
                     bigCellSize={bigCellSize}
                     smallCellSize={smallCellSize}
+                    activeBot={activeBot === characterName}
                   >
                     <div>
                       {characterName && (
-                        <Board.CharacterName>
+                        <Board.CharacterName
+                          activeBot={activeBot === characterName}
+                        >
                           {characterName}
                         </Board.CharacterName>
                       )}
@@ -86,6 +90,7 @@ export default ({ rows }) => {
                           alt="player"
                           src={character}
                           rotate={shouldRotate}
+                          activeBot={activeBot === characterName}
                         />
                       )}
                     </div>
