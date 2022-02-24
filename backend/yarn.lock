@@ -176,6 +176,11 @@
   resolved "https://registry.yarnpkg.com/@digikare/nestjs-prom/-/nestjs-prom-0.2.2.tgz#270908378da13be73df3d4fbc803bf7d3de146ea"
   integrity sha512-Ygnw6dEsg97psYVi1HP7zg8HmR85IpfTU95P9xYxm4FxEokys9KFLMtTCWDuCNVJzu5R9Bc8mdIMqbMbi44NCQ==
 
+"@golevelup/ts-jest@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@golevelup/ts-jest/-/ts-jest-0.3.2.tgz#ea199827fb77cd52a0d013796460ce884f0fe7ec"
+  integrity sha512-hv+j/vau2oj5CuhY1CrTs48Qu+ZVXpm/56OzKcL2KVN8+yc0ZIMbvTIld1wbrT1RrvAuwfDmUM2s3aSy7veuwg==
+
 "@jest/console@^24.7.1", "@jest/console@^24.9.0":
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/@jest/console/-/console-24.9.0.tgz#79b1bc06fb74a8cfb01cbdedf945584b1b9707f0"
@@ -5755,11 +5760,6 @@ pkg-dir@^4.2.0:
   dependencies:
     find-up "^4.0.0"
 
-pkginfo@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/pkginfo/-/pkginfo-0.4.1.tgz#b5418ef0439de5425fc4995042dced14fb2a84ff"
-  integrity sha1-tUGO8EOd5UJfxJlQQtztFPsqhP8=
-
 please-upgrade-node@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/please-upgrade-node/-/please-upgrade-node-3.2.0.tgz#aeddd3f994c933e4ad98b99d9a556efa0e2fe942"
@@ -5865,14 +5865,6 @@ prom-client@^12.0.0:
   integrity sha512-JbzzHnw0VDwCvoqf8y1WDtq4wSBAbthMB1pcVI/0lzdqHGJI3KBJDXle70XK+c7Iv93Gihqo0a5LlOn+g8+DrQ==
   dependencies:
     tdigest "^0.1.1"
-
-prometheus-api-metrics@^2.2.3:
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/prometheus-api-metrics/-/prometheus-api-metrics-2.2.3.tgz#d244f77acb160a67f1f9a3a9e86049215d31a619"
-  integrity sha512-A5lPAsn2HDRpdjZyj7wdx8XCSUS2uwadT6FKoboOY+1NKNA4FX5Ttwxs0GCxUQrAFkb1u5vkXIx3ScMLF/D9Qw==
-  dependencies:
-    debug "^3.2.6"
-    pkginfo "^0.4.1"
 
 promise-inflight@^1.0.1:
   version "1.0.1"

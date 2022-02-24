@@ -14,11 +14,11 @@ import { BoardConfigDto } from "../models/board-config.dto";
 import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
 import { SeasonsEntity } from "../db/models/seasons.entity";
 import { HighScoreEntity } from "../db/models/highScores.entity";
-import { MetricsService } from "../services/metrics.service";
 import { TeamsService } from "../services/teams.service";
 import { TeamsEntity } from "../db/models/teams.entity";
 import { BoardConfigEntity } from "../db/models/boardConfig.entity";
 import { HighscoresRepository } from "../db/repositories/highscores.repository";
+import { createTestingModule } from "../test-utils";
 
 describe("AutoScaleBourdsMiddleWare", () => {
   let boardsService: BoardsService;
@@ -28,10 +28,10 @@ describe("AutoScaleBourdsMiddleWare", () => {
   let autoScaleBoardsMiddleware: AutoScaleMiddleware;
   let recordingsService: RecordingsService;
   let boardConfigService: BoardConfigService;
-  let repositoryMock: MockType<Repository<HighScoreEntity>>;
-  let repositoryMock2: MockType<Repository<BotRegistrationsEntity>>;
-  let repositoryMock3: MockType<Repository<SeasonsEntity>>;
-  let repositoryMock4: MockType<Repository<BoardConfigEntity>>;
+  let repoHighscore: MockType<Repository<HighScoreEntity>>;
+  let repoBotRegistrations: MockType<Repository<BotRegistrationsEntity>>;
+  let repoSeasons: MockType<Repository<SeasonsEntity>>;
+  let repoBoardConfig: MockType<Repository<BoardConfigEntity>>;
   const boardConfig = {
     id: "test",
     seasonId: "321",
@@ -46,63 +46,23 @@ describe("AutoScaleBourdsMiddleWare", () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        HighscoresRepository,
-        {
-          provide: getRepositoryToken(HighScoreEntity),
-          useFactory: jest.fn(),
-        },
-        BotsService,
-        {
-          provide: getRepositoryToken(BotRegistrationsEntity),
-          useFactory: repositoryMockFactory,
-        },
-        SeasonsService,
-        {
-          provide: getRepositoryToken(SeasonsEntity),
-          useFactory: repositoryMockFactory,
-        },
-        HighScoresService,
-        {
-          provide: getRepositoryToken(HighScoreEntity),
-          useFactory: repositoryMockFactory,
-        },
-        {
-          useValue: null,
-          provide: MetricsService,
-        },
-        TeamsService,
-        {
-          provide: getRepositoryToken(TeamsEntity),
-          useFactory: repositoryMockFactory,
-        },
-        BoardConfigService,
-        {
-          provide: getRepositoryToken(BoardConfigEntity),
-          useFactory: repositoryMockFactory,
-        },
-        {
-          useValue: 4,
-          provide: "NUMBER_OF_BOARDS",
-        },
-      ],
-    }).compile();
+    const module: TestingModule = await createTestingModule();
     highScoresService = module.get<HighScoresService>(HighScoresService);
     botsService = module.get<BotsService>(BotsService);
     seasonsService = module.get<SeasonsService>(SeasonsService);
     boardConfigService = module.get<BoardConfigService>(BoardConfigService);
-    repositoryMock = module.get(getRepositoryToken(HighScoreEntity));
-    repositoryMock2 = module.get(getRepositoryToken(BotRegistrationsEntity));
-    repositoryMock3 = module.get(getRepositoryToken(SeasonsEntity));
-    repositoryMock4 = module.get(getRepositoryToken(BoardConfigEntity));
+    repoHighscore = module.get(getRepositoryToken(HighScoreEntity));
+    repoBotRegistrations = module.get(
+      getRepositoryToken(BotRegistrationsEntity),
+    );
+    repoSeasons = module.get(getRepositoryToken(SeasonsEntity));
+    repoBoardConfig = module.get(getRepositoryToken(BoardConfigEntity));
     spyOn(boardConfigService, "getCurrentBoardConfig").and.returnValue(
       boardConfig as BoardConfigDto,
     );
     boardsService = new BoardsService(
       botsService,
       highScoresService,
-      null,
       seasonsService,
       recordingsService,
       boardConfigService,
@@ -110,17 +70,10 @@ describe("AutoScaleBourdsMiddleWare", () => {
       4,
     );
 
+    boardsService.setup();
     autoScaleBoardsMiddleware = new AutoScaleMiddleware(boardsService);
 
     jest.clearAllMocks();
-  });
-
-  it("should be defined", () => {
-    expect(highScoresService).toBeDefined;
-    expect(botsService).toBeDefined;
-    expect(seasonsService).toBeDefined;
-    expect(boardsService).toBeDefined;
-    expect(boardConfigService).toBeDefined;
   });
 
   it("should 0 boards", async () => {

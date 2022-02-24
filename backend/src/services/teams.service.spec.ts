@@ -1,196 +1,91 @@
-import { SlackService } from "./slack.service";
-import { Repository } from "typeorm";
-import { SeasonsEntity } from "../db/models/seasons.entity";
-import { TestingModule, Test } from "@nestjs/testing";
-import { getRepositoryToken } from "@nestjs/typeorm";
+import { TestingModule } from "@nestjs/testing";
 import { TeamsService } from "./teams.service";
 import { TeamsEntity } from "../db/models/teams.entity";
 import ForbiddenError from "../errors/forbidden.error";
 import { TeamDto } from "../models/team.dto";
 import ConflictError from "../errors/conflict.error";
 import NotFoundError from "../errors/not-found.error";
+import { TeamsRepository } from "../db/repositories/teams.repository";
+import { createTestingModule } from "../test-utils";
 
 describe("SeasonsService", () => {
   let teamsService: TeamsService;
-  let repositoryMock: MockType<Repository<SeasonsEntity>>;
+  let teamsRepositoryMock: TeamsRepository;
+
+  const team = {
+    id: "123",
+    abbreviation: "etimo",
+    name: "Etimo",
+    logotypeUrl: "https://etimo.se",
+  };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        TeamsService,
-        {
-          provide: getRepositoryToken(TeamsEntity),
-          useFactory: repositoryMockFactory,
-        },
-      ],
-    }).compile();
-    teamsService = module.get<TeamsService>(TeamsService);
-    repositoryMock = module.get(getRepositoryToken(TeamsEntity));
+    const module: TestingModule = await createTestingModule();
+    teamsService = module.get(TeamsService);
+    teamsRepositoryMock = module.get(TeamsRepository);
+  });
+  afterEach(() => {
     jest.clearAllMocks();
   });
-  it("should be defined", () => {
-    expect(TeamsService).toBeDefined();
-  });
 
-  it("add, should throw Forbidden error", async () => {
-    const team = {
-      id: "123",
-      abbreviation: "etimo",
-      name: "Etimo",
-      logotypeUrl: null,
-    };
-
-    await expect(teamsService.add(team)).rejects.toThrowError(ForbiddenError);
-  });
-
-  it("add, should throw Conflict error", async () => {
-    const team = {
-      id: "123",
-      abbreviation: "etimo",
-      name: "Etimo",
-      logotypeUrl: "www.etimo.se",
-    };
-
-    const teamEntity: TeamsEntity = {
-      ...team,
-      createTimeStamp: new Date(),
-      updateTimeStamp: new Date(),
-    };
-
-    spyOn<any>(teamsService, "exist").and.returnValue(teamEntity);
-
-    await expect(teamsService.add(team)).rejects.toThrowError(ConflictError);
-  });
-
-  it("add, should return dto", async () => {
-    const team = {
-      id: "123",
-      abbreviation: "etimo",
-      name: "Etimo",
-      logotypeUrl: "https://etimo.se",
-    };
-
-    const save = jest.fn(
-      () =>
-        new Promise<TeamDto>((resolve, reject) => {
-          var savedPackage: TeamDto = team;
-
-          setTimeout(() => {
-            resolve(savedPackage);
-          }, 500);
+  describe("add", () => {
+    it("should throw Forbidden error is missing logotype", async () => {
+      await expect(
+        teamsService.add({
+          ...team,
+          logotypeUrl: null,
         }),
-    );
+      ).rejects.toThrowError(ForbiddenError);
+    });
 
-    repositoryMock.save.mockImplementation(save);
-    spyOn<any>(teamsService, "exist").and.returnValue(null);
+    it("should throw Conflict error", async () => {
+      const teamEntity: TeamsEntity = {
+        ...team,
+        createTimeStamp: new Date(),
+        updateTimeStamp: new Date(),
+      };
 
-    await expect(teamsService.add(team)).resolves.toHaveProperty("name");
+      spyOn(teamsRepositoryMock, "exist").and.returnValue(teamEntity);
+
+      await expect(teamsService.add(team)).rejects.toThrowError(ConflictError);
+    });
+
+    it("should return dto", async () => {
+      spyOn(teamsRepositoryMock, "exist").and.returnValue(null);
+      spyOn(teamsRepositoryMock, "create").and.returnValue(team);
+
+      await expect(teamsService.add(team)).resolves.toEqual(team);
+    });
+
+    it("should throw invalid url", async () => {
+      const team = {
+        id: "123",
+        abbreviation: "etimo",
+        name: "Etimo",
+        logotypeUrl: "httpsasd",
+      };
+
+      spyOn(teamsRepositoryMock, "exist").and.returnValue(null);
+
+      await expect(teamsService.add(team)).rejects.toThrowError(ForbiddenError);
+    });
   });
 
-  it("add, should throw invalid url", async () => {
-    const team = {
-      id: "123",
-      abbreviation: "etimo",
-      name: "Etimo",
-      logotypeUrl: "httpsasd",
-    };
+  describe("getByAbbreviation", () => {
+    it("should return dto", async () => {
+      spyOn(teamsRepositoryMock, "getByAbbreviation").and.returnValue(team);
 
-    const save = jest.fn(
-      () =>
-        new Promise<TeamDto>((resolve, reject) => {
-          var savedPackage: TeamDto = team;
+      await expect(
+        teamsService.getByAbbreviation(team.abbreviation),
+      ).resolves.toBeInstanceOf(TeamDto);
+    });
 
-          setTimeout(() => {
-            resolve(savedPackage);
-          }, 500);
-        }),
-    );
+    it("should throw not found error", async () => {
+      spyOn(teamsRepositoryMock, "getByAbbreviation").and.returnValue(null);
 
-    repositoryMock.save.mockImplementation(save);
-    spyOn<any>(teamsService, "exist").and.returnValue(null);
-
-    await expect(teamsService.add(team)).rejects.toThrowError(ForbiddenError);
-  });
-
-  it("getByAbbreviation, should return dto", async () => {
-    const team = {
-      id: "123",
-      abbreviation: "etimo",
-      name: "Etimo",
-      logotypeUrl: "asd",
-    };
-
-    //Mocking find from seasonsService
-    const execute = jest.fn();
-    const where = jest.fn(() => ({ execute }));
-    const set = jest.fn(() => ({ where }));
-    const update = jest.fn(() => ({ set }));
-
-    const getOne = jest.fn(
-      () =>
-        new Promise<TeamDto>((resolve, reject) => {
-          var savedPackage: TeamDto = team;
-
-          setTimeout(() => {
-            resolve(savedPackage);
-          }, 500);
-        }),
-    );
-    const where2 = jest.fn(() => ({ getOne }));
-
-    repositoryMock.createQueryBuilder.mockImplementation(
-      jest.fn(() => ({ where: where2 })),
-    );
-
-    await expect(
-      teamsService.getByAbbreviation(team.abbreviation),
-    ).resolves.toHaveProperty("name");
-  });
-
-  it("getByAbbreviation, should throw not found error", async () => {
-    //Mocking find from seasonsService
-    const execute = jest.fn();
-    const where = jest.fn(() => ({ execute }));
-    const set = jest.fn(() => ({ where }));
-    const update = jest.fn(() => ({ set }));
-
-    const getOne = jest.fn(
-      () =>
-        new Promise<TeamDto>((resolve, reject) => {
-          var savedPackage: TeamDto = null;
-
-          setTimeout(() => {
-            resolve(savedPackage);
-          }, 500);
-        }),
-    );
-    const where2 = jest.fn(() => ({ getOne }));
-
-    repositoryMock.createQueryBuilder.mockImplementation(
-      jest.fn(() => ({ where: where2 })),
-    );
-
-    await expect(teamsService.getByAbbreviation("test")).rejects.toThrow(
-      NotFoundError,
-    );
+      await expect(teamsService.getByAbbreviation("test")).rejects.toThrow(
+        NotFoundError,
+      );
+    });
   });
 });
-
-// @ts-ignore
-export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
-  () => ({
-    findOne: jest.fn(entity => entity),
-    find: jest.fn(entity => entity),
-    update: jest.fn(),
-    save: jest.fn(),
-    createQueryBuilder: jest.fn(() => ({
-      where: jest.fn(() => ({ getOne: jest.fn(entity => entity) })),
-      getOne: jest.fn(),
-    })),
-    execute: jest.fn(entity => entity),
-    where: jest.fn(),
-  }),
-);
-export type MockType<T> = {
-  [P in keyof T]: jest.Mock<{}>;
-};
