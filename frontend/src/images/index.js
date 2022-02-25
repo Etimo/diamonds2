@@ -10,6 +10,7 @@ import redButton from "./redButton.svg";
 import robot from "./robot.svg";
 import teleporter from "./teleporter.svg";
 import wall from "./wall.svg";
+import close from "./close.svg";
 
 export {
   etimoLogo,
@@ -23,5 +24,6 @@ export {
   redButton,
   robot,
   teleporter,
-  wall
+  wall,
+  close
 };
