@@ -56,7 +56,7 @@ const RulesModal = ({ visible, setRulesVisible, seasonId }) => {
             </Rules.RuleWrapper>
           )}
           <Rules.Close
-            alt="player"
+            alt="close"
             src={close}
             onClick={() => setRulesVisible(false)}
           />
