@@ -1,14 +1,26 @@
 import { SlackService } from "./slack.service";
+import { SeasonsEntity } from "../db/models/seasons.entity";
 import { TestingModule, Test } from "@nestjs/testing";
+import { getRepositoryToken } from "@nestjs/typeorm";
 import { SeasonDto } from "../models/season.dto";
 import ConflictError from "../errors/conflict.error";
 import ForbiddenError from "../errors/forbidden.error";
 import { SeasonsService } from "./seasons.service";
+import { repositoryMockFactory } from "./board.service.spec";
 import { TeamsService } from "./teams.service";
+import { TeamsEntity } from "../db/models/teams.entity";
 import { HighScoresService } from "./high-scores.service";
+import { HighScoreEntity } from "../db/models/highScores.entity";
+import { MetricsService } from "./metrics.service";
+import { RecordingsService } from "./recordings.service";
+import { CustomLogger } from "../logger";
+import SilentLogger from "../gameengine/util/silent-logger";
+import { RecordingsEntity } from "../db/models/recordings.entity";
+import { RecordingsRepository } from "../db/repositories/recordings.repository";
+import { HighscoresRepository } from "../db/repositories/highscores.repository";
 import { BoardConfigService } from "./board-config.service";
+import { BoardConfigEntity } from "../db/models/boardConfig.entity";
 import { BoardConfigDto } from "../models/board-config.dto";
-import { createTestingModule } from "../test-utils";
 
 describe("SeasonsService", () => {
   let slackService: SlackService;
@@ -18,11 +30,61 @@ describe("SeasonsService", () => {
   let boardConfigService: BoardConfigService;
 
   beforeEach(async () => {
-    const module: TestingModule = await createTestingModule();
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        SlackService,
+        SeasonsService,
+        RecordingsRepository,
+        RecordingsService,
+        {
+          provide: getRepositoryToken(RecordingsEntity),
+          useFactory: () => jest.fn(),
+        },
+        HighscoresRepository,
+        {
+          provide: getRepositoryToken(HighScoreEntity),
+          useFactory: jest.fn(),
+        },
+        {
+          provide: getRepositoryToken(SeasonsEntity),
+          useFactory: repositoryMockFactory,
+        },
+        TeamsService,
+        {
+          provide: getRepositoryToken(TeamsEntity),
+          useFactory: repositoryMockFactory,
+        },
+        HighScoresService,
+        {
+          provide: getRepositoryToken(HighScoreEntity),
+          useFactory: repositoryMockFactory,
+        },
+        BoardConfigService,
+        {
+          provide: getRepositoryToken(BoardConfigEntity),
+          useFactory: repositoryMockFactory,
+        },
+        {
+          useValue: null,
+          provide: MetricsService,
+        },
+        {
+          provide: CustomLogger,
+          useValue: new SilentLogger(),
+        },
+      ],
+    }).compile();
     slackService = module.get<SlackService>(SlackService);
     seasonsService = module.get<SeasonsService>(SeasonsService);
     boardConfigService = module.get<BoardConfigService>(BoardConfigService);
     jest.clearAllMocks();
+  });
+  it("should be defined", () => {
+    expect(SlackService).toBeDefined();
+    expect(SeasonsService).toBeDefined();
+    expect(TeamsService).toBeDefined();
+    expect(HighScoresService).toBeDefined();
+    expect(BoardConfigService).toBeDefined();
   });
 
   it("handleInteract, Should return error in slack format", async () => {

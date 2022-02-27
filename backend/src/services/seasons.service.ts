@@ -1,23 +1,41 @@
 import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { SeasonsEntity } from "../db/models/seasons.entity";
 import { SeasonDto } from "../models/season.dto";
 import ConflictError from "../errors/conflict.error";
 import ForbiddenError from "../errors/forbidden.error";
-import { SeasonsRepository } from "../db/repositories/seasons.repository";
 
 @Injectable()
 export class SeasonsService {
-  constructor(private readonly repo: SeasonsRepository) {}
+  constructor(
+    @InjectRepository(SeasonsEntity)
+    private readonly repo: Repository<SeasonsEntity>,
+  ) {}
 
-  public async getOffSeason(): Promise<SeasonDto> {
-    return SeasonDto.fromEntity(await this.repo.getOffSeason());
+  public async getOffSeason() {
+    const offSeason = await this.repo
+      .createQueryBuilder("seasons")
+      .where("seasons.name = 'Off season'")
+      .getOne();
+
+    return SeasonDto.fromEntity(offSeason);
   }
 
   public async getSeason(seasonId: SeasonDto["id"]): Promise<SeasonDto> {
-    return SeasonDto.fromEntity(await this.repo.getSeason(seasonId));
+    const offSeason = await this.repo
+      .createQueryBuilder("seasons")
+      .where("seasons.id = :seasonId", { seasonId: seasonId })
+      .getOne();
+
+    return SeasonDto.fromEntity(offSeason);
   }
 
-  public async getCurrentSeason(): Promise<SeasonDto> {
-    const currentSeason = await this.repo.getCurrentSeason();
+  public async getCurrentSeason() {
+    const currentSeason = await this.repo
+      .createQueryBuilder("seasons")
+      .where("seasons.startDate <= now() AND seasons.endDate >= now()")
+      .getOne();
 
     if (currentSeason) {
       return SeasonDto.fromEntity(currentSeason);
@@ -26,11 +44,17 @@ export class SeasonsService {
     return await this.getOffSeason();
   }
 
-  public async all(): Promise<SeasonDto[]> {
-    return (await this.repo.all()).map(e => SeasonDto.fromEntity(e));
+  public async all() {
+    return this.repo
+      .find({
+        order: {
+          createTimeStamp: "DESC",
+        },
+      })
+      .then(seasons => seasons.map(e => SeasonDto.fromEntity(e)));
   }
 
-  public async add(dto: SeasonDto): Promise<SeasonDto> {
+  public async add(dto: SeasonDto) {
     // Return if values are missing
     if (!dto.name || !dto.startDate || !dto.endDate) {
       throw new ForbiddenError(
@@ -48,9 +72,9 @@ export class SeasonsService {
       );
     }
 
-    const [dateCollision, nameExists] = await Promise.all([
-      this.repo.dateCollision(dto.startDate, dto.endDate),
-      this.repo.nameExists(dto.name),
+    let [dateCollision, nameExists] = await Promise.all([
+      this.dateCollision(dto.startDate, dto.endDate),
+      this.nameExists(dto.name),
     ]);
 
     if (dateCollision) {
@@ -68,6 +92,29 @@ export class SeasonsService {
     }
 
     // Add the season
-    return SeasonDto.fromEntity(await this.repo.create(dto));
+    return await this.create(dto);
+  }
+
+  public async create(dto: SeasonDto): Promise<SeasonDto> {
+    return await this.repo
+      .save(dto)
+      .then(seasonEntity => SeasonDto.fromEntity(seasonEntity));
+  }
+
+  private async nameExists(name: string) {
+    return await this.repo
+      .createQueryBuilder("seasons")
+      .where("seasons.name = :name", { name: name })
+      .getOne();
+  }
+  // Check if the new dates collides with other season dates.
+  private async dateCollision(startDate: Date, endDate: Date) {
+    return await this.repo
+      .createQueryBuilder("seasons")
+      .where(
+        "seasons.startDate <= :endDate AND seasons.endDate >= :startDate",
+        { endDate: endDate, startDate: startDate },
+      )
+      .getOne();
   }
 }
