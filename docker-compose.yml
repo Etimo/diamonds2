@@ -30,6 +30,11 @@ services:
       PORT: 5000
     ports:
       - 8081:5000
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
 
   bots:
     build:
@@ -37,6 +42,11 @@ services:
     restart: always
     volumes:
       - bot-data:/bot-data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
 
   database:
     image: postgres:alpine

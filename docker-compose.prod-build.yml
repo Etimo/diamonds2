@@ -25,6 +25,11 @@ services:
       - SLACK_SIGNING_SECRET
     ports:
       - 8081:5000
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
 
   bots:
     build:
@@ -32,6 +37,11 @@ services:
     restart: always
     volumes:
       - bot-data:/bot-data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
 
 volumes:
   bot-data:
