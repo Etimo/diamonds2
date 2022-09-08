@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { useBoard, getCurrentSeason } from "../hooks";
 import Layout from "../blocks/Layout";
-import GameBoard from "../components/GameBoard";
-import PlayerTable from "../components/PlayerTable";
-import HighScoreTable from "../components/HighScoreTable";
 import BoardPicker from "../components/BoardPicker";
-import SeasonPicker from "../components/SeasonPicker";
+import GameBoard from "../components/GameBoard";
+import HighScoreTable from "../components/HighScoreTable";
+import PlayerTable from "../components/PlayerTable";
 import RulesModal from "../components/RulesModal";
+import SeasonPicker from "../components/SeasonPicker";
+import { getCurrentSeason, useBoard } from "../hooks";
 
 export default () => {
   const currentSeason = getCurrentSeason();
