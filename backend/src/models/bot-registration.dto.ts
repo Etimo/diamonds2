@@ -1,12 +1,10 @@
 import { ApiModelProperty } from "@nestjs/swagger";
-import { PositionDto } from "./position.dto";
 import {
   IsEmail,
   IsString,
-  Min,
-  Max,
-  MinLength,
   MaxLength,
+  MinLength,
+  NotContains,
 } from "class-validator";
 export class BotRegistrationDto {
   @ApiModelProperty({
@@ -22,6 +20,7 @@ export class BotRegistrationDto {
   @IsString()
   @MinLength(1)
   @MaxLength(10)
+  @NotContains(" ", { message: "Bot name can not contain whitespace" })
   readonly botName: string;
 
   @ApiModelProperty({
