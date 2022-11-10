@@ -71,6 +71,7 @@ curl -X POST --data-urlencode "payload={\"channel\": \"#etimo-open-diamondsv2\",
 
 # Stop instance
 echo "Stopping instance"
+
 aws ec2 stop-instances --instance-ids $instance_id
 
 # Control that the instance is stopped!
@@ -97,5 +98,21 @@ echo "Instance type changed to $new_instance_type"
 
 # Start instance
 aws ec2 start-instances --instance-ids $instance_id
+
+#Waiting for the instance to be running. (total 100sec)
+fetch_instance_information $instance_id
+sleeps=0
+while [ "$status" != "running" ]
+do
+    echo $status
+    sleep 20
+    sleeps=$((sleeps + 1))
+    fetch_instance_information $instance_id
+    if [ "$sleeps" == 5 ]; then exit 1; fi
+done
+
+# Start Docker containers
+aws ssm send-command --instance-ids $instance_id --document-name "AWS-RunShellScript" --comment "Prune docker" --parameters "commands=docker system prune" --output text
+aws ssm send-command --instance-ids $instance_id --document-name "AWS-RunShellScript" --comment "Restart containers" --parameters "commands=DIAMONDS_DOCKER_TAG=master-$(docker inspect --format='{{.Config.Image}}' diamonds2-frontend-1 | cut -d "-" -f 2) docker-compose -f docker-compose.prod-run.yml up -d --force-recreate" --output text
 echo "Instance started again"
 
