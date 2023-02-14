@@ -1,4 +1,4 @@
-FROM node:12-alpine3.9 as develop
+FROM node:16-alpine3.17 as develop
 WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn
@@ -8,7 +8,7 @@ COPY . .
 FROM develop as build
 RUN yarn build --webpack
 
-FROM node:12-alpine3.9 as prod
+FROM node:16-alpine3.17 as prod
 WORKDIR /app
 COPY --from=build /app/dist /app/dist
 COPY package.json yarn.lock ./
