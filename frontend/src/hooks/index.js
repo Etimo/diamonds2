@@ -1,10 +1,11 @@
-import useInterval from "./useInterval";
-import useFetchRepeatedly from "./useFetchRepeatedly";
+import getCurrentSeason from "./getCurrentSeason";
 import useBoard from "./useBoard";
 import useBoardIds from "./useBoardIds";
-import useSeasons from "./useSeasons";
-import getCurrentSeason from "./getCurrentSeason";
+import useFetchRepeatedly from "./useFetchRepeatedly";
+import useInterval from "./useInterval";
+import usePost from "./usePost";
 import useResize from "./useResize";
+import useSeasons from "./useSeasons";
 
 export {
   useInterval,
@@ -13,5 +14,6 @@ export {
   useBoardIds,
   useSeasons,
   getCurrentSeason,
-  useResize
+  useResize,
+  usePost
 };
