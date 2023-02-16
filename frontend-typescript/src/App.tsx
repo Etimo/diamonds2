@@ -1,13 +1,12 @@
-import { FC } from "react";
-import { Grid, Header, SideMenu, Spacer } from "./components";
+import { FC } from 'react';
+import { Grid, Header, SideMenu } from './components';
 
 const App: FC = () => {
   return (
-    <div className="bg-white w-screen h-screen">
+    <div className="bg-white w-screen h-screen flex flex-col">
       <Header />
-      <div className="flex flex-row justify-between h-full">
+      <div className="flex-1 grid grid-cols-[1fr_30%]">
         <Grid />
-        <Spacer vertical />
         <SideMenu />
       </div>
     </div>
