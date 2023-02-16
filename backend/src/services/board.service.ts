@@ -24,7 +24,7 @@ import { TeleportRelocationProvider } from "../gameengine/gameobjects/teleport-r
 import { SeasonsService } from "./seasons.service";
 import { RecordingsService } from "./recordings.service";
 import { BoardConfigService } from "./board-config.service";
-import { BoardConfigDto } from "src/models/board-config.dto";
+import { BotGameObject } from "../gameengine/gameobjects/bot/bot";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
@@ -42,27 +42,25 @@ export class BoardsService {
   ) {
     this.createInMemoryBoards(this.numberOfBoards).then(async () => {
       this.boards.forEach(board => {
-        board.registerSessionFinishedCallback(
-          async (botName: any, score: any) => {
-            if (this.metricsService) {
-              this.metricsService.decPlayersTotal(board.getId());
-            }
-            const currentSeason = await this.seasonsService.getCurrentSeason();
-            const better = await this.highscoresService.addOrUpdate({
-              botName,
-              score,
+        board.registerSessionFinishedCallback(async (bot: BotGameObject) => {
+          if (this.metricsService) {
+            this.metricsService.decPlayersTotal(board.getId());
+          }
+          const currentSeason = await this.seasonsService.getCurrentSeason();
+          const better = await this.highscoresService.addOrUpdate({
+            botName: bot.name,
+            score: bot.score,
+            seasonId: currentSeason.id,
+          });
+          if (better) {
+            this.recordingsService.save({
+              boardIndex: this.getBoardIndex(board),
+              botName: bot.name,
+              score: bot.score,
               seasonId: currentSeason.id,
             });
-            if (better) {
-              this.recordingsService.save({
-                boardIndex: this.getBoardIndex(board),
-                botName,
-                score,
-                seasonId: currentSeason.id,
-              });
-            }
-          },
-        );
+          }
+        });
       });
     });
   }

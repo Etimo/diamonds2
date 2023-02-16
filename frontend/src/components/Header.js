@@ -5,7 +5,10 @@ import { etimoLogo } from "../images";
 import RegisterBotModal from "./RegisterBotModal";
 
 const teamsOrGameLink = location => {
-  if (location.pathname === "/teams") {
+  if (
+    location.pathname === "/teams" ||
+    location.pathname.startsWith("/recording")
+  ) {
     return <Header.Link href="/">Game</Header.Link>;
   }
   return <Header.Link href="/teams">Teams</Header.Link>;
