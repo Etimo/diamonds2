@@ -11,17 +11,15 @@ export default () => {
     <Router>
       <Layout>
         <Header />
-        <Switch>
-          <Route path="/teams">
-            <Teams />
-          </Route>
-          <Route path="/recording/*">
-            <Recording />
-          </Route>
-          <Route path="*">
-            <Game />
-          </Route>
-        </Switch>
+        <Route path="/teams">
+          <Teams />
+        </Route>
+        <Route path="/recording/*">
+          <Recording />
+        </Route>
+        <Route path="*">
+          <Game />
+        </Route>
       </Layout>
     </Router>
   );
