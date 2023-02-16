@@ -16,7 +16,7 @@ services:
     build:
       context: ./backend
       target: "develop"
-    command: /bin/sh -c "yarn run typeorm:migration:run && yarn start"
+    command: /bin/sh -c "yarn run typeorm:migration:run && yarn start:dev"
     volumes:
       - ./backend/src:/app/src
       # - /app/node_modules
@@ -27,9 +27,9 @@ services:
       TYPEORM_USERNAME: postgres
       TYPEORM_PASSWORD: postgres
       TYPEORM_DATABASE: postgres
-      PORT: 5000
+      PORT: 3000
     ports:
-      - 8081:5000
+      - 8081:3000
     logging:
       driver: "json-file"
       options:
