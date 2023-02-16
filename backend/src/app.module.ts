@@ -49,7 +49,6 @@ const dbConfig: TypeOrmModuleOptions = {
   migrations: ['dist/migration/*.{ts,js}'],
   ssl: false,
 };
-console.log(dbConfig);
 
 @Module({
   controllers: [
