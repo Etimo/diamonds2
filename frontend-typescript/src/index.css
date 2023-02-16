@@ -6,5 +6,10 @@
   .text-label {
     @apply font-sans not-italic font-bold mb-1;
     @apply text-2xl text-etimo block;
+  body {
+    @apply font-sans antialiased text-etimo;
+  }
+  a {
+    @apply hover:text-etimoLight;
   }
 }
