@@ -31,27 +31,27 @@ import { BoardConfigService } from "./services/board-config.service";
 import { BoardConfigEntity } from "./db/models/boardConfig.entity";
 import { HighscoresRepository } from "./db/repositories/highscores.repository";
 
-const dbConfig: TypeOrmModuleOptions = {
-  type: "postgres",
-  host: process.env["TYPEORM_HOST"],
-  port: parseInt(process.env["TYPEORM_PORT"]),
-  username: process.env["TYPEORM_USERNAME"],
-  password: process.env["TYPEORM_PASSWORD"],
-  database: process.env["TYPEORM_DATABASE"],
-  synchronize: process.env["ENVIRONMENT"] === "development",
-  entities: [
-    HighScoreEntity,
-    BotRegistrationsEntity,
-    SeasonsEntity,
-    TeamsEntity,
-    RecordingsEntity,
-    BoardConfigEntity,
-  ],
-  migrationsTableName: "migration",
-  migrations: ["./migration/*.{ts,js}"],
-  ssl: false,
-};
-console.log("DB Config", dbConfig.host, dbConfig.username);
+// const dbConfig: TypeOrmModuleOptions = {
+//   type: "postgres",
+//   host: process.env["TYPEORM_HOST"],
+//   port: parseInt(process.env["TYPEORM_PORT"]),
+//   username: process.env["TYPEORM_USERNAME"],
+//   password: process.env["TYPEORM_PASSWORD"],
+//   database: process.env["TYPEORM_DATABASE"],
+//   synchronize: process.env["ENVIRONMENT"] === "development",
+//   entities: [
+//     HighScoreEntity,
+//     BotRegistrationsEntity,
+//     SeasonsEntity,
+//     TeamsEntity,
+//     RecordingsEntity,
+//     BoardConfigEntity,
+//   ],
+//   migrationsTableName: "migration",
+//   migrations: ["./migration/*.{ts,js}"],
+//   ssl: false,
+// };
+// console.log("DB Config", dbConfig.host, dbConfig.username);
 @Module({
   controllers: [
     BotsController,
@@ -63,16 +63,15 @@ console.log("DB Config", dbConfig.host, dbConfig.username);
     RecordingsController,
   ],
   imports: [
-    TypeOrmModule.forRoot(dbConfig),
-
-    TypeOrmModule.forFeature([
-      HighScoreEntity,
-      BotRegistrationsEntity,
-      SeasonsEntity,
-      TeamsEntity,
-      RecordingsEntity,
-      BoardConfigEntity,
-    ]),
+    // TypeOrmModule.forRoot(dbConfig),
+    // TypeOrmModule.forFeature([
+    //   HighScoreEntity,
+    //   BotRegistrationsEntity,
+    //   SeasonsEntity,
+    //   TeamsEntity,
+    //   RecordingsEntity,
+    //   BoardConfigEntity,
+    // ]),
   ],
   providers: [
     CustomLogger,

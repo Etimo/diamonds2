@@ -49,7 +49,7 @@ export class BoardsService {
             }
             const currentSeason = await this.seasonsService.getCurrentSeason();
             const better = await this.highscoresService.addOrUpdate({
-              botName,
+              name: botName,
               score,
               seasonId: currentSeason.id,
             });

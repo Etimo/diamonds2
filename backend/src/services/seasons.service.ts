@@ -5,53 +5,76 @@ import { SeasonsEntity } from "../db/models/seasons.entity";
 import { SeasonDto } from "../models/season.dto";
 import ConflictError from "../errors/conflict.error";
 import ForbiddenError from "../errors/forbidden.error";
+import { PrismaService } from "./prisma.service";
 
 @Injectable()
 export class SeasonsService {
-  constructor(
-    @InjectRepository(SeasonsEntity)
-    private readonly repo: Repository<SeasonsEntity>,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   public async getOffSeason() {
-    const offSeason = await this.repo
-      .createQueryBuilder("seasons")
-      .where("seasons.name = 'Off season'")
-      .getOne();
+    return this.prisma.season.findFirst({
+      where: {
+        id: "00000000-0000-0000-0000-000000000000",
+      },
+    });
+    // const offSeason = await this.repo
+    //   .createQueryBuilder("seasons")
+    //   .where("seasons.name = 'Off season'")
+    //   .getOne();
 
-    return SeasonDto.fromEntity(offSeason);
+    // return SeasonDto.fromEntity(offSeason);
   }
 
-  public async getSeason(seasonId: SeasonDto["id"]): Promise<SeasonDto> {
-    const offSeason = await this.repo
-      .createQueryBuilder("seasons")
-      .where("seasons.id = :seasonId", { seasonId: seasonId })
-      .getOne();
+  public async getSeason(seasonId: SeasonDto["id"]) {
+    return this.prisma.season.findFirst({
+      where: {
+        id: seasonId,
+      },
+    });
+    // const offSeason = await this.repo
+    //   .createQueryBuilder("seasons")
+    //   .where("seasons.id = :seasonId", { seasonId: seasonId })
+    //   .getOne();
 
-    return SeasonDto.fromEntity(offSeason);
+    // return SeasonDto.fromEntity(offSeason);
   }
 
   public async getCurrentSeason() {
-    const currentSeason = await this.repo
-      .createQueryBuilder("seasons")
-      .where("seasons.startDate <= now() AND seasons.endDate >= now()")
-      .getOne();
+    const currentSeason = await this.prisma.season.findFirst({
+      where: {
+        startDate: {
+          lte: new Date(),
+        },
+        endDate: {
+          gte: new Date(),
+        },
+      },
+    });
+    // const currentSeason = await this.repo
+    //   .createQueryBuilder("seasons")
+    //   .where("seasons.startDate <= now() AND seasons.endDate >= now()")
+    //   .getOne();
 
     if (currentSeason) {
-      return SeasonDto.fromEntity(currentSeason);
+      return currentSeason;
     }
 
-    return await this.getOffSeason();
+    return this.getOffSeason();
   }
 
   public async all() {
-    return this.repo
-      .find({
-        order: {
-          createTimeStamp: "DESC",
-        },
-      })
-      .then(seasons => seasons.map(e => SeasonDto.fromEntity(e)));
+    return this.prisma.season.findMany({
+      orderBy: {
+        createTimeStamp: "desc",
+      },
+    });
+    // return this.repo
+    //   .find({
+    //     order: {
+    //       createTimeStamp: "DESC",
+    //     },
+    //   })
+    //   .then(seasons => seasons.map(e => SeasonDto.fromEntity(e)));
   }
 
   public async add(dto: SeasonDto) {
@@ -95,26 +118,48 @@ export class SeasonsService {
     return await this.create(dto);
   }
 
-  public async create(dto: SeasonDto): Promise<SeasonDto> {
-    return await this.repo
-      .save(dto)
-      .then(seasonEntity => SeasonDto.fromEntity(seasonEntity));
+  public async create(dto: SeasonDto) {
+    return this.prisma.season.create({
+      data: {
+        endDate: dto.endDate,
+        name: dto.name,
+        startDate: dto.startDate,
+      },
+    });
+    // return await this.repo
+    //   .save(dto)
+    //   .then(seasonEntity => SeasonDto.fromEntity(seasonEntity));
   }
 
   private async nameExists(name: string) {
-    return await this.repo
-      .createQueryBuilder("seasons")
-      .where("seasons.name = :name", { name: name })
-      .getOne();
+    return this.prisma.season.findFirst({
+      where: {
+        name,
+      },
+    });
+    // return await this.repo
+    //   .createQueryBuilder("seasons")
+    //   .where("seasons.name = :name", { name: name })
+    //   .getOne();
   }
   // Check if the new dates collides with other season dates.
   private async dateCollision(startDate: Date, endDate: Date) {
-    return await this.repo
-      .createQueryBuilder("seasons")
-      .where(
-        "seasons.startDate <= :endDate AND seasons.endDate >= :startDate",
-        { endDate: endDate, startDate: startDate },
-      )
-      .getOne();
+    return this.prisma.season.findFirst({
+      where: {
+        startDate: {
+          lte: endDate,
+        },
+        endDate: {
+          lte: startDate,
+        },
+      },
+    });
+    // return await this.repo
+    //   .createQueryBuilder("seasons")
+    //   .where(
+    //     "seasons.startDate <= :endDate AND seasons.endDate >= :startDate",
+    //     { endDate: endDate, startDate: startDate },
+    //   )
+    //   .getOne();
   }
 }

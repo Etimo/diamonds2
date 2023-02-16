@@ -1,9 +1,10 @@
 import { ApiModelProperty } from "@nestjs/swagger";
+import { Bot, HighScore } from "@prisma/client";
 import { HighScoreEntity } from "../db/models/highScores.entity";
 
 export class HighscoreDto {
   @ApiModelProperty()
-  botName: string;
+  name: string;
   @ApiModelProperty()
   score: number;
   @ApiModelProperty()
@@ -11,15 +12,15 @@ export class HighscoreDto {
 
   public static from(dto: Partial<HighscoreDto>) {
     const highScoreObj = new HighscoreDto();
-    highScoreObj.botName = dto.botName;
+    highScoreObj.name = dto.name;
     highScoreObj.score = dto.score;
     highScoreObj.seasonId = dto.seasonId;
     return highScoreObj;
   }
 
-  public static fromEntity(entity: HighScoreEntity) {
+  public static fromEntity(entity: HighScore & { bot: Bot }) {
     return this.from({
-      botName: entity.botName,
+      name: entity.bot.name,
       score: entity.score,
       seasonId: entity.seasonId,
     });

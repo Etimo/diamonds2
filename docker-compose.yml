@@ -49,7 +49,7 @@ services:
         max-file: "1"
 
   database:
-    image: postgres:alpine
+    image: postgres:14
     restart: always
     environment:
       POSTGRES_DB: postgres

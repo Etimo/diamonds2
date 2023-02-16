@@ -1,4 +1,5 @@
 import { ApiModelProperty } from "@nestjs/swagger";
+import { Bot } from "@prisma/client";
 import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
 
 export class BotRegistrationPublicDto {
@@ -24,9 +25,9 @@ export class BotRegistrationPublicDto {
     return botRegistrationPublicObj;
   }
 
-  public static fromEntity(entity: BotRegistrationsEntity) {
+  public static fromEntity(entity: Bot) {
     return this.from({
-      botName: entity.botName,
+      botName: entity.name,
       email: entity.email,
       token: entity.token,
     });

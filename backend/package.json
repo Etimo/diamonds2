@@ -22,6 +22,9 @@
     "typeorm:migration:run": "yarn run typeorm migration:run",
     "start:dev:db:seed": "ts-node -r tsconfig-paths/register src/scripts/seed.ts"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "dependencies": {
     "@digikare/nestjs-prom": "^0.2.2",
     "@nestjs/common": "^6.7.2",
@@ -30,6 +33,7 @@
     "@nestjs/platform-fastify": "^6.1.1",
     "@nestjs/swagger": "^3.0.2",
     "@nestjs/typeorm": "^6.2.0",
+    "@prisma/client": "^4.6.0",
     "@types/node": "^10.17.26",
     "async": "^3.1.0",
     "bcrypt": "^5.0.0",
@@ -69,6 +73,7 @@
     "precise-commits": "^1.0.2",
     "prettier": "^1.15.3",
     "pretty-quick": "^2.0.1",
+    "prisma": "^4.6.0",
     "supertest": "^4.0.2",
     "ts-jest": "^24.0.2",
     "tslint": "5.18.0",
