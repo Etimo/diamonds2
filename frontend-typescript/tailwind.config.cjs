@@ -11,7 +11,7 @@ module.exports = {
       },
     },
     fontFamily: { sans: ['Quattrocento Sans', ...defaultSans] },
-    extend: { colors: { etimo: '#2c3e50', etimoLight: '#375b7d' } },
+    extend: { colors: { etimo: '#2c3e50', 'etimo-light': '#375b7d' } },
   },
   plugins: [],
 };

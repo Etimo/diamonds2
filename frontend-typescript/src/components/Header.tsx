@@ -13,12 +13,12 @@ export const Header: FC = memo(() => {
   };
 
   return (
-    <div className="grid grid-cols-3 mx-14 my-6 items-center border-b-2 pb-2">
-      <div className="w-1/3">
+    <div className="text-header grid grid-cols-[70px,1fr,2fr] lg:grid-cols-3 mx-3 my-2 lg:mx-14 lg:my-6 items-center border-b-2 pb-2">
+      <div className="w-full lg:w-1/3">
         <img src={etimoLogo} alt="etimo-logo" />
       </div>
-      <p className="justify-self-center text-3xl font-extrabold">Diamonds</p>
-      <div className="justify-self-end text-xl font-extrabold">
+      <p className="justify-self-center font-bold">Diamonds</p>
+      <div className="justify-self-end font-bold">
         {toggleLink(location.pathname)}
 
         <Link

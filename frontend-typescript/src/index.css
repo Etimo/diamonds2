@@ -9,7 +9,16 @@
   body {
     @apply font-sans antialiased text-etimo;
   }
+
   a {
-    @apply hover:text-etimoLight;
+    @apply hover:text-etimo-light ease-in duration-200;
+  }
+
+  .text-header {
+    @apply text-sm lg:text-2xl;
+  }
+
+  .text-header p {
+    @apply text-lg lg:text-3xl;
   }
 }
