@@ -1,26 +1,26 @@
-import { ApiModelProperty } from "@nestjs/swagger";
-import { BoardConfigEntity } from "../db/models/boardConfig.entity";
+import { ApiProperty } from '@nestjs/swagger';
+import { BoardConfigEntity } from '../db/models/boardConfig.entity';
 
 export class BoardConfigDto {
-  @ApiModelProperty()
+  @ApiProperty()
   id: string;
-  @ApiModelProperty()
+  @ApiProperty()
   seasonId: string;
-  @ApiModelProperty()
+  @ApiProperty()
   inventorySize: number;
-  @ApiModelProperty()
+  @ApiProperty()
   canTackle: boolean;
-  @ApiModelProperty()
+  @ApiProperty()
   teleporters: number;
-  @ApiModelProperty()
+  @ApiProperty()
   teleportRelocation: number;
-  @ApiModelProperty()
+  @ApiProperty()
   height: number;
-  @ApiModelProperty()
+  @ApiProperty()
   width: number;
-  @ApiModelProperty()
+  @ApiProperty()
   minimumDelayBetweenMoves: number;
-  @ApiModelProperty()
+  @ApiProperty()
   sessionLength: number;
 
   public static from(dto: Partial<BoardConfigDto>): BoardConfigDto {

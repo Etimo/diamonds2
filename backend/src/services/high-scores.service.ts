@@ -1,25 +1,23 @@
-import { Injectable } from "@nestjs/common";
-import { HighscoreDto } from "../models/highscore.dto";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { HighScoreEntity } from "../db/models/highScores.entity";
-import { MetricsService } from "./metrics.service";
-import { SeasonsService } from "./seasons.service";
-import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
-import { TeamsEntity } from "../db/models/teams.entity";
-import { HighscorePublicDto } from "../models/highscore-public.dto";
-import { HighscorePrivateDto } from "../models/highscore-private.dto";
+import { Inject, Injectable } from '@nestjs/common';
+import { HighscoreDto } from '../models/highscore.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { HighScoreEntity } from '../db/models/highScores.entity';
+import { SeasonsService } from './seasons.service';
+import { BotRegistrationsEntity } from '../db/models/botRegistrations.entity';
+import { TeamsEntity } from '../db/models/teams.entity';
+import { HighscorePublicDto } from '../models/highscore-public.dto';
+import { HighscorePrivateDto } from '../models/highscore-private.dto';
 
 @Injectable()
 export class HighScoresService {
   //no db
   private highScores: HighscoreDto[] = [];
-  private entityHighScores: string = "highScores";
+  private entityHighScores: string = 'highScores';
 
   constructor(
-    @InjectRepository(HighScoreEntity)
+    @Inject('HIGHSCORES')
     private readonly repo: Repository<HighScoreEntity>,
-    private metricsService: MetricsService,
     private seasonService: SeasonsService,
   ) {}
 
@@ -28,9 +26,6 @@ export class HighScoresService {
 
     if (await this.isNewHighScore(input)) {
       await this.create(input);
-      if (this.metricsService) {
-        this.metricsService.incHighscoresImproved();
-      }
     }
 
     return seasonAllTimeBest < input.score;
@@ -41,7 +36,7 @@ export class HighScoresService {
       .find({
         where: [{ botName: newScore.botName }],
       })
-      .then(highScores => highScores.map(e => HighscoreDto.fromEntity(e)));
+      .then((highScores) => highScores.map((e) => HighscoreDto.fromEntity(e)));
   }
 
   private async isNewHighScore(newScore: HighscoreDto) {
@@ -51,7 +46,7 @@ export class HighScoresService {
     const resultSetHighScore = await this.repo
       .createQueryBuilder(this.entityHighScores)
       .where(
-        "highScores.botName = :botName AND highScores.seasonId = :seasonId",
+        'highScores.botName = :botName AND highScores.seasonId = :seasonId',
         {
           botName: newScore.botName,
           seasonId: season.id,
@@ -63,17 +58,14 @@ export class HighScoresService {
       if (resultSetHighScore.score < newScore.score) {
         await this.repo
           .createQueryBuilder()
-          .update("high_scores")
+          .update('high_scores')
           .set({ score: newScore.score })
-          .where("botName = :botName AND seasonId = :seasonId", {
+          .where('botName = :botName AND seasonId = :seasonId', {
             botName: newScore.botName,
             seasonId: season.id,
           })
           .execute();
         isNew = false;
-        if (this.metricsService) {
-          this.metricsService.incHighscoresImproved();
-        }
       } else {
         isNew = false;
       }
@@ -87,7 +79,7 @@ export class HighScoresService {
     if (existingBest.length === 0) {
       return 0;
     }
-    return existingBest[0]["highScores_score"];
+    return existingBest[0]['highScores_score'];
   }
 
   private async allBySeasonIdRaw(seasonId: string, limit: number = 0) {
@@ -97,14 +89,14 @@ export class HighScoresService {
     const highScores = await this.repo
       .createQueryBuilder(this.entityHighScores)
       .select(this.entityHighScores)
-      .where("highScores.seasonId = :seasonId", { seasonId: seasonId })
+      .where('highScores.seasonId = :seasonId', { seasonId: seasonId })
       .leftJoinAndSelect(
         BotRegistrationsEntity,
-        "bot",
-        "highScores.botName = bot.botName",
+        'bot',
+        'highScores.botName = bot.botName',
       )
-      .leftJoinAndSelect(TeamsEntity, "teams", "bot.team = teams.id")
-      .orderBy("score", "DESC")
+      .leftJoinAndSelect(TeamsEntity, 'teams', 'bot.team = teams.id')
+      .orderBy('score', 'DESC')
       .limit(take)
       .execute();
 
@@ -113,12 +105,12 @@ export class HighScoresService {
 
   public async allBySeasonIdPrivate(seasonId: string, limit: number = 0) {
     const highScores = await this.allBySeasonIdRaw(seasonId, limit);
-    return highScores.map(e => HighscorePrivateDto.fromRawDataObject(e));
+    return highScores.map((e) => HighscorePrivateDto.fromRawDataObject(e));
   }
 
   public async allBySeasonIdPublic(seasonId: string) {
     const highScores = await this.allBySeasonIdRaw(seasonId);
-    return highScores.map(e => HighscorePublicDto.fromRawDataObject(e));
+    return highScores.map((e) => HighscorePublicDto.fromRawDataObject(e));
   }
 
   public async create(dto: HighscoreDto): Promise<HighscoreDto> {
@@ -129,8 +121,8 @@ export class HighScoresService {
     return await this.repo
       .createQueryBuilder()
       .delete()
-      .from("high_scores")
-      .where("botName = :botName", { botName: dto.botName })
+      .from('high_scores')
+      .where('botName = :botName', { botName: dto.botName })
       .execute();
   }
 }

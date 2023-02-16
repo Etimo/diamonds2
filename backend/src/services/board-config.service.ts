@@ -1,14 +1,14 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { BoardConfigEntity } from "../db/models/boardConfig.entity";
-import { BoardConfigDto } from "../models/board-config.dto";
-import { SeasonsService } from "./seasons.service";
+import { Inject, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BoardConfigEntity } from '../db/models/boardConfig.entity';
+import { BoardConfigDto } from '../models/board-config.dto';
+import { SeasonsService } from './seasons.service';
 
 @Injectable()
 export class BoardConfigService {
   constructor(
-    @InjectRepository(BoardConfigEntity)
+    @Inject('BOARD_CONFIGS')
     private readonly repo: Repository<BoardConfigEntity>,
     private seasonsService: SeasonsService,
   ) {}
@@ -16,8 +16,8 @@ export class BoardConfigService {
   public async getCurrentBoardConfig() {
     const currentSeason = await this.seasonsService.getCurrentSeason();
     const boardConfig = await this.repo
-      .createQueryBuilder("board_config")
-      .where("board_config.seasonId = :seasonId", {
+      .createQueryBuilder('board_config')
+      .where('board_config.seasonId = :seasonId', {
         seasonId: currentSeason.id,
       })
       .getOne();
@@ -27,8 +27,8 @@ export class BoardConfigService {
     if (!boardConfig) {
       const currentSeason = await this.seasonsService.getOffSeason();
       return await this.repo
-        .createQueryBuilder("board_config")
-        .where("board_config.seasonId = :seasonId", {
+        .createQueryBuilder('board_config')
+        .where('board_config.seasonId = :seasonId', {
           seasonId: currentSeason.id,
         })
         .getOne();
@@ -39,8 +39,8 @@ export class BoardConfigService {
 
   public async getBoardConfig(seasonId: string) {
     const boardConfig = await this.repo
-      .createQueryBuilder("board_config")
-      .where("board_config.seasonId = :seasonId", { seasonId })
+      .createQueryBuilder('board_config')
+      .where('board_config.seasonId = :seasonId', { seasonId })
       .getOne();
 
     return BoardConfigDto.fromEntity(boardConfig);
@@ -56,6 +56,8 @@ export class BoardConfigService {
   public async create(dto: BoardConfigDto): Promise<BoardConfigDto> {
     return await this.repo
       .save(dto)
-      .then(boardConfigEntity => BoardConfigDto.fromEntity(boardConfigEntity));
+      .then((boardConfigEntity) =>
+        BoardConfigDto.fromEntity(boardConfigEntity),
+      );
   }
 }

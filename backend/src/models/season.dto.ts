@@ -1,14 +1,14 @@
-import { ApiModelProperty } from "@nestjs/swagger";
-import { SeasonsEntity } from "../db/models/seasons.entity";
+import { ApiProperty } from '@nestjs/swagger';
+import { SeasonsEntity } from '../db/models/seasons.entity';
 
 export class SeasonDto {
-  @ApiModelProperty()
+  @ApiProperty()
   id: string;
-  @ApiModelProperty()
+  @ApiProperty()
   name: string;
-  @ApiModelProperty()
+  @ApiProperty()
   startDate: Date;
-  @ApiModelProperty()
+  @ApiProperty()
   endDate: Date;
 
   public static from(dto: Partial<SeasonDto>) {

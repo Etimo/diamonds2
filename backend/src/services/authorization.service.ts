@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { Request } from "express";
 import * as crypto from "crypto";
 import * as qs from "qs";
 import UnauthorizedError from "../errors/unauthorized.error";
+import { Request } from "express";
 
 @Injectable()
 export class AuthorizationService {

@@ -1,15 +1,15 @@
-import { ApiModelProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class RecordingListDto {
-  @ApiModelProperty()
+  @ApiProperty()
   botName: string;
-  @ApiModelProperty()
+  @ApiProperty()
   score: number;
-  @ApiModelProperty()
+  @ApiProperty()
   board: number;
-  @ApiModelProperty()
+  @ApiProperty()
   recordingId: string;
-  @ApiModelProperty()
+  @ApiProperty()
   created: Date;
 
   public static from(dto: Partial<RecordingListDto>) {
@@ -23,10 +23,10 @@ export class RecordingListDto {
 
   public static fromRawDataObject(data: {}) {
     return this.from({
-      botName: data["recordings_botName"],
-      score: data["recordings_score"],
-      recordingId: data["recordings_id"],
-      created: data["recordings_createTimeStamp"],
+      botName: data['recordings_botName'],
+      score: data['recordings_score'],
+      recordingId: data['recordings_id'],
+      created: data['recordings_createTimeStamp'],
     });
   }
 }

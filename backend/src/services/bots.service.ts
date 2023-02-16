@@ -1,27 +1,25 @@
-import { Injectable } from "@nestjs/common";
-import { IBot } from "src/interfaces/bot.interface";
-import { BotRegistrationDto } from "src/models/bot-registration.dto";
-import ConflictError from "../errors/conflict.error";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
-import { BotRegistrationPublicDto } from "../models/bot-registration-public.dto";
-import { MetricsService } from "./metrics.service";
-import { BotRecoveryDto } from "../models/bot-recovery.dto";
-import * as bcrypt from "bcrypt";
-import NotFoundError from "../errors/not-found.error";
-import { BotPasswordDto } from "../models/bot-password.dto";
-import ForbiddenError from "../errors/forbidden.error";
-import { TeamsService } from "./teams.service";
+import { Inject, Injectable } from '@nestjs/common';
+import { IBot } from 'src/interfaces/bot.interface';
+import { BotRegistrationDto } from 'src/models/bot-registration.dto';
+import ConflictError from '../errors/conflict.error';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BotRegistrationsEntity } from '../db/models/botRegistrations.entity';
+import { BotRegistrationPublicDto } from '../models/bot-registration-public.dto';
+import { BotRecoveryDto } from '../models/bot-recovery.dto';
+import * as bcrypt from 'bcrypt';
+import NotFoundError from '../errors/not-found.error';
+import { BotPasswordDto } from '../models/bot-password.dto';
+import ForbiddenError from '../errors/forbidden.error';
+import { TeamsService } from './teams.service';
 
 @Injectable()
 export class BotsService {
   private bots: IBot[] = [];
 
   constructor(
-    @InjectRepository(BotRegistrationsEntity)
+    @Inject('BOT_REGISTRATIONS')
     private readonly repo: Repository<BotRegistrationsEntity>,
-    private metricsService: MetricsService,
     private teamsService: TeamsService,
   ) {}
 
@@ -33,7 +31,7 @@ export class BotsService {
       (await this.nameExists(input.botName))
     ) {
       return Promise.reject(
-        new ConflictError("Email and/or name already exists"),
+        new ConflictError('Email and/or name already exists'),
       );
     }
 
@@ -43,19 +41,15 @@ export class BotsService {
       input.team = team.id;
     }
 
-    if (this.metricsService) {
-      this.metricsService.incBotsRegistered();
-    }
-
     return this.create(input);
   }
 
   public async get(token: string): Promise<BotRegistrationPublicDto> {
     const existBot = await this.repo
-      .createQueryBuilder("botRegistrations")
-      .where("botRegistrations.token = :token", { token: token })
+      .createQueryBuilder('botRegistrations')
+      .where('botRegistrations.token = :token', { token: token })
       .getOne()
-      .then(botRegistrationsEntity =>
+      .then((botRegistrationsEntity) =>
         BotRegistrationPublicDto.fromEntity(botRegistrationsEntity),
       );
     return existBot;
@@ -65,8 +59,8 @@ export class BotsService {
     email = email.toLowerCase();
 
     const existEmail = await this.repo
-      .createQueryBuilder("botRegistrations")
-      .where("botRegistrations.email = :email", { email: email })
+      .createQueryBuilder('botRegistrations')
+      .where('botRegistrations.email = :email', { email: email })
       .getOne();
     //    console.log(!existEmail);
     return existEmail;
@@ -75,8 +69,8 @@ export class BotsService {
   private async nameExists(name: string) {
     name = name.toLowerCase();
     const existName = await this.repo
-      .createQueryBuilder("botRegistrations")
-      .where("botRegistrations.botName = :botName", { botName: name })
+      .createQueryBuilder('botRegistrations')
+      .where('botRegistrations.botName = :botName', { botName: name })
       .getOne();
     //console.log(!firstUser);
     return existName;
@@ -89,7 +83,7 @@ export class BotsService {
     dto.password = await this.hashPassword(dto.password);
     return await this.repo
       .save(dto)
-      .then(botRegistrationsEntity =>
+      .then((botRegistrationsEntity) =>
         BotRegistrationPublicDto.fromEntity(botRegistrationsEntity),
       );
   }
@@ -98,8 +92,8 @@ export class BotsService {
     return await this.repo
       .createQueryBuilder()
       .delete()
-      .from("bot_registrations")
-      .where("botName = :botName", { botName: dto.botName })
+      .from('bot_registrations')
+      .where('botName = :botName', { botName: dto.botName })
       .execute();
   }
 
@@ -107,8 +101,8 @@ export class BotsService {
     botRecoveryDto: BotRecoveryDto,
   ): Promise<BotRegistrationPublicDto> {
     const existBot = await this.repo
-      .createQueryBuilder("botRegistrations")
-      .where("botRegistrations.email = :email", {
+      .createQueryBuilder('botRegistrations')
+      .where('botRegistrations.email = :email', {
         email: botRecoveryDto.email,
       })
       .getOne();
@@ -120,31 +114,31 @@ export class BotsService {
         return BotRegistrationPublicDto.fromEntity(existBot);
       }
     }
-    return Promise.reject(new NotFoundError("Invalid email or password"));
+    return Promise.reject(new NotFoundError('Invalid email or password'));
   }
 
   public async addPassword(
     botPasswordDto: BotPasswordDto,
   ): Promise<BotRegistrationPublicDto> {
     const existBot = await this.repo
-      .createQueryBuilder("botRegistrations")
-      .where("botRegistrations.token = :token", {
+      .createQueryBuilder('botRegistrations')
+      .where('botRegistrations.token = :token', {
         token: botPasswordDto.token,
       })
       .getOne();
     if (!existBot) {
-      return Promise.reject(new NotFoundError("Bot not found"));
+      return Promise.reject(new NotFoundError('Bot not found'));
     }
 
     if (existBot.password) {
-      return Promise.reject(new ForbiddenError("Bot already has a password"));
+      return Promise.reject(new ForbiddenError('Bot already has a password'));
     }
     const hashedPassword = await this.hashPassword(botPasswordDto.password);
     await this.repo
       .createQueryBuilder()
-      .update("bot_registrations")
+      .update('bot_registrations')
       .set({ password: hashedPassword })
-      .where("token = :token", {
+      .where('token = :token', {
         token: botPasswordDto.token,
       })
       .execute();

@@ -1,12 +1,12 @@
-import { ApiModelProperty } from "@nestjs/swagger";
-import { HighScoreEntity } from "../db/models/highScores.entity";
+import { ApiProperty } from '@nestjs/swagger';
+import { HighScoreEntity } from '../db/models/highScores.entity';
 
 export class HighscoreDto {
-  @ApiModelProperty()
+  @ApiProperty()
   botName: string;
-  @ApiModelProperty()
+  @ApiProperty()
   score: number;
-  @ApiModelProperty()
+  @ApiProperty()
   seasonId: string;
 
   public static from(dto: Partial<HighscoreDto>) {

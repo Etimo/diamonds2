@@ -1,36 +1,36 @@
-import { ApiModelProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsString,
   MaxLength,
   MinLength,
   NotContains,
-} from "class-validator";
+} from 'class-validator';
 export class BotRegistrationDto {
-  @ApiModelProperty({
+  @ApiProperty({
     description:
-      "A valid email address for this bot. Will be used for communication. Will for example be used if you are one of the winners.",
+      'A valid email address for this bot. Will be used for communication. Will for example be used if you are one of the winners.',
   })
   @IsEmail()
   readonly email: string;
 
-  @ApiModelProperty({
-    description: "The name you want to use for the bot.",
+  @ApiProperty({
+    description: 'The name you want to use for the bot.',
   })
   @IsString()
   @MinLength(1)
   @MaxLength(10)
-  @NotContains(" ", { message: "Bot name can not contain whitespace" })
+  @NotContains(' ', { message: 'Bot name can not contain whitespace' })
   readonly botName: string;
 
-  @ApiModelProperty({
+  @ApiProperty({
     description: "The password for your bot (Old bots don't have a password).",
   })
   @IsString()
   password: string;
 
-  @ApiModelProperty({
-    description: "The abbreviation of the team you want to join.",
+  @ApiProperty({
+    description: 'The abbreviation of the team you want to join.',
   })
   team: string;
 }

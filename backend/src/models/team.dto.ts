@@ -1,14 +1,14 @@
-import { ApiModelProperty } from "@nestjs/swagger";
-import { TeamsEntity } from "../db/models/teams.entity";
+import { ApiProperty } from '@nestjs/swagger';
+import { TeamsEntity } from '../db/models/teams.entity';
 
 export class TeamDto {
-  @ApiModelProperty()
+  @ApiProperty()
   id: string;
-  @ApiModelProperty()
+  @ApiProperty()
   name: string;
-  @ApiModelProperty()
+  @ApiProperty()
   abbreviation: string;
-  @ApiModelProperty()
+  @ApiProperty()
   logotypeUrl: string;
 
   public static from(dto: Partial<TeamDto>) {

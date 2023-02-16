@@ -1,11 +1,11 @@
-import { Controller, Get, Body, Post, Param } from "@nestjs/common";
-import { ApiUseTags, ApiResponse } from "@nestjs/swagger";
-import { RecordingsService } from "../services/recordings.service";
-import { RecordingListDto } from "../models/recording-list.dto";
-import { RecordingPublicDto } from "../models/recording-public.dto";
+import { Controller, Get, Body, Post, Param } from '@nestjs/common';
+import { ApiTags, ApiResponse } from '@nestjs/swagger';
+import { RecordingsService } from '../services/recordings.service';
+import { RecordingListDto } from '../models/recording-list.dto';
+import { RecordingPublicDto } from '../models/recording-public.dto';
 
-@ApiUseTags("Recordings")
-@Controller("api/recordings")
+@ApiTags('Recordings')
+@Controller('api/recordings')
 export class RecordingsController {
   constructor(private recordingsService: RecordingsService) {}
 
@@ -16,16 +16,16 @@ export class RecordingsController {
    */
   @ApiResponse({
     status: 200,
-    description: "Returns recordings by season",
+    description: 'Returns recordings by season',
     isArray: true,
     type: RecordingListDto,
   })
   @ApiResponse({
     status: 404,
-    description: "Season not found",
+    description: 'Season not found',
   })
-  @Get(":seasonId")
-  async list(@Param("seasonId") seasonId: string): Promise<RecordingListDto[]> {
+  @Get(':seasonId')
+  async list(@Param('seasonId') seasonId: string): Promise<RecordingListDto[]> {
     return await this.recordingsService.allBySeasonIdList(seasonId);
   }
 
@@ -36,17 +36,17 @@ export class RecordingsController {
    */
   @ApiResponse({
     status: 200,
-    description: "Returns specific recording",
+    description: 'Returns specific recording',
     type: RecordingPublicDto,
   })
   @ApiResponse({
     status: 404,
-    description: "Recording or season not found",
+    description: 'Recording or season not found',
   })
-  @Get(":seasonId/:id")
+  @Get(':seasonId/:id')
   public find(
-    @Param("seasonId") seasonId: string,
-    @Param("id") id: string,
+    @Param('seasonId') seasonId: string,
+    @Param('id') id: string,
   ): Promise<RecordingPublicDto> {
     return this.recordingsService.getById(seasonId, id);
   }
