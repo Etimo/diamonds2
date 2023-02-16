@@ -8,13 +8,15 @@ const BoardPicker = ({ onChange, value }) => {
   return (
     <Select>
       <Select.Title>Select Board</Select.Title>
-      <Select.Picker onChange={onChange} value={value}>
-        {ids.map(id => (
-          <option key={id} value={id}>
-            {id}
-          </option>
-        ))}
-      </Select.Picker>
+      <Select.PickerWrapper>
+        <Select.Picker onChange={onChange} value={value}>
+          {ids.map(id => (
+            <option key={id} value={id}>
+              {id}
+            </option>
+          ))}
+        </Select.Picker>
+      </Select.PickerWrapper>
     </Select>
   );
 };

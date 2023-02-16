@@ -37,6 +37,15 @@ export class BoardConfigService {
     return BoardConfigDto.fromEntity(boardConfig);
   }
 
+  public async getBoardConfig(seasonId: string) {
+    const boardConfig = await this.repo
+      .createQueryBuilder("board_config")
+      .where("board_config.seasonId = :seasonId", { seasonId })
+      .getOne();
+
+    return BoardConfigDto.fromEntity(boardConfig);
+  }
+
   public async add(dto: BoardConfigDto) {
     // TODO: Add validation
 
