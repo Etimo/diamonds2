@@ -1,6 +1,6 @@
 import random
 from ..util import get_direction
-
+from game.models import Board, GameObject
 
 class FirstDiamondLogic(object):
     def __init__(self):
@@ -8,29 +8,28 @@ class FirstDiamondLogic(object):
         self.previous_position = (None, None)
         self.turn_direction = 1
 
-    def next_move(self, board_bot, board):
-        print(board_bot)
-        props = board_bot["properties"]
+    def next_move(self, board_bot: GameObject, board: Board):
+        props = board_bot.properties
 
         # Analyze new state
-        if props["diamonds"] == 5:
+        if props.diamonds == 5:
             # Move to base if we are full of diamonds
-            base = props["base"]
+            base = props.base
             self.goal_position = base
         else:
             # Move towards first diamond on board
-            self.goal_position = board.diamonds[0].get('position')
+            self.goal_position = board.diamonds[0].position
 
         if self.goal_position:
             # Calculate move according to goal position
-            current_position = board_bot["position"]
-            cur_x = current_position["x"]
-            cur_y = current_position["y"]
+            current_position = board_bot.position
+            cur_x = current_position.x
+            cur_y = current_position.y
             delta_x, delta_y = get_direction(
                 cur_x,
                 cur_y,
-                self.goal_position["x"],
-                self.goal_position["y"],
+                self.goal_position.x,
+                self.goal_position.y,
             )
 
             if (cur_x, cur_y) == self.previous_position:

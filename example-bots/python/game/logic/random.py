@@ -1,5 +1,6 @@
 import random
 from ..util import get_direction
+from game.models import GameObject, Board
 
 
 class RandomLogic(object):
@@ -8,25 +9,25 @@ class RandomLogic(object):
         self.goal_position = None
         self.current_direction = 0
 
-    def next_move(self, board_bot, board):
-        props = board_bot["properties"]
+    def next_move(self, board_bot: GameObject, board: Board):
+        props = board_bot.properties
         # Analyze new state
-        if props["diamonds"] == 5:
+        if props.diamonds == 5:
             # Move to base
-            base = board_bot["base"]
+            base = board_bot.base
             self.goal_position = base
         else:
             # Just roam around
             self.goal_position = None
 
-        current_position = board_bot["position"]
+        current_position = board_bot.position
         if self.goal_position:
             # We are aiming for a specific position, calculate delta
             delta_x, delta_y = get_direction(
-                current_position["x"],
-                current_position["y"],
-                self.goal_position["x"],
-                self.goal_position["y"],
+                current_position.x,
+                current_position.y,
+                self.goal_position.x,
+                self.goal_position.y,
             )
         else:
             # Roam around

@@ -1,16 +1,22 @@
 import requests
+from requests import Response
 import json
 from colorama import init, Fore, Back, Style
+from dataclasses import dataclass
+from typing import Tuple, Union, List, Optional
+from decode import decode
+from game.models import Bot, Board
+from dacite import from_dict
 
 
-class Api(object):
-    def __init__(self, url):
-        self.url = url
+@dataclass
+class Api:
+    url: str
 
-    def _get_url(self, endpoint):
+    def _get_url(self, endpoint: str) -> str:
         return "{}{}".format(self.url, endpoint)
 
-    def _req(self, endpoint, method, body):
+    def _req(self, endpoint: str, method: str, body: dict) -> Response:
         print(
             ">>> {} {} {}".format(
                 Style.BRIGHT + method.upper() + Style.RESET_ALL,
@@ -25,40 +31,61 @@ class Api(object):
         print("<<< {} {}".format(req.status_code, req.text))
         return req
 
-    def bots_get(self, bot_token):
+    def bots_get(self, bot_token: str) -> Optional[Bot]:
         response = self._req("/bots/{}".format(bot_token), "get", {})
-        return self._return_response_and_status(response)
+        data, status =  self._return_response_and_status(response)
+        if status == 200:
+            return from_dict(Bot, data)
+        return None
 
-    def bots_register(self, name, email, password, team):
+    def bots_register(self, name: str, email: str, password: str, team: str) -> Optional[Bot]:
         response = self._req("/bots", "post", {"email": email, "botName": name, "password": password, "team": team})
-        return self._return_response_and_status(response)
+        resp, status = self._return_response_and_status(response)
+        if status == 200:
+            return from_dict(Bot, resp)
+        return None
 
-    def boards_list(self):
+    def boards_list(self) -> Optional[List[Board]]:
         response = self._req("/boards", "get", {})
-        return self._return_response_and_status(response)
+        resp, status = self._return_response_and_status(response)
+        if status == 200:
+            return [from_dict(Board, board) for board in resp]
+        return None
+        
 
-    def boards_join(self, board_id, bot_token):
+    def boards_join(self, bot_token: str, board_id: int) -> bool:
         response = self._req(
-            "/boards/{}/join".format(board_id), "post", {"botToken": bot_token}
+            f"/boards/{board_id}/join", "post", {"botToken": bot_token}
         )
-        return self._return_response_and_status(response)
 
-    def boards_get(self, board_id):
+        resp, status =  self._return_response_and_status(response)
+        if status == 200:
+            return True
+        return False
+
+    def boards_get(self, board_id: str) -> Optional[Board]:
         response = self._req("/boards/{}".format(board_id), "get", {})
-        return self._return_response_and_status(response)
+        resp, status =  self._return_response_and_status(response)
+        if status == 200:
+            return from_dict(Board, resp)
+        return None
 
-    def boards_move(self, board_id, direction, bot_token):
+    def boards_move(self, board_id: int, direction: str, bot_token: str) -> Optional[Board]:
         response = self._req(
             "/boards/{}/move".format(board_id),
             "post",
             {"direction": direction, "botToken": bot_token},
         )
-        return self._return_response_and_status(response)
+        resp, status =  self._return_response_and_status(response)
+        if status == 200:
+            return from_dict(Board, resp)
+        return None
 
-    def _return_response_and_status(self, response):
-        try:
-            resp = response.json()['data']
-        except KeyError:
-            resp = response.json()
+    def _return_response_and_status(self, response: Response) -> Tuple[Union[dict, List], int]:
+        resp = response.json()
 
-        return resp, response.status_code
+        response_data = resp.get("data") if isinstance(resp, dict) else resp
+        if not response_data:
+            response_data = resp
+        
+        return decode(response_data), response.status_code

@@ -11,7 +11,7 @@ pipenv sync
 
 First you need to register one or more bots if not already done. This can be done using the following command:
 
-`pipenv run start --name <name> --email <email> --password <password> --team <team> --logic <logic>`
+`pipenv run start --name <name> --email <email> --password <password> --team <team>`
 
 Add the team abbreviation of the team you want your bot to be a part of.
 You can see a list of all teams at diamonds.etimo.se/teams.
