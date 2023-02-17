@@ -6,7 +6,7 @@ type TableProps = {
   data: any[];
 };
 
-export const Table: FC<TableProps> = memo((props) => {
+export const Table: FC<TableProps> = memo(props => {
   const { cols, data, label = '' } = props;
   return (
     <>
@@ -16,7 +16,7 @@ export const Table: FC<TableProps> = memo((props) => {
           <tr className="">
             {cols.map((col, index) => (
               <th
-                key={'th-' + index}
+                key={`th-${index}}`}
                 className="font-sans text-xs text-etimo font-bold text-left p-2.5 first:rounded-tl-md last:rounded-tr-md"
               >
                 {col}
@@ -31,7 +31,10 @@ export const Table: FC<TableProps> = memo((props) => {
               className="font-sans text-etimo text-xs font-normal border-b border-b-gray-400 last:border-none"
             >
               {Object.values(item).map((value: any) => (
-                <td className="p-2.5 whitespace-nowrap min-w-[80px] first:w-[99%]">
+                <td
+                  key={`td-${index}`}
+                  className="p-2.5 whitespace-nowrap min-w-[100px] first:w-[99%]"
+                >
                   {value}
                 </td>
               ))}
