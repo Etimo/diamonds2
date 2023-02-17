@@ -3,24 +3,43 @@
 @tailwind utilities;
 
 @layer base {
-  .text-label {
-    @apply font-sans not-italic font-bold mb-1;
-    @apply text-2xl text-etimo block;
-  }
-
   body {
     @apply font-sans antialiased text-etimo;
+  }
+
+  .text-header {
+    @apply text-sm lg:text-xl;
+  }
+
+  .text-header p {
+    @apply text-lg lg:text-3xl;
+  }
+
+  .text-label {
+    @apply font-sans not-italic font-bold mb-1;
+    @apply text-sm text-etimo block;
+  }
+
+  .text-body {
+    @apply font-sans not-italic mb-1;
+    @apply text-sm text-etimo block;
   }
 
   a {
     @apply hover:text-etimo-light ease-in duration-200;
   }
 
-  .text-header {
-    @apply text-sm lg:text-2xl;
+  p {
+    @apply text-etimo;
+  }
+}
+
+@layer components {
+  .modal-wrapper {
+    @apply flex flex-col absolute top-[15%] lg:top-[20%] min-w-[360px] border border-gray-200 bg-white rounded-md p-4 shadow-md left-[50%] translate-x-[-50%];
   }
 
-  .text-header p {
-    @apply text-lg lg:text-3xl;
+  .modal-button {
+    @apply absolute top-[6px] right-[12px];
   }
 }

@@ -1,18 +1,18 @@
 import { FC, memo } from 'react';
 
-type TalbeProps = {
+type TableProps = {
   label?: string;
   cols: string[];
   data: any[];
 };
 
-export const Table: FC<TalbeProps> = memo(props => {
+export const Table: FC<TableProps> = memo((props) => {
   const { cols, data, label = '' } = props;
   return (
     <>
       <label className="text-label mb-2.5">{label}</label>
-      <table className="w-full">
-        <thead className="bg-gray-100 w-full border-b border-b-gray-400">
+      <table>
+        <thead className="bg-gray-100  border-b border-b-gray-400">
           <tr className="">
             {cols.map((col, index) => (
               <th
@@ -28,10 +28,10 @@ export const Table: FC<TalbeProps> = memo(props => {
           {data.map((item, index) => (
             <tr
               key={'tr-' + index}
-              className="font-sans text-lg text-etimo font-normal border-b border-b-gray-400 last:border-none"
+              className="font-sans text-etimo text-xs font-normal border-b border-b-gray-400 last:border-none"
             >
               {Object.values(item).map((value: any) => (
-                <td className="p-2.5 whitespace-nowrap min-w-[100px] first:w-[99%]">
+                <td className="p-2.5 whitespace-nowrap min-w-[80px] first:w-[99%]">
                   {value}
                 </td>
               ))}

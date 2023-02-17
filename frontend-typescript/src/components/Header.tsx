@@ -13,7 +13,7 @@ export const Header: FC = memo(() => {
   };
 
   return (
-    <div className="text-header grid grid-cols-[70px,1fr,2fr] lg:grid-cols-3 mx-3 my-2 lg:mx-14 lg:my-6 items-center border-b-2 pb-2">
+    <div className="text-header grid grid-cols-[70px,1fr,2fr] lg:grid-cols-3 mx-3 my-2 lg:mx-14 lg:my-6 items-center lg:items-baseline border-b-2 pb-2">
       <div className="w-full lg:w-1/3">
         <img src={etimoLogo} alt="etimo-logo" />
       </div>
