@@ -1,12 +1,12 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { BoardDto } from 'src/models/board.dto';
-import { JoinInputDto } from 'src/models/join-input.dto';
-import { MoveInputDto } from 'src/models/move-input.dto';
-import { BoardsService } from 'src/services/board.service';
+import { Body, Controller, Get, HttpCode, Param, Post } from "@nestjs/common";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { BoardDto } from "src/models/board.dto";
+import { JoinInputDto } from "src/models/join-input.dto";
+import { MoveInputDto } from "src/models/move-input.dto";
+import { BoardsService } from "src/services/board.service";
 
-@ApiTags('Boards')
-@Controller('api/boards')
+@ApiTags("Boards")
+@Controller("api/boards")
 export class BoardsController {
   constructor(private boardsService: BoardsService) {}
 
@@ -16,7 +16,7 @@ export class BoardsController {
   @ApiResponse({
     status: 200,
     isArray: true,
-    description: 'Return boards',
+    description: "Return boards",
     type: BoardDto,
   })
   @Get()
@@ -31,15 +31,15 @@ export class BoardsController {
    */
   @ApiResponse({
     status: 200,
-    description: 'Returns specific board',
+    description: "Returns specific board",
     type: BoardDto,
   })
   @ApiResponse({
     status: 404,
-    description: 'Board not found',
+    description: "Board not found",
   })
-  @Get(':id')
-  public find(@Param('id') id: string): BoardDto {
+  @Get(":id")
+  public find(@Param("id") id: string): BoardDto {
     return this.boardsService.getById(parseInt(id, 10));
   }
 
@@ -51,23 +51,23 @@ export class BoardsController {
    */
   @ApiResponse({
     status: 200,
-    description: 'Joined specific board',
+    description: "Joined specific board",
   })
   @ApiResponse({
     status: 401,
-    description: 'Invalid botToken',
+    description: "Invalid botToken",
   })
   @ApiResponse({
     status: 404,
-    description: 'Board not found',
+    description: "Board not found",
   })
   @ApiResponse({
     status: 409,
-    description: 'Board full',
+    description: "Board full",
   })
   @HttpCode(200)
-  @Post(':id/join')
-  join(@Param('id') id: string, @Body() input: JoinInputDto) {
+  @Post(":id/join")
+  join(@Param("id") id: string, @Body() input: JoinInputDto) {
     return this.boardsService.join(parseInt(id, 10), input.botToken);
   }
 
@@ -79,24 +79,24 @@ export class BoardsController {
    */
   @ApiResponse({
     status: 200,
-    description: 'Returns specific board',
+    description: "Returns specific board",
     type: BoardDto,
   })
   @ApiResponse({
     status: 401,
-    description: 'Invalid botToken',
+    description: "Invalid botToken",
   })
   @ApiResponse({
     status: 403,
-    description: 'Move not legal',
+    description: "Move not legal",
   })
   @ApiResponse({
     status: 404,
-    description: 'Board not found',
+    description: "Board not found",
   })
   @HttpCode(200)
-  @Post(':id/move')
-  async move(@Param('id') id: string, @Body() input: MoveInputDto) {
+  @Post(":id/move")
+  async move(@Param("id") id: string, @Body() input: MoveInputDto) {
     return this.boardsService.move(
       parseInt(id, 10),
       input.botToken,

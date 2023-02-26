@@ -6,14 +6,14 @@ import {
   Param,
   Post,
   Req,
-} from '@nestjs/common';
-import { Request } from 'express';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SlackService } from '../services/slack.service';
-import { AuthorizationService } from '../services/authorization.service';
+} from "@nestjs/common";
+import { Request } from "express";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { SlackService } from "../services/slack.service";
+import { AuthorizationService } from "../services/authorization.service";
 
-@ApiTags('Slack')
-@Controller('api/slack')
+@ApiTags("Slack")
+@Controller("api/slack")
 export class SlackController {
   constructor(
     private slackService: SlackService,
@@ -25,9 +25,9 @@ export class SlackController {
    */
   @ApiResponse({
     status: 200,
-    description: 'Shows a slack modal with all seasons',
+    description: "Shows a slack modal with all seasons",
   })
-  @Post('/seasons')
+  @Post("/seasons")
   @HttpCode(200)
   async listAllSeasons(@Body() input: {}) {
     return this.slackService.getAllSeasons(input);
@@ -38,9 +38,9 @@ export class SlackController {
    */
   @ApiResponse({
     status: 200,
-    description: 'Shows a slack modal to add seasons',
+    description: "Shows a slack modal to add seasons",
   })
-  @Post('/season')
+  @Post("/season")
   @HttpCode(200)
   async addSeasonModal(@Body() input: {}) {
     return await this.slackService.getSeasonModal(input);
@@ -51,9 +51,9 @@ export class SlackController {
    */
   @ApiResponse({
     status: 200,
-    description: 'Shows a slack modal with all teams',
+    description: "Shows a slack modal with all teams",
   })
-  @Post('/teams')
+  @Post("/teams")
   @HttpCode(200)
   async listAllTeams(@Body() input: {}) {
     return this.slackService.getAllTeams(input);
@@ -64,9 +64,9 @@ export class SlackController {
    */
   @ApiResponse({
     status: 200,
-    description: 'Shows a slack modal to add seasons',
+    description: "Shows a slack modal to add seasons",
   })
-  @Post('/team')
+  @Post("/team")
   @HttpCode(200)
   async addTeamModal(@Body() input: {}) {
     return await this.slackService.getTeamModal(input);
@@ -77,13 +77,13 @@ export class SlackController {
    */
   @ApiResponse({
     status: 200,
-    description: 'No body if OK',
+    description: "No body if OK",
   })
   @ApiResponse({
     status: 401,
-    description: 'Only slack is allowed to call this endpoint.',
+    description: "Only slack is allowed to call this endpoint.",
   })
-  @Post('/interact')
+  @Post("/interact")
   @HttpCode(200)
   async interact(@Req() request: Request, @Body() input: {}) {
     await this.authorizationService.isSlackRequest(request);

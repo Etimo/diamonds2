@@ -1,15 +1,15 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { RecordingDto } from '../../models/recording.dto';
-import { LessThan, Repository } from 'typeorm';
-import { RecordingsEntity } from '../models/recordings.entity';
+import { Inject, Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { RecordingDto } from "../../models/recording.dto";
+import { LessThan, Repository } from "typeorm";
+import { RecordingsEntity } from "../models/recordings.entity";
 
 @Injectable()
 export class RecordingsRepository {
-  private entity: string = 'recordings';
+  private entity: string = "recordings";
 
   constructor(
-    @Inject('RECORDINGS')
+    @Inject("RECORDINGS")
     private readonly repo: Repository<RecordingsEntity>,
   ) {}
 
@@ -17,8 +17,8 @@ export class RecordingsRepository {
     return await this.repo
       .createQueryBuilder(this.entity)
       .select(this.entity)
-      .where('recordings.seasonId = :seasonId', { seasonId })
-      .orderBy('score', 'DESC')
+      .where("recordings.seasonId = :seasonId", { seasonId })
+      .orderBy("score", "DESC")
       .limit(limit)
       .execute();
   }
@@ -31,9 +31,9 @@ export class RecordingsRepository {
     const maxEntries = 10;
     const existing = await this.repo
       .createQueryBuilder(this.entity)
-      .select(['recordings.score'])
-      .where('recordings.seasonId = :seasonId', { seasonId })
-      .orderBy('score', 'DESC')
+      .select(["recordings.score"])
+      .where("recordings.seasonId = :seasonId", { seasonId })
+      .orderBy("score", "DESC")
       .limit(maxEntries + 1)
       .execute();
 
@@ -45,7 +45,7 @@ export class RecordingsRepository {
         .from(RecordingsEntity)
         .where({
           seasonId,
-          score: LessThan(existing[maxEntries - 1]['recordings_score']),
+          score: LessThan(existing[maxEntries - 1]["recordings_score"]),
         })
         .execute();
     }
@@ -55,7 +55,7 @@ export class RecordingsRepository {
     return await this.repo
       .createQueryBuilder(this.entity)
       .select(this.entity)
-      .where('recordings.seasonId = :seasonId AND recordings.id = :id', {
+      .where("recordings.seasonId = :seasonId AND recordings.id = :id", {
         seasonId,
         id,
       })

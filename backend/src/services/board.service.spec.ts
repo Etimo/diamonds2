@@ -1,37 +1,37 @@
-import { BoardsService } from './board.service';
-import { Repository } from 'typeorm';
-import { BotRegistrationsEntity } from '../db/models/botRegistrations.entity';
-import { Test, TestingModule } from '@nestjs/testing';
-import { HighScoresService } from './high-scores.service';
+import { BoardsService } from "./board.service";
+import { Repository } from "typeorm";
+import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
+import { Test, TestingModule } from "@nestjs/testing";
+import { HighScoresService } from "./high-scores.service";
 
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { CustomLogger } from '../logger';
-import { BotsService } from './bots.service';
-import { HighScoreEntity } from '../db/models/highScores.entity';
-import UnauthorizedError from '../errors/unauthorized.error';
-import { IBot } from '../interfaces/bot.interface';
-import NotFoundError from '../errors/not-found.error';
-import SilentLogger from '../gameengine/util/silent-logger';
-import { SeasonsService } from './seasons.service';
-import { SeasonsEntity } from '../db/models/seasons.entity';
-import ConflictError from '../errors/conflict.error';
-import { TeamsService } from './teams.service';
-import { TeamsEntity } from '../db/models/teams.entity';
-import { RecordingsService } from './recordings.service';
-import { RecordingsEntity } from '../db/models/recordings.entity';
-import { BoardConfigService } from './board-config.service';
-import { BoardConfigEntity } from '../db/models/boardConfig.entity';
-import { BoardConfigDto } from 'src/models/board-config.dto';
-import { RecordingsRepository } from '../db/repositories/recordings.repository';
-import { HighscoresRepository } from '../db/repositories/highscores.repository';
+import { getRepositoryToken } from "@nestjs/typeorm";
+import { CustomLogger } from "../logger";
+import { BotsService } from "./bots.service";
+import { HighScoreEntity } from "../db/models/highScores.entity";
+import UnauthorizedError from "../errors/unauthorized.error";
+import { IBot } from "../interfaces/bot.interface";
+import NotFoundError from "../errors/not-found.error";
+import SilentLogger from "../gameengine/util/silent-logger";
+import { SeasonsService } from "./seasons.service";
+import { SeasonsEntity } from "../db/models/seasons.entity";
+import ConflictError from "../errors/conflict.error";
+import { TeamsService } from "./teams.service";
+import { TeamsEntity } from "../db/models/teams.entity";
+import { RecordingsService } from "./recordings.service";
+import { RecordingsEntity } from "../db/models/recordings.entity";
+import { BoardConfigService } from "./board-config.service";
+import { BoardConfigEntity } from "../db/models/boardConfig.entity";
+import { BoardConfigDto } from "src/models/board-config.dto";
+import { RecordingsRepository } from "../db/repositories/recordings.repository";
+import { HighscoresRepository } from "../db/repositories/highscores.repository";
 
-describe('BoardsService', () => {
+describe("BoardsService", () => {
   let botsService: BotsService;
   let highScoresService: HighScoresService;
   let seasonsService: SeasonsService;
   const dummyBoardId = 1111111;
-  const dummyBoardToken = 'dummy';
-  const dummyBotId = 'dummyId';
+  const dummyBoardToken = "dummy";
+  const dummyBotId = "dummyId";
   let boardsService: BoardsService;
   let boardConfigService: BoardConfigService;
   let newBoardsService: BoardsService;
@@ -41,8 +41,8 @@ describe('BoardsService', () => {
   let repositoryMock3: MockType<Repository<SeasonsEntity>>;
   let repositoryMock4: MockType<Repository<BoardConfigEntity>>;
   const boardConfig = {
-    id: 'test',
-    seasonId: '321',
+    id: "test",
+    seasonId: "321",
     inventorySize: 5,
     canTackle: false,
     teleporters: 1,
@@ -101,7 +101,7 @@ describe('BoardsService', () => {
         },
         {
           useValue: 2,
-          provide: 'NUMBER_OF_BOARDS',
+          provide: "NUMBER_OF_BOARDS",
         },
       ],
     }).compile();
@@ -114,7 +114,7 @@ describe('BoardsService', () => {
     repositoryMock2 = module.get(getRepositoryToken(BotRegistrationsEntity));
     repositoryMock3 = module.get(getRepositoryToken(SeasonsEntity));
     repositoryMock4 = module.get(getRepositoryToken(BoardConfigEntity));
-    spyOn(boardConfigService, 'getCurrentBoardConfig').and.returnValue(
+    spyOn(boardConfigService, "getCurrentBoardConfig").and.returnValue(
       boardConfig as BoardConfigDto,
     );
     boardsService = new BoardsService(
@@ -140,26 +140,26 @@ describe('BoardsService', () => {
     jest.clearAllMocks();
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(highScoresService).toBeDefined();
     expect(botsService).toBeDefined();
     expect(boardsService).toBeDefined();
     expect(seasonsService).toBeDefined();
   });
 
-  it('Should throw UnauthorizedError when bot not exists', async () => {
-    spyOn(botsService, 'get').and.returnValue(undefined);
+  it("Should throw UnauthorizedError when bot not exists", async () => {
+    spyOn(botsService, "get").and.returnValue(undefined);
     await expect(
       boardsService.join(dummyBoardId, dummyBoardToken),
     ).rejects.toThrowError(UnauthorizedError);
   });
 
-  it('Should throw ConflictError when bot is already present on other board', async () => {
+  it("Should throw ConflictError when bot is already present on other board", async () => {
     const boards = boardsService.getAll();
-    spyOn(botsService, 'get').and.returnValue({
+    spyOn(botsService, "get").and.returnValue({
       token: dummyBoardToken,
-      botName: 'name',
-      email: 'email',
+      botName: "name",
+      email: "email",
     } as IBot);
     await boardsService.join(boards[0].id, dummyBoardToken);
 
@@ -168,12 +168,12 @@ describe('BoardsService', () => {
     ).rejects.toThrowError(ConflictError);
   });
 
-  it('Should throw ConflictError when bot is already present on same board', async () => {
+  it("Should throw ConflictError when bot is already present on same board", async () => {
     const boards = boardsService.getAll();
-    spyOn(botsService, 'get').and.returnValue({
+    spyOn(botsService, "get").and.returnValue({
       token: dummyBoardToken,
-      botName: 'name',
-      email: 'email',
+      botName: "name",
+      email: "email",
     } as IBot);
     await boardsService.join(boards[0].id, dummyBoardToken);
 
@@ -182,15 +182,15 @@ describe('BoardsService', () => {
     ).rejects.toThrowError(ConflictError);
   });
 
-  it('Should throw NotFoundError when board not exists', async () => {
-    spyOn(botsService, 'get').and.returnValue({} as IBot);
+  it("Should throw NotFoundError when board not exists", async () => {
+    spyOn(botsService, "get").and.returnValue({} as IBot);
     await expect(
       boardsService.join(dummyBoardId, dummyBoardToken),
     ).rejects.toThrowError(NotFoundError);
   });
 
-  it('Should not remove board 1 and 3', async () => {
-    spyOn(botsService, 'get').and.returnValue({} as IBot);
+  it("Should not remove board 1 and 3", async () => {
+    spyOn(botsService, "get").and.returnValue({} as IBot);
     let boards = newBoardsService.getAll();
     await newBoardsService.join(boards[2].id, dummyBoardToken);
     newBoardsService.removeEmptyBoards(4);
@@ -200,8 +200,8 @@ describe('BoardsService', () => {
     expect(boards.length).toEqual(2);
   });
 
-  it('Should remove all boards except board 1', async () => {
-    spyOn(botsService, 'get').and.returnValue({} as IBot);
+  it("Should remove all boards except board 1", async () => {
+    spyOn(botsService, "get").and.returnValue({} as IBot);
     let boards = newBoardsService.getAll();
     newBoardsService.removeEmptyBoards(10);
     boards = newBoardsService.getAll();

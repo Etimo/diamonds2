@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
 export class RecordingListDto {
   @ApiProperty()
@@ -23,10 +23,10 @@ export class RecordingListDto {
 
   public static fromRawDataObject(data: {}) {
     return this.from({
-      botName: data['recordings_botName'],
-      score: data['recordings_score'],
-      recordingId: data['recordings_id'],
-      created: data['recordings_createTimeStamp'],
+      botName: data["recordings_botName"],
+      score: data["recordings_score"],
+      recordingId: data["recordings_id"],
+      created: data["recordings_createTimeStamp"],
     });
   }
 }

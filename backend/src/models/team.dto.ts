@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { TeamsEntity } from '../db/models/teams.entity';
+import { ApiProperty } from "@nestjs/swagger";
+import { TeamsEntity } from "../db/models/teams.entity";
 
 export class TeamDto {
   @ApiProperty()

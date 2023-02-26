@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
 export class HighscorePublicDto {
   @ApiProperty()
@@ -23,10 +23,10 @@ export class HighscorePublicDto {
     // Used by allBySeasonId in hishscore service
     // Data includes raw data from highScore table and teams table.
     return this.from({
-      botName: data['highScores_botName'],
-      score: data['highScores_score'],
-      seasonId: data['highScores_seasonId'],
-      teamLogotype: data['teams_logotypeUrl'],
+      botName: data["highScores_botName"],
+      score: data["highScores_score"],
+      seasonId: data["highScores_seasonId"],
+      teamLogotype: data["teams_logotypeUrl"],
     });
   }
 }

@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { HighScoreEntity } from '../db/models/highScores.entity';
+import { ApiProperty } from "@nestjs/swagger";
+import { HighScoreEntity } from "../db/models/highScores.entity";
 
 export class HighscoreDto {
   @ApiProperty()

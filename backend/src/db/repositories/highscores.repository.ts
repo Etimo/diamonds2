@@ -1,17 +1,17 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { HighScoreEntity } from '../models/highScores.entity';
-import { BotRegistrationsEntity } from '../models/botRegistrations.entity';
-import { TeamsEntity } from '../models/teams.entity';
-import { HighscoreDto } from '../../models/highscore.dto';
+import { Inject, Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { HighScoreEntity } from "../models/highScores.entity";
+import { BotRegistrationsEntity } from "../models/botRegistrations.entity";
+import { TeamsEntity } from "../models/teams.entity";
+import { HighscoreDto } from "../../models/highscore.dto";
 
 @Injectable()
 export class HighscoresRepository {
-  private entity: string = 'high_scores';
+  private entity: string = "high_scores";
 
   constructor(
-    @Inject('HIGHSCORES')
+    @Inject("HIGHSCORES")
     private readonly repo: Repository<HighScoreEntity>,
   ) {}
 
@@ -25,14 +25,14 @@ export class HighscoresRepository {
     const highScores = await this.repo
       .createQueryBuilder(this.entity)
       .select(this.entity)
-      .where('highScores.seasonId = :seasonId', { seasonId: seasonId })
+      .where("highScores.seasonId = :seasonId", { seasonId: seasonId })
       .leftJoinAndSelect(
         BotRegistrationsEntity,
-        'bot',
-        'high_scores.botName = bot.botName',
+        "bot",
+        "high_scores.botName = bot.botName",
       )
-      .leftJoinAndSelect(TeamsEntity, 'teams', 'bot.team = teams.id')
-      .orderBy('score', 'DESC')
+      .leftJoinAndSelect(TeamsEntity, "teams", "bot.team = teams.id")
+      .orderBy("score", "DESC")
       .limit(take)
       .execute();
 
@@ -52,7 +52,7 @@ export class HighscoresRepository {
       .createQueryBuilder(this.entity)
       .select(this.entity)
       .where(
-        'high_scores.botName = :botName AND high_scores.seasonId = :seasonId',
+        "high_scores.botName = :botName AND high_scores.seasonId = :seasonId",
         {
           botName,
           seasonId,
@@ -70,7 +70,7 @@ export class HighscoresRepository {
       .createQueryBuilder()
       .update(this.entity)
       .set({ score })
-      .where('botName = :botName AND seasonId = :seasonId', {
+      .where("botName = :botName AND seasonId = :seasonId", {
         botName,
         seasonId,
       })
@@ -86,7 +86,7 @@ export class HighscoresRepository {
       .createQueryBuilder()
       .delete()
       .from(this.entity)
-      .where('botName = :botName', { botName })
+      .where("botName = :botName", { botName })
       .execute();
   }
 }

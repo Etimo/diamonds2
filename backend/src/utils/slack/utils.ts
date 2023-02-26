@@ -5,13 +5,13 @@ export const showModal = async (view, type = "open") => {
     .post(`https://slack.com/api/views.${type}`, view, {
       headers: getSlackHeaders(),
     })
-    .then(response => {
+    .then((response) => {
       const data = response.data;
       if (!data.ok) {
         return data.error;
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.log("-Error: ", error);
     });
   return;

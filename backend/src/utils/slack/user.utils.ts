@@ -31,7 +31,7 @@ export const getWinnerListBody = (trigger_id, users, season) => {
   };
 };
 
-const formatUserBlocks = users => {
+const formatUserBlocks = (users) => {
   return users.flatMap((user, index) => {
     return [
       {

@@ -1,9 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
 export class DiamondDto {
   @ApiProperty({
     description:
-      'The value this diamond is worth. Also the number of spaces it takes in an inventory.',
+      "The value this diamond is worth. Also the number of spaces it takes in an inventory.",
   })
   points: number;
   @ApiProperty()

@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { SeasonsEntity } from '../db/models/seasons.entity';
+import { ApiProperty } from "@nestjs/swagger";
+import { SeasonsEntity } from "../db/models/seasons.entity";
 
 export class SeasonDto {
   @ApiProperty()

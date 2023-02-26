@@ -179,15 +179,15 @@ describe("SeasonsService", () => {
 // @ts-ignore
 export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
   () => ({
-    findOne: jest.fn(entity => entity),
-    find: jest.fn(entity => entity),
+    findOne: jest.fn((entity) => entity),
+    find: jest.fn((entity) => entity),
     update: jest.fn(),
     save: jest.fn(),
     createQueryBuilder: jest.fn(() => ({
-      where: jest.fn(() => ({ getOne: jest.fn(entity => entity) })),
+      where: jest.fn(() => ({ getOne: jest.fn((entity) => entity) })),
       getOne: jest.fn(),
     })),
-    execute: jest.fn(entity => entity),
+    execute: jest.fn((entity) => entity),
     where: jest.fn(),
   }),
 );

@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { BoardConfigEntity } from '../db/models/boardConfig.entity';
+import { ApiProperty } from "@nestjs/swagger";
+import { BoardConfigEntity } from "../db/models/boardConfig.entity";
 
 export class BoardConfigDto {
   @ApiProperty()

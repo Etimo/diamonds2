@@ -1,29 +1,29 @@
-import { Injectable, Scope, Logger, Inject } from '@nestjs/common';
-import { OperationQueueBoard } from '../gameengine/operation-queue-board';
-import { BotsService } from './bots.service';
-import { HighScoresService } from './high-scores.service';
-import { CustomLogger } from '../logger';
-import { BoardDto } from '../models/board.dto';
-import NotFoundError from '../errors/not-found.error';
-import UnauthorizedError from '../errors/unauthorized.error';
-import ConflictError from '../errors/conflict.error';
-import { MoveDirection } from '../enums/move-direction.enum';
-import ForbiddenError from '../errors/forbidden.error';
-import { IBot } from '../interfaces/bot.interface';
-import { IPosition } from '../common/interfaces/position.interface';
-import { Board } from '../gameengine/board';
-import { GameObjectDto } from '../models/game-object.dto';
-import { DiamondButtonProvider } from '../gameengine/gameobjects/diamond-button/diamond-button-provider';
-import { BaseProvider } from '../gameengine/gameobjects/base/base-provider';
-import { DiamondProvider } from '../gameengine/gameobjects/diamond/diamond-provider';
-import { BotProvider } from '../gameengine/gameobjects/bot/bot-provider';
-import { BoardConfig } from '../gameengine/board-config';
-import { TeleportProvider } from '../gameengine/gameobjects/teleport/teleport-provider';
-import { TeleportRelocationProvider } from '../gameengine/gameobjects/teleport-relocation-provider/teleport-relocation-provider';
-import { SeasonsService } from './seasons.service';
-import { RecordingsService } from './recordings.service';
-import { BoardConfigService } from './board-config.service';
-import { BotGameObject } from '../gameengine/gameobjects/bot/bot';
+import { Injectable, Scope, Logger, Inject } from "@nestjs/common";
+import { OperationQueueBoard } from "../gameengine/operation-queue-board";
+import { BotsService } from "./bots.service";
+import { HighScoresService } from "./high-scores.service";
+import { CustomLogger } from "../logger";
+import { BoardDto } from "../models/board.dto";
+import NotFoundError from "../errors/not-found.error";
+import UnauthorizedError from "../errors/unauthorized.error";
+import ConflictError from "../errors/conflict.error";
+import { MoveDirection } from "../enums/move-direction.enum";
+import ForbiddenError from "../errors/forbidden.error";
+import { IBot } from "../interfaces/bot.interface";
+import { IPosition } from "../common/interfaces/position.interface";
+import { Board } from "../gameengine/board";
+import { GameObjectDto } from "../models/game-object.dto";
+import { DiamondButtonProvider } from "../gameengine/gameobjects/diamond-button/diamond-button-provider";
+import { BaseProvider } from "../gameengine/gameobjects/base/base-provider";
+import { DiamondProvider } from "../gameengine/gameobjects/diamond/diamond-provider";
+import { BotProvider } from "../gameengine/gameobjects/bot/bot-provider";
+import { BoardConfig } from "../gameengine/board-config";
+import { TeleportProvider } from "../gameengine/gameobjects/teleport/teleport-provider";
+import { TeleportRelocationProvider } from "../gameengine/gameobjects/teleport-relocation-provider/teleport-relocation-provider";
+import { SeasonsService } from "./seasons.service";
+import { RecordingsService } from "./recordings.service";
+import { BoardConfigService } from "./board-config.service";
+import { BotGameObject } from "../gameengine/gameobjects/bot/bot";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
@@ -36,7 +36,7 @@ export class BoardsService {
     private recordingsService: RecordingsService,
     private boardConfigService: BoardConfigService,
     private logger: CustomLogger,
-    @Inject('NUMBER_OF_BOARDS') private numberOfBoards,
+    @Inject("NUMBER_OF_BOARDS") private numberOfBoards,
   ) {
     this.createInMemoryBoards(this.numberOfBoards).then(async () => {
       this.boards.forEach((board) => {
@@ -76,7 +76,7 @@ export class BoardsService {
     if (board) {
       return this.returnAndSaveDto(board);
     }
-    throw new NotFoundError('Board not found');
+    throw new NotFoundError("Board not found");
   }
 
   /**
@@ -87,23 +87,23 @@ export class BoardsService {
   public async join(boardId: number, botToken: string) {
     const bot = await this.botsService.get(botToken);
     if (!bot) {
-      throw new UnauthorizedError('Invalid botToken');
+      throw new UnauthorizedError("Invalid botToken");
     }
     const board = this.getBoardById(boardId);
     if (!board) {
-      throw new NotFoundError('Board not found');
+      throw new NotFoundError("Board not found");
     }
 
     // Check if bot is on any board
     this.boards.forEach((b) => {
       if (b.getBot(botToken)) {
-        throw new ConflictError('Already playing');
+        throw new ConflictError("Already playing");
       }
     });
 
     const result = await board.enqueueJoin(bot);
     if (!result) {
-      throw new ConflictError('Board full');
+      throw new ConflictError("Board full");
     }
     return this.returnAndSaveDto(board);
   }
@@ -123,13 +123,13 @@ export class BoardsService {
     // Get board to move on
     const board = this.getBoardById(boardId);
     if (!board) {
-      throw new NotFoundError('Board not found');
+      throw new NotFoundError("Board not found");
     }
 
     // Get bot to move from board
     let bot = board.getBot(botToken);
     if (!bot) {
-      throw new UnauthorizedError('Invalid botToken');
+      throw new UnauthorizedError("Invalid botToken");
     }
 
     // Rate limit moves
@@ -151,7 +151,7 @@ export class BoardsService {
     );
 
     if (!result) {
-      throw new ForbiddenError('Move not legal');
+      throw new ForbiddenError("Move not legal");
     }
 
     return this.returnAndSaveDto(board);

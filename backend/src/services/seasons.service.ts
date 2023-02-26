@@ -1,31 +1,31 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { SeasonsEntity } from '../db/models/seasons.entity';
-import { SeasonDto } from '../models/season.dto';
-import ConflictError from '../errors/conflict.error';
-import ForbiddenError from '../errors/forbidden.error';
+import { Inject, Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { SeasonsEntity } from "../db/models/seasons.entity";
+import { SeasonDto } from "../models/season.dto";
+import ConflictError from "../errors/conflict.error";
+import ForbiddenError from "../errors/forbidden.error";
 
 @Injectable()
 export class SeasonsService {
   constructor(
-    @Inject('SEASONS')
+    @Inject("SEASONS")
     private readonly repo: Repository<SeasonsEntity>,
   ) {}
 
   public async getOffSeason() {
     const offSeason = await this.repo
-      .createQueryBuilder('seasons')
+      .createQueryBuilder("seasons")
       .where("seasons.name = 'Off season'")
       .getOne();
 
     return SeasonDto.fromEntity(offSeason);
   }
 
-  public async getSeason(seasonId: SeasonDto['id']): Promise<SeasonDto> {
+  public async getSeason(seasonId: SeasonDto["id"]): Promise<SeasonDto> {
     const offSeason = await this.repo
-      .createQueryBuilder('seasons')
-      .where('seasons.id = :seasonId', { seasonId: seasonId })
+      .createQueryBuilder("seasons")
+      .where("seasons.id = :seasonId", { seasonId: seasonId })
       .getOne();
 
     return SeasonDto.fromEntity(offSeason);
@@ -33,8 +33,8 @@ export class SeasonsService {
 
   public async getCurrentSeason() {
     const currentSeason = await this.repo
-      .createQueryBuilder('seasons')
-      .where('seasons.startDate <= now() AND seasons.endDate >= now()')
+      .createQueryBuilder("seasons")
+      .where("seasons.startDate <= now() AND seasons.endDate >= now()")
       .getOne();
 
     if (currentSeason) {
@@ -48,7 +48,7 @@ export class SeasonsService {
     return this.repo
       .find({
         order: {
-          createTimeStamp: 'DESC',
+          createTimeStamp: "DESC",
         },
       })
       .then((seasons) => seasons.map((e) => SeasonDto.fromEntity(e)));
@@ -58,8 +58,8 @@ export class SeasonsService {
     // Return if values are missing
     if (!dto.name || !dto.startDate || !dto.endDate) {
       throw new ForbiddenError(
-        'The body does not contain name, startDate or endDate.',
-        'season_name',
+        "The body does not contain name, startDate or endDate.",
+        "season_name",
       );
     }
     dto.endDate.setHours(23, 59, 59, 999); // Season ends at midnight
@@ -67,8 +67,8 @@ export class SeasonsService {
     // Return if startDate is larger then endDate.
     if (dto.startDate > dto.endDate) {
       throw new ForbiddenError(
-        'The endDate is not larger then the startDate.',
-        'end_date',
+        "The endDate is not larger then the startDate.",
+        "end_date",
       );
     }
 
@@ -79,15 +79,15 @@ export class SeasonsService {
 
     if (dateCollision) {
       throw new ConflictError(
-        'The selected dates collides with another season.',
-        'start_date',
+        "The selected dates collides with another season.",
+        "start_date",
       );
     }
 
     if (nameExists) {
       throw new ConflictError(
-        'The selected name does already exist.',
-        'season_name',
+        "The selected name does already exist.",
+        "season_name",
       );
     }
 
@@ -103,16 +103,16 @@ export class SeasonsService {
 
   private async nameExists(name: string) {
     return await this.repo
-      .createQueryBuilder('seasons')
-      .where('seasons.name = :name', { name: name })
+      .createQueryBuilder("seasons")
+      .where("seasons.name = :name", { name: name })
       .getOne();
   }
   // Check if the new dates collides with other season dates.
   private async dateCollision(startDate: Date, endDate: Date) {
     return await this.repo
-      .createQueryBuilder('seasons')
+      .createQueryBuilder("seasons")
       .where(
-        'seasons.startDate <= :endDate AND seasons.endDate >= :startDate',
+        "seasons.startDate <= :endDate AND seasons.endDate >= :startDate",
         { endDate: endDate, startDate: startDate },
       )
       .getOne();

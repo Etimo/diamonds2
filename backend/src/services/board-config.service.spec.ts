@@ -1,30 +1,30 @@
-import { BoardsService } from './board.service';
-import { Repository, SelectQueryBuilder, Connection } from 'typeorm';
-import { BotRegistrationsEntity } from '../db/models/botRegistrations.entity';
-import { Test, TestingModule } from '@nestjs/testing';
-import { HighScoresService } from './high-scores.service';
+import { BoardsService } from "./board.service";
+import { Repository, SelectQueryBuilder, Connection } from "typeorm";
+import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
+import { Test, TestingModule } from "@nestjs/testing";
+import { HighScoresService } from "./high-scores.service";
 
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { CustomLogger } from '../logger';
-import { BotsService } from './bots.service';
-import { HighScoreEntity } from '../db/models/highScores.entity';
-import UnauthorizedError from '../errors/unauthorized.error';
-import { IBot } from '../interfaces/bot.interface';
-import NotFoundError from '../errors/not-found.error';
-import SilentLogger from '../gameengine/util/silent-logger';
-import { SeasonsService } from './seasons.service';
-import { SeasonsEntity } from '../db/models/seasons.entity';
-import ConflictError from '../errors/conflict.error';
-import { Board } from '../gameengine/board';
-import { TeamsService } from './teams.service';
-import { TeamsEntity } from '../db/models/teams.entity';
-import { BoardConfigService } from './board-config.service';
-import { BoardConfigEntity } from '../db/models/boardConfig.entity';
-import { SeasonDto } from '../models/season.dto';
-import { BoardConfigDto } from '../models/board-config.dto';
-import { HighscoresRepository } from '../db/repositories/highscores.repository';
+import { getRepositoryToken } from "@nestjs/typeorm";
+import { CustomLogger } from "../logger";
+import { BotsService } from "./bots.service";
+import { HighScoreEntity } from "../db/models/highScores.entity";
+import UnauthorizedError from "../errors/unauthorized.error";
+import { IBot } from "../interfaces/bot.interface";
+import NotFoundError from "../errors/not-found.error";
+import SilentLogger from "../gameengine/util/silent-logger";
+import { SeasonsService } from "./seasons.service";
+import { SeasonsEntity } from "../db/models/seasons.entity";
+import ConflictError from "../errors/conflict.error";
+import { Board } from "../gameengine/board";
+import { TeamsService } from "./teams.service";
+import { TeamsEntity } from "../db/models/teams.entity";
+import { BoardConfigService } from "./board-config.service";
+import { BoardConfigEntity } from "../db/models/boardConfig.entity";
+import { SeasonDto } from "../models/season.dto";
+import { BoardConfigDto } from "../models/board-config.dto";
+import { HighscoresRepository } from "../db/repositories/highscores.repository";
 
-describe('BoardConfigService', () => {
+describe("BoardConfigService", () => {
   let botsService: BotsService;
   let highScoresService: HighScoresService;
   let seasonsService: SeasonsService;
@@ -68,7 +68,7 @@ describe('BoardConfigService', () => {
         },
         {
           useValue: 2,
-          provide: 'NUMBER_OF_BOARDS',
+          provide: "NUMBER_OF_BOARDS",
         },
       ],
     }).compile();
@@ -85,7 +85,7 @@ describe('BoardConfigService', () => {
     jest.clearAllMocks();
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(highScoresService).toBeDefined();
     expect(botsService).toBeDefined();
     expect(seasonsService).toBeDefined();
@@ -115,8 +115,8 @@ export type MockType<T> = {
 
 const mockGetSeason = () => {
   let testSeason = {
-    id: '321',
-    name: 'Test Season',
+    id: "321",
+    name: "Test Season",
     startDate: new Date(),
     endDate: new Date(),
   };
@@ -143,8 +143,8 @@ const mockGetSeason = () => {
 
 const mockGetBoardConfig = () => {
   let testBoardConfig = {
-    id: '321',
-    seasonId: 'test 1d',
+    id: "321",
+    seasonId: "test 1d",
     inventorySize: 5,
     canTackle: false,
     teleporters: 1,

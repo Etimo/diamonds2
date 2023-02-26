@@ -1,11 +1,11 @@
-import { SeasonsService } from "./seasons.service";
+import { Test, TestingModule } from "@nestjs/testing";
+import { getRepositoryToken } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { SeasonsEntity } from "../db/models/seasons.entity";
-import { TestingModule, Test } from "@nestjs/testing";
-import { getRepositoryToken } from "@nestjs/typeorm";
-import { SeasonDto } from "../models/season.dto";
 import ConflictError from "../errors/conflict.error";
 import ForbiddenError from "../errors/forbidden.error";
+import { SeasonDto } from "../models/season.dto";
+import { SeasonsService } from "./seasons.service";
 
 describe("SeasonsService", () => {
   let seasonsService: SeasonsService;
@@ -17,8 +17,8 @@ describe("SeasonsService", () => {
       providers: [
         SeasonsService,
         {
-          provide: getRepositoryToken(SeasonsEntity),
-          useFactory: repositoryMockFactory,
+          provide: "SEASONS",
+          useFactory: () => getRepositoryToken(SeasonsEntity),
         },
       ],
     }).compile();
@@ -267,15 +267,15 @@ describe("SeasonsService", () => {
 // @ts-ignore
 export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
   () => ({
-    findOne: jest.fn(entity => entity),
-    find: jest.fn(entity => entity),
+    findOne: jest.fn((entity) => entity),
+    find: jest.fn((entity) => entity),
     update: jest.fn(),
     save: jest.fn(),
     createQueryBuilder: jest.fn(() => ({
-      where: jest.fn(() => ({ getOne: jest.fn(entity => entity) })),
+      where: jest.fn(() => ({ getOne: jest.fn((entity) => entity) })),
       getOne: jest.fn(),
     })),
-    execute: jest.fn(entity => entity),
+    execute: jest.fn((entity) => entity),
     where: jest.fn(),
   }),
 );

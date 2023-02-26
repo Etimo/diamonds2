@@ -1,21 +1,21 @@
-import { BotsService } from './bots.service';
-import { Repository, SelectQueryBuilder, Connection } from 'typeorm';
-import { BotRegistrationsEntity } from '../db/models/botRegistrations.entity';
-import { BotRegistrationDto } from 'src/models/bot-registration.dto';
-import ConflictError from '../errors/conflict.error';
-import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { BotRegistrationPublicDto } from '../models/bot-registration-public.dto';
-import NotFoundError from '../errors/not-found.error';
-import { BotRecoveryDto } from '../models/bot-recovery.dto';
-import * as bcrypt from 'bcrypt';
-import { BotPasswordDto } from '../models/bot-password.dto';
-import ForbiddenError from '../errors/forbidden.error';
-import { TeamsService } from './teams.service';
-import { TeamsEntity } from '../db/models/teams.entity';
-import { TeamDto } from '../models/team.dto';
+import { Test, TestingModule } from "@nestjs/testing";
+import { getRepositoryToken } from "@nestjs/typeorm";
+import * as bcrypt from "bcrypt";
+import { BotRegistrationDto } from "src/models/bot-registration.dto";
+import { Repository } from "typeorm";
+import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
+import { TeamsEntity } from "../db/models/teams.entity";
+import ConflictError from "../errors/conflict.error";
+import ForbiddenError from "../errors/forbidden.error";
+import NotFoundError from "../errors/not-found.error";
+import { BotPasswordDto } from "../models/bot-password.dto";
+import { BotRecoveryDto } from "../models/bot-recovery.dto";
+import { BotRegistrationPublicDto } from "../models/bot-registration-public.dto";
+import { TeamDto } from "../models/team.dto";
+import { BotsService } from "./bots.service";
+import { TeamsService } from "./teams.service";
 
-describe('BotsService', () => {
+describe("BotsService", () => {
   let botsService: BotsService;
   let repositoryMock: MockType<Repository<BotRegistrationsEntity>>;
   let repositoryMock1: MockType<Repository<TeamsEntity>>;
@@ -25,31 +25,32 @@ describe('BotsService', () => {
       providers: [
         BotsService,
         {
-          provide: getRepositoryToken(BotRegistrationsEntity),
-          useFactory: repositoryMockFactory,
+          // provide: getRepositoryToken(BotRegistrationsEntity),
+          useFactory: () => getRepositoryToken(BotRegistrationsEntity),
+          provide: "BOT_REGISTRATIONS",
         },
         TeamsService,
         {
-          provide: getRepositoryToken(TeamsEntity),
-          useFactory: repositoryMockFactory,
+          provide: "TEAMS",
+          useFactory: () => getRepositoryToken(TeamsEntity),
         },
       ],
     }).compile();
     botsService = module.get<BotsService>(BotsService);
-    repositoryMock = module.get(getRepositoryToken(BotRegistrationsEntity));
-    repositoryMock1 = module.get(getRepositoryToken(TeamsEntity));
+    repositoryMock =
+      module.get<MockType<Repository<BotRegistrationsEntity>>>(
+        "BOT_REGISTRATIONS",
+      ); //getRepositoryToken(BotRegistrationsEntity);
+    repositoryMock1 =
+      module.get<MockType<Repository<BotRegistrationsEntity>>>("TEAMS");
     jest.clearAllMocks();
   });
 
-  it('should be defined', () => {
-    expect(botsService).toBeDefined();
-  });
-
-  it('Adding bot with same email generates error', async () => {
+  it("Adding bot with same email generates error", async () => {
     const data = {
-      email: 'hello@world.se',
-      botName: 'bot1',
-      password: '123456',
+      email: "hello@world.se",
+      botName: "bot1",
+      password: "123456",
       team: null,
     };
 
@@ -90,20 +91,20 @@ describe('BotsService', () => {
     await expect(
       botsService.add({
         email: data.email,
-        botName: 'other bot',
-        password: '123456',
-        team: 'liu',
+        botName: "other bot",
+        password: "123456",
+        team: "liu",
       }),
     ).rejects.toBeInstanceOf(ConflictError);
 
     expect(save).toHaveBeenCalledTimes(1);
   });
 
-  it('Adding bot with same name generates error', async () => {
+  it("Adding bot with same name generates error", async () => {
     const data = {
-      email: 'hello@world.se',
-      botName: 'bot1',
-      password: '123456',
+      email: "hello@world.se",
+      botName: "bot1",
+      password: "123456",
       team: null,
     };
 
@@ -143,21 +144,21 @@ describe('BotsService', () => {
 
     await expect(
       botsService.add({
-        email: 'other@world.se',
+        email: "other@world.se",
         botName: data.botName,
-        password: '123456',
-        team: 'liu',
+        password: "123456",
+        team: "liu",
       }),
     ).rejects.toBeInstanceOf(ConflictError);
 
     expect(save).toHaveBeenCalledTimes(1);
   });
 
-  it('Get bot with token', async () => {
+  it("Get bot with token", async () => {
     const data = {
-      email: 'hel22lo@world.se',
-      botName: 'bot122',
-      password: '123456',
+      email: "hel22lo@world.se",
+      botName: "bot122",
+      password: "123456",
       team: null,
     };
 
@@ -193,15 +194,15 @@ describe('BotsService', () => {
     );
 
     await expect(botsService.get(result.token)).resolves.toHaveProperty(
-      'email',
+      "email",
     );
   });
 
-  it('Get bot with email and password', async () => {
+  it("Get bot with email and password", async () => {
     const data = {
-      email: 'hel22lo@world.se',
-      botName: 'bot122',
-      password: '123456',
+      email: "hel22lo@world.se",
+      botName: "bot122",
+      password: "123456",
       team: null,
     };
     const hashedPassword = await bcrypt.hash(data.password, 10);
@@ -241,18 +242,18 @@ describe('BotsService', () => {
 
     const botRecoveryDto: BotRecoveryDto = {
       email: data.email,
-      password: '123456',
+      password: "123456",
     };
     await expect(
       botsService.getByEmailAndPassword(botRecoveryDto),
-    ).resolves.toHaveProperty('email');
+    ).resolves.toHaveProperty("email");
   });
 
-  it('Get bot with email and password, should fail - incorrect password', async () => {
+  it("Get bot with email and password, should fail - incorrect password", async () => {
     const data = {
-      email: 'hel22lo@world.se',
-      botName: 'bot122',
-      password: '123456',
+      email: "hel22lo@world.se",
+      botName: "bot122",
+      password: "123456",
       team: null,
     };
     const hashedPassword = await bcrypt.hash(data.password, 10);
@@ -292,18 +293,18 @@ describe('BotsService', () => {
 
     const botRecoveryDto: BotRecoveryDto = {
       email: data.email,
-      password: '123',
+      password: "123",
     };
     await expect(
       botsService.getByEmailAndPassword(botRecoveryDto),
     ).rejects.toBeInstanceOf(NotFoundError);
   });
 
-  it('Get bot with email and password, should fail - incorrect email', async () => {
+  it("Get bot with email and password, should fail - incorrect email", async () => {
     const data = {
-      email: 'hel22lo@world.se',
-      botName: 'bot122',
-      password: '123456',
+      email: "hel22lo@world.se",
+      botName: "bot122",
+      password: "123456",
       team: null,
     };
     const hashedPassword = await bcrypt.hash(data.password, 10);
@@ -341,7 +342,7 @@ describe('BotsService', () => {
     );
 
     const botRecoveryDto: BotRecoveryDto = {
-      email: 'test@test.se',
+      email: "test@test.se",
       password: data.password,
     };
     await expect(
@@ -349,11 +350,11 @@ describe('BotsService', () => {
     ).rejects.toBeInstanceOf(NotFoundError);
   });
 
-  it('Add password should fail, incorrect token', async () => {
+  it("Add password should fail, incorrect token", async () => {
     const data = {
-      email: 'hel22lo@world.se',
-      botName: 'bot122',
-      password: '123456',
+      email: "hel22lo@world.se",
+      botName: "bot122",
+      password: "123456",
     };
 
     const getOne = jest.fn(
@@ -373,19 +374,19 @@ describe('BotsService', () => {
     );
 
     const botPasswordDto: BotPasswordDto = {
-      token: 'asd',
-      password: '123456',
+      token: "asd",
+      password: "123456",
     };
     await expect(
       botsService.addPassword(botPasswordDto),
     ).rejects.toBeInstanceOf(NotFoundError);
   });
 
-  it('Add password should fail, password already exist', async () => {
+  it("Add password should fail, password already exist", async () => {
     const data = {
-      email: 'hel22lo@world.se',
-      botName: 'bot122',
-      password: '123456',
+      email: "hel22lo@world.se",
+      botName: "bot122",
+      password: "123456",
       team: null,
     };
     const getOne = jest.fn(
@@ -405,21 +406,21 @@ describe('BotsService', () => {
     );
 
     const botPasswordDto: BotPasswordDto = {
-      token: 'test@test.se',
-      password: '123456',
+      token: "test@test.se",
+      password: "123456",
     };
     await expect(
       botsService.addPassword(botPasswordDto),
     ).rejects.toBeInstanceOf(ForbiddenError);
   });
 
-  it('Add password should return bot', async () => {
+  it("Add password should return bot", async () => {
     const data = {
-      email: 'hel22lo@world.se',
-      botName: 'bot122',
+      email: "hel22lo@world.se",
+      botName: "bot122",
       password: null,
-      token: '123',
-      team: 'liu',
+      token: "123",
+      team: "liu",
       createTimeStamp: new Date(),
       updateTimeStamp: new Date(),
     };
@@ -446,27 +447,27 @@ describe('BotsService', () => {
     );
 
     const botPasswordDto: BotPasswordDto = {
-      token: 'test@test.se',
-      password: '123456',
+      token: "test@test.se",
+      password: "123456",
     };
     await expect(
       botsService.addPassword(botPasswordDto),
     ).resolves.toBeInstanceOf(BotRegistrationPublicDto);
   });
 
-  it('Add and get bot with team', async () => {
+  it("Add and get bot with team", async () => {
     const data = {
-      email: 'hel22lo@world.se',
-      botName: 'bot122',
-      password: '123456',
-      team: 'etimo',
+      email: "hel22lo@world.se",
+      botName: "bot122",
+      password: "123456",
+      team: "etimo",
     };
 
     const team = {
-      id: '123123',
-      abbreviation: 'etimo',
-      name: 'Etimo',
-      logotypeUrl: 'asdasd',
+      id: "123123",
+      abbreviation: "etimo",
+      name: "Etimo",
+      logotypeUrl: "asdasd",
     };
 
     const save = jest.fn(
@@ -519,16 +520,16 @@ describe('BotsService', () => {
     );
 
     await expect(botsService.get(result.token)).resolves.toHaveProperty(
-      'email',
+      "email",
     );
   });
 
-  it('Add and get bot with team, throw not found error - Team does not exist', async () => {
+  it("Add and get bot with team, throw not found error - Team does not exist", async () => {
     const data = {
-      email: 'hel22lo@world.se',
-      botName: 'bot122',
-      password: '123456',
-      team: 'zxczxc',
+      email: "hel22lo@world.se",
+      botName: "bot122",
+      password: "123456",
+      team: "zxczxc",
     };
 
     const save = jest.fn(
