@@ -17,7 +17,7 @@
     "typeorm:migration:generate": "yarn run typeorm migration:generate -d src/datasource.ts",
     "typeorm:migration:run": "yarn run typeorm migration:run -d src/datasource.ts",
     "typeorm:migration:revert": "yarn run typeorm migration:revert -d src/datasource.ts",
-    "test": "jest",
+    "test": "jest --passWithNoTests --detectOpenHandles",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
