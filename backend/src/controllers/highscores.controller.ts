@@ -1,9 +1,9 @@
 import { Controller, Get, Body, Post, Param } from "@nestjs/common";
-import { ApiUseTags, ApiResponse } from "@nestjs/swagger";
+import { ApiTags, ApiResponse } from "@nestjs/swagger";
 import { HighScoresService } from "src/services/high-scores.service";
 import { HighscorePublicDto } from "src/models/highscore-public.dto";
 
-@ApiUseTags("Highscores")
+@ApiTags("Highscores")
 @Controller("api/highscores")
 export class HighscoresController {
   constructor(private highScoresService: HighScoresService) {}

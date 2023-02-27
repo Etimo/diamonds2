@@ -1,17 +1,17 @@
-import { ApiModelProperty } from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class RecordingPublicDto {
-  @ApiModelProperty()
+  @ApiProperty()
   botName: string;
-  @ApiModelProperty()
+  @ApiProperty()
   score: number;
-  @ApiModelProperty()
+  @ApiProperty()
   board: number;
-  @ApiModelProperty()
+  @ApiProperty()
   seasonId: string;
-  @ApiModelProperty()
+  @ApiProperty()
   recording: string;
-  @ApiModelProperty()
+  @ApiProperty()
   created: Date;
 
   public static from(dto: Partial<RecordingPublicDto>) {

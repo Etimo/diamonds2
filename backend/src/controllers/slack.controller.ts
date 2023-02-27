@@ -8,11 +8,11 @@ import {
   Req,
 } from "@nestjs/common";
 import { Request } from "express";
-import { ApiResponse, ApiUseTags } from "@nestjs/swagger";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { SlackService } from "../services/slack.service";
 import { AuthorizationService } from "../services/authorization.service";
 
-@ApiUseTags("Slack")
+@ApiTags("Slack")
 @Controller("api/slack")
 export class SlackController {
   constructor(

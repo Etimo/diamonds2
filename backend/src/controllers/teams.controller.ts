@@ -1,9 +1,9 @@
 import { Controller, Get, Body, Post } from "@nestjs/common";
-import { ApiUseTags, ApiResponse } from "@nestjs/swagger";
+import { ApiTags, ApiResponse } from "@nestjs/swagger";
 import { TeamDto } from "src/models/team.dto";
 import { TeamsService } from "src/services/teams.service";
 
-@ApiUseTags("Teams")
+@ApiTags("Teams")
 @Controller("api/teams")
 export class TeamsController {
   constructor(private teamsService: TeamsService) {}

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { BoardConfigEntity } from "../db/models/boardConfig.entity";
@@ -8,7 +8,7 @@ import { SeasonsService } from "./seasons.service";
 @Injectable()
 export class BoardConfigService {
   constructor(
-    @InjectRepository(BoardConfigEntity)
+    @Inject("BOARD_CONFIGS")
     private readonly repo: Repository<BoardConfigEntity>,
     private seasonsService: SeasonsService,
   ) {}
@@ -56,6 +56,8 @@ export class BoardConfigService {
   public async create(dto: BoardConfigDto): Promise<BoardConfigDto> {
     return await this.repo
       .save(dto)
-      .then(boardConfigEntity => BoardConfigDto.fromEntity(boardConfigEntity));
+      .then((boardConfigEntity) =>
+        BoardConfigDto.fromEntity(boardConfigEntity),
+      );
   }
 }

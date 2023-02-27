@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { HighScoreEntity } from "../models/highScores.entity";
@@ -11,7 +11,7 @@ export class HighscoresRepository {
   private entity: string = "high_scores";
 
   constructor(
-    @InjectRepository(HighScoreEntity)
+    @Inject("HIGHSCORES")
     private readonly repo: Repository<HighScoreEntity>,
   ) {}
 
@@ -44,7 +44,7 @@ export class HighscoresRepository {
       .find({
         where: [{ botName }],
       })
-      .then(highScores => highScores.map(e => HighscoreDto.fromEntity(e)));
+      .then((highScores) => highScores.map((e) => HighscoreDto.fromEntity(e)));
   }
 
   public async getBestBotScore(botName: string, seasonId: string) {

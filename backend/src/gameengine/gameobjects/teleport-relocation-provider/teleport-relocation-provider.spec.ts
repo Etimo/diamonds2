@@ -1,19 +1,18 @@
 import { Board } from "../../board";
 import createTestBoard from "../../util/test-board";
-import { TeleportRelocationProvider } from "./teleport-relocation-provider";
 import { TeleportGameObject } from "../teleport/teleport";
+import { TeleportRelocationProvider } from "./teleport-relocation-provider";
 
 let provider: TeleportRelocationProvider;
 let board: Board;
 let teleport: TeleportGameObject;
 
 beforeEach(() => {
+  jest.useFakeTimers();
   provider = new TeleportRelocationProvider({ seconds: 1 });
   board = createTestBoard([provider]);
   teleport = new TeleportGameObject(board.getEmptyPosition(), "1");
   board.addGameObjects([teleport]);
-
-  jest.useFakeTimers();
 });
 
 test("Moves teleporter after time", () => {

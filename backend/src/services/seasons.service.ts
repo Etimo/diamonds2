@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { SeasonsEntity } from "../db/models/seasons.entity";
@@ -9,7 +9,7 @@ import ForbiddenError from "../errors/forbidden.error";
 @Injectable()
 export class SeasonsService {
   constructor(
-    @InjectRepository(SeasonsEntity)
+    @Inject("SEASONS")
     private readonly repo: Repository<SeasonsEntity>,
   ) {}
 
@@ -51,7 +51,7 @@ export class SeasonsService {
           createTimeStamp: "DESC",
         },
       })
-      .then(seasons => seasons.map(e => SeasonDto.fromEntity(e)));
+      .then((seasons) => seasons.map((e) => SeasonDto.fromEntity(e)));
   }
 
   public async add(dto: SeasonDto) {
@@ -98,7 +98,7 @@ export class SeasonsService {
   public async create(dto: SeasonDto): Promise<SeasonDto> {
     return await this.repo
       .save(dto)
-      .then(seasonEntity => SeasonDto.fromEntity(seasonEntity));
+      .then((seasonEntity) => SeasonDto.fromEntity(seasonEntity));
   }
 
   private async nameExists(name: string) {

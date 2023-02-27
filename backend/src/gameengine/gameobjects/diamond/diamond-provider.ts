@@ -17,9 +17,7 @@ export interface DiamondProviderConfig {
   redRatio: number;
 }
 
-export class DiamondProvider extends AbstractGameObjectProvider<
-  DiamondProviderConfig
-> {
+export class DiamondProvider extends AbstractGameObjectProvider<DiamondProviderConfig> {
   constructor(config: DiamondProviderConfig) {
     super(config);
   }
@@ -43,7 +41,7 @@ export class DiamondProvider extends AbstractGameObjectProvider<
     );
     const diamonds = new Array(count)
       .fill(null)
-      .map(_ => new DiamondGameObject(board.getEmptyPosition(), 1));
+      .map((_) => new DiamondGameObject(board.getEmptyPosition(), 1));
     const redDiamonds = Math.floor(diamonds.length * this.config.redRatio);
     for (let i = 0; i < redDiamonds; i++) {
       diamonds[i].points = 2;

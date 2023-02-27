@@ -1,16 +1,16 @@
-import { ApiModelProperty } from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
 
 export class BotRegistrationPublicDto {
-  @ApiModelProperty({
+  @ApiProperty({
     description: "The name you registered with.",
   })
   botName: string;
-  @ApiModelProperty({
+  @ApiProperty({
     description: "The email you registered with.",
   })
   email: string;
-  @ApiModelProperty({
+  @ApiProperty({
     description:
       "Your unique, and secret, token. Use this for all your requests.",
   })

@@ -1,5 +1,5 @@
-const formatSeasonBlocks = seasons => {
-  return seasons.flatMap(season => {
+const formatSeasonBlocks = (seasons) => {
+  return seasons.flatMap((season) => {
     return [
       {
         type: "section",
@@ -76,7 +76,7 @@ export const getSeasonListBody = (trigger_id, seasons) => {
   };
 };
 
-export const getAddSeasonBody = trigger_id => {
+export const getAddSeasonBody = (trigger_id) => {
   return {
     trigger_id: trigger_id,
     view: {

@@ -1,41 +1,41 @@
-import { ApiModelProperty } from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 import { PositionDto } from "./position.dto";
 export class BotDto {
-  @ApiModelProperty({
+  @ApiProperty({
     description: "The name of the bot.",
   })
   name: string;
-  @ApiModelProperty({
+  @ApiProperty({
     description: "The position of the base for this bot.",
   })
   base: PositionDto;
-  @ApiModelProperty({
+  @ApiProperty({
     description: "The current position of the bot.",
   })
   position: PositionDto;
-  @ApiModelProperty({
+  @ApiProperty({
     description: "Number of diamonds this bot is carrying.",
   })
   diamonds: number;
-  @ApiModelProperty({
+  @ApiProperty({
     description: "The time when this bot joined the board.",
   })
   timeJoined: Date;
-  @ApiModelProperty({
+  @ApiProperty({
     description:
       "The number of milliseconds left before the session ends for this bot.",
   })
   millisecondsLeft: number;
-  @ApiModelProperty({
+  @ApiProperty({
     description:
       "The value of the diamonds this bot has managed to drop of at its base.",
   })
   score: number;
-  @ApiModelProperty({
+  @ApiProperty({
     description: "An id of the bot.",
   })
   botId: string;
-  @ApiModelProperty({
+  @ApiProperty({
     description:
       "A calculated timestamp for when this bot can perform its next move.",
   })

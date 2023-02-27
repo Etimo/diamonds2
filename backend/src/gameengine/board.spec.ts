@@ -1,11 +1,11 @@
+import { IBot } from "src/interfaces/bot.interface";
 import { Board } from "./board";
-import createTestBoard from "./util/test-board";
-import { BotGameObject } from "./gameobjects/bot/bot";
 import { AbstractGameObject } from "./gameobjects/abstract-game-object";
 import { BaseGameObject } from "./gameobjects/base/base";
-import { DiamondProvider } from "./gameobjects/diamond/diamond-provider";
+import { BotGameObject } from "./gameobjects/bot/bot";
 import { BotProvider } from "./gameobjects/bot/bot-provider";
-import { IBot } from "src/interfaces/bot.interface";
+import { DiamondProvider } from "./gameobjects/diamond/diamond-provider";
+import createTestBoard from "./util/test-board";
 
 let board: Board;
 let opponent: BotGameObject;
@@ -63,7 +63,7 @@ describe("sessionFinishedCallbacks and join", () => {
   });
 
   test("join notifies providers", async () => {
-    spyOn(provider, "onBotJoined");
+    jest.spyOn(provider, "onBotJoined");
 
     await board.join(botExampleData);
 
@@ -128,7 +128,7 @@ describe("trySetGameObjectPosition", () => {
   test("when gameobject not allowed to move bot stays", () => {
     const initialPosition = { x: 0, y: 0 };
     const bot = new BotGameObject(initialPosition);
-    spyOn(opponent, "canGameObjectEnter").and.returnValue(false);
+    jest.spyOn(opponent, "canGameObjectEnter").mockReturnValue(false);
 
     const result = board.trySetGameObjectPosition(bot, { x: 1, y: 0 });
 
@@ -139,8 +139,8 @@ describe("trySetGameObjectPosition", () => {
   test("when bot move gameObjectEntered is triggered on gameobjects on destination", () => {
     const initialPosition = { x: 0, y: 0 };
     const bot = new BotGameObject(initialPosition);
-    spyOn(opponent, "canGameObjectEnter").and.returnValue(true);
-    spyOn(opponent, "onGameObjectEntered");
+    jest.spyOn(opponent, "canGameObjectEnter").mockReturnValue(true);
+    jest.spyOn(opponent, "onGameObjectEntered");
 
     const result = board.trySetGameObjectPosition(bot, { x: 1, y: 0 });
 
@@ -171,14 +171,14 @@ describe("getEmptyPosition", () => {
   });
 
   test("returns an empty position even though random checks fail", () => {
-    spyOn(board, "getRandomPosition").and.returnValue(opponent.position);
+    jest.spyOn(board, "getRandomPosition").mockReturnValue(opponent.position);
     const empty = board.getEmptyPosition();
     expect(empty).not.toEqual(opponent.position);
   });
 
   test("returns null if no empty positions are found", () => {
-    spyOn(board, "getRandomPosition").and.returnValue(opponent.position);
-    spyOn(board, "isCellEmpty").and.returnValue(false);
+    jest.spyOn(board, "getRandomPosition").mockReturnValue(opponent.position);
+    jest.spyOn(board, "isCellEmpty").mockReturnValue(false);
     const empty = board.getEmptyPosition();
     expect(empty).toBeNull();
   });
@@ -217,13 +217,13 @@ describe("canGameObjectEnter", () => {
       x: opponent.x + 1,
       y: opponent.y,
     });
-    spyOn(blockingGameObject, "canGameObjectEnter").and.returnValue(false);
+    jest.spyOn(blockingGameObject, "canGameObjectEnter").mockReturnValue(false);
 
     allowingGameObject = new BotGameObject({
       x: opponent.x,
       y: opponent.y + 1,
     });
-    spyOn(allowingGameObject, "canGameObjectEnter").and.returnValue(true);
+    jest.spyOn(allowingGameObject, "canGameObjectEnter").mockReturnValue(true);
 
     board.addGameObjects([blockingGameObject, allowingGameObject]);
   });
@@ -250,13 +250,13 @@ describe("canGameObjectLeave", () => {
       x: opponent.x + 1,
       y: opponent.y,
     });
-    spyOn(blockingGameObject, "canGameObjectLeave").and.returnValue(false);
+    jest.spyOn(blockingGameObject, "canGameObjectLeave").mockReturnValue(false);
 
     allowingGameObject = new BotGameObject({
       x: opponent.x,
       y: opponent.y + 1,
     });
-    spyOn(allowingGameObject, "canGameObjectLeave").and.returnValue(true);
+    jest.spyOn(allowingGameObject, "canGameObjectLeave").mockReturnValue(true);
 
     board.addGameObjects([blockingGameObject, allowingGameObject]);
   });
@@ -281,7 +281,7 @@ describe("removeGameObject", () => {
     expect(board.getAllGameObjects().length).toBe(0);
   });
   test("calls onGameObjectRemoved on game object", () => {
-    spyOn(opponent, "onGameObjectRemoved");
+    jest.spyOn(opponent, "onGameObjectRemoved");
 
     board.removeGameObject(opponent);
 
@@ -303,7 +303,7 @@ describe("removeGameObjectsByType", () => {
   });
 
   test("calls onGameObjectRemoved on each removed game object", () => {
-    spyOn(opponent, "onGameObjectRemoved");
+    jest.spyOn(opponent, "onGameObjectRemoved");
 
     board.removeGameObjectsByType(BotGameObject);
 
@@ -311,7 +311,7 @@ describe("removeGameObjectsByType", () => {
   });
   test("notifies providers", () => {
     board = createTestBoard([provider]);
-    spyOn(provider, "onGameObjectsRemoved");
+    jest.spyOn(provider, "onGameObjectsRemoved");
 
     board.removeGameObjectsByType(BotGameObject);
 
@@ -335,7 +335,7 @@ describe("addGameObjects", () => {
   });
 
   test("notifies providers", () => {
-    spyOn(provider, "onGameObjectsAdded");
+    jest.spyOn(provider, "onGameObjectsAdded");
 
     board.addGameObjects([baseGameObject]);
 

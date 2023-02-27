@@ -5,12 +5,12 @@ on:
 jobs:
   test-backend:
     name: Test backend
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
-          node-version: "12.x"
+          node-version: "16.x"
       - name: Install dependencies
         run: yarn --cwd=backend install
       - name: Run tests with coverage report
@@ -23,7 +23,7 @@ jobs:
 
   # test-frontend:
   #   name: Test frontend
-  #   runs-on: ubuntu-18.04
+  #   runs-on: ubuntu-latest
   #   steps:
   #     - uses: actions/checkout@v1
   #     - uses: actions/setup-node@v1
@@ -37,7 +37,7 @@ jobs:
   # Test that building local dev env using docker works
   test-build:
     name: Build for dev env
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - run: echo "Ref ${{ github.ref }}"
       - uses: actions/checkout@v1
@@ -47,7 +47,7 @@ jobs:
   # Build and push production images
   build-prod:
     name: Build for prod env
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     needs:
       - test-backend
@@ -82,7 +82,7 @@ jobs:
   # deploy-prod:
   #   name: Deploy to new account
   #   needs: build-prod
-  #   runs-on: ubuntu-18.04
+  #   runs-on: ubuntu-latest
   #   if: github.ref == 'refs/heads/master'
   #   steps:
   #     - uses: chrnorm/deployment-action@releases/v1

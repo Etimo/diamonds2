@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { IBot } from "src/interfaces/bot.interface";
 import { BotRegistrationDto } from "src/models/bot-registration.dto";
 import ConflictError from "../errors/conflict.error";
@@ -6,7 +6,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
 import { BotRegistrationPublicDto } from "../models/bot-registration-public.dto";
-import { MetricsService } from "./metrics.service";
 import { BotRecoveryDto } from "../models/bot-recovery.dto";
 import * as bcrypt from "bcrypt";
 import NotFoundError from "../errors/not-found.error";
@@ -19,9 +18,8 @@ export class BotsService {
   private bots: IBot[] = [];
 
   constructor(
-    @InjectRepository(BotRegistrationsEntity)
+    @Inject("BOT_REGISTRATIONS")
     private readonly repo: Repository<BotRegistrationsEntity>,
-    private metricsService: MetricsService,
     private teamsService: TeamsService,
   ) {}
 
@@ -43,10 +41,6 @@ export class BotsService {
       input.team = team.id;
     }
 
-    if (this.metricsService) {
-      this.metricsService.incBotsRegistered();
-    }
-
     return this.create(input);
   }
 
@@ -55,7 +49,7 @@ export class BotsService {
       .createQueryBuilder("botRegistrations")
       .where("botRegistrations.token = :token", { token: token })
       .getOne()
-      .then(botRegistrationsEntity =>
+      .then((botRegistrationsEntity) =>
         BotRegistrationPublicDto.fromEntity(botRegistrationsEntity),
       );
     return existBot;
@@ -89,7 +83,7 @@ export class BotsService {
     dto.password = await this.hashPassword(dto.password);
     return await this.repo
       .save(dto)
-      .then(botRegistrationsEntity =>
+      .then((botRegistrationsEntity) =>
         BotRegistrationPublicDto.fromEntity(botRegistrationsEntity),
       );
   }

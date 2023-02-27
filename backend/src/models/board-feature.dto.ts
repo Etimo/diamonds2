@@ -1,12 +1,12 @@
-import { ApiModelProperty } from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 import { DiamondProviderConfig } from "src/gameengine/gameobjects/diamond/diamond-provider";
 import { BotProviderConfig } from "src/gameengine/gameobjects/bot/bot-provider";
 import { TeleportProviderConfig } from "src/gameengine/gameobjects/teleport/teleport-provider";
 
 export default class BoardFeatureDto {
-  @ApiModelProperty()
+  @ApiProperty()
   name: string;
-  @ApiModelProperty({
+  @ApiProperty({
     description: "The configuration for this feature.",
   })
   config:

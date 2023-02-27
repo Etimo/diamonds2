@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { RecordingDto } from "../../models/recording.dto";
 import { LessThan, Repository } from "typeorm";
@@ -9,7 +9,7 @@ export class RecordingsRepository {
   private entity: string = "recordings";
 
   constructor(
-    @InjectRepository(RecordingsEntity)
+    @Inject("RECORDINGS")
     private readonly repo: Repository<RecordingsEntity>,
   ) {}
 

@@ -14,13 +14,11 @@ export interface TeleportRelocationProviderConfig {
 /**
  * This provider moves all teleporters on the board when a certain time has passed.
  */
-export class TeleportRelocationProvider extends AbstractGameObjectProvider<
-  TeleportRelocationProviderConfig
-> {
+export class TeleportRelocationProvider extends AbstractGameObjectProvider<TeleportRelocationProviderConfig> {
   onBoardInitialized(board: Board) {
-    setInterval(_ => {
+    setInterval((_) => {
       const teleporters = board.getGameObjectsByType(TeleportGameObject);
-      teleporters.forEach(t => {
+      teleporters.forEach((t) => {
         const inititalPosition = t.position;
         // Continue generating new position until it's not the same as initial
         while ((t.position = board.getEmptyPosition()) == inititalPosition) {}

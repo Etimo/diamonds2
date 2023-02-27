@@ -1,7 +1,8 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class addOffSeasonBoardConfig1639053743945
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<any> {
     const offSeason = await this.getAllSeasons(queryRunner);
     await queryRunner.manager
@@ -36,6 +37,6 @@ export class addOffSeasonBoardConfig1639053743945
 
   private async getAllSeasons(queryRunner) {
     const seasons = await queryRunner.query("SELECT * FROM seasons");
-    return seasons.find(season => season.name === "Off season");
+    return seasons.find((season) => season.name === "Off season");
   }
 }

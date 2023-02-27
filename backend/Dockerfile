@@ -1,8 +1,9 @@
 FROM node:16-alpine3.17 as develop
 WORKDIR /app
 COPY package.json yarn.lock ./
+RUN echo
 RUN yarn
-COPY . .
+COPY tsconfig.json ./
 # RUN ./node_modules/.bin/tsc src/migration/*.ts
 
 FROM develop as build
