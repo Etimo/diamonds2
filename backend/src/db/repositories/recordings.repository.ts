@@ -1,8 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
 import { RecordingDto } from "../../models/recording.dto";
-import { LessThan, Repository } from "typeorm";
-import { RecordingsEntity } from "../models/recordings.entity";
 import { PrismaService } from "../../services/prisma.service";
 
 @Injectable()

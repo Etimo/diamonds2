@@ -1,10 +1,10 @@
 import { Controller, Get, Body, Post, Param } from "@nestjs/common";
-import { ApiUseTags, ApiResponse } from "@nestjs/swagger";
-import { RecordingsService } from "../../services/recordings.service";
-import { RecordingListDto } from "../../models/recording-list.dto";
-import { RecordingPublicDto } from "../../models/recording-public.dto";
+import { ApiTags, ApiResponse } from "@nestjs/swagger";
+import { RecordingsService } from "../services/recordings.service";
+import { RecordingListDto } from "../models/recording-list.dto";
+import { RecordingPublicDto } from "../models/recording-public.dto";
 
-@ApiUseTags("Recordings")
+@ApiTags("Recordings")
 @Controller("api/recordings")
 export class RecordingsController {
   constructor(private recordingsService: RecordingsService) {}

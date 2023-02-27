@@ -1,30 +1,29 @@
-import { Injectable, Scope, Logger, Inject } from "@nestjs/common";
-import { OperationQueueBoard } from "../gameengine/operation-queue-board";
-import { BotsService } from "./bots.service";
-import { HighScoresService } from "./high-scores.service";
-import { CustomLogger } from "../logger";
-import { BoardDto } from "../models/board.dto";
+import { Inject, Injectable, Scope } from "@nestjs/common";
+import { IPosition } from "../common/interfaces/position.interface";
+import { MoveDirection } from "../enums/move-direction.enum";
+import ConflictError from "../errors/conflict.error";
+import ForbiddenError from "../errors/forbidden.error";
 import NotFoundError from "../errors/not-found.error";
 import UnauthorizedError from "../errors/unauthorized.error";
-import ConflictError from "../errors/conflict.error";
-import { MoveDirection } from "../enums/move-direction.enum";
-import ForbiddenError from "../errors/forbidden.error";
-import { IBot } from "../interfaces/bot.interface";
-import { IPosition } from "../common/interfaces/position.interface";
 import { Board } from "../gameengine/board";
-import { GameObjectDto } from "../models/game-object.dto";
-import { DiamondButtonProvider } from "../gameengine/gameobjects/diamond-button/diamond-button-provider";
-import { BaseProvider } from "../gameengine/gameobjects/base/base-provider";
-import { DiamondProvider } from "../gameengine/gameobjects/diamond/diamond-provider";
-import { BotProvider } from "../gameengine/gameobjects/bot/bot-provider";
 import { BoardConfig } from "../gameengine/board-config";
-import { TeleportProvider } from "../gameengine/gameobjects/teleport/teleport-provider";
-import { MetricsService } from "./metrics.service";
+import { BaseProvider } from "../gameengine/gameobjects/base/base-provider";
+import { BotGameObject } from "../gameengine/gameobjects/bot/bot";
+import { BotProvider } from "../gameengine/gameobjects/bot/bot-provider";
+import { DiamondButtonProvider } from "../gameengine/gameobjects/diamond-button/diamond-button-provider";
+import { DiamondProvider } from "../gameengine/gameobjects/diamond/diamond-provider";
 import { TeleportRelocationProvider } from "../gameengine/gameobjects/teleport-relocation-provider/teleport-relocation-provider";
-import { SeasonsService } from "./seasons.service";
-import { RecordingsService } from "./recordings.service";
+import { TeleportProvider } from "../gameengine/gameobjects/teleport/teleport-provider";
+import { OperationQueueBoard } from "../gameengine/operation-queue-board";
+import { IBot } from "../interfaces/bot.interface";
+import { CustomLogger } from "../logger";
+import { BoardDto } from "../models/board.dto";
+import { GameObjectDto } from "../models/game-object.dto";
 import { BoardConfigService } from "./board-config.service";
-import { BoardConfigDto } from "src/models/board-config.dto";
+import { BotsService } from "./bots.service";
+import { HighScoresService } from "./high-scores.service";
+import { RecordingsService } from "./recordings.service";
+import { SeasonsService } from "./seasons.service";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
@@ -33,7 +32,6 @@ export class BoardsService {
   constructor(
     private botsService: BotsService,
     private highscoresService: HighScoresService,
-    private metricsService: MetricsService,
     private seasonsService: SeasonsService,
     private recordingsService: RecordingsService,
     private boardConfigService: BoardConfigService,
@@ -41,28 +39,23 @@ export class BoardsService {
     @Inject("NUMBER_OF_BOARDS") private numberOfBoards,
   ) {
     this.createInMemoryBoards(this.numberOfBoards).then(async () => {
-      this.boards.forEach(board => {
-        board.registerSessionFinishedCallback(
-          async (botName: any, score: any) => {
-            if (this.metricsService) {
-              this.metricsService.decPlayersTotal(board.getId());
-            }
-            const currentSeason = await this.seasonsService.getCurrentSeason();
-            const better = await this.highscoresService.addOrUpdate({
-              name: botName,
-              score,
+      this.boards.forEach((board) => {
+        board.registerSessionFinishedCallback(async (bot: BotGameObject) => {
+          const currentSeason = await this.seasonsService.getCurrentSeason();
+          const better = await this.highscoresService.addOrUpdate({
+            name: bot.name,
+            score: bot.score,
+            seasonId: currentSeason.id,
+          });
+          if (better) {
+            this.recordingsService.save({
+              boardIndex: this.getBoardIndex(board),
+              botName: bot.name,
+              score: bot.score,
               seasonId: currentSeason.id,
             });
-            if (better) {
-              this.recordingsService.save({
-                boardIndex: this.getBoardIndex(board),
-                botName,
-                score,
-                seasonId: currentSeason.id,
-              });
-            }
-          },
-        );
+          }
+        });
       });
     });
   }
@@ -71,7 +64,7 @@ export class BoardsService {
    * Return all boards.
    */
   public getAll(): BoardDto[] {
-    return this.boards.map(b => this.getAsDto(b));
+    return this.boards.map((b) => this.getAsDto(b));
   }
 
   /**
@@ -102,7 +95,7 @@ export class BoardsService {
     }
 
     // Check if bot is on any board
-    this.boards.forEach(b => {
+    this.boards.forEach((b) => {
       if (b.getBot(botToken)) {
         throw new ConflictError("Already playing");
       }
@@ -111,10 +104,6 @@ export class BoardsService {
     const result = await board.enqueueJoin(bot);
     if (!result) {
       throw new ConflictError("Board full");
-    }
-    if (this.metricsService) {
-      this.metricsService.incPlayersTotal(boardId);
-      this.metricsService.incSessionsStarted(boardId);
     }
     return this.returnAndSaveDto(board);
   }
@@ -165,10 +154,6 @@ export class BoardsService {
       throw new ForbiddenError("Move not legal");
     }
 
-    if (this.metricsService) {
-      this.metricsService.incMovesPerformed(boardId);
-    }
-
     return this.returnAndSaveDto(board);
   }
 
@@ -184,11 +169,11 @@ export class BoardsService {
   }
 
   private getBoardById(id: number): OperationQueueBoard {
-    return this.boards.find(b => b.getId() === id);
+    return this.boards.find((b) => b.getId() === id);
   }
 
   private getBoardIndex(board: Board): number {
-    return this.boards.findIndex(b => b === board);
+    return this.boards.findIndex((b) => b === board);
   }
 
   /**
@@ -220,13 +205,13 @@ export class BoardsService {
       width: board.width,
       height: board.height,
       minimumDelayBetweenMoves: board.getConfig().minimumDelayBetweenMoves,
-      features: board.gameObjectProviders.map(gop => {
+      features: board.gameObjectProviders.map((gop) => {
         return {
           name: gop.constructor.name,
           config: gop.config,
         };
       }),
-      gameObjects: board.getAllGameObjects().map(g => {
+      gameObjects: board.getAllGameObjects().map((g) => {
         return {
           id: g.id,
           position: g.position,
@@ -287,9 +272,6 @@ export class BoardsService {
         this.logger,
       );
       this.boards.push(board);
-      if (this.metricsService) {
-        this.metricsService.incBoardsTotal();
-      }
     }
   }
 
@@ -313,9 +295,6 @@ export class BoardsService {
       .forEach((removeIndex, index) => {
         if (index < numberOfBoards) {
           this.boards.splice(removeIndex, 1);
-          if (this.metricsService) {
-            this.metricsService.decBoardsTotal();
-          }
         }
       });
   }
@@ -328,7 +307,7 @@ export class BoardsService {
     }
     const highestId = Math.max.apply(
       Math,
-      this.boards.map(function(board) {
+      this.boards.map(function (board) {
         return board.getId();
       }),
     );

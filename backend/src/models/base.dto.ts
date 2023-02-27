@@ -1,8 +1,8 @@
-import { ApiModelProperty } from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class BaseDto {
-  @ApiModelProperty()
+  @ApiProperty()
   x: number;
-  @ApiModelProperty()
+  @ApiProperty()
   y: number;
 }

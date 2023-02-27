@@ -1,33 +1,33 @@
-import { ApiModelProperty } from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 import BoardFeatureDto from "./board-feature.dto";
 import { GameObjectDto } from "./game-object.dto";
 
 export class BoardDto {
-  @ApiModelProperty({
+  @ApiProperty({
     description:
       "A unique id of the board to use when querying just a specific board.",
   })
   id: number;
-  @ApiModelProperty({
+  @ApiProperty({
     description: "The width of the board.",
   })
   width: number;
-  @ApiModelProperty({
+  @ApiProperty({
     description: "The height of the board.",
   })
   height: number;
-  @ApiModelProperty({
+  @ApiProperty({
     description:
       "The minimum delay (in ms) required between moves of the same bot.",
   })
   minimumDelayBetweenMoves: number;
-  @ApiModelProperty({
+  @ApiProperty({
     isArray: true,
     type: GameObjectDto,
     description: "All game objects currently on the board.",
   })
   gameObjects: GameObjectDto[];
-  @ApiModelProperty({
+  @ApiProperty({
     isArray: true,
     type: BoardFeatureDto,
     description:

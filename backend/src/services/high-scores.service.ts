@@ -1,15 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { HighscoreDto } from "../models/highscore.dto";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { HighScoreEntity } from "../db/models/highScores.entity";
-import { MetricsService } from "./metrics.service";
-import { SeasonsService } from "./seasons.service";
-import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
-import { TeamsEntity } from "../db/models/teams.entity";
-import { HighscorePublicDto } from "../models/highscore-public.dto";
 import { HighscorePrivateDto } from "../models/highscore-private.dto";
+import { HighscorePublicDto } from "../models/highscore-public.dto";
+import { HighscoreDto } from "../models/highscore.dto";
 import { PrismaService } from "./prisma.service";
+import { SeasonsService } from "./seasons.service";
 
 @Injectable()
 export class HighScoresService {
@@ -19,7 +13,6 @@ export class HighScoresService {
 
   constructor(
     private prisma: PrismaService,
-    private metricsService: MetricsService,
     private seasonService: SeasonsService,
   ) {}
 
@@ -28,9 +21,6 @@ export class HighScoresService {
 
     if (await this.isNewHighScore(input)) {
       await this.create(input);
-      if (this.metricsService) {
-        this.metricsService.incHighscoresImproved();
-      }
     }
 
     return seasonAllTimeBest < input.score;
@@ -51,8 +41,8 @@ export class HighScoresService {
           bot: true,
         },
       })
-      .then(highscores =>
-        highscores.map(highscore => HighscoreDto.fromEntity(highscore)),
+      .then((highscores) =>
+        highscores.map((highscore) => HighscoreDto.fromEntity(highscore)),
       );
     // return this.repo
     //   .find({
@@ -104,9 +94,6 @@ export class HighScoresService {
         //   })
         //   .execute();
         isNew = false;
-        if (this.metricsService) {
-          this.metricsService.incHighscoresImproved();
-        }
       } else {
         isNew = false;
       }
@@ -166,12 +153,12 @@ export class HighScoresService {
 
   public async allBySeasonIdPrivate(seasonId: string, limit: number = 0) {
     const highScores = await this.allBySeasonIdRaw(seasonId, limit);
-    return highScores.map(e => HighscorePrivateDto.fromRawDataObject(e));
+    return highScores.map((e) => HighscorePrivateDto.fromRawDataObject(e));
   }
 
   public async allBySeasonIdPublic(seasonId: string) {
     const highScores = await this.allBySeasonIdRaw(seasonId);
-    return highScores.map(e => HighscorePublicDto.fromRawDataObject(e));
+    return highScores.map((e) => HighscorePublicDto.fromRawDataObject(e));
   }
 
   public async create(dto: HighscoreDto): Promise<HighscoreDto> {

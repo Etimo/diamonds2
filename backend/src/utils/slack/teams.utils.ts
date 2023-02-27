@@ -1,5 +1,5 @@
-const formatTeamBlocks = teams => {
-  return teams.flatMap(team => {
+const formatTeamBlocks = (teams) => {
+  return teams.flatMap((team) => {
     return [
       {
         type: "section",
@@ -61,7 +61,7 @@ export const getTeamListBody = (trigger_id, teams) => {
   };
 };
 
-export const getAddTeamBody = trigger_id => {
+export const getAddTeamBody = (trigger_id) => {
   return {
     trigger_id: trigger_id,
     view: {

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { CustomLogger } from "../logger";
 import { RecordingListDto } from "../models/recording-list.dto";
 import { RecordingPublicDto } from "../models/recording-public.dto";
@@ -11,6 +11,7 @@ export class RecordingsService {
   private stateIndex: number[] = [];
 
   constructor(
+    @Inject("RECORDINGS")
     private readonly repo: RecordingsRepository,
     private logger: CustomLogger,
   ) {}
@@ -19,7 +20,7 @@ export class RecordingsService {
     this.logger.info(
       `Setting up state recorder for ${numberOfBoards} boards with ${numberOfStates} states`,
     );
-    this.states = new Array(numberOfBoards).fill(null).map(_ => {
+    this.states = new Array(numberOfBoards).fill(null).map((_) => {
       const arr = new Array(numberOfStates).fill(null);
       Object.seal(arr);
       return arr;
@@ -41,7 +42,7 @@ export class RecordingsService {
     return new Array(states.length)
       .fill(0)
       .map((_, index) => states[(currentStateIndex + index) % states.length])
-      .filter(r => r);
+      .filter((r) => r);
   }
 
   async save({
@@ -75,7 +76,7 @@ export class RecordingsService {
     if (data.length === 0) {
       throw new NotFoundError("Season not found");
     }
-    return data.map(e => RecordingListDto.fromRawDataObject(e));
+    return data.map((e) => RecordingListDto.fromRawDataObject(e));
   }
 
   public async getById(
@@ -86,6 +87,6 @@ export class RecordingsService {
     if (data.length === 0) {
       throw new NotFoundError("Data not found");
     }
-    return data.map(e => RecordingPublicDto.fromRawDataObject(e))[0];
+    return data.map((e) => RecordingPublicDto.fromRawDataObject(e))[0];
   }
 }

@@ -1,11 +1,11 @@
 import { Body, Controller, Get, HttpCode, Param, Post } from "@nestjs/common";
-import { ApiResponse, ApiUseTags } from "@nestjs/swagger";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { BoardDto } from "src/models/board.dto";
 import { JoinInputDto } from "src/models/join-input.dto";
 import { MoveInputDto } from "src/models/move-input.dto";
 import { BoardsService } from "src/services/board.service";
 
-@ApiUseTags("Boards")
+@ApiTags("Boards")
 @Controller("api/boards")
 export class BoardsController {
   constructor(private boardsService: BoardsService) {}

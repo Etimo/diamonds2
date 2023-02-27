@@ -33,7 +33,7 @@ export class OperationQueueBoard extends Board {
    */
   private setupOperationQueue() {
     // Move queue
-    const sleep = m => new Promise(r => setTimeout(r, m));
+    const sleep = (m) => new Promise((r) => setTimeout(r, m));
     this.opQueue = async.queue(async (t: OperationQueueEvent, cb) => {
       // console.log("Operation queue task received", t);
       const board: Board = t["board"];

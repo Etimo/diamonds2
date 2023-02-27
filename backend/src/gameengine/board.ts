@@ -5,6 +5,8 @@ import { AbstractGameObject } from "./gameobjects/abstract-game-object";
 import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
 import { BotGameObject } from "./gameobjects/bot/bot";
 
+export type SessionFinishedCallbackFunction = (bot: BotGameObject) => void;
+
 export class Board {
   private readonly _id: number;
   private bots: Object = {};
@@ -40,7 +42,7 @@ export class Board {
    *
    * @param callback
    */
-  registerSessionFinishedCallback(callback: Function) {
+  registerSessionFinishedCallback(callback: SessionFinishedCallbackFunction) {
     this.sessionFinishedCallbacks.push(callback);
   }
 
@@ -49,9 +51,9 @@ export class Board {
    *
    * @param callback
    */
-  unregisterSessionFinishedCallback(callback: Function) {
+  unregisterSessionFinishedCallback(callback: SessionFinishedCallbackFunction) {
     this.sessionFinishedCallbacks = this.sessionFinishedCallbacks.filter(
-      c => c !== callback,
+      (c) => c !== callback,
     );
   }
 
@@ -109,7 +111,7 @@ export class Board {
    */
   public async move(bot: IBot, delta: IPosition) {
     const botGameObject = this.getGameObjectsByType(BotGameObject).find(
-      b => b.name === bot.botName,
+      (b) => b.name === bot.botName,
     );
 
     if (botGameObject) {
@@ -127,10 +129,10 @@ export class Board {
    */
   private createNewExpirationTimer(bot: IBot, time: number = null) {
     const id = setTimeout(
-      _ => {
+      (_) => {
         this.logger.debug(`Purge bot ${bot.botName}`);
         const botGameObject = this.getGameObjectsByType(BotGameObject).find(
-          b => b.name === bot.botName,
+          (b) => b.name === bot.botName,
         );
         if (!botGameObject) {
           return;
@@ -142,9 +144,7 @@ export class Board {
         delete this.botRateLimitViolations[bot.botName];
 
         // Notify all session finished callbacks
-        this.sessionFinishedCallbacks.forEach(sfc =>
-          sfc(botGameObject.name, botGameObject.score),
-        );
+        this.sessionFinishedCallbacks.forEach((sfc) => sfc(botGameObject));
         this.removeGameObject(botGameObject);
       },
       time ? time : this.config.sessionLength * 1000,
@@ -160,7 +160,7 @@ export class Board {
    * @returns True if the cell is empty, false otherwise.
    */
   isCellEmpty(x: number, y: number): boolean {
-    return !this.gameObjects.some(g => g.x === x && g.y === y);
+    return !this.gameObjects.some((g) => g.x === x && g.y === y);
   }
 
   registerGameObjectForCallbackLoop(
@@ -169,13 +169,12 @@ export class Board {
   ) {
     if (!(interval in this.callbackLoopsRegistered)) {
       // Setup new interval in callbackloops
-      const id = setInterval(_ => {
+      const id = setInterval((_) => {
         // TODO: add lock
         this.logger.debug(`Callback loop triggered for interval ${interval}`);
-        this.callbackLoopsRegistered[
-          interval
-        ].forEach((g: AbstractGameObject) =>
-          g.onGameObjectCallbackNotified(this, interval),
+        this.callbackLoopsRegistered[interval].forEach(
+          (g: AbstractGameObject) =>
+            g.onGameObjectCallbackNotified(this, interval),
         );
       }, interval);
       this.callbackLoopsRegistered[interval] = [gameObject];
@@ -193,7 +192,7 @@ export class Board {
       // Remove from collection
       this.callbackLoopsRegistered[interval] = this.callbackLoopsRegistered[
         interval
-      ].filter(g => g != gameObject);
+      ].filter((g) => g != gameObject);
 
       // TODO: Stop interval timer if empty?
       if (this.callbackLoopsRegistered[interval].length === 0) {
@@ -279,7 +278,7 @@ export class Board {
    * @param p The position
    */
   getGameObjectsOnPosition(p: IPosition): AbstractGameObject[] {
-    return this.gameObjects.filter(g => g.x === p.x && g.y === p.y);
+    return this.gameObjects.filter((g) => g.x === p.x && g.y === p.y);
   }
 
   trySetGameObjectPosition(
@@ -303,7 +302,7 @@ export class Board {
 
     // Notfy game objects in current position that we are leaving to the new position
     const gameObjectsPrev = this.getGameObjectsOnPosition(gameObject.position);
-    gameObjectsPrev.forEach(g => g.onGameObjectLeft(gameObject, this));
+    gameObjectsPrev.forEach((g) => g.onGameObjectLeft(gameObject, this));
 
     // Notify game objects in new position that we are entering the new position
     const gameObjectsDest = this.getGameObjectsOnPosition(dest);
@@ -311,19 +310,19 @@ export class Board {
     // Update position of game object
     gameObject.position = dest;
 
-    gameObjectsDest.forEach(g => g.onGameObjectEntered(gameObject, this));
+    gameObjectsDest.forEach((g) => g.onGameObjectEntered(gameObject, this));
 
     return true;
   }
 
   canGameObjectEnter(gameObject: AbstractGameObject, dest: IPosition): boolean {
     const gameObjects = this.getGameObjectsOnPosition(dest);
-    return !gameObjects.some(g => !g.canGameObjectEnter(gameObject, this));
+    return !gameObjects.some((g) => !g.canGameObjectEnter(gameObject, this));
   }
 
   canGameObjectLeave(gameObject: AbstractGameObject, dest: IPosition): boolean {
     const gameObjects = this.getGameObjectsOnPosition(dest);
-    return !gameObjects.some(g => !g.canGameObjectLeave(gameObject, this));
+    return !gameObjects.some((g) => !g.canGameObjectLeave(gameObject, this));
   }
 
   /**
@@ -334,7 +333,7 @@ export class Board {
   getGameObjectsByType<T extends AbstractGameObject>(
     t: new (...args: any[]) => T,
   ): T[] {
-    return this.gameObjects.filter(g => g instanceof t).map(g => g as T);
+    return this.gameObjects.filter((g) => g instanceof t).map((g) => g as T);
   }
 
   /**
@@ -344,7 +343,7 @@ export class Board {
    */
   removeGameObject(gameObject: AbstractGameObject) {
     gameObject.onGameObjectRemoved(this);
-    this.gameObjects = this.gameObjects.filter(g => g !== gameObject);
+    this.gameObjects = this.gameObjects.filter((g) => g !== gameObject);
     this.notifyProvidersGameObjectsRemoved([gameObject]);
   }
 
@@ -354,34 +353,34 @@ export class Board {
   removeGameObjectsByType<T extends AbstractGameObject>(
     t: new (...args: any[]) => T,
   ) {
-    this.gameObjects.forEach(g => g.onGameObjectRemoved(this));
-    const removed = this.gameObjects.filter(g => g instanceof t);
-    this.gameObjects = this.gameObjects.filter(g => !(g instanceof t));
+    this.gameObjects.forEach((g) => g.onGameObjectRemoved(this));
+    const removed = this.gameObjects.filter((g) => g instanceof t);
+    this.gameObjects = this.gameObjects.filter((g) => !(g instanceof t));
     this.notifyProvidersGameObjectsRemoved(removed);
   }
 
   private notifyProvidersGameObjectsRemoved(gameObjects: AbstractGameObject[]) {
-    this.gameObjectProviders.forEach(p =>
+    this.gameObjectProviders.forEach((p) =>
       p.onGameObjectsRemoved(this, gameObjects),
     );
   }
 
   getLogString(gameObjects: AbstractGameObject[]): string {
-    return JSON.stringify(gameObjects.map(g => g.toLogString()));
+    return JSON.stringify(gameObjects.map((g) => g.toLogString()));
   }
 
   private notifyProvidersGameObjectsAdded(gameObjects: AbstractGameObject[]) {
-    this.gameObjectProviders.forEach(p =>
+    this.gameObjectProviders.forEach((p) =>
       p.onGameObjectsAdded(this, gameObjects),
     );
   }
 
   private notifyProvidersBoardInitialized() {
-    this.gameObjectProviders.forEach(p => p.onBoardInitialized(this));
+    this.gameObjectProviders.forEach((p) => p.onBoardInitialized(this));
   }
 
   private notifyProvidersBoardBotJoined(bot: IBot) {
-    this.gameObjectProviders.forEach(p => p.onBotJoined(bot, this));
+    this.gameObjectProviders.forEach((p) => p.onBotJoined(bot, this));
   }
 
   private destinationIsOutOfBounds(destination: IPosition): boolean {
@@ -414,6 +413,6 @@ export class Board {
     message: string,
     payload?: Object,
   ) {
-    this.gameObjects.forEach(g => g.onEvent(this, sender, message, payload));
+    this.gameObjects.forEach((g) => g.onEvent(this, sender, message, payload));
   }
 }

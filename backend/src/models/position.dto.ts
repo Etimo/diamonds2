@@ -1,11 +1,11 @@
-import { ApiModelProperty } from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class PositionDto {
-  @ApiModelProperty({
+  @ApiProperty({
     description: "The x position on the board.",
   })
   x: number;
-  @ApiModelProperty({
+  @ApiProperty({
     description: "The y position on the board.",
   })
   y: number;

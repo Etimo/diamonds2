@@ -22,7 +22,7 @@ export class TeleportGameObject extends AbstractGameObject {
     const bot = gameObject as BotGameObject;
     const teleports = board.getGameObjectsByType(TeleportGameObject);
     const otherTeleport = teleports.find(
-      t => t.pairId === this.pairId && t !== this,
+      (t) => t.pairId === this.pairId && t !== this,
     );
     if (
       bot.previousPosition.x === otherTeleport.position.x &&

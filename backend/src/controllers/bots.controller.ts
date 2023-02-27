@@ -1,5 +1,5 @@
 import { Controller, Post, Get, Param, Body, HttpCode } from "@nestjs/common";
-import { ApiUseTags, ApiResponse } from "@nestjs/swagger";
+import { ApiTags, ApiResponse } from "@nestjs/swagger";
 import { BotDto } from "src/models/bot.dto";
 import { BotRegistrationDto } from "src/models/bot-registration.dto";
 import { BotsService } from "src/services/bots.service";
@@ -8,7 +8,7 @@ import { BotRegistrationPublicDto } from "src/models/bot-registration-public.dto
 import { BotRecoveryDto } from "src/models/bot-recovery.dto";
 import { BotPasswordDto } from "src/models/bot-password.dto";
 
-@ApiUseTags("Bots")
+@ApiTags("Bots")
 @Controller("api/bots")
 export class BotsController {
   constructor(private botService: BotsService) {}

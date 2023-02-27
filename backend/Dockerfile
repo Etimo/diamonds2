@@ -1,14 +1,15 @@
-FROM node:14-alpine as develop
+FROM node:16-alpine3.17 as develop
 WORKDIR /app
 COPY package.json yarn.lock ./
+RUN echo
 RUN yarn
-COPY . .
+COPY tsconfig.json ./
 # RUN ./node_modules/.bin/tsc src/migration/*.ts
 
 FROM develop as build
 RUN yarn build --webpack
 
-FROM node:12-alpine3.9 as prod
+FROM node:16-alpine3.17 as prod
 WORKDIR /app
 COPY --from=build /app/dist /app/dist
 COPY package.json yarn.lock ./

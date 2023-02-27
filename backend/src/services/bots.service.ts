@@ -1,19 +1,15 @@
 import { Injectable } from "@nestjs/common";
+import * as bcrypt from "bcrypt";
 import { IBot } from "src/interfaces/bot.interface";
 import { BotRegistrationDto } from "src/models/bot-registration.dto";
 import ConflictError from "../errors/conflict.error";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
-import { BotRegistrationPublicDto } from "../models/bot-registration-public.dto";
-import { MetricsService } from "./metrics.service";
-import { BotRecoveryDto } from "../models/bot-recovery.dto";
-import * as bcrypt from "bcrypt";
+import ForbiddenError from "../errors/forbidden.error";
 import NotFoundError from "../errors/not-found.error";
 import { BotPasswordDto } from "../models/bot-password.dto";
-import ForbiddenError from "../errors/forbidden.error";
-import { TeamsService } from "./teams.service";
+import { BotRecoveryDto } from "../models/bot-recovery.dto";
+import { BotRegistrationPublicDto } from "../models/bot-registration-public.dto";
 import { PrismaService } from "./prisma.service";
+import { TeamsService } from "./teams.service";
 
 @Injectable()
 export class BotsService {
@@ -21,7 +17,6 @@ export class BotsService {
 
   constructor(
     private prisma: PrismaService,
-    private metricsService: MetricsService,
     private teamsService: TeamsService,
   ) {}
 
@@ -43,10 +38,6 @@ export class BotsService {
       input.team = team.id;
     }
 
-    if (this.metricsService) {
-      this.metricsService.incBotsRegistered();
-    }
-
     return this.create(input);
   }
 
@@ -57,7 +48,7 @@ export class BotsService {
           token,
         },
       })
-      .then(bot => BotRegistrationPublicDto.fromEntity(bot));
+      .then((bot) => BotRegistrationPublicDto.fromEntity(bot));
     // const existBot = await this.repo
     //   .createQueryBuilder("botRegistrations")
     //   .where("botRegistrations.token = :token", { token: token })
@@ -106,7 +97,7 @@ export class BotsService {
       .create({
         data: dto,
       })
-      .then(bot => BotRegistrationPublicDto.fromEntity(bot));
+      .then((bot) => BotRegistrationPublicDto.fromEntity(bot));
     // return await this.repo
     //   .save(dto)
     //   .then(botRegistrationsEntity =>

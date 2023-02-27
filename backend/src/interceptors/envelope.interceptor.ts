@@ -23,7 +23,7 @@ export class EnvelopeInterceptor<T> implements NestInterceptor<T, Response<T>> {
     const res = context.getArgByIndex(1);
 
     return next.handle().pipe(
-      map(data => {
+      map((data) => {
         if (req.url.includes("/api/slack/")) {
           return data;
         }

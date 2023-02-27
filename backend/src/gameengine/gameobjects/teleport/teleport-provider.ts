@@ -9,9 +9,7 @@ export interface TeleportProviderConfig {
   pairs: number;
 }
 
-export class TeleportProvider extends AbstractGameObjectProvider<
-  TeleportProviderConfig
-> {
+export class TeleportProvider extends AbstractGameObjectProvider<TeleportProviderConfig> {
   constructor(config: TeleportProviderConfig) {
     super(config);
   }

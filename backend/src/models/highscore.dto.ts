@@ -1,13 +1,12 @@
-import { ApiModelProperty } from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 import { Bot, HighScore } from "@prisma/client";
-import { HighScoreEntity } from "../db/models/highScores.entity";
 
 export class HighscoreDto {
-  @ApiModelProperty()
+  @ApiProperty()
   name: string;
-  @ApiModelProperty()
+  @ApiProperty()
   score: number;
-  @ApiModelProperty()
+  @ApiProperty()
   seasonId: string;
 
   public static from(dto: Partial<HighscoreDto>) {

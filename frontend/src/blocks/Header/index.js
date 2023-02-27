@@ -1,7 +1,8 @@
 import styled from "styled-components";
+import Button from "./Button";
+import Link from "./Link";
 import Logo from "./Logo";
 import Title from "./Title";
-import Link from "./Link";
 
 const Header = styled.div`
   align-items: flex-end;
@@ -40,5 +41,6 @@ Header.Logo = Logo;
 
 Header.Title = Title;
 Header.Link = Link;
+Header.Button = Button;
 
 export default Header;

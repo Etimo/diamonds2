@@ -1,13 +1,13 @@
-import { ApiModelProperty } from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class HighscorePublicDto {
-  @ApiModelProperty()
+  @ApiProperty()
   botName: string;
-  @ApiModelProperty()
+  @ApiProperty()
   score: number;
-  @ApiModelProperty()
+  @ApiProperty()
   seasonId: string;
-  @ApiModelProperty()
+  @ApiProperty()
   teamLogotype: string;
 
   public static from(dto: Partial<HighscorePublicDto>) {

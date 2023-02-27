@@ -1,7 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { BoardConfigEntity } from "../db/models/boardConfig.entity";
 import { BoardConfigDto } from "../models/board-config.dto";
 import { PrismaService } from "./prisma.service";
 import { SeasonsService } from "./seasons.service";
@@ -72,8 +69,5 @@ export class BoardConfigService {
     return this.prisma.boardConfig.create({
       data: dto,
     });
-    // return await this.repo
-    //   .save(dto)
-    //   .then(boardConfigEntity => BoardConfigDto.fromEntity(boardConfigEntity));
   }
 }

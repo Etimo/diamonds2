@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { TeamsEntity } from "../db/models/teams.entity";
@@ -11,7 +11,7 @@ import { URL } from "url";
 @Injectable()
 export class TeamsService {
   constructor(
-    @InjectRepository(TeamsEntity)
+    @Inject("TEAMS")
     private readonly repo: Repository<TeamsEntity>,
   ) {}
 
@@ -22,7 +22,7 @@ export class TeamsService {
           createTimeStamp: "DESC",
         },
       })
-      .then(teams => teams.map(e => TeamDto.fromEntity(e)));
+      .then((teams) => teams.map((e) => TeamDto.fromEntity(e)));
   }
 
   public async add(dto: TeamDto) {
@@ -47,7 +47,7 @@ export class TeamsService {
   private async create(dto: TeamDto): Promise<TeamDto> {
     return await this.repo
       .save(dto)
-      .then(teamEntity => TeamDto.fromEntity(teamEntity));
+      .then((teamEntity) => TeamDto.fromEntity(teamEntity));
   }
 
   private async validateInput(dto: TeamDto) {
@@ -59,15 +59,13 @@ export class TeamsService {
     }
     // Check if name, abbreviation or url already exist.
     // Separate checks to return proper error.
-    let [
-      nameExists,
-      abbreviationExists,
-      logotypeUrlExists,
-    ] = await Promise.all([
-      this.exist("teams.name", dto.name),
-      this.exist("teams.abbreviation", dto.abbreviation),
-      this.exist("teams.logotypeUrl", dto.logotypeUrl),
-    ]);
+    let [nameExists, abbreviationExists, logotypeUrlExists] = await Promise.all(
+      [
+        this.exist("teams.name", dto.name),
+        this.exist("teams.abbreviation", dto.abbreviation),
+        this.exist("teams.logotypeUrl", dto.logotypeUrl),
+      ],
+    );
 
     const errorPayload = this.getErrorPayload(
       nameExists,

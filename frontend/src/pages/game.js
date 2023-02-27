@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import { useBoard, getCurrentSeason } from "../hooks";
 import Layout from "../blocks/Layout";
-import GameBoard from "../components/GameBoard";
-import PlayerTable from "../components/PlayerTable";
-import HighScoreTable from "../components/HighScoreTable";
 import BoardPicker from "../components/BoardPicker";
-import SeasonPicker from "../components/SeasonPicker";
+import GameBoard from "../components/GameBoard";
+import HighScoreTable from "../components/HighScoreTable";
+import PlayerTable from "../components/PlayerTable";
 import RulesModal from "../components/RulesModal";
+import SeasonPicker from "../components/SeasonPicker";
+import { getCurrentSeason, useBoard } from "../hooks";
 
 export default () => {
   const currentSeason = getCurrentSeason();
   const [boardId, setBoardId] = useState(1);
   const [seasonId, setSeasonId] = useState(0);
+  const delay = 2000; // 0.25 s
   const [rulesVisible, setRulesVisible] = useState(false);
-  const delay = 250; // 0.25 s
 
   const [rows, bots] = useBoard(boardId, delay);
 

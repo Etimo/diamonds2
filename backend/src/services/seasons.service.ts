@@ -1,10 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { SeasonsEntity } from "../db/models/seasons.entity";
-import { SeasonDto } from "../models/season.dto";
 import ConflictError from "../errors/conflict.error";
 import ForbiddenError from "../errors/forbidden.error";
+import { SeasonDto } from "../models/season.dto";
 import { PrismaService } from "./prisma.service";
 
 @Injectable()

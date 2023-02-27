@@ -1,12 +1,12 @@
-import { RecordingsService } from "./recordings.service";
-import SilentLogger from "../gameengine/util/silent-logger";
-import { RecordingsRepository } from "../db/repositories/recordings.repository";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { RecordingsEntity } from "../db/models/recordings.entity";
-import { CustomLogger } from "../logger";
+import { RecordingsRepository } from "../db/repositories/recordings.repository";
 import NotFoundError from "../errors/not-found.error";
+import SilentLogger from "../gameengine/util/silent-logger";
+import { CustomLogger } from "../logger";
 import { RecordingListDto } from "../models/recording-list.dto";
+import { RecordingsService } from "./recordings.service";
 
 describe("RecordingsService", () => {
   let recordingsService: RecordingsService;
@@ -19,8 +19,8 @@ describe("RecordingsService", () => {
         RecordingsService,
         RecordingsRepository,
         {
-          provide: getRepositoryToken(RecordingsEntity),
-          useFactory: () => jest.fn(),
+          provide: "RECORDINGS",
+          useFactory: () => getRepositoryToken(RecordingsEntity),
         },
         {
           provide: CustomLogger,
@@ -67,7 +67,7 @@ describe("RecordingsService", () => {
   describe("getById", () => {
     it("should throw error get by id", async () => {
       const mock = jest.spyOn(recordingsRepository, "getById");
-      mock.mockReturnValue(new Promise(resolve => resolve([])));
+      mock.mockReturnValue(new Promise((resolve) => resolve([])));
 
       const res = recordingsService.getById("", "");
 
@@ -77,7 +77,7 @@ describe("RecordingsService", () => {
     it("should return data when present", async () => {
       const d = new Date(2021, 1, 1, 1, 1, 1, 1);
       jest.spyOn(recordingsRepository, "getById").mockReturnValue(
-        new Promise(resolve =>
+        new Promise((resolve) =>
           resolve([
             {
               recordings_id: "",
@@ -108,7 +108,7 @@ describe("RecordingsService", () => {
     it("should throw error if invalid season", async () => {
       jest
         .spyOn(recordingsRepository, "allBySeasonIdRaw")
-        .mockReturnValue(new Promise(resolve => resolve([])));
+        .mockReturnValue(new Promise((resolve) => resolve([])));
 
       const res = recordingsService.allBySeasonIdList("");
 
@@ -128,7 +128,7 @@ describe("RecordingsService", () => {
       };
       jest
         .spyOn(recordingsRepository, "allBySeasonIdRaw")
-        .mockReturnValue(new Promise(resolve => resolve([data])));
+        .mockReturnValue(new Promise((resolve) => resolve([data])));
 
       const res = await recordingsService.allBySeasonIdList("");
 
@@ -140,10 +140,10 @@ describe("RecordingsService", () => {
     it("should create entry", async () => {
       const mock = jest
         .spyOn(recordingsRepository, "create")
-        .mockReturnValue(new Promise(resolve => resolve(null)));
+        .mockReturnValue(new Promise((resolve) => resolve(null)));
       jest
         .spyOn(recordingsRepository, "purgeOld")
-        .mockReturnValue(new Promise(resolve => resolve(undefined)));
+        .mockReturnValue(new Promise((resolve) => resolve(undefined)));
 
       await recordingsService.save({
         boardIndex: 0,
@@ -164,10 +164,10 @@ describe("RecordingsService", () => {
     it("should purge old", async () => {
       jest
         .spyOn(recordingsRepository, "create")
-        .mockReturnValue(new Promise(resolve => resolve(null)));
+        .mockReturnValue(new Promise((resolve) => resolve(null)));
       const mock = jest
         .spyOn(recordingsRepository, "purgeOld")
-        .mockReturnValue(new Promise(resolve => resolve(undefined)));
+        .mockReturnValue(new Promise((resolve) => resolve(undefined)));
 
       await recordingsService.save({
         boardIndex: 0,
