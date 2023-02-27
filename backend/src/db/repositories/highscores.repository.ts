@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { HighscoreDto } from "../../models/highscore.dto";
 import { PrismaService } from "../../services/prisma.service";
+import { INewHighscore } from "../../types";
 
 @Injectable()
 export class HighscoresRepository {
@@ -15,7 +15,7 @@ export class HighscoresRepository {
   ) {
     const take = limit ? limit : seasonId === currentSeasonId ? 50 : 20;
 
-    return this.prisma.highScore.findMany({
+    return this.prisma.highscore.findMany({
       where: {
         seasonId,
       },
@@ -31,95 +31,63 @@ export class HighscoresRepository {
         },
       },
     });
-    // Using joins to fetch logotypeUrl that related to the bots team.
-    // const highScores = await this.repo
-    //   .createQueryBuilder(this.entity)
-    //   .select(this.entity)
-    //   .where("highScores.seasonId = :seasonId", { seasonId: seasonId })
-    //   .leftJoinAndSelect(
-    //     BotRegistrationsEntity,
-    //     "bot",
-    //     "high_scores.botName = bot.botName",
-    //   )
-    //   .leftJoinAndSelect(TeamsEntity, "teams", "bot.team = teams.id")
-    //   .orderBy("score", "DESC")
-    //   .limit(take)
-    //   .execute();
-
-    // return highScores;
   }
 
   public getBotScore(botName: string) {
-    return this.repo
-      .find({
-        where: [{ botName }],
-      })
-      .then((highScores) => highScores.map((e) => HighscoreDto.fromEntity(e)));
-  }
-
-  public async getBestBotScore(botName: string, seasonId: string) {
-    return await this.repo
-      .createQueryBuilder(this.entity)
-      .select(this.entity)
-      .where(
-        "high_scores.botName = :botName AND high_scores.seasonId = :seasonId",
-        {
-          botName,
-          seasonId,
-        },
-      )
-      .getOne();
-  }
-
-  public async updateBestBotScore(
-    botName: string,
-    seasonId: string,
-    score: number,
-  ) {
-    await this.prisma.highScore.update({
-      data: {
-        score,
-      },
-      where: {
-        seasonId,
-        botName,
-      },
-    });
-    // await this.repo
-    //   .createQueryBuilder()
-    //   .update(this.entity)
-    //   .set({ score })
-    //   .where("botName = :botName AND seasonId = :seasonId", {
-    //     botName,
-    //     seasonId,
-    //   })
-    //   .execute();
-  }
-
-  public async create(dto: HighscoreDto) {
-    return this.prisma.highScore.create({
-      data: {
-        score: dto.score,
-        seasonId: dto.seasonId,
-        botToken: "",
-      },
-    });
-    // return this.repo.save(dto);
-  }
-
-  public async delete(botName: string) {
-    return this.prisma.highScore.deleteMany({
+    return this.prisma.highscore.findMany({
       where: {
         bot: {
           name: botName,
         },
       },
     });
-    // return await this.repo
-    //   .createQueryBuilder()
-    //   .delete()
-    //   .from(this.entity)
-    //   .where("botName = :botName", { botName })
-    //   .execute();
+  }
+
+  public async getBestBotScore(botName: string, seasonId: string) {
+    return this.prisma.highscore.findFirst({
+      where: {
+        bot: {
+          name: botName,
+        },
+        seasonId,
+      },
+    });
+  }
+
+  public async updateBestBotScore(
+    botId: string,
+    seasonId: string,
+    score: number,
+  ) {
+    await this.prisma.highscore.update({
+      data: {
+        score,
+      },
+      where: {
+        seasonId_botId: {
+          botId,
+          seasonId,
+        },
+      },
+    });
+  }
+
+  public async create(data: INewHighscore) {
+    return this.prisma.highscore.create({
+      data: {
+        botId: data.botId,
+        score: data.score,
+        seasonId: data.seasonId,
+      },
+    });
+    // return this.repo.save(dto);
+  }
+
+  public async delete(botId: string) {
+    return this.prisma.highscore.deleteMany({
+      where: {
+        botId,
+      },
+    });
   }
 }

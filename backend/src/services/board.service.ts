@@ -21,7 +21,7 @@ import { BoardDto } from "../models/board.dto";
 import { GameObjectDto } from "../models/game-object.dto";
 import { BoardConfigService } from "./board-config.service";
 import { BotsService } from "./bots.service";
-import { HighScoresService } from "./high-scores.service";
+import { HighscoresService } from "./highscores.service";
 import { RecordingsService } from "./recordings.service";
 import { SeasonsService } from "./seasons.service";
 
@@ -31,7 +31,7 @@ export class BoardsService {
 
   constructor(
     private botsService: BotsService,
-    private highscoresService: HighScoresService,
+    private highscoresService: HighscoresService,
     private seasonsService: SeasonsService,
     private recordingsService: RecordingsService,
     private boardConfigService: BoardConfigService,
@@ -42,19 +42,19 @@ export class BoardsService {
       this.boards.forEach((board) => {
         board.registerSessionFinishedCallback(async (bot: BotGameObject) => {
           const currentSeason = await this.seasonsService.getCurrentSeason();
-          const better = await this.highscoresService.addOrUpdate({
-            name: bot.name,
-            score: bot.score,
-            seasonId: currentSeason.id,
-          });
-          if (better) {
-            this.recordingsService.save({
-              boardIndex: this.getBoardIndex(board),
-              botName: bot.name,
-              score: bot.score,
-              seasonId: currentSeason.id,
-            });
-          }
+          // const better = await this.highscoresService.addOrUpdate({
+          //   name: bot.name,
+          //   score: bot.score,
+          //   seasonId: currentSeason.id,
+          // });
+          // if (better) {
+          //   this.recordingsService.save({
+          //     boardIndex: this.getBoardIndex(board),
+          //     botName: bot.name,
+          //     score: bot.score,
+          //     seasonId: currentSeason.id,
+          //   });
+          // }
         });
       });
     });
@@ -84,10 +84,10 @@ export class BoardsService {
    * @param boardId
    * @param bot
    */
-  public async join(boardId: number, botToken: string) {
-    const bot = await this.botsService.get(botToken);
+  public async join(boardId: number, botId: string) {
+    const bot = await this.botsService.get(botId);
     if (!bot) {
-      throw new UnauthorizedError("Invalid botToken");
+      throw new UnauthorizedError("Invalid bot");
     }
     const board = this.getBoardById(boardId);
     if (!board) {
@@ -96,7 +96,7 @@ export class BoardsService {
 
     // Check if bot is on any board
     this.boards.forEach((b) => {
-      if (b.getBot(botToken)) {
+      if (b.getBot(botId)) {
         throw new ConflictError("Already playing");
       }
     });

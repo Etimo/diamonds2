@@ -68,7 +68,7 @@ export class BoardsController {
   @HttpCode(200)
   @Post(":id/join")
   join(@Param("id") id: string, @Body() input: JoinInputDto) {
-    return this.boardsService.join(parseInt(id, 10), input.botToken);
+    return this.boardsService.join(parseInt(id, 10), input.botId);
   }
 
   /**
@@ -99,7 +99,7 @@ export class BoardsController {
   async move(@Param("id") id: string, @Body() input: MoveInputDto) {
     return this.boardsService.move(
       parseInt(id, 10),
-      input.botToken,
+      input.botId,
       input.direction,
     );
   }

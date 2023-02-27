@@ -1,12 +1,9 @@
-import { Controller, Post, Get, Param, Body, HttpCode } from "@nestjs/common";
-import { ApiTags, ApiResponse } from "@nestjs/swagger";
-import { BotDto } from "src/models/bot.dto";
+import { Body, Controller, HttpCode, Post } from "@nestjs/common";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { BotRecoveryDto } from "src/models/bot-recovery.dto";
+import { BotRegistrationPublicDto } from "src/models/bot-registration-public.dto";
 import { BotRegistrationDto } from "src/models/bot-registration.dto";
 import { BotsService } from "src/services/bots.service";
-import { IBot } from "src/interfaces/bot.interface";
-import { BotRegistrationPublicDto } from "src/models/bot-registration-public.dto";
-import { BotRecoveryDto } from "src/models/bot-recovery.dto";
-import { BotPasswordDto } from "src/models/bot-password.dto";
 
 @ApiTags("Bots")
 @Controller("api/bots")
@@ -35,27 +32,32 @@ export class BotsController {
   async create(
     @Body() botRegistration: BotRegistrationDto,
   ): Promise<BotRegistrationPublicDto> {
-    return await this.botService.add(botRegistration);
+    const bot = await this.botService.add(botRegistration);
+    return {
+      name: bot.name,
+      email: bot.email,
+      id: bot.id,
+    };
   }
 
-  /**
-   * Get information for a registered bot.
-   *
-   * @param token The secret token of the previously registered bot.
-   */
-  @ApiResponse({
-    status: 200,
-    description: "Returns bot",
-    type: BotRegistrationPublicDto,
-  })
-  @ApiResponse({
-    status: 404,
-    description: "Bot not found",
-  })
-  @Get(":token")
-  async find(@Param("token") token: string): Promise<BotRegistrationPublicDto> {
-    return await this.botService.get(token);
-  }
+  // /**
+  //  * Get information for a registered bot.
+  //  *
+  //  * @param token The secret token of the previously registered bot.
+  //  */
+  // @ApiResponse({
+  //   status: 200,
+  //   description: "Returns bot",
+  //   type: BotRegistrationPublicDto,
+  // })
+  // @ApiResponse({
+  //   status: 404,
+  //   description: "Bot not found",
+  // })
+  // @Get(":token")
+  // async find(@Param("token") token: string): Promise<BotRegistrationPublicDto> {
+  //   return await this.botService.get(token);
+  // }
 
   @ApiResponse({
     status: 200,
@@ -67,29 +69,34 @@ export class BotsController {
     description: "Bot not found",
   })
   @Post("/recover")
-  async fetch(
+  async recover(
     @Body() botRecoveryDto: BotRecoveryDto,
   ): Promise<BotRegistrationPublicDto> {
-    return await this.botService.getByEmailAndPassword(botRecoveryDto);
+    const bot = await this.botService.getByEmailAndPassword(botRecoveryDto);
+    return {
+      email: bot.email,
+      id: bot.id,
+      name: bot.name,
+    };
   }
 
-  @ApiResponse({
-    status: 200,
-    description: "Password was succesfully added, returning bot",
-    type: BotRegistrationPublicDto,
-  })
-  @ApiResponse({
-    status: 403,
-    description: "Not allowed to change password if a password already exists",
-  })
-  @ApiResponse({
-    status: 404,
-    description: "Bot not found",
-  })
-  @Post("/password")
-  async addPassword(
-    @Body() botPasswordDto: BotPasswordDto,
-  ): Promise<BotRegistrationPublicDto> {
-    return await this.botService.addPassword(botPasswordDto);
-  }
+  // @ApiResponse({
+  //   status: 200,
+  //   description: "Password was succesfully added, returning bot",
+  //   type: BotRegistrationPublicDto,
+  // })
+  // @ApiResponse({
+  //   status: 403,
+  //   description: "Not allowed to change password if a password already exists",
+  // })
+  // @ApiResponse({
+  //   status: 404,
+  //   description: "Bot not found",
+  // })
+  // @Post("/password")
+  // async addPassword(
+  //   @Body() botPasswordDto: BotPasswordDto,
+  // ): Promise<BotRegistrationPublicDto> {
+  //   return await this.botService.addPassword(botPasswordDto);
+  // }
 }

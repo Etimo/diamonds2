@@ -1,13 +1,13 @@
 import {
-  ExceptionFilter,
-  Catch,
   ArgumentsHost,
-  HttpException,
-  NotFoundException,
-  InternalServerErrorException,
+  Catch,
   ConflictException,
-  UnauthorizedException,
+  ExceptionFilter,
   ForbiddenException,
+  HttpException,
+  InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException,
 } from "@nestjs/common";
 
 @Catch()
@@ -27,11 +27,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const httpException: HttpException = this.mapException(exception);
     const status = httpException.getStatus();
 
+    console.log(exception, httpException);
+
     response.status(status).json({
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
-      data: httpException.message,
+      data: exception.message,
     });
   }
 

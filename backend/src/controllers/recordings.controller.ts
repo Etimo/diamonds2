@@ -1,8 +1,8 @@
-import { Controller, Get, Body, Post, Param } from "@nestjs/common";
-import { ApiTags, ApiResponse } from "@nestjs/swagger";
-import { RecordingsService } from "../services/recordings.service";
+import { Controller, Get, Param } from "@nestjs/common";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { RecordingListDto } from "../models/recording-list.dto";
 import { RecordingPublicDto } from "../models/recording-public.dto";
+import { RecordingsService } from "../services/recordings.service";
 
 @ApiTags("Recordings")
 @Controller("api/recordings")
@@ -24,7 +24,7 @@ export class RecordingsController {
     status: 404,
     description: "Season not found",
   })
-  @Get(":seasonId")
+  @Get("seasons/:seasonId")
   async list(@Param("seasonId") seasonId: string): Promise<RecordingListDto[]> {
     return await this.recordingsService.allBySeasonIdList(seasonId);
   }
@@ -43,11 +43,8 @@ export class RecordingsController {
     status: 404,
     description: "Recording or season not found",
   })
-  @Get(":seasonId/:id")
-  public find(
-    @Param("seasonId") seasonId: string,
-    @Param("id") id: string,
-  ): Promise<RecordingPublicDto> {
-    return this.recordingsService.getById(seasonId, id);
+  @Get(":id")
+  public find(@Param("id") id: string): Promise<RecordingPublicDto> {
+    return this.recordingsService.getById(id);
   }
 }

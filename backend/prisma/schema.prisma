@@ -21,12 +21,11 @@ model BoardConfig {
   sessionLength            Int      @default(60)
   createTimeStamp          DateTime @default(now()) @db.Timestamptz(6)
   updateTimeStamp          DateTime @default(now()) @db.Timestamptz(6)
-  seasonId                 String   @unique @db.Uuid
-  Season                   Season   @relation(fields: [seasonId], references: [id])
+  season                   Season[]
 }
 
 model Bot {
-  token           String      @id(map: "PK_9ada6b90026027b7d2f75c4d3d8") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id              String      @id(map: "PK_9ada6b90026027b7d2f75c4d3d8") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name            String      @unique @db.VarChar(300)
   email           String      @unique @db.VarChar(300)
   createTimeStamp DateTime    @default(now()) @db.Timestamptz(6)
@@ -34,21 +33,22 @@ model Bot {
   password        String?     @db.VarChar(300)
   teamId          String      @db.Uuid
   team            Team        @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  highScores      HighScore[]
+  highscores      Highscore[]
   recordings      Recording[]
 }
 
-model HighScore {
+model Highscore {
   id              String   @id(map: "PK_da1bb900eb93df2f2d5103d8545") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   score           Int
   createTimeStamp DateTime @default(now()) @db.Timestamptz(6)
   updateTimeStamp DateTime @default(now()) @db.Timestamptz(6)
   seasonId        String   @db.Uuid
-  botToken        String   @db.Uuid
-  bot             Bot      @relation(fields: [botToken], references: [token], onDelete: Cascade)
+  botId           String   @db.Uuid
+  bot             Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
   season          Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
 
-  @@index([seasonId, botToken])
+  @@unique([seasonId, botId])
+  @@index([seasonId, botId])
 }
 
 model Recording {
@@ -57,23 +57,23 @@ model Recording {
   board           Int
   createTimeStamp DateTime @default(now()) @db.Timestamptz(6)
   recording       String
-  botToken        String   @db.Uuid
   seasonId        String   @db.Uuid
-  bot             Bot      @relation(fields: [botToken], references: [token], onDelete: Cascade)
+  botId           String   @db.Uuid
+  bot             Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
   season          Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
 }
 
 model Season {
-  id              String       @id(map: "PK_cb8ed53b5fe109dcd4a4449ec9d") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name            String       @unique @db.VarChar(300)
-  startDate       DateTime     @db.Timestamptz(6)
-  endDate         DateTime     @db.Timestamptz(6)
-  createTimeStamp DateTime     @default(now()) @db.Timestamptz(6)
-  updateTimeStamp DateTime     @default(now()) @db.Timestamptz(6)
-  boardConfigId   String?      @db.Uuid
-  highScores      HighScore[]
+  id              String      @id(map: "PK_cb8ed53b5fe109dcd4a4449ec9d") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String      @unique @db.VarChar(300)
+  startDate       DateTime    @db.Timestamptz(6)
+  endDate         DateTime    @db.Timestamptz(6)
+  createTimeStamp DateTime    @default(now()) @db.Timestamptz(6)
+  updateTimeStamp DateTime    @default(now()) @db.Timestamptz(6)
+  highscores      Highscore[]
   recordings      Recording[]
-  BoardConfig     BoardConfig?
+  boardConfigId   String      @db.Uuid
+  boardConfig     BoardConfig @relation(fields: [boardConfigId], references: [id])
 }
 
 model Team {

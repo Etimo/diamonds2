@@ -6,16 +6,15 @@ import { RecordingsController } from "./controllers/recordings.controller";
 import { SeasonsController } from "./controllers/seasons.controller";
 import { SlackController } from "./controllers/slack.controller";
 import { TeamsController } from "./controllers/teams.controller";
-import { DatabaseModule } from "./database.module";
 import { HighscoresRepository } from "./db/repositories/highscores.repository";
 import { RecordingsRepository } from "./db/repositories/recordings.repository";
 import { CustomLogger } from "./logger";
-import { repositoryProviders } from "./repository.providers";
 import { AuthorizationService } from "./services/authorization.service";
 import { BoardConfigService } from "./services/board-config.service";
 import { BoardsService } from "./services/board.service";
 import { BotsService } from "./services/bots.service";
-import { HighScoresService } from "./services/high-scores.service";
+import { HighscoresService } from "./services/highscores.service";
+import { PrismaService } from "./services/prisma.service";
 import { RecordingsService } from "./services/recordings.service";
 import { SeasonsService } from "./services/seasons.service";
 import { SlackService } from "./services/slack.service";
@@ -31,11 +30,10 @@ import { TeamsService } from "./services/teams.service";
     SlackController,
     TeamsController,
   ],
-  imports: [DatabaseModule],
   providers: [
-    ...repositoryProviders,
+    PrismaService,
     BoardsService,
-    HighScoresService,
+    HighscoresService,
     BotsService,
     RecordingsService,
     SeasonsService,

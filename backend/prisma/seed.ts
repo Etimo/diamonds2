@@ -7,7 +7,8 @@ const main = async () => {
   await prisma.boardConfig.deleteMany();
   await prisma.bot.deleteMany();
   await prisma.team.deleteMany();
-  await prisma.highScore.deleteMany();
+  await prisma.highscore.deleteMany();
+  await prisma.recording.deleteMany();
 
   const zeroUuid = "00000000-0000-0000-0000-000000000000";
 
@@ -25,7 +26,7 @@ const main = async () => {
       email: "etimo1@etimo.se",
       name: "Etimo1",
       teamId: team.id,
-      token: "1a567a03-3272-426b-8828-98807d1551bf",
+      id: "00000000-0000-0000-0000-000000000001",
     },
   });
   const bot2 = await prisma.bot.create({
@@ -33,7 +34,7 @@ const main = async () => {
       email: "etimo2@etimo.se",
       name: "Etimo2",
       teamId: team.id,
-      token: "47046ef2-f56b-4588-b951-deb2ab127aa2",
+      id: "00000000-0000-0000-0000-000000000002",
     },
   });
 
@@ -58,15 +59,15 @@ const main = async () => {
     },
   });
 
-  await prisma.highScore.createMany({
+  await prisma.highscore.createMany({
     data: [
-      { botToken: bot1.token, score: 34, seasonId: season.id },
-      { botToken: bot2.token, score: 31, seasonId: season.id },
+      { botId: bot1.id, score: 34, seasonId: season.id },
+      { botId: bot2.id, score: 31, seasonId: season.id },
     ],
   });
 };
 
-main().then(async _ => {
+main().then(async (_) => {
   await prisma.$disconnect();
   console.log("Done");
 });

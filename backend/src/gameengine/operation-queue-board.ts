@@ -1,7 +1,7 @@
-import { Board } from "./board";
-import { IBot } from "src/interfaces/bot.interface";
-import { IPosition } from "src/common/interfaces/position.interface";
 import * as async from "async";
+import { IPosition } from "src/common/interfaces/position.interface";
+import { IBot } from "src/interfaces/bot.interface";
+import { Board } from "./board";
 import { BoardConfig } from "./board-config";
 import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
 
@@ -50,12 +50,12 @@ export class OperationQueueBoard extends Board {
       //   new Date().getTime() - queuedAt.getTime(),
       //   "ms",
       // );
-      try {
-        const res = t.run();
-        cb(res);
-      } catch (e) {
-        cb(null, e);
-      }
+      // try {
+      //   const res = t.run();
+      //   cb(res);
+      // } catch (e) {
+      //   cb(null, e);
+      // }
     });
   }
 

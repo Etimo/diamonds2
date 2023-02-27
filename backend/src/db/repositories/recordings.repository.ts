@@ -1,11 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { RecordingDto } from "../../models/recording.dto";
 import { PrismaService } from "../../services/prisma.service";
+import { INewRecording } from "../../types";
 
 @Injectable()
 export class RecordingsRepository {
-  private entity: string = "recordings";
-
   constructor(private prisma: PrismaService) {}
 
   public async allBySeasonIdRaw(seasonId: string, limit: number = 0) {
@@ -15,25 +13,12 @@ export class RecordingsRepository {
       },
       take: limit,
     });
-    // return await this.repo
-    //   .createQueryBuilder(this.entity)
-    //   .select(this.entity)
-    //   .where("recordings.seasonId = :seasonId", { seasonId })
-    //   .orderBy("score", "DESC")
-    //   .limit(limit)
-    //   .execute();
   }
 
-  public async create(dto: RecordingDto) {
+  public async create(data: INewRecording) {
     return this.prisma.recording.create({
-      data: {
-        board: dto.board,
-        score: dto.score,
-        seasonId: dto.seasonId,
-        recording: dto.recording,
-      },
+      data,
     });
-    // return await this.repo.save(dto);
   }
 
   public async purgeOld(seasonId: string) {
@@ -50,13 +35,6 @@ export class RecordingsRepository {
       },
       take: maxEntries + 1,
     });
-    // const existing = await this.repo
-    //   .createQueryBuilder(this.entity)
-    //   .select(["recordings.score"])
-    //   .where("recordings.seasonId = :seasonId", { seasonId })
-    //   .orderBy("score", "DESC")
-    //   .limit(maxEntries + 1)
-    //   .execute();
 
     if (existing.length > maxEntries) {
       // Remove if we have more than 10 recordings
@@ -68,32 +46,14 @@ export class RecordingsRepository {
           },
         },
       });
-      // await this.repo
-      //   .createQueryBuilder()
-      //   .delete()
-      //   .from(RecordingsEntity)
-      //   .where({
-      //     seasonId,
-      //     score: LessThan(existing[maxEntries - 1]["recordings_score"]),
-      //   })
-      //   .execute();
     }
   }
 
-  public async getById(seasonId: string, id: string) {
+  public async getById(id: string) {
     return this.prisma.recording.findMany({
       where: {
-        seasonId,
         id,
       },
     });
-    // return await this.repo
-    //   .createQueryBuilder(this.entity)
-    //   .select(this.entity)
-    //   .where("recordings.seasonId = :seasonId AND recordings.id = :id", {
-    //     seasonId,
-    //     id,
-    //   })
-    //   .execute();
   }
 }

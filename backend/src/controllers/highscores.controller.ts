@@ -1,12 +1,12 @@
-import { Controller, Get, Body, Post, Param } from "@nestjs/common";
-import { ApiTags, ApiResponse } from "@nestjs/swagger";
-import { HighScoresService } from "src/services/high-scores.service";
+import { Controller, Get, Param } from "@nestjs/common";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { HighscorePublicDto } from "src/models/highscore-public.dto";
+import { HighscoresService } from "src/services/highscores.service";
 
 @ApiTags("Highscores")
 @Controller("api/highscores")
 export class HighscoresController {
-  constructor(private highScoresService: HighScoresService) {}
+  constructor(private highscoresService: HighscoresService) {}
 
   /**
    * Returns all highscores on a specific season.
@@ -23,6 +23,6 @@ export class HighscoresController {
   async find(
     @Param("seasonId") seasonId: string,
   ): Promise<HighscorePublicDto[]> {
-    return await this.highScoresService.allBySeasonIdPublic(seasonId);
+    return this.highscoresService.allBySeasonIdPublic(seasonId);
   }
 }
