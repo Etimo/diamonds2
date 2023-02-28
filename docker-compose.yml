@@ -19,6 +19,7 @@ services:
     command: /bin/sh -c "npx prisma generate && yarn start:dev"
     volumes:
       - ./backend/src:/app/src
+      - ./backend/prisma:/app/prisma
       # - /app/node_modules
     environment:
       ENVIRONMENT: development
