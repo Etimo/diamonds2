@@ -1,9 +1,10 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
+import { RecordingsRepository } from "../db/repositories/recordings.repository";
+import NotFoundError from "../errors/not-found.error";
 import { CustomLogger } from "../logger";
 import { RecordingListDto } from "../models/recording-list.dto";
 import { RecordingPublicDto } from "../models/recording-public.dto";
-import NotFoundError from "../errors/not-found.error";
-import { RecordingsRepository } from "../db/repositories/recordings.repository";
+import { INewRecording } from "../types";
 
 @Injectable()
 export class RecordingsService {
@@ -11,7 +12,6 @@ export class RecordingsService {
   private stateIndex: number[] = [];
 
   constructor(
-    @Inject("RECORDINGS")
     private readonly repo: RecordingsRepository,
     private logger: CustomLogger,
   ) {}
@@ -45,28 +45,15 @@ export class RecordingsService {
       .filter((r) => r);
   }
 
-  async save({
-    boardIndex,
-    botName,
-    score,
-    seasonId,
-  }: {
-    boardIndex: number;
-    botName: string;
-    score: number;
-    seasonId: string;
-  }) {
+  async save(data: INewRecording) {
     this.logger.debug(
-      `Saving new recording for ${botName} with score ${score}`,
+      `Saving new recording for ${data.botId} with score ${data.score}`,
     );
     await this.repo.create({
-      botName,
-      score,
-      board: boardIndex,
-      seasonId,
-      recording: JSON.stringify(this.getRecording(boardIndex)),
+      ...data,
+      recording: JSON.stringify(this.getRecording(data.board)),
     });
-    await this.repo.purgeOld(seasonId);
+    await this.repo.purgeOld(data.seasonId);
   }
 
   public async allBySeasonIdList(
@@ -76,17 +63,30 @@ export class RecordingsService {
     if (data.length === 0) {
       throw new NotFoundError("Season not found");
     }
-    return data.map((e) => RecordingListDto.fromRawDataObject(e));
+    return data.map((e) => ({
+      board: e.board,
+      botName: "",
+      created: e.createTimeStamp,
+      recordingId: e.id,
+      score: e.score,
+    }));
   }
 
-  public async getById(
-    seasonId: string,
-    id: string,
-  ): Promise<RecordingPublicDto> {
-    const data = await this.repo.getById(seasonId, id);
+  public async getById(id: string): Promise<RecordingPublicDto> {
+    const data = await this.repo.getById(id);
     if (data.length === 0) {
       throw new NotFoundError("Data not found");
     }
-    return data.map((e) => RecordingPublicDto.fromRawDataObject(e))[0];
+    return data.map(
+      (e) =>
+        ({
+          board: e.board,
+          botName: "",
+          created: e.createTimeStamp,
+          recording: e.recording,
+          score: e.score,
+          seasonId: e.seasonId,
+        } as RecordingPublicDto),
+    )[0];
   }
 }

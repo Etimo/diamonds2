@@ -1,5 +1,5 @@
-import { Controller, Get, Body, Post } from "@nestjs/common";
-import { ApiTags, ApiResponse } from "@nestjs/swagger";
+import { Controller, Get } from "@nestjs/common";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { TeamDto } from "src/models/team.dto";
 import { TeamsService } from "src/services/teams.service";
 
@@ -16,6 +16,7 @@ export class TeamsController {
   })
   @Get()
   async listAll(): Promise<TeamDto[]> {
-    return this.teamsService.all();
+    const teams = await this.teamsService.all();
+    return teams.map((team) => TeamDto.fromEntity(team));
   }
 }

@@ -1,5 +1,6 @@
 FROM node:16-alpine3.17 as develop
 WORKDIR /app
+RUN apk add openssl1.1-compat
 COPY package.json yarn.lock ./
 RUN echo
 RUN yarn

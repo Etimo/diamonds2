@@ -1,149 +1,108 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { IBot } from "src/interfaces/bot.interface";
+import { Injectable } from "@nestjs/common";
+import * as bcrypt from "bcrypt";
 import { BotRegistrationDto } from "src/models/bot-registration.dto";
 import ConflictError from "../errors/conflict.error";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
-import { BotRegistrationPublicDto } from "../models/bot-registration-public.dto";
-import { BotRecoveryDto } from "../models/bot-recovery.dto";
-import * as bcrypt from "bcrypt";
 import NotFoundError from "../errors/not-found.error";
-import { BotPasswordDto } from "../models/bot-password.dto";
-import ForbiddenError from "../errors/forbidden.error";
+import { BotRecoveryDto } from "../models/bot-recovery.dto";
+import { INewBot } from "../types";
+import { PrismaService } from "./prisma.service";
 import { TeamsService } from "./teams.service";
 
 @Injectable()
 export class BotsService {
-  private bots: IBot[] = [];
-
   constructor(
-    @Inject("BOT_REGISTRATIONS")
-    private readonly repo: Repository<BotRegistrationsEntity>,
+    private prisma: PrismaService,
     private teamsService: TeamsService,
   ) {}
 
-  public async add(
-    input: BotRegistrationDto,
-  ): Promise<BotRegistrationPublicDto> {
+  public async add(input: BotRegistrationDto) {
     if (
       (await this.emailExists(input.email)) ||
-      (await this.nameExists(input.botName))
+      (await this.nameExists(input.name))
     ) {
       return Promise.reject(
         new ConflictError("Email and/or name already exists"),
       );
     }
 
+    const newBot: INewBot = {
+      ...input,
+      teamId: null,
+    };
+
     // Fetching the teamId
     if (input.team) {
       const team = await this.teamsService.getByAbbreviation(input.team);
-      input.team = team.id;
+      newBot.teamId = team.id;
     }
 
-    return this.create(input);
+    return this.create(newBot);
   }
 
-  public async get(token: string): Promise<BotRegistrationPublicDto> {
-    const existBot = await this.repo
-      .createQueryBuilder("botRegistrations")
-      .where("botRegistrations.token = :token", { token: token })
-      .getOne()
-      .then((botRegistrationsEntity) =>
-        BotRegistrationPublicDto.fromEntity(botRegistrationsEntity),
-      );
-    return existBot;
+  public async get(id: string) {
+    return this.prisma.bot.findFirst({
+      where: {
+        id,
+      },
+    });
   }
 
   private async emailExists(email: string) {
     email = email.toLowerCase();
 
-    const existEmail = await this.repo
-      .createQueryBuilder("botRegistrations")
-      .where("botRegistrations.email = :email", { email: email })
-      .getOne();
-    //    console.log(!existEmail);
-    return existEmail;
+    return this.prisma.bot.findFirst({
+      where: {
+        email,
+      },
+    });
   }
 
   private async nameExists(name: string) {
     name = name.toLowerCase();
-    const existName = await this.repo
-      .createQueryBuilder("botRegistrations")
-      .where("botRegistrations.botName = :botName", { botName: name })
-      .getOne();
-    //console.log(!firstUser);
-    return existName;
+    return this.prisma.bot.findFirst({
+      where: {
+        name,
+      },
+    });
   }
 
-  public async create(
-    dto: BotRegistrationDto,
-  ): Promise<BotRegistrationPublicDto> {
+  public async create(dto: INewBot) {
     // Hashing password
     dto.password = await this.hashPassword(dto.password);
-    return await this.repo
-      .save(dto)
-      .then((botRegistrationsEntity) =>
-        BotRegistrationPublicDto.fromEntity(botRegistrationsEntity),
-      );
+
+    return this.prisma.bot.create({
+      data: {
+        email: dto.email,
+        name: dto.name,
+        password: dto.password,
+        teamId: dto.teamId,
+      },
+    });
   }
 
   public async delete(dto: BotRegistrationDto) {
-    return await this.repo
-      .createQueryBuilder()
-      .delete()
-      .from("bot_registrations")
-      .where("botName = :botName", { botName: dto.botName })
-      .execute();
+    return this.prisma.bot.delete({
+      where: {
+        name: dto.name,
+      },
+    });
   }
 
-  public async getByEmailAndPassword(
-    botRecoveryDto: BotRecoveryDto,
-  ): Promise<BotRegistrationPublicDto> {
-    const existBot = await this.repo
-      .createQueryBuilder("botRegistrations")
-      .where("botRegistrations.email = :email", {
+  public async getByEmailAndPassword(botRecoveryDto: BotRecoveryDto) {
+    const existingBot = await this.prisma.bot.findFirst({
+      where: {
         email: botRecoveryDto.email,
-      })
-      .getOne();
+      },
+    });
 
     // Don't return bots with no password
-    if (existBot && existBot.password) {
+    if (existingBot && existingBot.password) {
       // Return bot if password is correct
-      if (await bcrypt.compare(botRecoveryDto.password, existBot.password)) {
-        return BotRegistrationPublicDto.fromEntity(existBot);
+      if (await bcrypt.compare(botRecoveryDto.password, existingBot.password)) {
+        return existingBot;
       }
     }
-    return Promise.reject(new NotFoundError("Invalid email or password"));
-  }
-
-  public async addPassword(
-    botPasswordDto: BotPasswordDto,
-  ): Promise<BotRegistrationPublicDto> {
-    const existBot = await this.repo
-      .createQueryBuilder("botRegistrations")
-      .where("botRegistrations.token = :token", {
-        token: botPasswordDto.token,
-      })
-      .getOne();
-    if (!existBot) {
-      return Promise.reject(new NotFoundError("Bot not found"));
-    }
-
-    if (existBot.password) {
-      return Promise.reject(new ForbiddenError("Bot already has a password"));
-    }
-    const hashedPassword = await this.hashPassword(botPasswordDto.password);
-    await this.repo
-      .createQueryBuilder()
-      .update("bot_registrations")
-      .set({ password: hashedPassword })
-      .where("token = :token", {
-        token: botPasswordDto.token,
-      })
-      .execute();
-
-    return BotRegistrationPublicDto.fromEntity(existBot);
+    throw new NotFoundError("Invalid email or password");
   }
 
   private async hashPassword(password: string): Promise<string> {

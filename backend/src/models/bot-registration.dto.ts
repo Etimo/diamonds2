@@ -21,7 +21,7 @@ export class BotRegistrationDto {
   @MinLength(1)
   @MaxLength(10)
   @NotContains(" ", { message: "Bot name can not contain whitespace" })
-  readonly botName: string;
+  readonly name: string;
 
   @ApiProperty({
     description: "The password for your bot (Old bots don't have a password).",

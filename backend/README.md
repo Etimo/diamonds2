@@ -1,73 +1,50 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
+# Backend
 
 ```bash
-$ yarn install
+yarn  # Install dependencies
+npm run env  # Create .env file
+npx prisma generate  # Update prisma client
+npx prisma db push  # Forcefully create db
+npx prisma migrate dev  # Migrate local db
+npx prisma migrate reset  # Reset db and run all migrations
+npx prisma migrate dev --name <name>  # Create new migration
 ```
 
-## Running the app
+# Database and schema
+
+The full schema of the db is defined in `prisma/schema.schema`.
+
+## Updating schema
+
+If you want to make changes to the schema you do the changes directly in the schema file. After you have made the changes you have two options:
+
+1. Forcefully reset the whole database with the new schema: `npx prisma db push`
+2. Create a new migration for the changes in the schema: `npx prisma migrate dev --name <name of migration>`
+
+Option 1 can be used locally when iterating and trying out new changes. When you are happy with the final changes in the schema you must create a migration using option 2. The new migration(s) must then be added to git.
+
+You can create multiple migrations within the same branch but if you are not sure exactly how the new schema should look it is easier to just use option 1 until you are satisfied with the result.
+
+Both of these options will also update the Prisma client in the code `@prisma/client` so that the new types are available in the code.
+
+If the types are not properly reflected in VS Code you can restart the TS server using Ctrl/Cmd+P and choosing TODO.
+
+## Updating seeds
+
+Seeding the database is done in `prisma/seed.ts`. Please make sure that this seed is always up to date and working with the latest schema. You can run `npx prisma db seed` to re-seed the database.
+
+## Run pending migrations
+
+When you pull new changes to the schema you can apply them to your current database using `npx prisma migrate dev`.
+
+## DB GUI
+
+Prisma comes with a built in GUI for browsing the database. Just run `npx prisma studio` to open. You can also use any postgres compatible app on your computer.
+
+## Other commands
 
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+npx prisma migrate reset  # Reset db and run all migrations and seeds again
+npx prisma migrate status  # Check if there are any pending migrations not yet applied
+npx prisma format  # Format the schema file
 ```
-
-## Test
-
-```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).

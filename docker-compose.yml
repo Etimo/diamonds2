@@ -16,18 +16,14 @@ services:
     build:
       context: ./backend
       target: "develop"
-    command: /bin/sh -c "yarn run typeorm:migration:run && yarn start:dev"
+    command: /bin/sh -c "npx prisma migrate dev && yarn start:dev"
     volumes:
       - ./backend/src:/app/src
+      - ./backend/prisma:/app/prisma
       # - /app/node_modules
     environment:
       ENVIRONMENT: development
-      TYPEORM_HOST: database
-      TYPEORM_PORT: 5432
-      TYPEORM_USERNAME: postgres
-      TYPEORM_PASSWORD: postgres
-      TYPEORM_DATABASE: postgres
-      PORT: 3000
+      DATABASE_URL: postgresql://diamonds:password@database:5432/diamonds?schema=public
     ports:
       - 8081:3000
     logging:
@@ -49,22 +45,16 @@ services:
         max-file: "1"
 
   database:
-    image: postgres:alpine
+    image: postgres:14
     restart: always
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: diamonds
+      POSTGRES_USER: diamonds
+      POSTGRES_PASSWORD: password
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8082:8080
 
 volumes:
   db-data:

@@ -9,21 +9,26 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "nest start --watch",
+    "start:dev": "npx prisma generate && nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "env": "cp .env.defaults .env",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
-    "typeorm:migration:generate": "yarn run typeorm migration:generate -d src/datasource.ts",
-    "typeorm:migration:run": "yarn run typeorm migration:run -d src/datasource.ts",
-    "typeorm:migration:revert": "yarn run typeorm migration:revert -d src/datasource.ts",
     "test": "jest --passWithNoTests --detectOpenHandles",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "dependencies": {
+    "@digikare/nestjs-prom": "^0.2.2",
+    "@prisma/client": "^4.6.0",
+    "@types/node": "^10.17.26",
+    "chalk": "^2.4.2",
+    "class-transformer": "^0.2.3",
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
@@ -48,21 +53,28 @@
     "@nestjs/testing": "^9.0.0",
     "@types/express": "^4.17.13",
     "@types/jest": "29.2.4",
+    "@types/loglevel": "^1.5.4",
     "@types/node": "18.11.18",
+    "@types/pino": "^5.8.7",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
-    "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "eslint": "^8.0.1",
     "jest": "29.3.1",
+    "nodemon": "^1.19.4",
+    "precise-commits": "^1.0.2",
     "prettier": "^2.3.2",
+    "pretty-quick": "^2.0.1",
+    "prisma": "^4.6.0",
     "source-map-support": "^0.5.20",
     "supertest": "^6.1.3",
     "ts-jest": "29.0.3",
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
     "tsconfig-paths": "4.1.1",
+    "tslint": "5.18.0",
     "typescript": "^4.7.4"
   },
   "jest": {
@@ -81,5 +93,10 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   }
 }

@@ -5,6 +5,7 @@ export class PositionDto {
     description: "The x position on the board.",
   })
   x: number;
+
   @ApiProperty({
     description: "The y position on the board.",
   })

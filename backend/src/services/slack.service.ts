@@ -1,27 +1,27 @@
 import { Injectable } from "@nestjs/common";
-import { SeasonsService } from "./seasons.service";
-import { TeamsService } from "./teams.service";
-import {
-  getSeasonListBody,
-  getAddSeasonBody,
-} from "../utils/slack/season.utils";
-import { getTeamListBody, getAddTeamBody } from "../utils/slack/teams.utils";
-import { getWinnerListBody } from "../utils/slack/user.utils";
-import { showModal, slackError } from "../utils/slack/utils";
-import { SeasonDto } from "../models/season.dto";
-import { TeamDto } from "../models/team.dto";
 import ForbiddenError from "../errors/forbidden.error";
 import { BotDto } from "../models/bot.dto";
-import { HighScoresService } from "./high-scores.service";
-import { BoardConfigDto } from "../models/board-config.dto";
+import { SeasonDto } from "../models/season.dto";
+import { TeamDto } from "../models/team.dto";
+import { INewBoardConfig, INewSeason } from "../types";
+import {
+  getAddSeasonBody,
+  getSeasonListBody,
+} from "../utils/slack/season.utils";
+import { getAddTeamBody, getTeamListBody } from "../utils/slack/teams.utils";
+import { getWinnerListBody } from "../utils/slack/user.utils";
+import { showModal, slackError } from "../utils/slack/utils";
 import { BoardConfigService } from "./board-config.service";
+import { HighscoresService } from "./highscores.service";
+import { SeasonsService } from "./seasons.service";
+import { TeamsService } from "./teams.service";
 
 @Injectable()
 export class SlackService {
   constructor(
     private seasonsService: SeasonsService,
     private teamsService: TeamsService,
-    private highScoresService: HighScoresService,
+    private highscoresService: HighscoresService,
     private boardConfigService: BoardConfigService,
   ) {}
 
@@ -44,7 +44,7 @@ export class SlackService {
   }
 
   private async getWinners(trigger_id, seasonId: SeasonDto["id"]) {
-    const users = await this.highScoresService.allBySeasonIdPrivate(
+    const users = await this.highscoresService.allBySeasonIdPrivate(
       seasonId,
       10,
     );
@@ -80,11 +80,6 @@ export class SlackService {
     const startDate = this.parseValue(payload, "start_date", "selected_date");
     const endDate = this.parseValue(payload, "end_date", "selected_date");
     const name = this.parseValue(payload, "season_name", "value");
-    const seasonDto = SeasonDto.create({
-      name,
-      startDate: new Date(startDate),
-      endDate: new Date(endDate),
-    });
     const inventorySize = this.parseValue(payload, "inventory_size", "value");
     const canTackle =
       this.parseValue(payload, "can_tackle", "value") === "true";
@@ -102,7 +97,7 @@ export class SlackService {
       "value",
     );
     const sessionLength = this.parseValue(payload, "session_length", "value");
-    const boardConfigDto = BoardConfigDto.create({
+    const boardConfig: INewBoardConfig = {
       inventorySize,
       canTackle,
       teleporters,
@@ -111,10 +106,15 @@ export class SlackService {
       width,
       minimumDelayBetweenMoves,
       sessionLength,
-    });
-    const season = await this.seasonsService.add(seasonDto);
-    boardConfigDto.seasonId = season.id;
-    const boardConfig = await this.boardConfigService.add(boardConfigDto);
+    };
+    const createdBoardConfig = await this.boardConfigService.add(boardConfig);
+    const season: INewSeason = {
+      name,
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
+      boardConfigId: createdBoardConfig.id,
+    };
+    const createdSeason = await this.seasonsService.add(season);
     return season;
   }
 
