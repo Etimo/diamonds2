@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IHighscore } from "../types";
 
 export class HighscorePublicDto {
   @ApiProperty()
@@ -13,25 +14,12 @@ export class HighscorePublicDto {
   @ApiProperty()
   teamLogotype: string;
 
-  // public static from(dto: Partial<HighscorePublicDto>) {
-  //   const highScoreObj = new HighscorePublicDto();
-  //   highScoreObj.botName = dto.botName;
-  //   highScoreObj.score = dto.score;
-  //   highScoreObj.seasonId = dto.seasonId;
-  //   highScoreObj.teamLogotype = dto.teamLogotype ? dto.teamLogotype : null;
-  //   return highScoreObj;
-  // }
-
-  // public static fromEntity(
-  //   data: Highscore & { bot: Bot; team: { logotypeUrl: string } },
-  // ) {
-  //   // Used by allBySeasonId in hishscore service
-  //   // Data includes raw data from highScore table and teams table.
-  //   return this.from({
-  //     botName: data.bot.name,
-  //     score: data.score,
-  //     seasonId: data.seasonId,
-  //     teamLogotype: data.team.logotypeUrl,
-  //   });
-  // }
+  public static fromEntity(entity: IHighscore): HighscorePublicDto {
+    return {
+      botName: entity.bot.name,
+      score: entity.score,
+      seasonId: entity.seasonId,
+      teamLogotype: entity.bot.team.logotypeUrl,
+    };
+  }
 }

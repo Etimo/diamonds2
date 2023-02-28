@@ -16,6 +16,7 @@ export class TeamsController {
   })
   @Get()
   async listAll(): Promise<TeamDto[]> {
-    return this.teamsService.all();
+    const teams = await this.teamsService.all();
+    return teams.map((team) => TeamDto.fromEntity(team));
   }
 }

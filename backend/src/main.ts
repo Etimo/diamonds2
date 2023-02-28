@@ -5,7 +5,6 @@ import * as compression from "compression";
 import { AppModule } from "./app.module";
 import { AllExceptionsFilter } from "./exception-filter";
 import { isLocal } from "./hooks/environment";
-import { EnvelopeInterceptor } from "./interceptors/envelope.interceptor";
 import bodyParser = require("body-parser");
 
 async function bootstrap() {
@@ -13,7 +12,7 @@ async function bootstrap() {
   app.use(bodyParser.json());
   app.use(compression());
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalInterceptors(new EnvelopeInterceptor());
+  // app.useGlobalInterceptors(new EnvelopeInterceptor());
   app.useGlobalFilters(new AllExceptionsFilter());
 
   const schema = isLocal() ? "http" : "https";

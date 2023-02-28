@@ -33,31 +33,8 @@ export class BotsController {
     @Body() botRegistration: BotRegistrationDto,
   ): Promise<BotRegistrationPublicDto> {
     const bot = await this.botService.add(botRegistration);
-    return {
-      name: bot.name,
-      email: bot.email,
-      id: bot.id,
-    };
+    return BotRegistrationPublicDto.fromEntity(bot);
   }
-
-  // /**
-  //  * Get information for a registered bot.
-  //  *
-  //  * @param token The secret token of the previously registered bot.
-  //  */
-  // @ApiResponse({
-  //   status: 200,
-  //   description: "Returns bot",
-  //   type: BotRegistrationPublicDto,
-  // })
-  // @ApiResponse({
-  //   status: 404,
-  //   description: "Bot not found",
-  // })
-  // @Get(":token")
-  // async find(@Param("token") token: string): Promise<BotRegistrationPublicDto> {
-  //   return await this.botService.get(token);
-  // }
 
   @ApiResponse({
     status: 200,
@@ -73,30 +50,6 @@ export class BotsController {
     @Body() botRecoveryDto: BotRecoveryDto,
   ): Promise<BotRegistrationPublicDto> {
     const bot = await this.botService.getByEmailAndPassword(botRecoveryDto);
-    return {
-      email: bot.email,
-      id: bot.id,
-      name: bot.name,
-    };
+    return BotRegistrationPublicDto.fromEntity(bot);
   }
-
-  // @ApiResponse({
-  //   status: 200,
-  //   description: "Password was succesfully added, returning bot",
-  //   type: BotRegistrationPublicDto,
-  // })
-  // @ApiResponse({
-  //   status: 403,
-  //   description: "Not allowed to change password if a password already exists",
-  // })
-  // @ApiResponse({
-  //   status: 404,
-  //   description: "Bot not found",
-  // })
-  // @Post("/password")
-  // async addPassword(
-  //   @Body() botPasswordDto: BotPasswordDto,
-  // ): Promise<BotRegistrationPublicDto> {
-  //   return await this.botService.addPassword(botPasswordDto);
-  // }
 }

@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IBot } from "../types";
 
 export class BotRegistrationPublicDto {
   @ApiProperty({
@@ -25,11 +26,11 @@ export class BotRegistrationPublicDto {
   //   return botRegistrationPublicObj;
   // }
 
-  // public static fromEntity(entity: Bot) {
-  //   return this.from({
-  //     botName: entity.name,
-  //     email: entity.email,
-  //     id: entity.id,
-  //   });
-  // }
+  public static fromEntity(entity: IBot) {
+    return {
+      name: entity.name,
+      email: entity.email,
+      id: entity.id,
+    };
+  }
 }

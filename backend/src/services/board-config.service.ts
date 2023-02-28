@@ -51,18 +51,23 @@ export class BoardConfigService {
   }
 
   public async getBoardConfig(seasonId: string) {
-    const season = await this.prisma.season.findFirst({
+    return this.prisma.boardConfig.findFirst({
       where: {
-        id: seasonId,
-      },
-      include: {
-        boardConfig: true,
+        season: {
+          some: {
+            id: seasonId,
+          },
+        },
       },
     });
-    return {
-      ...season.boardConfig,
-      seasonId,
-    };
+    // return this.prisma.season.findFirst({
+    //   where: {
+    //     id: seasonId,
+    //   },
+    //   include: {
+    //     boardConfig: true,
+    //   },
+    // });
   }
 
   public async add(dto: INewBoardConfig) {

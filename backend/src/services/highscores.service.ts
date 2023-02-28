@@ -105,16 +105,14 @@ export class HighscoresService {
     }));
   }
 
-  public async allBySeasonIdPublic(
-    seasonId: string,
-  ): Promise<HighscorePublicDto[]> {
-    const highScores = await this.allBySeasonId(seasonId);
-    return highScores.map((e) => ({
-      botName: e.bot.name,
-      score: e.score,
-      seasonId: e.seasonId,
-      teamLogotype: e.bot.team.logotypeUrl,
-    }));
+  public async allBySeasonIdPublic(seasonId: string) {
+    return this.allBySeasonId(seasonId);
+    // return highScores.map((e) => ({
+    //   botName: e.bot.name,
+    //   score: e.score,
+    //   seasonId: e.seasonId,
+    //   teamLogotype: e.bot.team.logotypeUrl,
+    // }));
   }
 
   public async create(data: IHighscore) {
