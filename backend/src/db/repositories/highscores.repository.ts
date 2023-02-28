@@ -80,7 +80,6 @@ export class HighscoresRepository {
         seasonId: data.seasonId,
       },
     });
-    // return this.repo.save(dto);
   }
 
   public async delete(botId: string) {
