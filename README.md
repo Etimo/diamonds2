@@ -21,14 +21,12 @@ If you find a bug or has a suggestion for improvement you are more than welcome 
 Run the following commands to setup a development environment using Docker:
 
 ```
-docker-compose build --parallel
-docker-compose up
+docker-compose up --build
 ```
 
 - Frontend: [http://localhost:8080](http://localhost:8080)
 - API: [http://localhost:8081](http://localhost:8081)
 - Swagger: [http://localhost:8081/docs](http://localhost:8081/docs)
-- Database (browsing): [http://localhost:8082](http://localhost:8082/?pgsql=database&username=postgres&db=postgres)
 
 ## Production (from source)
 
