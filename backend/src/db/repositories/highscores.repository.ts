@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../services/prisma.service";
-import { INewHighscore } from "../../types";
+import { IHighscore, INewHighscore } from "../../types";
 
 @Injectable()
 export class HighscoresRepository {
@@ -12,7 +12,7 @@ export class HighscoresRepository {
     seasonId: string,
     currentSeasonId: string,
     limit: number = 0,
-  ) {
+  ): Promise<IHighscore[]> {
     const take = limit ? limit : seasonId === currentSeasonId ? 50 : 20;
 
     return this.prisma.highscore.findMany({
@@ -30,10 +30,11 @@ export class HighscoresRepository {
           },
         },
       },
+      take: take,
     });
   }
 
-  public getBotScore(botName: string) {
+  public getBotScore(botName: string): Promise<IHighscore[]> {
     return this.prisma.highscore.findMany({
       where: {
         bot: {
@@ -43,11 +44,14 @@ export class HighscoresRepository {
     });
   }
 
-  public async getBestBotScore(botName: string, seasonId: string) {
+  public async getBestBotScore(
+    botId: string,
+    seasonId: string,
+  ): Promise<IHighscore> {
     return this.prisma.highscore.findFirst({
       where: {
         bot: {
-          name: botName,
+          id: botId,
         },
         seasonId,
       },
@@ -72,7 +76,7 @@ export class HighscoresRepository {
     });
   }
 
-  public async create(data: INewHighscore) {
+  public async create(data: INewHighscore): Promise<IHighscore> {
     return this.prisma.highscore.create({
       data: {
         botId: data.botId,

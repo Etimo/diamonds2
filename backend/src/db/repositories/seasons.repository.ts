@@ -1,86 +1,81 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../services/prisma.service";
-import { INewSeason } from "../../types";
+import { INewSeason, ISeason } from "../../types";
 
 @Injectable()
-export class SeasonsRepository{
-    constructor(private prisma: PrismaService){}
+export class SeasonsRepository {
+  constructor(private prisma: PrismaService) {}
 
-    public async create(data: INewSeason) {
-        return this.prisma.season.create({
-          data: {
-            endDate: data.endDate,
-            name: data.name,
-            startDate: data.startDate,
-            boardConfigId: data.boardConfigId,
-          },
-        });
-    }
+  public async create(data: INewSeason): Promise<ISeason> {
+    return this.prisma.season.create({
+      data: {
+        endDate: data.endDate,
+        name: data.name,
+        startDate: data.startDate,
+        boardConfigId: data.boardConfigId,
+      },
+    });
+  }
 
-    public async getById(seasonId: string, includeBoardConfig: boolean) {
-      return this.prisma.season.findFirst({
-        where: {
-          id: seasonId,
+  public async getById(
+    seasonId: string,
+    includeBoardConfig: boolean,
+  ): Promise<ISeason | undefined> {
+    return this.prisma.season.findFirst({
+      where: {
+        id: seasonId,
+      },
+      include: {
+        boardConfig: includeBoardConfig,
+      },
+    });
+  }
+
+  public async getCurrentSeason(): Promise<ISeason | undefined> {
+    const currentSeason = await this.prisma.season.findFirst({
+      where: {
+        startDate: {
+          lte: new Date(),
         },
-        include: {
-          boardConfig: includeBoardConfig,
+        endDate: {
+          gte: new Date(),
         },
-      });
-    }
+      },
+      include: {
+        boardConfig: true,
+      },
+    });
 
-    public async getOffSeason() {
-        return this.getById("00000000-0000-0000-0000-000000000000", false);
-    }
+    return currentSeason;
+  }
 
-    public async getCurrentSeason() {
-        const currentSeason = await this.prisma.season.findFirst({
-          where: {
-            startDate: {
-              lte: new Date(),
-            },
-            endDate: {
-              gte: new Date(),
-            },
-          },
-          include: {
-            boardConfig: true,
-          },
-        });
+  public async getAll(): Promise<ISeason[]> {
+    return this.prisma.season.findMany({
+      orderBy: {
+        createTimeStamp: "desc",
+      },
+    });
+  }
 
-        if (currentSeason) {
-          return currentSeason;
-        }
+  public async getByName(name: string): Promise<ISeason | undefined> {
+    return this.prisma.season.findFirst({
+      where: {
+        name,
+      },
+    });
+  }
 
-        return this.getOffSeason();
-    }
-
-    public async getAll() {
-      return this.prisma.season.findMany({
-        orderBy: {
-          createTimeStamp: "desc",
+  // Check if the new dates collides with other season dates.
+  public async dateCollision(startDate: Date, endDate: Date) {
+    return this.prisma.season.findFirst({
+      where: {
+        startDate: {
+          lte: endDate,
         },
-      });
-    }
-
-    public async nameExists(name: string) {
-      return this.prisma.season.findFirst({
-        where: {
-          name,
+        endDate: {
+          lte: startDate,
         },
-      });
-    }
-
-      // Check if the new dates collides with other season dates.
-    public async dateCollision(startDate: Date, endDate: Date) {
-      return this.prisma.season.findFirst({
-        where: {
-          startDate: {
-            lte: endDate,
-          },
-          endDate: {
-            lte: startDate,
-          },
-        },
-      });
-    }
+      },
+    });
+  }
 }

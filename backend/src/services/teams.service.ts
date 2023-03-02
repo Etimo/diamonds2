@@ -1,21 +1,17 @@
 import { Injectable } from "@nestjs/common";
 import { URL } from "url";
+import { TeamsRepository } from "../db/repositories/teams.repository";
 import ConflictError from "../errors/conflict.error";
 import ForbiddenError from "../errors/forbidden.error";
 import NotFoundError from "../errors/not-found.error";
 import { INewTeam, ITeam } from "../types";
-import { PrismaService } from "./prisma.service";
 
 @Injectable()
 export class TeamsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private repo: TeamsRepository) {}
 
   public async all(): Promise<ITeam[]> {
-    return this.prisma.team.findMany({
-      orderBy: {
-        createTimeStamp: "desc",
-      },
-    });
+    return this.repo.all();
   }
 
   public async add(data: INewTeam): Promise<ITeam> {
@@ -26,11 +22,7 @@ export class TeamsService {
   public async getByAbbreviation(
     abbreviation: string,
   ): Promise<ITeam | undefined> {
-    const team = await this.prisma.team.findFirst({
-      where: {
-        abbreviation,
-      },
-    });
+    let team = this.repo.getByAbbreviation(abbreviation);
 
     if (team) {
       return team;
@@ -39,9 +31,7 @@ export class TeamsService {
   }
 
   private async create(data: INewTeam): Promise<ITeam> {
-    return await this.prisma.team.create({
-      data,
-    });
+    return await this.repo.create(data);
   }
 
   private async validateInput(data: INewTeam) {
@@ -55,9 +45,9 @@ export class TeamsService {
     // Separate checks to return proper error.
     let [nameExists, abbreviationExists, logotypeUrlExists] = await Promise.all(
       [
-        this.exist("name", data.name),
-        this.exist("abbreviation", data.abbreviation),
-        this.exist("logotypeUrl", data.logotypeUrl),
+        this.repo.get("name", data.name),
+        this.repo.get("abbreviation", data.abbreviation),
+        this.repo.get("logotypeUrl", data.logotypeUrl),
       ],
     );
 
@@ -74,14 +64,6 @@ export class TeamsService {
     if (!this.isValidUrl(data.logotypeUrl)) {
       throw new ForbiddenError("Invalid url", "team_logotype_url");
     }
-  }
-
-  private async exist(field: string, data: string): Promise<ITeam | undefined> {
-    return await this.prisma.team.findFirst({
-      where: {
-        [field]: data,
-      },
-    });
   }
 
   private getErrorPayload(nameExists, abbreviationExists, logotypeUrlExists) {

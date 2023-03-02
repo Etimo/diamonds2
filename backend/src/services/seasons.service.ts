@@ -3,21 +3,27 @@ import { SeasonsRepository } from "../db/repositories/seasons.repository";
 import ConflictError from "../errors/conflict.error";
 import ForbiddenError from "../errors/forbidden.error";
 import { INewSeason } from "../types";
+import { offSeasonId } from "../utils/slack/utils";
 
 @Injectable()
 export class SeasonsService {
   constructor(private repo: SeasonsRepository) {}
 
   public async getOffSeason() {
-    return this.repo.getById("00000000-0000-0000-0000-000000000000", false);
+    return this.repo.getById(offSeasonId, false);
   }
 
   public async getSeason(seasonId: string) {
     return this.repo.getById(seasonId, true);
   }
 
-  public async getCurrentSeason(){
-    return this.repo.getCurrentSeason();
+  public async getCurrentSeason() {
+    let currentSeason = this.repo.getCurrentSeason();
+    if (currentSeason) {
+      return currentSeason;
+    }
+
+    return this.getOffSeason();
   }
 
   public async all() {
@@ -44,7 +50,7 @@ export class SeasonsService {
 
     let [dateCollision, nameExists] = await Promise.all([
       this.repo.dateCollision(data.startDate, data.endDate),
-      this.repo.nameExists(data.name),
+      this.repo.getByName(data.name),
     ]);
 
     if (dateCollision) {
@@ -68,6 +74,4 @@ export class SeasonsService {
   public async create(data: INewSeason) {
     return this.repo.create(data);
   }
-
-
 }

@@ -1,23 +1,19 @@
 import { Injectable } from "@nestjs/common";
-import { BoardConfigDto } from "../models/board-config.dto";
+import { BoardConfigRepository } from "../db/repositories/boardConfig.repository";
 import { INewBoardConfig } from "../types";
-import { PrismaService } from "./prisma.service";
 import { SeasonsService } from "./seasons.service";
 
 @Injectable()
 export class BoardConfigService {
   constructor(
-    private prisma: PrismaService,
     private seasonsService: SeasonsService,
+    private repo: BoardConfigRepository,
   ) {}
 
   public async getCurrentBoardConfig() {
     const season = await this.seasonsService.getCurrentSeason();
-    return this.prisma.boardConfig.findFirst({
-      where: {
-        id: season.boardConfigId,
-      },
-    });
+    return this.repo.getBoardConfigById(season.boardConfigId);
+
     // const boardConfig = await this.prisma.boardConfig.findFirst({
     //   where: {
     //     s,
@@ -51,46 +47,17 @@ export class BoardConfigService {
   }
 
   public async getBoardConfig(seasonId: string) {
-    return this.prisma.boardConfig.findFirst({
-      where: {
-        season: {
-          some: {
-            id: seasonId,
-          },
-        },
-      },
-    });
-    // return this.prisma.season.findFirst({
-    //   where: {
-    //     id: seasonId,
-    //   },
-    //   include: {
-    //     boardConfig: true,
-    //   },
-    // });
+    return this.repo.getBoardConfigById(seasonId);
   }
 
   public async add(dto: INewBoardConfig) {
     // TODO: Add validation
 
     // Add the season
-    return this.prisma.boardConfig.create({
-      data: {
-        canTackle: dto.canTackle,
-        height: dto.height,
-        inventorySize: dto.inventorySize,
-        minimumDelayBetweenMoves: dto.minimumDelayBetweenMoves,
-        teleporters: dto.teleporters,
-        teleportRelocation: dto.teleportRelocation,
-        width: dto.width,
-        sessionLength: dto.sessionLength,
-      },
-    });
+    return this.repo.create(dto);
   }
 
-  public async create(dto: BoardConfigDto) {
-    return this.prisma.boardConfig.create({
-      data: dto,
-    });
-  }
+  // public async create(dto: BoardConfigDto) {
+  //   return this.repo.create(dto);
+  // }
 }

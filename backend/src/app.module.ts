@@ -6,9 +6,13 @@ import { RecordingsController } from "./controllers/recordings.controller";
 import { SeasonsController } from "./controllers/seasons.controller";
 import { SlackController } from "./controllers/slack.controller";
 import { TeamsController } from "./controllers/teams.controller";
+import { BoardConfigRepository } from "./db/repositories/boardConfig.repository";
+import { BotRegistrationsRepository } from "./db/repositories/botRegistrations.repository";
 import { HighscoresRepository } from "./db/repositories/highscores.repository";
 import { RecordingsRepository } from "./db/repositories/recordings.repository";
 import { SeasonsRepository } from "./db/repositories/seasons.repository";
+import { TeamsRepository } from "./db/repositories/teams.repository";
+
 import { CustomLogger } from "./logger";
 import { AuthorizationService } from "./services/authorization.service";
 import { BoardConfigService } from "./services/board-config.service";
@@ -45,6 +49,9 @@ import { TeamsService } from "./services/teams.service";
     HighscoresRepository,
     RecordingsRepository,
     SeasonsRepository,
+    TeamsRepository,
+    BoardConfigRepository,
+    BotRegistrationsRepository,
     AuthorizationService,
     {
       provide: "NUMBER_OF_BOARDS",

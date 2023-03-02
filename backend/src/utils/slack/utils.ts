@@ -32,3 +32,5 @@ export const slackError = (errorTag, message) => {
     },
   };
 };
+
+export const offSeasonId = "00000000-0000-0000-0000-000000000000";
