@@ -16,19 +16,17 @@ export class BoardConfigRepository {
     });
   }
 
-  public async create(dto: INewBoardConfig) {
-    // Add the season
-
+  public async create(newBoardConfig: INewBoardConfig) {
     return this.prisma.boardConfig.create({
       data: {
-        canTackle: dto.canTackle,
-        height: dto.height,
-        inventorySize: dto.inventorySize,
-        minimumDelayBetweenMoves: dto.minimumDelayBetweenMoves,
-        teleporters: dto.teleporters,
-        teleportRelocation: dto.teleportRelocation,
-        width: dto.width,
-        sessionLength: dto.sessionLength,
+        canTackle: newBoardConfig.canTackle,
+        height: newBoardConfig.height,
+        inventorySize: newBoardConfig.inventorySize,
+        minimumDelayBetweenMoves: newBoardConfig.minimumDelayBetweenMoves,
+        teleporters: newBoardConfig.teleporters,
+        teleportRelocation: newBoardConfig.teleportRelocation,
+        width: newBoardConfig.width,
+        sessionLength: newBoardConfig.sessionLength,
       },
     });
   }

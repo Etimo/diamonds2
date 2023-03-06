@@ -21,7 +21,6 @@ import { BoardDto } from "../models/board.dto";
 import { GameObjectDto } from "../models/game-object.dto";
 import { BoardConfigService } from "./board-config.service";
 import { BotsService } from "./bots.service";
-import { HighscoresService } from "./highscores.service";
 import { RecordingsService } from "./recordings.service";
 import { SeasonsService } from "./seasons.service";
 
@@ -31,7 +30,6 @@ export class BoardsService {
 
   constructor(
     private botsService: BotsService,
-    private highscoresService: HighscoresService,
     private seasonsService: SeasonsService,
     private recordingsService: RecordingsService,
     private boardConfigService: BoardConfigService,

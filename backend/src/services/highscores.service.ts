@@ -22,27 +22,12 @@ export class HighscoresService {
   }
 
   public async getBotScore(newScore: IHighscore) {
-    // return this.prisma.highscore.findMany({
-    //   where: {
-    //     botId: newScore.botId,
-    //   },
-    //   include: {
-    //     bot: true,
-    //   },
-    // });
     return this.repo.getBotScore(newScore.botId);
   }
 
   private async isNewHighScore(newScore: IHighscore) {
     let isNew: boolean = true;
     const season = await this.seasonService.getCurrentSeason();
-
-    // const resultSetHighScore = await this.prisma.highscore.findFirst({
-    //   where: {
-    //     botId: newScore.botId,
-    //     seasonId: newScore.seasonId,
-    //   },
-    // });
 
     const resultSetHighScore = await this.repo.getBestBotScore(
       newScore.botId,
@@ -56,7 +41,7 @@ export class HighscoresService {
           newScore.seasonId,
           newScore.score,
         );
-        isNew = true;
+        isNew = false;
       } else {
         isNew = false;
       }
