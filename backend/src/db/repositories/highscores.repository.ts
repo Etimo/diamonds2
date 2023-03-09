@@ -31,6 +31,9 @@ export class HighscoresRepository {
         },
       },
       take: take,
+      orderBy: {
+        score: "desc",
+      },
     });
   }
 

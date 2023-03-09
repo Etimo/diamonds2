@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../services/prisma.service";
-import { INewRecording } from "../../types";
+import { INewRecording, IRecording } from "../../types";
 
 @Injectable()
 export class RecordingsRepository {
@@ -15,13 +15,14 @@ export class RecordingsRepository {
     });
   }
 
-  public async create(data: INewRecording) {
+  public async create(data: INewRecording): Promise<IRecording> {
     return this.prisma.recording.create({
       data,
     });
   }
 
   public async purgeOld(seasonId: string) {
+    //TODO: Move logic to a service. //Klara
     const maxEntries = 10;
     const existing = await this.prisma.recording.findMany({
       select: {
