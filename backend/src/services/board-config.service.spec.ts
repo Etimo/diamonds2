@@ -1,46 +1,15 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { BoardConfigRepository } from "../db/repositories/boardConfig.repository";
-import { SeasonsRepository } from "../db/repositories/seasons.repository";
+import { TestingModule } from "@nestjs/testing";
 import { offSeasonId } from "../utils/slack/utils";
 import { BoardConfigService } from "./board-config.service";
 import { SeasonsService } from "./seasons.service";
+import { GetTestModule, seasonsRepositoryMock } from "./testHelper";
 
 describe("BoardConfigService", () => {
   let boardConfigService: BoardConfigService;
   let seasonService: SeasonsService;
 
-  let repositoryMock = {
-    create: jest.fn(),
-  };
-
-  let seasonsRepositoryMock = {
-    getById: jest.fn(),
-    getAll: jest.fn(),
-    getCurrentSeason: jest.fn(),
-    create: jest.fn(),
-    dateCollision: jest.fn(),
-    getByName: jest.fn(),
-  };
-
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        BoardConfigService,
-        {
-          provide: SeasonsService,
-          useValue: seasonService,
-        },
-        {
-          provide: BoardConfigRepository,
-          useValue: repositoryMock,
-        },
-        SeasonsService,
-        {
-          provide: SeasonsRepository,
-          useValue: seasonsRepositoryMock,
-        },
-      ],
-    }).compile();
+    const module: TestingModule = await GetTestModule();
 
     boardConfigService = module.get<BoardConfigService>(BoardConfigService);
     seasonService = module.get<SeasonsService>(SeasonsService);

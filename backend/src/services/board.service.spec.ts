@@ -1,24 +1,21 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { BoardConfigRepository } from "../db/repositories/boardConfig.repository";
-import { BotRegistrationsRepository } from "../db/repositories/botRegistrations.repository";
-import { HighscoresRepository } from "../db/repositories/highscores.repository";
-import { RecordingsRepository } from "../db/repositories/recordings.repository";
-import { SeasonsRepository } from "../db/repositories/seasons.repository";
-import { TeamsRepository } from "../db/repositories/teams.repository";
+import { TestingModule } from "@nestjs/testing";
 import ConflictError from "../errors/conflict.error";
 import NotFoundError from "../errors/not-found.error";
 import UnauthorizedError from "../errors/unauthorized.error";
-import SilentLogger from "../gameengine/util/silent-logger";
-import { CustomLogger } from "../logger";
 import { IBot } from "../types";
-import { offSeasonId } from "../utils/slack/utils";
 import { BoardConfigService } from "./board-config.service";
 import { BoardsService } from "./board.service";
 import { BotsService } from "./bots.service";
 import { HighscoresService } from "./highscores.service";
 import { RecordingsService } from "./recordings.service";
 import { SeasonsService } from "./seasons.service";
-import { TeamsService } from "./teams.service";
+import {
+  boardConfigRepositoryMock,
+  botRepositryMock,
+  GetTestModule,
+  offSeasonTest,
+  seasonsRepositoryMock,
+} from "./testHelper";
 
 describe("BoardsService", () => {
   let botsService: BotsService;
@@ -28,47 +25,11 @@ describe("BoardsService", () => {
   let boardConfigService: BoardConfigService;
   let newBoardsService: BoardsService;
   let recordingsService: RecordingsService;
-  let teamsService: TeamsService;
 
   const dummyBoardId = 1111111;
   const dummyBoardToken = "dummy";
   const dummyBotId = "dummyId";
-  let seasonsRepositoryMock = {
-    getById: jest.fn(),
-    getAll: jest.fn(),
-    getCurrentSeason: jest.fn(),
-    create: jest.fn(),
-    dateCollision: jest.fn(),
-    getByName: jest.fn(),
-  };
 
-  let offSeasonTest = {
-    id: offSeasonId,
-    name: "Off Season",
-    startDate: new Date(),
-    endDate: new Date(),
-  };
-
-  let highescoresRepositoryMock = {
-    create: jest.fn(),
-    allBySeasonIdRaw: jest.fn(),
-    getBestBotScore: jest.fn(),
-    getBotScore: jest.fn(),
-    updateBestBotScore: jest.fn(),
-  };
-
-  let botRepositryMock = {
-    get: jest.fn(),
-  };
-  let recordingsRepositoryMock = {
-    getById: jest.fn(),
-  };
-  let teamsRepositoryMock = {
-    getById: jest.fn(),
-  };
-  let boardConfigRepositoryMock = {
-    getBoardConfigById: jest.fn(),
-  };
   const boardConfig = {
     id: "test",
     seasonId: "321",
@@ -88,81 +49,7 @@ describe("BoardsService", () => {
     seasonsRepositoryMock.getCurrentSeason.mockReturnValue(offSeasonTest);
     boardConfigRepositoryMock.getBoardConfigById.mockReturnValue(boardConfig);
 
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        BoardsService,
-        {
-          provide: BotsService,
-          useValue: botsService,
-        },
-        {
-          provide: SeasonsService,
-          useValue: seasonsService,
-        },
-        {
-          provide: BoardConfigService,
-          useValue: boardConfigService,
-        },
-        {
-          provide: RecordingsService,
-          useValue: recordingsService,
-        },
-        {
-          provide: CustomLogger,
-          useValue: new SilentLogger() as CustomLogger,
-        },
-        BotsService,
-        {
-          provide: TeamsService,
-          useValue: teamsService,
-        },
-        {
-          provide: BotRegistrationsRepository,
-          useValue: botRepositryMock,
-        },
-        SeasonsService,
-        {
-          provide: SeasonsRepository,
-          useValue: seasonsRepositoryMock,
-        },
-        RecordingsService,
-        {
-          provide: RecordingsRepository,
-          useValue: recordingsRepositoryMock,
-        },
-        {
-          provide: CustomLogger,
-          useValue: new SilentLogger() as CustomLogger,
-        },
-        HighscoresService,
-        {
-          provide: SeasonsService,
-          useValue: seasonsService,
-        },
-        {
-          provide: HighscoresRepository,
-          useValue: highescoresRepositoryMock,
-        },
-        TeamsService,
-        {
-          provide: TeamsRepository,
-          useValue: teamsRepositoryMock,
-        },
-        BoardConfigService,
-        {
-          provide: SeasonsService,
-          useValue: seasonsService,
-        },
-        {
-          provide: BoardConfigRepository,
-          useValue: boardConfigRepositoryMock,
-        },
-        {
-          useValue: numberOfBoards,
-          provide: "NUMBER_OF_BOARDS",
-        },
-      ],
-    }).compile();
+    const module: TestingModule = await GetTestModule();
 
     highscoresService = module.get<HighscoresService>(HighscoresService);
     botsService = module.get<BotsService>(BotsService);

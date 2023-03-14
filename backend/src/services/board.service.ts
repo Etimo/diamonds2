@@ -39,6 +39,7 @@ export class BoardsService {
     this.createInMemoryBoards(this.numberOfBoards).then(async () => {
       this.boards.forEach((board) => {
         board.registerSessionFinishedCallback(async (bot: BotGameObject) => {
+          // TODO: is this code needed to record? If yes, uncomment //Klara
           // const currentSeason = await this.seasonsService.getCurrentSeason();
           // const better = await this.highscoresService.addOrUpdate({
           //   name: bot.name,

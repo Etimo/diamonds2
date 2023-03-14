@@ -1,52 +1,22 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { HighscoresRepository } from "../db/repositories/highscores.repository";
-import { SeasonsRepository } from "../db/repositories/seasons.repository";
+import { TestingModule } from "@nestjs/testing";
 import { IHighscore, INewHighscore } from "../types";
 import { offSeasonId } from "../utils/slack/utils";
 import { HighscoresService } from "./highscores.service";
 import { SeasonsService } from "./seasons.service";
+import {
+  GetTestModule,
+  highscoresRepositoryMock,
+  seasonsRepositoryMock,
+} from "./testHelper";
 
 describe("HighScoresService", () => {
   let highScoresService: HighscoresService;
   let seasonsService: SeasonsService;
-  let repositoryMock = {
-    create: jest.fn(),
-    allBySeasonIdRaw: jest.fn(),
-    getBestBotScore: jest.fn(),
-    getBotScore: jest.fn(),
-    updateBestBotScore: jest.fn(),
-  };
-
-  let seasonsRepositoryMock = {
-    getById: jest.fn(),
-    getAll: jest.fn(),
-    getCurrentSeason: jest.fn(),
-    create: jest.fn(),
-    dateCollision: jest.fn(),
-    getByName: jest.fn(),
-  };
 
   let testBotName: string = "testBot";
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        HighscoresService,
-        {
-          provide: SeasonsService,
-          useValue: seasonsService,
-        },
-        {
-          provide: HighscoresRepository,
-          useValue: repositoryMock,
-        },
-        SeasonsService,
-        {
-          provide: SeasonsRepository,
-          useValue: seasonsRepositoryMock,
-        },
-      ],
-    }).compile();
+    const module: TestingModule = await GetTestModule();
 
     highScoresService = module.get<HighscoresService>(HighscoresService);
     seasonsService = module.get<SeasonsService>(SeasonsService);
@@ -80,11 +50,11 @@ describe("HighScoresService", () => {
       endDate: new Date(),
     };
 
-    let mockCreate = repositoryMock.create.mockReturnValue(highScore);
+    let mockCreate = highscoresRepositoryMock.create.mockReturnValue(highScore);
 
     seasonsRepositoryMock.getCurrentSeason.mockReturnValue(mockSeaason);
-    repositoryMock.allBySeasonIdRaw.mockReturnValue([]);
-    repositoryMock.getBestBotScore.mockReturnValue(null);
+    highscoresRepositoryMock.allBySeasonIdRaw.mockReturnValue([]);
+    highscoresRepositoryMock.getBestBotScore.mockReturnValue(null);
 
     //act
     let res = await highScoresService.addOrUpdate(highScore);
@@ -105,7 +75,7 @@ describe("HighScoresService", () => {
       updateTimeStamp: new Date(),
     };
 
-    repositoryMock.getBotScore.mockReturnValue([highscore]);
+    highscoresRepositoryMock.getBotScore.mockReturnValue([highscore]);
 
     //act
     let res = await highScoresService.getBotScore(highscore);
@@ -132,14 +102,14 @@ describe("HighScoresService", () => {
       updateTimeStamp: new Date(),
     };
 
-    repositoryMock.allBySeasonIdRaw.mockReturnValue([highscore]);
-    repositoryMock.getBestBotScore.mockReturnValue(highscore);
+    highscoresRepositoryMock.allBySeasonIdRaw.mockReturnValue([highscore]);
+    highscoresRepositoryMock.getBestBotScore.mockReturnValue(highscore);
 
     //act
     await highScoresService.addOrUpdate(botHighScore);
 
     //assert
-    expect(repositoryMock.updateBestBotScore).toHaveBeenCalled();
+    expect(highscoresRepositoryMock.updateBestBotScore).toHaveBeenCalled();
   });
 
   it("Ignore lower score", async () => {
@@ -162,12 +132,14 @@ describe("HighScoresService", () => {
     };
 
     //act
-    repositoryMock.allBySeasonIdRaw.mockReturnValue([botHighScore]);
-    repositoryMock.getBestBotScore.mockReturnValue(botHighScore);
+    highscoresRepositoryMock.allBySeasonIdRaw.mockReturnValue([botHighScore]);
+    highscoresRepositoryMock.getBestBotScore.mockReturnValue(botHighScore);
     await highScoresService.addOrUpdate(botLowScore);
 
     //assert
-    expect(repositoryMock.create).toHaveBeenCalledTimes(0);
-    expect(repositoryMock.updateBestBotScore).toHaveBeenCalledTimes(0);
+    expect(highscoresRepositoryMock.create).toHaveBeenCalledTimes(0);
+    expect(highscoresRepositoryMock.updateBestBotScore).toHaveBeenCalledTimes(
+      0,
+    );
   });
 });

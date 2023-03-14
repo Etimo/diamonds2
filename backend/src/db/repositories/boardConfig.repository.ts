@@ -16,7 +16,7 @@ export class BoardConfigRepository {
     });
   }
 
-  public async create(newBoardConfig: INewBoardConfig) {
+  public async create(newBoardConfig: INewBoardConfig): Promise<IBoardConfig> {
     return this.prisma.boardConfig.create({
       data: {
         canTackle: newBoardConfig.canTackle,
