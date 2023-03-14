@@ -1,5 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { HighscoresRepository } from "../db/repositories/highscores.repository";
+import { SeasonsRepository } from "../db/repositories/seasons.repository";
 import { IHighscore, INewHighscore } from "../types";
 import { offSeasonId } from "../utils/slack/utils";
 import { HighscoresService } from "./highscores.service";
@@ -7,6 +8,7 @@ import { SeasonsService } from "./seasons.service";
 
 describe("HighScoresService", () => {
   let highScoresService: HighscoresService;
+  let seasonsService: SeasonsService;
   let repositoryMock = {
     create: jest.fn(),
     allBySeasonIdRaw: jest.fn(),
@@ -15,8 +17,13 @@ describe("HighScoresService", () => {
     updateBestBotScore: jest.fn(),
   };
 
-  let seasonServiceMock = {
+  let seasonsRepositoryMock = {
+    getById: jest.fn(),
+    getAll: jest.fn(),
     getCurrentSeason: jest.fn(),
+    create: jest.fn(),
+    dateCollision: jest.fn(),
+    getByName: jest.fn(),
   };
 
   let testBotName: string = "testBot";
@@ -27,21 +34,28 @@ describe("HighScoresService", () => {
         HighscoresService,
         {
           provide: SeasonsService,
-          useValue: seasonServiceMock,
+          useValue: seasonsService,
         },
         {
           provide: HighscoresRepository,
           useValue: repositoryMock,
         },
+        SeasonsService,
+        {
+          provide: SeasonsRepository,
+          useValue: seasonsRepositoryMock,
+        },
       ],
     }).compile();
 
     highScoresService = module.get<HighscoresService>(HighscoresService);
+    seasonsService = module.get<SeasonsService>(SeasonsService);
     jest.clearAllMocks();
   });
 
   it("should be defined", () => {
     expect(highScoresService).toBeDefined();
+    expect(seasonsService).toBeDefined();
   });
 
   it("Add new score", async () => {
@@ -67,7 +81,8 @@ describe("HighScoresService", () => {
     };
 
     let mockCreate = repositoryMock.create.mockReturnValue(highScore);
-    seasonServiceMock.getCurrentSeason.mockReturnValue(mockSeaason);
+
+    seasonsRepositoryMock.getCurrentSeason.mockReturnValue(mockSeaason);
     repositoryMock.allBySeasonIdRaw.mockReturnValue([]);
     repositoryMock.getBestBotScore.mockReturnValue(null);
 

@@ -1,237 +1,290 @@
-// import { Test, TestingModule } from "@nestjs/testing";
-// import { Repository } from "typeorm";
-// import { BotRegistrationsEntity } from "../db/models/botRegistrations.entity";
-// import { BoardsService } from "./board.service";
-// import { HighScoresService } from "./high-scores.service";
+import { Test, TestingModule } from "@nestjs/testing";
+import { BoardConfigRepository } from "../db/repositories/boardConfig.repository";
+import { BotRegistrationsRepository } from "../db/repositories/botRegistrations.repository";
+import { HighscoresRepository } from "../db/repositories/highscores.repository";
+import { RecordingsRepository } from "../db/repositories/recordings.repository";
+import { SeasonsRepository } from "../db/repositories/seasons.repository";
+import { TeamsRepository } from "../db/repositories/teams.repository";
+import ConflictError from "../errors/conflict.error";
+import NotFoundError from "../errors/not-found.error";
+import UnauthorizedError from "../errors/unauthorized.error";
+import SilentLogger from "../gameengine/util/silent-logger";
+import { CustomLogger } from "../logger";
+import { IBot } from "../types";
+import { offSeasonId } from "../utils/slack/utils";
+import { BoardConfigService } from "./board-config.service";
+import { BoardsService } from "./board.service";
+import { BotsService } from "./bots.service";
+import { HighscoresService } from "./highscores.service";
+import { RecordingsService } from "./recordings.service";
+import { SeasonsService } from "./seasons.service";
+import { TeamsService } from "./teams.service";
 
-// import { getRepositoryToken } from "@nestjs/typeorm";
-// import { BoardConfigDto } from "src/models/board-config.dto";
-// import { BoardConfigEntity } from "../db/models/boardConfig.entity";
-// import { HighScoreEntity } from "../db/models/highScores.entity";
-// import { RecordingsEntity } from "../db/models/recordings.entity";
-// import { SeasonsEntity } from "../db/models/seasons.entity";
-// import { TeamsEntity } from "../db/models/teams.entity";
-// import { HighscoresRepository } from "../db/repositories/highscores.repository";
-// import { RecordingsRepository } from "../db/repositories/recordings.repository";
-// import ConflictError from "../errors/conflict.error";
-// import NotFoundError from "../errors/not-found.error";
-// import UnauthorizedError from "../errors/unauthorized.error";
-// import SilentLogger from "../gameengine/util/silent-logger";
-// import { IBot } from "../interfaces/bot.interface";
-// import { CustomLogger } from "../logger";
-// import { BoardConfigService } from "./board-config.service";
-// import { BotsService } from "./bots.service";
-// import { RecordingsService } from "./recordings.service";
-// import { SeasonsService } from "./seasons.service";
-// import { TeamsService } from "./teams.service";
+describe("BoardsService", () => {
+  let botsService: BotsService;
+  let highscoresService: HighscoresService;
+  let seasonsService: SeasonsService;
+  let boardsService: BoardsService;
+  let boardConfigService: BoardConfigService;
+  let newBoardsService: BoardsService;
+  let recordingsService: RecordingsService;
+  let teamsService: TeamsService;
 
-// describe("BoardsService", () => {
-//   let botsService: BotsService;
-//   let highScoresService: HighScoresService;
-//   let seasonsService: SeasonsService;
-//   const dummyBoardId = 1111111;
-//   const dummyBoardToken = "dummy";
-//   const dummyBotId = "dummyId";
-//   let boardsService: BoardsService;
-//   let boardConfigService: BoardConfigService;
-//   let newBoardsService: BoardsService;
-//   let recordingsService: RecordingsService;
-//   let repositoryMock: MockType<Repository<HighScoreEntity>>;
-//   let repositoryMock2: MockType<Repository<BotRegistrationsEntity>>;
-//   let repositoryMock3: MockType<Repository<SeasonsEntity>>;
-//   let repositoryMock4: MockType<Repository<BoardConfigEntity>>;
-//   const boardConfig = {
-//     id: "test",
-//     seasonId: "321",
-//     inventorySize: 5,
-//     canTackle: false,
-//     teleporters: 1,
-//     teleportRelocation: 10,
-//     height: 15,
-//     width: 15,
-//     minimumDelayBetweenMoves: 100,
-//     sessionLength: 60,
-//   };
-//   beforeEach(async () => {
-//     const module: TestingModule = await Test.createTestingModule({
-//       providers: [
-//         {
-//           provide: CustomLogger,
-//           useValue: new SilentLogger() as CustomLogger,
-//         },
-//         HighscoresRepository,
-//         {
-//           provide: getRepositoryToken(HighScoreEntity),
-//           useFactory: jest.fn(),
-//         },
-//         BotsService,
-//         {
-//           provide: getRepositoryToken(BotRegistrationsEntity),
-//           useFactory: repositoryMockFactory,
-//         },
-//         {
-//           provide: getRepositoryToken(RecordingsEntity),
-//           useFactory: repositoryMockFactory,
-//         },
-//         SeasonsService,
-//         RecordingsRepository,
-//         RecordingsService,
-//         {
-//           provide: getRepositoryToken(RecordingsEntity),
-//           useFactory: () => jest.fn(),
-//         },
-//         {
-//           provide: getRepositoryToken(SeasonsEntity),
-//           useFactory: repositoryMockFactory,
-//         },
-//         HighScoresService,
-//         {
-//           provide: getRepositoryToken(HighScoreEntity),
-//           useFactory: repositoryMockFactory,
-//         },
-//         TeamsService,
-//         {
-//           provide: getRepositoryToken(TeamsEntity),
-//           useFactory: repositoryMockFactory,
-//         },
-//         BoardConfigService,
-//         {
-//           provide: getRepositoryToken(BoardConfigEntity),
-//           useFactory: repositoryMockFactory,
-//         },
-//         {
-//           useValue: 2,
-//           provide: "NUMBER_OF_BOARDS",
-//         },
-//       ],
-//     }).compile();
-//     highScoresService = module.get<HighScoresService>(HighScoresService);
-//     botsService = module.get<BotsService>(BotsService);
-//     seasonsService = module.get<SeasonsService>(SeasonsService);
-//     recordingsService = module.get<RecordingsService>(RecordingsService);
-//     boardConfigService = module.get<BoardConfigService>(BoardConfigService);
-//     repositoryMock = module.get(getRepositoryToken(HighScoreEntity));
-//     repositoryMock2 = module.get(getRepositoryToken(BotRegistrationsEntity));
-//     repositoryMock3 = module.get(getRepositoryToken(SeasonsEntity));
-//     repositoryMock4 = module.get(getRepositoryToken(BoardConfigEntity));
-//     spyOn(boardConfigService, "getCurrentBoardConfig").and.returnValue(
-//       boardConfig as BoardConfigDto,
-//     );
-//     boardsService = new BoardsService(
-//       botsService,
-//       highScoresService,
-//       seasonsService,
-//       recordingsService,
-//       boardConfigService,
-//       new SilentLogger() as CustomLogger,
-//       2,
-//     );
+  const dummyBoardId = 1111111;
+  const dummyBoardToken = "dummy";
+  const dummyBotId = "dummyId";
+  let seasonsRepositoryMock = {
+    getById: jest.fn(),
+    getAll: jest.fn(),
+    getCurrentSeason: jest.fn(),
+    create: jest.fn(),
+    dateCollision: jest.fn(),
+    getByName: jest.fn(),
+  };
 
-//     newBoardsService = new BoardsService(
-//       botsService,
-//       highScoresService,
-//       seasonsService,
-//       recordingsService,
-//       boardConfigService,
-//       new SilentLogger() as CustomLogger,
-//       5,
-//     );
+  let offSeasonTest = {
+    id: offSeasonId,
+    name: "Off Season",
+    startDate: new Date(),
+    endDate: new Date(),
+  };
 
-//     jest.clearAllMocks();
-//   });
+  let highescoresRepositoryMock = {
+    create: jest.fn(),
+    allBySeasonIdRaw: jest.fn(),
+    getBestBotScore: jest.fn(),
+    getBotScore: jest.fn(),
+    updateBestBotScore: jest.fn(),
+  };
 
-//   it("should be defined", () => {
-//     expect(highScoresService).toBeDefined();
-//     expect(botsService).toBeDefined();
-//     expect(boardsService).toBeDefined();
-//     expect(seasonsService).toBeDefined();
-//   });
+  let botRepositryMock = {
+    get: jest.fn(),
+  };
+  let recordingsRepositoryMock = {
+    getById: jest.fn(),
+  };
+  let teamsRepositoryMock = {
+    getById: jest.fn(),
+  };
+  let boardConfigRepositoryMock = {
+    getBoardConfigById: jest.fn(),
+  };
+  const boardConfig = {
+    id: "test",
+    seasonId: "321",
+    inventorySize: 5,
+    canTackle: false,
+    teleporters: 1,
+    teleportRelocation: 10,
+    height: 15,
+    width: 15,
+    minimumDelayBetweenMoves: 100,
+    sessionLength: 60,
+  };
 
-//   it("Should throw UnauthorizedError when bot not exists", async () => {
-//     spyOn(botsService, "get").and.returnValue(undefined);
-//     await expect(
-//       boardsService.join(dummyBoardId, dummyBoardToken),
-//     ).rejects.toThrowError(UnauthorizedError);
-//   });
+  const numberOfBoards = 4;
 
-//   it("Should throw ConflictError when bot is already present on other board", async () => {
-//     const boards = boardsService.getAll();
-//     spyOn(botsService, "get").and.returnValue({
-//       token: dummyBoardToken,
-//       botName: "name",
-//       email: "email",
-//     } as IBot);
-//     await boardsService.join(boards[0].id, dummyBoardToken);
+  beforeEach(async () => {
+    seasonsRepositoryMock.getCurrentSeason.mockReturnValue(offSeasonTest);
+    boardConfigRepositoryMock.getBoardConfigById.mockReturnValue(boardConfig);
 
-//     await expect(
-//       boardsService.join(boards[1].id, dummyBoardToken),
-//     ).rejects.toThrowError(ConflictError);
-//   });
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        BoardsService,
+        {
+          provide: BotsService,
+          useValue: botsService,
+        },
+        {
+          provide: SeasonsService,
+          useValue: seasonsService,
+        },
+        {
+          provide: BoardConfigService,
+          useValue: boardConfigService,
+        },
+        {
+          provide: RecordingsService,
+          useValue: recordingsService,
+        },
+        {
+          provide: CustomLogger,
+          useValue: new SilentLogger() as CustomLogger,
+        },
+        BotsService,
+        {
+          provide: TeamsService,
+          useValue: teamsService,
+        },
+        {
+          provide: BotRegistrationsRepository,
+          useValue: botRepositryMock,
+        },
+        SeasonsService,
+        {
+          provide: SeasonsRepository,
+          useValue: seasonsRepositoryMock,
+        },
+        RecordingsService,
+        {
+          provide: RecordingsRepository,
+          useValue: recordingsRepositoryMock,
+        },
+        {
+          provide: CustomLogger,
+          useValue: new SilentLogger() as CustomLogger,
+        },
+        HighscoresService,
+        {
+          provide: SeasonsService,
+          useValue: seasonsService,
+        },
+        {
+          provide: HighscoresRepository,
+          useValue: highescoresRepositoryMock,
+        },
+        TeamsService,
+        {
+          provide: TeamsRepository,
+          useValue: teamsRepositoryMock,
+        },
+        BoardConfigService,
+        {
+          provide: SeasonsService,
+          useValue: seasonsService,
+        },
+        {
+          provide: BoardConfigRepository,
+          useValue: boardConfigRepositoryMock,
+        },
+        {
+          useValue: numberOfBoards,
+          provide: "NUMBER_OF_BOARDS",
+        },
+      ],
+    }).compile();
 
-//   it("Should throw ConflictError when bot is already present on same board", async () => {
-//     const boards = boardsService.getAll();
-//     spyOn(botsService, "get").and.returnValue({
-//       token: dummyBoardToken,
-//       botName: "name",
-//       email: "email",
-//     } as IBot);
-//     await boardsService.join(boards[0].id, dummyBoardToken);
+    highscoresService = module.get<HighscoresService>(HighscoresService);
+    botsService = module.get<BotsService>(BotsService);
+    seasonsService = module.get<SeasonsService>(SeasonsService);
+    recordingsService = module.get<RecordingsService>(RecordingsService);
+    boardConfigService = module.get<BoardConfigService>(BoardConfigService);
+    boardsService = module.get<BoardsService>(BoardsService);
+    newBoardsService = module.get<BoardsService>(BoardsService);
 
-//     await expect(
-//       boardsService.join(boards[0].id, dummyBoardToken),
-//     ).rejects.toThrowError(ConflictError);
-//   });
+    jest.clearAllMocks();
+  });
 
-//   it("Should throw NotFoundError when board not exists", async () => {
-//     spyOn(botsService, "get").and.returnValue({} as IBot);
-//     await expect(
-//       boardsService.join(dummyBoardId, dummyBoardToken),
-//     ).rejects.toThrowError(NotFoundError);
-//   });
+  it("should be defined", () => {
+    expect(highscoresService).toBeDefined();
+    expect(botsService).toBeDefined();
+    expect(boardsService).toBeDefined();
+    expect(seasonsService).toBeDefined();
+  });
 
-//   it("Should not remove board 1 and 3", async () => {
-//     spyOn(botsService, "get").and.returnValue({} as IBot);
-//     let boards = newBoardsService.getAll();
-//     await newBoardsService.join(boards[2].id, dummyBoardToken);
-//     newBoardsService.removeEmptyBoards(4);
-//     boards = newBoardsService.getAll();
-//     expect(boards[0].id).toEqual(1);
-//     expect(boards[1].id).toEqual(3);
-//     expect(boards.length).toEqual(2);
-//   });
+  it("Should throw UnauthorizedError when bot not exists", async () => {
+    //spyOn(botsService, "get").and.returnValue(undefined);
+    await expect(
+      boardsService.join(dummyBoardId, dummyBoardToken),
+    ).rejects.toThrowError(UnauthorizedError);
+  });
 
-//   it("Should remove all boards except board 1", async () => {
-//     spyOn(botsService, "get").and.returnValue({} as IBot);
-//     let boards = newBoardsService.getAll();
-//     newBoardsService.removeEmptyBoards(10);
-//     boards = newBoardsService.getAll();
-//     expect(boards[0].id).toEqual(1);
-//     expect(boards.length).toEqual(1);
-//   });
-// });
+  it("getAll, should be possible to get all boards", () => {
+    boardConfigRepositoryMock.getBoardConfigById.mockReturnValue(boardConfig);
 
-// //Repository functions to Mock
-// // @ts-ignore
-// export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
-//   () => ({
-//     findOne: jest.fn((entity) => entity),
-//     find: jest.fn((entity) => entity),
-//     update: jest.fn(),
-//     save: jest.fn(),
-//     createQueryBuilder: jest.fn(() => ({
-//       where: jest.fn(() => ({ getOne: jest.fn((entity) => entity) })),
-//       getOne: jest.fn(),
-//     })),
-//     execute: jest.fn((entity) => entity),
-//     where: jest.fn(),
-//   }),
-// );
-// export type MockType<T> = {
-//   [P in keyof T]: jest.Mock<{}>;
-// };
+    const boards = boardsService.getAll();
 
-describe("board.service", () => {
-  it("should work", () => {
-    expect(true).toBe(true);
+    expect(boards.length).toBe(numberOfBoards);
+  });
+
+  it("join, should be possible to join board", async () => {
+    const botId = "1";
+    boardConfigRepositoryMock.getBoardConfigById.mockReturnValue(boardConfig);
+    const botTest: IBot = {
+      email: "email",
+      password: "password",
+      name: "bot2",
+      id: botId,
+      createTimeStamp: new Date(),
+      updateTimeStamp: new Date(),
+      teamId: "Team",
+    };
+    botRepositryMock.get.mockReturnValueOnce(botTest);
+
+    const boards = boardsService.getAll();
+
+    const lenBefore = boards[0].gameObjects.length;
+
+    let board = await boardsService.join(boards[0].id, botId);
+
+    expect(board).toBeDefined();
+    expect(board.gameObjects.length).toBe(lenBefore + 2);
+  });
+
+  it("join, should throw unauthorized when bot is not defined", () => {
+    boardConfigRepositoryMock.getBoardConfigById.mockReturnValue(boardConfig);
+
+    const boards = boardsService.getAll();
+
+    const board = boardsService.join(boards[0].id, "hejhej");
+
+    expect(board).rejects.toThrow(UnauthorizedError);
+  });
+
+  it("Should throw ConflictError when bot is already present on other board", async () => {
+    const boards = boardsService.getAll();
+    botRepositryMock.get.mockReturnValue({
+      createTimeStamp: new Date(),
+      updateTimeStamp: new Date(),
+      password: "password",
+      teamId: "team",
+      id: dummyBoardToken,
+      name: "name",
+      email: "email",
+    } as IBot);
+
+    await boardsService.join(boards[0].id, dummyBoardToken);
+    let act = boardsService.join(boards[1].id, dummyBoardToken);
+    expect(act).rejects.toThrowError(ConflictError);
+  });
+
+  it("Should throw ConflictError when bot is already present on same board", async () => {
+    const boards = boardsService.getAll();
+    botRepositryMock.get.mockReturnValue({
+      createTimeStamp: new Date(),
+      updateTimeStamp: new Date(),
+      password: "password",
+      teamId: "team",
+      id: dummyBoardToken,
+      name: "name",
+      email: "email",
+    } as IBot);
+    await boardsService.join(boards[0].id, dummyBoardToken);
+    await expect(
+      boardsService.join(boards[0].id, dummyBoardToken),
+    ).rejects.toThrowError(ConflictError);
+  });
+  it("Should throw NotFoundError when board not exists", async () => {
+    await expect(
+      boardsService.join(dummyBoardId, dummyBoardToken),
+    ).rejects.toThrowError(NotFoundError);
+  });
+  it("Should not remove board 1 and 3", async () => {
+    botRepositryMock.get.mockReturnValue({} as IBot);
+    let boards = newBoardsService.getAll();
+    await newBoardsService.join(boards[2].id, dummyBoardToken);
+    newBoardsService.removeEmptyBoards(4);
+    boards = newBoardsService.getAll();
+    expect(boards[0].id).toEqual(1);
+    expect(boards[1].id).toEqual(3);
+    expect(boards.length).toEqual(2);
+  });
+  it("Should remove all boards except board 1", async () => {
+    botRepositryMock.get.mockReturnValue({} as IBot);
+    let boards = newBoardsService.getAll();
+    newBoardsService.removeEmptyBoards(10);
+    boards = newBoardsService.getAll();
+    expect(boards[0].id).toEqual(1);
+    expect(boards.length).toEqual(1);
   });
 });

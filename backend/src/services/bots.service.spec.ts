@@ -1,6 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import * as bcrypt from "bcrypt";
 import { BotRegistrationsRepository } from "../db/repositories/botRegistrations.repository";
+import { TeamsRepository } from "../db/repositories/teams.repository";
 import ConflictError from "../errors/conflict.error";
 import NotFoundError from "../errors/not-found.error";
 import { BotRecoveryDto } from "../models/bot-recovery.dto";
@@ -11,14 +12,18 @@ import { TeamsService } from "./teams.service";
 
 describe("BotsService", () => {
   let botsService: BotsService;
-  let teamsServiceMock = {
-    getByAbbreviation: jest.fn(),
-    getName: jest.fn(),
-  };
+  let teamsService: TeamsService;
+
   let repositoryMock = {
     getByEmail: jest.fn(),
     getByName: jest.fn(),
     create: jest.fn(),
+  };
+
+  let teamsRepositoryMock = {
+    get: jest.fn(),
+    create: jest.fn(),
+    getByAbbreviation: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -27,17 +32,28 @@ describe("BotsService", () => {
         BotsService,
         {
           provide: TeamsService,
-          useValue: teamsServiceMock,
+          useValue: teamsService,
         },
         {
           provide: BotRegistrationsRepository,
           useValue: repositoryMock,
         },
+        TeamsService,
+        {
+          provide: TeamsRepository,
+          useValue: teamsRepositoryMock,
+        },
       ],
     }).compile();
 
     botsService = module.get<BotsService>(BotsService);
+    teamsService = module.get<TeamsService>(TeamsService);
     jest.clearAllMocks();
+  });
+
+  it("should be defined", () => {
+    expect(botsService).toBeDefined();
+    expect(teamsService).toBeDefined();
   });
 
   it("add, Adding bot with same email generates error", async () => {

@@ -9,8 +9,7 @@ import { SeasonsService } from "./seasons.service";
 describe("SeasonsService", () => {
   let seasonsService: SeasonsService;
   let seasonId = "c43eee94-f363-4097-85e2-db3b48ed2d79";
-
-  let repositoryMock = {
+  let seasonsRepositoryMock = {
     getById: jest.fn(),
     getAll: jest.fn(),
     getCurrentSeason: jest.fn(),
@@ -25,7 +24,7 @@ describe("SeasonsService", () => {
         SeasonsService,
         {
           provide: SeasonsRepository,
-          useValue: repositoryMock,
+          useValue: seasonsRepositoryMock,
         },
       ],
     }).compile();
@@ -40,13 +39,13 @@ describe("SeasonsService", () => {
 
   it("getOffSeason, should return off season", async () => {
     // arrange
-    const mockSeaason = {
+    const mockSeason = {
       id: offSeasonId,
       name: "Off Season",
       startDate: new Date(),
       endDate: new Date(),
     };
-    repositoryMock.getById.mockReturnValue(mockSeaason);
+    seasonsRepositoryMock.getById.mockReturnValue(mockSeason);
 
     // act
     let returnedValue = await seasonsService.getOffSeason();
@@ -57,7 +56,7 @@ describe("SeasonsService", () => {
 
   it("all, should get no items in list", async () => {
     //arrange
-    repositoryMock.getAll.mockReturnValue(
+    seasonsRepositoryMock.getAll.mockReturnValue(
       new Promise<ISeason[]>((resolve, reject) => {
         var savedPackage: ISeason[] = [];
         setTimeout(() => {
@@ -85,7 +84,7 @@ describe("SeasonsService", () => {
       boardConfigId: "123",
     };
 
-    repositoryMock.getAll.mockReturnValue(
+    seasonsRepositoryMock.getAll.mockReturnValue(
       new Promise<ISeason[]>((resolve, reject) => {
         var savedPackage: ISeason[] = [testSeason];
         setTimeout(() => {
@@ -110,14 +109,14 @@ describe("SeasonsService", () => {
     };
 
     //arrange
-    repositoryMock.getCurrentSeason.mockReturnValue(undefined);
+    seasonsRepositoryMock.getCurrentSeason.mockReturnValue(undefined);
     const mockSeaason = {
       id: offSeasonId,
       name: "Off Season",
       startDate: new Date(),
       endDate: new Date(),
     };
-    repositoryMock.getById.mockReturnValue(mockSeaason);
+    seasonsRepositoryMock.getById.mockReturnValue(mockSeaason);
 
     //act
     let currentSeason = await seasonsService.getCurrentSeason();
@@ -134,7 +133,7 @@ describe("SeasonsService", () => {
       endDate: new Date(),
     };
     //arrange
-    repositoryMock.getCurrentSeason.mockReturnValue(testSeason);
+    seasonsRepositoryMock.getCurrentSeason.mockReturnValue(testSeason);
 
     //act
     let currentSeason = await seasonsService.getCurrentSeason();
@@ -152,10 +151,10 @@ describe("SeasonsService", () => {
       endDate: new Date("2018-02-01"),
       boardConfigId: "123",
     };
-    repositoryMock.dateCollision.mockReturnValue(undefined);
-    repositoryMock.getByName.mockReturnValue(undefined);
+    seasonsRepositoryMock.dateCollision.mockReturnValue(undefined);
+    seasonsRepositoryMock.getByName.mockReturnValue(undefined);
 
-    repositoryMock.create.mockReturnValue(
+    seasonsRepositoryMock.create.mockReturnValue(
       new Promise<ISeason>((resolve, reject) => {
         var savedPackage: ISeason = {
           ...dto,
@@ -186,10 +185,10 @@ describe("SeasonsService", () => {
       boardConfigId: "123",
     };
 
-    repositoryMock.dateCollision.mockReturnValue(undefined);
-    repositoryMock.getByName.mockReturnValue(undefined);
+    seasonsRepositoryMock.dateCollision.mockReturnValue(undefined);
+    seasonsRepositoryMock.getByName.mockReturnValue(undefined);
 
-    repositoryMock.create.mockReturnValue(
+    seasonsRepositoryMock.create.mockReturnValue(
       new Promise<ISeason>((resolve, reject) => {
         var savedPackage: ISeason = {
           ...dto,
@@ -229,10 +228,10 @@ describe("SeasonsService", () => {
       updateTimeStamp: new Date(),
     };
 
-    repositoryMock.dateCollision.mockReturnValue(collisionSeason);
-    repositoryMock.getByName.mockReturnValue(undefined);
+    seasonsRepositoryMock.dateCollision.mockReturnValue(collisionSeason);
+    seasonsRepositoryMock.getByName.mockReturnValue(undefined);
 
-    repositoryMock.create.mockReturnValue(
+    seasonsRepositoryMock.create.mockReturnValue(
       new Promise<ISeason>((resolve, reject) => {
         var savedPackage: ISeason = {
           ...dto,
@@ -271,9 +270,9 @@ describe("SeasonsService", () => {
       updateTimeStamp: new Date(),
     };
 
-    repositoryMock.dateCollision.mockReturnValue(undefined);
-    repositoryMock.getByName.mockReturnValue(nameExists);
-    repositoryMock.create.mockReturnValue(
+    seasonsRepositoryMock.dateCollision.mockReturnValue(undefined);
+    seasonsRepositoryMock.getByName.mockReturnValue(nameExists);
+    seasonsRepositoryMock.create.mockReturnValue(
       new Promise<ISeason>((resolve, reject) => {
         var savedPackage: ISeason = {
           ...dto,

@@ -39,7 +39,7 @@ export class BoardsService {
     this.createInMemoryBoards(this.numberOfBoards).then(async () => {
       this.boards.forEach((board) => {
         board.registerSessionFinishedCallback(async (bot: BotGameObject) => {
-          const currentSeason = await this.seasonsService.getCurrentSeason();
+          // const currentSeason = await this.seasonsService.getCurrentSeason();
           // const better = await this.highscoresService.addOrUpdate({
           //   name: bot.name,
           //   score: bot.score,
@@ -88,17 +88,17 @@ export class BoardsService {
       throw new UnauthorizedError("Invalid bot");
     }
     const board = this.getBoardById(boardId);
+
     if (!board) {
       throw new NotFoundError("Board not found");
     }
 
     // Check if bot is on any board
     this.boards.forEach((b) => {
-      if (b.getBot(botId)) {
+      if (b.getBotById(botId)) {
         throw new ConflictError("Already playing");
       }
     });
-
     const result = await board.enqueueJoin(bot);
     if (!result) {
       throw new ConflictError("Board full");
