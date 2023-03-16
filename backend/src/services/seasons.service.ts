@@ -1,47 +1,24 @@
 import { Injectable } from "@nestjs/common";
+import { SeasonsRepository } from "../db/repositories/seasons.repository";
 import ConflictError from "../errors/conflict.error";
 import ForbiddenError from "../errors/forbidden.error";
 import { INewSeason } from "../types";
-import { PrismaService } from "./prisma.service";
+import { offSeasonId } from "../utils/slack/utils";
 
 @Injectable()
 export class SeasonsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private repo: SeasonsRepository) {}
 
   public async getOffSeason() {
-    return this.prisma.season.findFirst({
-      where: {
-        id: "00000000-0000-0000-0000-000000000000",
-      },
-    });
+    return this.repo.getById(offSeasonId, false);
   }
 
   public async getSeason(seasonId: string) {
-    return this.prisma.season.findFirst({
-      where: {
-        id: seasonId,
-      },
-      include: {
-        boardConfig: true,
-      },
-    });
+    return this.repo.getById(seasonId, true);
   }
 
   public async getCurrentSeason() {
-    const currentSeason = await this.prisma.season.findFirst({
-      where: {
-        startDate: {
-          lte: new Date(),
-        },
-        endDate: {
-          gte: new Date(),
-        },
-      },
-      include: {
-        boardConfig: true,
-      },
-    });
-
+    let currentSeason = this.repo.getCurrentSeason();
     if (currentSeason) {
       return currentSeason;
     }
@@ -50,11 +27,7 @@ export class SeasonsService {
   }
 
   public async all() {
-    return this.prisma.season.findMany({
-      orderBy: {
-        createTimeStamp: "desc",
-      },
-    });
+    return this.repo.getAll();
   }
 
   public async add(data: INewSeason) {
@@ -76,8 +49,8 @@ export class SeasonsService {
     }
 
     let [dateCollision, nameExists] = await Promise.all([
-      this.dateCollision(data.startDate, data.endDate),
-      this.nameExists(data.name),
+      this.repo.dateCollision(data.startDate, data.endDate),
+      this.repo.getByName(data.name),
     ]);
 
     if (dateCollision) {
@@ -99,35 +72,6 @@ export class SeasonsService {
   }
 
   public async create(data: INewSeason) {
-    return this.prisma.season.create({
-      data: {
-        endDate: data.endDate,
-        name: data.name,
-        startDate: data.startDate,
-        boardConfigId: data.boardConfigId,
-      },
-    });
-  }
-
-  private async nameExists(name: string) {
-    return this.prisma.season.findFirst({
-      where: {
-        name,
-      },
-    });
-  }
-
-  // Check if the new dates collides with other season dates.
-  private async dateCollision(startDate: Date, endDate: Date) {
-    return this.prisma.season.findFirst({
-      where: {
-        startDate: {
-          lte: endDate,
-        },
-        endDate: {
-          lte: startDate,
-        },
-      },
-    });
+    return this.repo.create(data);
   }
 }

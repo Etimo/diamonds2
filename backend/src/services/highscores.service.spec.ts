@@ -1,133 +1,145 @@
-// import { HighScoresService } from "./high-scores.service";
-// import { Repository, SelectQueryBuilder, Connection } from "typeorm";
-// import { HighScoreEntity } from "../db/models/highScores.entity";
-// import { Test, TestingModule } from "@nestjs/testing";
-// import { HighscoreDto } from "../models/highscore.dto";
-// import { getRepositoryToken } from "@nestjs/typeorm";
-// import { SeasonsService } from "./seasons.service";
-// import { SeasonsEntity } from "../db/models/seasons.entity";
-// import { SeasonDto } from "../models/season.dto";
-// import { HighscoresRepository } from "../db/repositories/highscores.repository";
+import { TestingModule } from "@nestjs/testing";
+import { IHighscore, INewHighscore } from "../types";
+import { offSeasonId } from "../utils/slack/utils";
+import { HighscoresService } from "./highscores.service";
+import { SeasonsService } from "./seasons.service";
+import {
+  GetTestModule,
+  highscoresRepositoryMock,
+  seasonsRepositoryMock,
+} from "./testHelper";
 
-// describe("HighScoresService", () => {
-//   let highScoresService: HighScoresService;
-//   let seasonService: SeasonsService;
-//   let testBotName: string = "testBot";
-//   let seasonId = "c43eee94-f363-4097-85e2-db3b48ed2d79";
-//   let highscoresRepository: HighscoresRepository;
+describe("HighScoresService", () => {
+  let highScoresService: HighscoresService;
+  let seasonsService: SeasonsService;
 
-//   let currentSeason = {
-//     id: seasonId,
-//     name: "Off Season",
-//     startDate: new Date(),
-//     endDate: new Date(),
-//   };
+  let testBotName: string = "testBot";
 
-//   beforeEach(async () => {
-//     const module: TestingModule = await Test.createTestingModule({
-//       providers: [
-//         SeasonsService,
-//         {
-//           provide: getRepositoryToken(SeasonsEntity),
-//           useFactory: jest.fn(),
-//         },
-//         HighScoresService,
-//         HighscoresRepository,
-//         {
-//           provide: getRepositoryToken(HighScoreEntity),
-//           useFactory: jest.fn(),
-//         },
-//       ],
-//     }).compile();
-//     highScoresService = module.get<HighScoresService>(HighScoresService);
-//     seasonService = module.get<SeasonsService>(SeasonsService);
-//     highscoresRepository =
-//       module.get<HighscoresRepository>(HighscoresRepository);
-//     jest.clearAllMocks();
-//   });
+  beforeEach(async () => {
+    const module: TestingModule = await GetTestModule();
 
-//   it("should be defined", () => {
-//     expect(highScoresService).toBeDefined();
-//     expect(seasonService).toBeDefined();
-//   });
+    highScoresService = module.get<HighscoresService>(HighscoresService);
+    seasonsService = module.get<SeasonsService>(SeasonsService);
+    jest.clearAllMocks();
+  });
 
-//   // it("Add new score", async () => {
-//   //   let newHighScoreDto = {
-//   //     botName: testBotName,
-//   //     score: 44,
-//   //     seasonId: "Off Season",
-//   //   };
+  it("should be defined", () => {
+    expect(highScoresService).toBeDefined();
+    expect(seasonsService).toBeDefined();
+  });
 
-//   //   const mock = jest.spyOn(highscoresRepository, "create");
+  it("Add new score", async () => {
+    //arrange
+    let newHighScore: INewHighscore = {
+      botId: testBotName,
+      score: 44,
+      seasonId: "Off Season",
+    };
 
-//   //   await highScoresService.addOrUpdate(newHighScoreDto);
+    let highScore: IHighscore = {
+      ...newHighScore,
+      id: "c43eee94-f363-4097-85e2-db3b48ed2d79",
+      createTimeStamp: new Date(),
+      updateTimeStamp: new Date(),
+    };
 
-//   //   expect(mock).toHaveBeenCalledTimes(1);
-//   // });
+    const mockSeaason = {
+      id: offSeasonId,
+      name: "Off Season",
+      startDate: new Date(),
+      endDate: new Date(),
+    };
 
-//   // it("getBotScore", async () => {
-//   //   let highscore = {
-//   //     botName: testBotName,
-//   //     score: 100,
-//   //     seasonId: "Off Season",
-//   //   };
+    let mockCreate = highscoresRepositoryMock.create.mockReturnValue(highScore);
 
-//   //   const mock = jest
-//   //     .spyOn(highscoresRepository, "getBotScore")
-//   //     .mockReturnValue(new Promise(resolve => resolve([highscore])));
+    seasonsRepositoryMock.getCurrentSeason.mockReturnValue(mockSeaason);
+    highscoresRepositoryMock.allBySeasonIdRaw.mockReturnValue([]);
+    highscoresRepositoryMock.getBestBotScore.mockReturnValue(null);
 
-//   //   expect(await highScoresService.getBotScore(highscore)).toEqual([highscore]);
-//   // });
+    //act
+    let res = await highScoresService.addOrUpdate(highScore);
 
-//   // test("Update score", async () => {
-//   //   let botLowScore: HighscoreDto = {
-//   //     botName: testBotName,
-//   //     score: 44,
-//   //     seasonId: "Off Season",
-//   //   };
-//   //   let botHighScore = {
-//   //     botName: testBotName,
-//   //     score: 84,
-//   //     seasonId: "Off Season",
-//   //   };
+    //assert
+    expect(res).toBeTruthy();
+    expect(mockCreate).toHaveBeenCalledTimes(1);
+  });
 
-//   //   const mock = jest.spyOn(highscoresRepository, "getBestBotScore");
-//   //   const mockUpdate = jest.spyOn(highscoresRepository, "updateBestBotScore");
+  it("getBotScore", async () => {
+    //arrange
+    let highscore: IHighscore = {
+      botId: testBotName,
+      score: 100,
+      seasonId: "Off Season",
+      id: "c43eee94-f363-4097-85e2-db3b48ed2d79",
+      createTimeStamp: new Date(),
+      updateTimeStamp: new Date(),
+    };
 
-//   //   await highScoresService.addOrUpdate(botHighScore);
+    highscoresRepositoryMock.getBotScore.mockReturnValue([highscore]);
 
-//   //   expect(mockUpdate).toHaveBeenCalledWith(botHighScore);
-//   // });
+    //act
+    let res = await highScoresService.getBotScore(highscore);
 
-//   // it("Ignore lower score", async () => {
-//   //   let botHighScore = {
-//   //     botName: testBotName,
-//   //     score: 5,
-//   //     seasonId: "Off Season",
-//   //   };
-//   //   let botLowScore = {
-//   //     botName: testBotName,
-//   //     score: 4,
-//   //     seasonId: "Off Season",
-//   //   };
+    expect(res).toEqual([highscore]);
+  });
 
-//   //   await highScoresService.addOrUpdate(botHighScore);
+  it("addOrUpdate, should update score", async () => {
+    //arrange
+    let highscore: IHighscore = {
+      botId: testBotName,
+      score: 44,
+      seasonId: "Off Season",
+      id: "c43eee94-f363-4097-85e2-db3b48ed2d79",
+      createTimeStamp: new Date(),
+      updateTimeStamp: new Date(),
+    };
+    let botHighScore = {
+      botId: testBotName,
+      score: 84,
+      seasonId: "Off Season",
+      id: "c43eee94-f363-4097-85e2-db3b48ed2d79",
+      createTimeStamp: new Date(),
+      updateTimeStamp: new Date(),
+    };
 
-//   //   await highScoresService.addOrUpdate(botLowScore);
+    highscoresRepositoryMock.allBySeasonIdRaw.mockReturnValue([highscore]);
+    highscoresRepositoryMock.getBestBotScore.mockReturnValue(highscore);
 
-//   //   // Save calls should not increase.
-//   //   expect(repositoryMock.save).toHaveBeenCalledTimes(1);
-//   //   expect(update).toHaveBeenCalledTimes(0);
+    //act
+    await highScoresService.addOrUpdate(botHighScore);
 
-//   //   let highscoreDtoItems = await highScoresService.getBotScore(botLowScore);
+    //assert
+    expect(highscoresRepositoryMock.updateBestBotScore).toHaveBeenCalled();
+  });
 
-//   //   expect(highscoreDtoItems.length).toEqual(1);
+  it("Ignore lower score", async () => {
+    //arrange
+    let botLowScore: IHighscore = {
+      botId: testBotName,
+      score: 44,
+      seasonId: "Off Season",
+      id: "c43eee94-f363-4097-85e2-db3b48ed2d79",
+      createTimeStamp: new Date(),
+      updateTimeStamp: new Date(),
+    };
+    let botHighScore = {
+      botId: testBotName,
+      score: 84,
+      seasonId: "Off Season",
+      id: "c43eee94-f363-4097-85e2-db3b48ed2d79",
+      createTimeStamp: new Date(),
+      updateTimeStamp: new Date(),
+    };
 
-//   //   expect(highscoreDtoItems[0].score).toEqual(botHighScore.score);
-//   // });
-// });
-describe("high-scores.service", () => {
-  it("should work", () => {
-    expect(true).toBe(true);
+    //act
+    highscoresRepositoryMock.allBySeasonIdRaw.mockReturnValue([botHighScore]);
+    highscoresRepositoryMock.getBestBotScore.mockReturnValue(botHighScore);
+    await highScoresService.addOrUpdate(botLowScore);
+
+    //assert
+    expect(highscoresRepositoryMock.create).toHaveBeenCalledTimes(0);
+    expect(highscoresRepositoryMock.updateBestBotScore).toHaveBeenCalledTimes(
+      0,
+    );
   });
 });

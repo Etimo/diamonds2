@@ -1,24 +1,24 @@
 import { Injectable } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { BotRegistrationDto } from "src/models/bot-registration.dto";
+import { BotRegistrationsRepository } from "../db/repositories/botRegistrations.repository";
 import ConflictError from "../errors/conflict.error";
 import NotFoundError from "../errors/not-found.error";
 import { BotRecoveryDto } from "../models/bot-recovery.dto";
-import { INewBot } from "../types";
-import { PrismaService } from "./prisma.service";
+import { IBot, INewBot } from "../types";
 import { TeamsService } from "./teams.service";
 
 @Injectable()
 export class BotsService {
   constructor(
-    private prisma: PrismaService,
     private teamsService: TeamsService,
+    private repo: BotRegistrationsRepository,
   ) {}
 
   public async add(input: BotRegistrationDto) {
     if (
-      (await this.emailExists(input.email)) ||
-      (await this.nameExists(input.name))
+      (await this.repo.getByEmail(input.email)) ||
+      (await this.repo.getByName(input.name))
     ) {
       return Promise.reject(
         new ConflictError("Email and/or name already exists"),
@@ -40,60 +40,22 @@ export class BotsService {
   }
 
   public async get(id: string) {
-    return this.prisma.bot.findFirst({
-      where: {
-        id,
-      },
-    });
-  }
-
-  private async emailExists(email: string) {
-    email = email.toLowerCase();
-
-    return this.prisma.bot.findFirst({
-      where: {
-        email,
-      },
-    });
-  }
-
-  private async nameExists(name: string) {
-    name = name.toLowerCase();
-    return this.prisma.bot.findFirst({
-      where: {
-        name,
-      },
-    });
+    return this.repo.get(id);
   }
 
   public async create(dto: INewBot) {
     // Hashing password
     dto.password = await this.hashPassword(dto.password);
 
-    return this.prisma.bot.create({
-      data: {
-        email: dto.email,
-        name: dto.name,
-        password: dto.password,
-        teamId: dto.teamId,
-      },
-    });
+    return this.repo.create(dto);
   }
 
-  public async delete(dto: BotRegistrationDto) {
-    return this.prisma.bot.delete({
-      where: {
-        name: dto.name,
-      },
-    });
+  public async delete(dto: IBot) {
+    return this.repo.delete(dto);
   }
 
   public async getByEmailAndPassword(botRecoveryDto: BotRecoveryDto) {
-    const existingBot = await this.prisma.bot.findFirst({
-      where: {
-        email: botRecoveryDto.email,
-      },
-    });
+    const existingBot = await this.repo.getByEmail(botRecoveryDto.email);
 
     // Don't return bots with no password
     if (existingBot && existingBot.password) {

@@ -9,7 +9,10 @@ export type SessionFinishedCallbackFunction = (bot: BotGameObject) => void;
 
 export class Board {
   private readonly _id: number;
+
+  //TODO: This should be an array of IBot //Klara
   private bots: Object = {};
+
   /** List of game objects on the board. */
   private gameObjects: AbstractGameObject[] = [];
   /** Set of registered timer callbacks. */
@@ -64,7 +67,7 @@ export class Board {
    */
   async join(bot: IBot) {
     // Add bot to board
-    this.bots[bot.token] = bot;
+    this.bots[bot.id] = bot;
 
     // Create expiration timer
     this.createNewExpirationTimer(bot);
@@ -92,6 +95,15 @@ export class Board {
    */
   getBot(token: string): IBot {
     return this.bots[token];
+  }
+
+  /**
+   * Return a bot on the board matching the given id.
+   *
+   * @param id The id of the bot to find.
+   */
+  getBotById(id: string): IBot {
+    return this.bots[id];
   }
 
   /**

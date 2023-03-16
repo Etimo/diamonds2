@@ -63,6 +63,7 @@ export class RecordingsService {
     if (data.length === 0) {
       throw new NotFoundError("Season not found");
     }
+    //TODO: should botName be empty string?  //Klara
     return data.map((e) => ({
       board: e.board,
       botName: "",
@@ -77,6 +78,7 @@ export class RecordingsService {
     if (data.length === 0) {
       throw new NotFoundError("Data not found");
     }
+    //TODO: should botName be empty string?  //Klara
     return data.map(
       (e) =>
         ({

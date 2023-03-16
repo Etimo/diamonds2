@@ -1,15 +1,14 @@
 import { Injectable } from "@nestjs/common";
+import { HighscoresRepository } from "../db/repositories/highscores.repository";
 import { HighscorePrivateDto } from "../models/highscore-private.dto";
-import { HighscorePublicDto } from "../models/highscore-public.dto";
 import { IHighscore } from "../types";
-import { PrismaService } from "./prisma.service";
 import { SeasonsService } from "./seasons.service";
 
 @Injectable()
 export class HighscoresService {
   constructor(
-    private prisma: PrismaService,
     private seasonService: SeasonsService,
+    private repo: HighscoresRepository,
   ) {}
 
   public async addOrUpdate(input: IHighscore): Promise<boolean> {
@@ -23,37 +22,25 @@ export class HighscoresService {
   }
 
   public async getBotScore(newScore: IHighscore) {
-    return this.prisma.highscore.findMany({
-      where: {
-        botId: newScore.botId,
-      },
-      include: {
-        bot: true,
-      },
-    });
+    return this.repo.getBotScore(newScore.botId);
   }
 
   private async isNewHighScore(newScore: IHighscore) {
     let isNew: boolean = true;
     const season = await this.seasonService.getCurrentSeason();
 
-    const resultSetHighScore = await this.prisma.highscore.findFirst({
-      where: {
-        botId: newScore.botId,
-        seasonId: newScore.seasonId,
-      },
-    });
+    const resultSetHighScore = await this.repo.getBestBotScore(
+      newScore.botId,
+      newScore.seasonId,
+    );
 
     if (resultSetHighScore) {
       if (resultSetHighScore.score < newScore.score) {
-        await this.prisma.highscore.update({
-          data: {
-            score: newScore.score,
-          },
-          where: {
-            id: resultSetHighScore.id,
-          },
-        });
+        await this.repo.updateBestBotScore(
+          newScore.botId,
+          newScore.seasonId,
+          newScore.score,
+        );
         isNew = false;
       } else {
         isNew = false;
@@ -73,24 +60,25 @@ export class HighscoresService {
 
   private async allBySeasonId(seasonId: string, limit: number = 0) {
     const currentSeason = await this.seasonService.getCurrentSeason();
-    const take = limit ? limit : seasonId === currentSeason.id ? 50 : 20;
+    return this.repo.allBySeasonIdRaw(seasonId, currentSeason.id);
+    // const take = limit ? limit : seasonId === currentSeason.id ? 50 : 20;
 
-    return this.prisma.highscore.findMany({
-      where: {
-        seasonId,
-      },
-      include: {
-        bot: {
-          include: {
-            team: {
-              select: {
-                logotypeUrl: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    // return this.prisma.highscore.findMany({
+    //   where: {
+    //     seasonId,
+    //   },
+    //   include: {
+    //     bot: {
+    //       include: {
+    //         team: {
+    //           select: {
+    //             logotypeUrl: true,
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    // });
   }
 
   public async allBySeasonIdPrivate(
@@ -116,20 +104,10 @@ export class HighscoresService {
   }
 
   public async create(data: IHighscore) {
-    return this.prisma.highscore.create({
-      data: {
-        score: data.score,
-        botId: data.botId,
-        seasonId: data.seasonId,
-      },
-    });
+    return this.repo.create(data);
   }
 
   public async deleteFor(botId: string) {
-    return this.prisma.highscore.deleteMany({
-      where: {
-        botId,
-      },
-    });
+    return this.repo.delete(botId);
   }
 }

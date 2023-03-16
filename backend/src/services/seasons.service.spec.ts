@@ -1,289 +1,295 @@
-// import { Test, TestingModule } from "@nestjs/testing";
-// import { getRepositoryToken } from "@nestjs/typeorm";
-// import { Repository } from "typeorm";
-// import { SeasonsEntity } from "../db/models/seasons.entity";
-// import ConflictError from "../errors/conflict.error";
-// import ForbiddenError from "../errors/forbidden.error";
-// import { SeasonDto } from "../models/season.dto";
-// import { SeasonsService } from "./seasons.service";
+import { Test, TestingModule } from "@nestjs/testing";
+import { SeasonsRepository } from "../db/repositories/seasons.repository";
+import ConflictError from "../errors/conflict.error";
+import ForbiddenError from "../errors/forbidden.error";
+import { INewSeason, ISeason } from "../types";
+import { offSeasonId } from "../utils/slack/utils";
+import { SeasonsService } from "./seasons.service";
 
-// describe("SeasonsService", () => {
-//   let seasonsService: SeasonsService;
-//   let repositoryMock: MockType<Repository<SeasonsEntity>>;
-//   let seasonId = "c43eee94-f363-4097-85e2-db3b48ed2d79";
+describe("SeasonsService", () => {
+  let seasonsService: SeasonsService;
+  let seasonId = "c43eee94-f363-4097-85e2-db3b48ed2d79";
+  let seasonsRepositoryMock = {
+    getById: jest.fn(),
+    getAll: jest.fn(),
+    getCurrentSeason: jest.fn(),
+    create: jest.fn(),
+    dateCollision: jest.fn(),
+    getByName: jest.fn(),
+  };
 
-//   beforeEach(async () => {
-//     const module: TestingModule = await Test.createTestingModule({
-//       providers: [
-//         SeasonsService,
-//         {
-//           provide: "SEASONS",
-//           useFactory: () => getRepositoryToken(SeasonsEntity),
-//         },
-//       ],
-//     }).compile();
-//     seasonsService = module.get<SeasonsService>(SeasonsService);
-//     repositoryMock = module.get(getRepositoryToken(SeasonsEntity));
-//     jest.clearAllMocks();
-//   });
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        SeasonsService,
+        {
+          provide: SeasonsRepository,
+          useValue: seasonsRepositoryMock,
+        },
+      ],
+    }).compile();
 
-//   it("should be defined", () => {
-//     expect(seasonsService).toBeDefined();
-//   });
+    seasonsService = module.get<SeasonsService>(SeasonsService);
+    jest.clearAllMocks();
+  });
 
-//   it("should get no items in list", async () => {
-//     //Mocking find from repository
-//     repositoryMock.find.mockReturnValue(
-//       new Promise<SeasonDto[]>((resolve, reject) => {
-//         var savedPackage: SeasonDto[] = [];
+  it("should be defined", () => {
+    expect(seasonsService).toBeDefined();
+  });
 
-//         setTimeout(() => {
-//           resolve(savedPackage);
-//         }, 1500);
-//       }),
-//     );
+  it("getOffSeason, should return off season", async () => {
+    // arrange
+    const mockSeason = {
+      id: offSeasonId,
+      name: "Off Season",
+      startDate: new Date(),
+      endDate: new Date(),
+    };
+    seasonsRepositoryMock.getById.mockReturnValue(mockSeason);
 
-//     let all = await seasonsService.all();
+    // act
+    let returnedValue = await seasonsService.getOffSeason();
 
-//     expect(all.length).toEqual(0);
-//   });
+    // assert
+    expect(returnedValue.name).toEqual("Off Season");
+  });
 
-//   it("should get one item in list", async () => {
-//     let testSeason = {
-//       id: seasonId,
-//       name: "Test Season",
-//       startDate: new Date(),
-//       endDate: new Date(),
-//     };
-//     //Mocking find from repository
-//     repositoryMock.find.mockReturnValue(
-//       new Promise<SeasonDto[]>((resolve, reject) => {
-//         var savedPackage: SeasonDto[] = [testSeason];
+  it("all, should get no items in list", async () => {
+    //arrange
+    seasonsRepositoryMock.getAll.mockReturnValue(
+      new Promise<ISeason[]>((resolve, reject) => {
+        var savedPackage: ISeason[] = [];
+        setTimeout(() => {
+          resolve(savedPackage);
+        }, 1500);
+      }),
+    );
 
-//         setTimeout(() => {
-//           resolve(savedPackage);
-//         }, 1500);
-//       }),
-//     );
+    //act
+    let all = await seasonsService.all();
 
-//     let all = await seasonsService.all();
+    //assert
+    expect(all.length).toEqual(0);
+  });
 
-//     expect(all.length).toEqual(1);
-//   });
+  it("all, should get one item in list", async () => {
+    //arrange
+    let testSeason: ISeason = {
+      id: seasonId,
+      name: "Test Season",
+      startDate: new Date(),
+      endDate: new Date(),
+      createTimeStamp: new Date(),
+      updateTimeStamp: new Date(),
+      boardConfigId: "123",
+    };
 
-//   it("should get off season, exists no other seasons", async () => {
-//     const offSeason = {
-//       id: seasonId,
-//       name: "Off Season",
-//       startDate: new Date(),
-//       endDate: new Date(),
-//     };
+    seasonsRepositoryMock.getAll.mockReturnValue(
+      new Promise<ISeason[]>((resolve, reject) => {
+        var savedPackage: ISeason[] = [testSeason];
+        setTimeout(() => {
+          resolve(savedPackage);
+        }, 1500);
+      }),
+    );
 
-//     const execute = jest.fn();
-//     const where = jest.fn(() => ({ execute }));
-//     const set = jest.fn(() => ({ where }));
-//     const update = jest.fn(() => ({ set }));
+    //act
+    let all = await seasonsService.all();
 
-//     const getOne = jest.fn(
-//       () =>
-//         new Promise<SeasonDto>((resolve, reject) => {
-//           var savedPackage: SeasonDto = null;
+    //assert
+    expect(all.length).toEqual(1);
+  });
 
-//           setTimeout(() => {
-//             resolve(savedPackage);
-//           }, 500);
-//         }),
-//     );
-//     const where2 = jest.fn(() => ({ getOne }));
+  it("getCurrentSeason, should get off season when no other seasons exists", async () => {
+    const offSeason = {
+      id: offSeasonId,
+      name: "Off Season",
+      startDate: new Date(),
+      endDate: new Date(),
+    };
 
-//     repositoryMock.createQueryBuilder.mockImplementation(
-//       jest.fn(() => ({ where: where2 })),
-//     );
+    //arrange
+    seasonsRepositoryMock.getCurrentSeason.mockReturnValue(undefined);
+    const mockSeaason = {
+      id: offSeasonId,
+      name: "Off Season",
+      startDate: new Date(),
+      endDate: new Date(),
+    };
+    seasonsRepositoryMock.getById.mockReturnValue(mockSeaason);
 
-//     // Mock getOffSeason
-//     const getOffSeason = (SeasonsService.prototype.getOffSeason = jest.fn());
-//     getOffSeason.mockReturnValue(offSeason);
+    //act
+    let currentSeason = await seasonsService.getCurrentSeason();
 
-//     let currentSeason = await seasonsService.getCurrentSeason();
+    //assert
+    expect(currentSeason.name).toEqual("Off Season");
+  });
 
-//     expect(currentSeason.name).toEqual("Off Season");
-//   });
+  it("getCurrentSeason, should return Test Season", async () => {
+    let testSeason = {
+      id: seasonId,
+      name: "Test Season",
+      startDate: new Date(),
+      endDate: new Date(),
+    };
+    //arrange
+    seasonsRepositoryMock.getCurrentSeason.mockReturnValue(testSeason);
 
-//   it("should return Test Season", async () => {
-//     let testSeason = {
-//       id: seasonId,
-//       name: "Test Season",
-//       startDate: new Date(),
-//       endDate: new Date(),
-//     };
+    //act
+    let currentSeason = await seasonsService.getCurrentSeason();
 
-//     const execute = jest.fn();
-//     const where = jest.fn(() => ({ execute }));
-//     const set = jest.fn(() => ({ where }));
-//     const update = jest.fn(() => ({ set }));
+    //assert
+    expect(currentSeason.name).toEqual("Test Season");
+    expect(currentSeason.id).toEqual(seasonId);
+  });
 
-//     const getOne = jest.fn(
-//       () =>
-//         new Promise<SeasonDto>((resolve, reject) => {
-//           var savedPackage: SeasonDto = testSeason;
+  it("add, Should add season", async () => {
+    //arrange
+    const dto: INewSeason = {
+      name: "test",
+      startDate: new Date("2018-01-01"),
+      endDate: new Date("2018-02-01"),
+      boardConfigId: "123",
+    };
+    seasonsRepositoryMock.dateCollision.mockReturnValue(undefined);
+    seasonsRepositoryMock.getByName.mockReturnValue(undefined);
 
-//           setTimeout(() => {
-//             resolve(savedPackage);
-//           }, 500);
-//         }),
-//     );
-//     const where2 = jest.fn(() => ({ getOne }));
+    seasonsRepositoryMock.create.mockReturnValue(
+      new Promise<ISeason>((resolve, reject) => {
+        var savedPackage: ISeason = {
+          ...dto,
+          id: "124",
+          createTimeStamp: new Date(),
+          updateTimeStamp: new Date(),
+        };
+        setTimeout(() => {
+          resolve(savedPackage);
+        }, 500);
+      }),
+    );
 
-//     repositoryMock.createQueryBuilder.mockImplementation(
-//       jest.fn(() => ({ where: where2 })),
-//     );
+    //act
+    const season = await seasonsService.add(dto);
 
-//     let currentSeason = await seasonsService.getCurrentSeason();
+    //assert
+    expect(season.name).toEqual("test");
+    expect(season.id).toEqual("124");
+  });
 
-//     expect(currentSeason.name).toEqual("Test Season");
-//     expect(currentSeason.id).toEqual(seasonId);
-//   });
+  it("Adding season, fails with startDate larger then endDate", async () => {
+    //arrange
+    const dto: INewSeason = {
+      name: "test",
+      startDate: new Date("2020-01-01"),
+      endDate: new Date("2018-02-01"),
+      boardConfigId: "123",
+    };
 
-//   it("Should add season", async () => {
-//     const dto = SeasonDto.create({
-//       name: "test",
-//       startDate: new Date("2018-01-01"),
-//       endDate: new Date("2018-02-01"),
-//     });
+    seasonsRepositoryMock.dateCollision.mockReturnValue(undefined);
+    seasonsRepositoryMock.getByName.mockReturnValue(undefined);
 
-//     spyOn<any>(seasonsService, "nameExists").and.returnValue(false);
-//     spyOn<any>(seasonsService, "dateCollision").and.returnValue(false);
+    seasonsRepositoryMock.create.mockReturnValue(
+      new Promise<ISeason>((resolve, reject) => {
+        var savedPackage: ISeason = {
+          ...dto,
+          id: "124",
+          createTimeStamp: new Date(),
+          updateTimeStamp: new Date(),
+        };
+        setTimeout(() => {
+          resolve(savedPackage);
+        }, 500);
+      }),
+    );
 
-//     const save = jest.fn(
-//       () =>
-//         new Promise<SeasonDto>((resolve, reject) => {
-//           var savedPackage: SeasonDto = dto;
+    //act
+    let response = seasonsService.add(dto);
 
-//           setTimeout(() => {
-//             resolve(savedPackage);
-//           }, 500);
-//         }),
-//     );
+    //assert
+    await expect(response).rejects.toThrowError(ForbiddenError);
+  });
 
-//     repositoryMock.save.mockImplementation(save);
+  it("add, fails with date collision", async () => {
+    //arrange
+    const dto: INewSeason = {
+      name: "test",
+      startDate: new Date("2018-01-01"),
+      endDate: new Date("2018-02-01"),
+      boardConfigId: "123",
+    };
 
-//     const season = await seasonsService.add(dto);
-//     expect(season.name).toEqual("test");
-//   });
+    const collisionSeason: ISeason = {
+      name: "test",
+      startDate: new Date("2018-01-01"),
+      endDate: new Date("2018-02-01"),
+      boardConfigId: "123",
+      id: "123",
+      createTimeStamp: new Date(),
+      updateTimeStamp: new Date(),
+    };
 
-//   it("Adding season, fails with startDate larger then endDate", async () => {
-//     const dto = SeasonDto.create({
-//       name: "test",
-//       startDate: new Date("2020-01-01"),
-//       endDate: new Date("2018-02-01"),
-//     });
+    seasonsRepositoryMock.dateCollision.mockReturnValue(collisionSeason);
+    seasonsRepositoryMock.getByName.mockReturnValue(undefined);
 
-//     spyOn<any>(seasonsService, "nameExists").and.returnValue(false);
-//     spyOn<any>(seasonsService, "dateCollision").and.returnValue(false);
+    seasonsRepositoryMock.create.mockReturnValue(
+      new Promise<ISeason>((resolve, reject) => {
+        var savedPackage: ISeason = {
+          ...dto,
+          id: "124",
+          createTimeStamp: new Date(),
+          updateTimeStamp: new Date(),
+        };
+        setTimeout(() => {
+          resolve(savedPackage);
+        }, 500);
+      }),
+    );
 
-//     const save = jest.fn(
-//       () =>
-//         new Promise<SeasonDto>((resolve, reject) => {
-//           var savedPackage: SeasonDto = dto;
+    //act
+    let response = seasonsService.add(dto);
 
-//           setTimeout(() => {
-//             resolve(savedPackage);
-//           }, 500);
-//         }),
-//     );
+    //assert
+    await expect(response).rejects.toThrowError(ConflictError);
+  });
 
-//     repositoryMock.save.mockImplementation(save);
+  it("Adding season, fails with name exists", async () => {
+    //arrange
+    const dto: INewSeason = {
+      name: "test",
+      startDate: new Date("2018-01-01"),
+      endDate: new Date("2018-02-01"),
+      boardConfigId: "123",
+    };
+    const nameExists: ISeason = {
+      name: "test",
+      startDate: new Date("2018-01-01"),
+      endDate: new Date("2018-02-01"),
+      boardConfigId: "123",
+      id: "123",
+      createTimeStamp: new Date(),
+      updateTimeStamp: new Date(),
+    };
 
-//     await expect(seasonsService.add(dto)).rejects.toThrowError(ForbiddenError);
-//   });
+    seasonsRepositoryMock.dateCollision.mockReturnValue(undefined);
+    seasonsRepositoryMock.getByName.mockReturnValue(nameExists);
+    seasonsRepositoryMock.create.mockReturnValue(
+      new Promise<ISeason>((resolve, reject) => {
+        var savedPackage: ISeason = {
+          ...dto,
+          id: "124",
+          createTimeStamp: new Date(),
+          updateTimeStamp: new Date(),
+        };
+        setTimeout(() => {
+          resolve(savedPackage);
+        }, 500);
+      }),
+    );
 
-//   it("Adding season, fails with date collision", async () => {
-//     const dto = SeasonDto.create({
-//       name: "test",
-//       startDate: new Date("2018-01-01"),
-//       endDate: new Date("2018-02-01"),
-//     });
+    //act
+    let response = seasonsService.add(dto);
 
-//     const collisionSeason = SeasonDto.create({
-//       name: "test",
-//       startDate: new Date("2018-01-01"),
-//       endDate: new Date("2018-02-01"),
-//     });
-
-//     spyOn<any>(seasonsService, "nameExists").and.returnValue(false);
-//     spyOn<any>(seasonsService, "dateCollision").and.returnValue(
-//       collisionSeason,
-//     );
-
-//     const save = jest.fn(
-//       () =>
-//         new Promise<SeasonDto>((resolve, reject) => {
-//           var savedPackage: SeasonDto = dto;
-
-//           setTimeout(() => {
-//             resolve(savedPackage);
-//           }, 500);
-//         }),
-//     );
-
-//     repositoryMock.save.mockImplementation(save);
-
-//     await expect(seasonsService.add(dto)).rejects.toThrowError(ConflictError);
-//   });
-
-//   it("Adding season, fails with name exists", async () => {
-//     const dto = SeasonDto.create({
-//       name: "test",
-//       startDate: new Date("2018-01-01"),
-//       endDate: new Date("2018-02-01"),
-//     });
-
-//     const nameExists = SeasonDto.create({
-//       name: "test",
-//       startDate: new Date("2018-01-01"),
-//       endDate: new Date("2018-02-01"),
-//     });
-
-//     spyOn<any>(seasonsService, "nameExists").and.returnValue(nameExists);
-//     spyOn<any>(seasonsService, "dateCollision").and.returnValue(false);
-
-//     const save = jest.fn(
-//       () =>
-//         new Promise<SeasonDto>((resolve, reject) => {
-//           var savedPackage: SeasonDto = dto;
-
-//           setTimeout(() => {
-//             resolve(savedPackage);
-//           }, 500);
-//         }),
-//     );
-
-//     repositoryMock.save.mockImplementation(save);
-
-//     await expect(seasonsService.add(dto)).rejects.toThrowError(ConflictError);
-//   });
-// });
-
-// // @ts-ignore
-// export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
-//   () => ({
-//     findOne: jest.fn((entity) => entity),
-//     find: jest.fn((entity) => entity),
-//     update: jest.fn(),
-//     save: jest.fn(),
-//     createQueryBuilder: jest.fn(() => ({
-//       where: jest.fn(() => ({ getOne: jest.fn((entity) => entity) })),
-//       getOne: jest.fn(),
-//     })),
-//     execute: jest.fn((entity) => entity),
-//     where: jest.fn(),
-//   }),
-// );
-// export type MockType<T> = {
-//   [P in keyof T]: jest.Mock<{}>;
-// };
-describe("seasons.service", () => {
-  it("should work", () => {
-    expect(true).toBe(true);
+    //assert
+    await expect(response).rejects.toThrowError(ConflictError);
   });
 });

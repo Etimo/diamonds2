@@ -76,7 +76,7 @@ export class SlackService {
     return slackError(action.errorTag, "Could not process input");
   }
 
-  private async addSeason(payload) {
+  private async addSeason(payload): Promise<SeasonDto> {
     const startDate = this.parseValue(payload, "start_date", "selected_date");
     const endDate = this.parseValue(payload, "end_date", "selected_date");
     const name = this.parseValue(payload, "season_name", "value");
@@ -115,7 +115,12 @@ export class SlackService {
       boardConfigId: createdBoardConfig.id,
     };
     const createdSeason = await this.seasonsService.add(season);
-    return season;
+    let seasonDto = new SeasonDto();
+    seasonDto.id = createdSeason.id;
+    seasonDto.name = createdSeason.name;
+    seasonDto.startDate = createdSeason.startDate;
+    seasonDto.endDate = createdSeason.endDate;
+    return seasonDto;
   }
 
   private async addTeam(payload) {

@@ -50,12 +50,13 @@ export class OperationQueueBoard extends Board {
       //   new Date().getTime() - queuedAt.getTime(),
       //   "ms",
       // );
-      // try {
-      //   const res = t.run();
-      //   cb(res);
-      // } catch (e) {
-      //   cb(null, e);
-      // }
+
+      try {
+        const res = t.run();
+        cb(res);
+      } catch (e) {
+        cb(null, e);
+      }
     });
   }
 
