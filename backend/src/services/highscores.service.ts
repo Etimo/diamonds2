@@ -61,24 +61,6 @@ export class HighscoresService {
   private async allBySeasonId(seasonId: string, limit: number = 0) {
     const currentSeason = await this.seasonService.getCurrentSeason();
     return this.repo.allBySeasonIdRaw(seasonId, currentSeason.id);
-    // const take = limit ? limit : seasonId === currentSeason.id ? 50 : 20;
-
-    // return this.prisma.highscore.findMany({
-    //   where: {
-    //     seasonId,
-    //   },
-    //   include: {
-    //     bot: {
-    //       include: {
-    //         team: {
-    //           select: {
-    //             logotypeUrl: true,
-    //           },
-    //         },
-    //       },
-    //     },
-    //   },
-    // });
   }
 
   public async allBySeasonIdPrivate(
@@ -95,12 +77,6 @@ export class HighscoresService {
 
   public async allBySeasonIdPublic(seasonId: string) {
     return this.allBySeasonId(seasonId);
-    // return highScores.map((e) => ({
-    //   botName: e.bot.name,
-    //   score: e.score,
-    //   seasonId: e.seasonId,
-    //   teamLogotype: e.bot.team.logotypeUrl,
-    // }));
   }
 
   public async create(data: IHighscore) {

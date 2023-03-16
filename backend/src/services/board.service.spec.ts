@@ -70,7 +70,6 @@ describe("BoardsService", () => {
   });
 
   it("Should throw UnauthorizedError when bot not exists", async () => {
-    //spyOn(botsService, "get").and.returnValue(undefined);
     await expect(
       boardsService.join(dummyBoardId, dummyBoardToken),
     ).rejects.toThrowError(UnauthorizedError);

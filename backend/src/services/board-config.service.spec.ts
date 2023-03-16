@@ -22,7 +22,6 @@ describe("BoardConfigService", () => {
   });
 
   it("getCurrentBoardConfig, should return off season board config if no current season", () => {
-    // arrange
     const mockSeaason = {
       id: offSeasonId,
       name: "Off Season",

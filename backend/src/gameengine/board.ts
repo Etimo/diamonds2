@@ -10,7 +10,6 @@ export type SessionFinishedCallbackFunction = (bot: BotGameObject) => void;
 export class Board {
   private readonly _id: number;
 
-  //TODO: This should be an array of IBot //Klara
   private bots: Object = {};
 
   /** List of game objects on the board. */

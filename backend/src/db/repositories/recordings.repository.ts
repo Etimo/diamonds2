@@ -22,7 +22,6 @@ export class RecordingsRepository {
   }
 
   public async purgeOld(seasonId: string) {
-    //TODO: Move logic to a service. //Klara
     const maxEntries = 10;
     const existing = await this.prisma.recording.findMany({
       select: {

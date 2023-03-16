@@ -1,6 +1,4 @@
 import { Test, TestingModule } from "@nestjs/testing";
-// import { getRepositoryToken } from "@nestjs/typeorm";
-// import { RecordingsEntity } from "../db/models/recordings.entity";
 import { RecordingsRepository } from "../db/repositories/recordings.repository";
 import NotFoundError from "../errors/not-found.error";
 import SilentLogger from "../gameengine/util/silent-logger";
@@ -8,7 +6,6 @@ import { CustomLogger } from "../logger";
 import { RecordingListDto } from "../models/recording-list.dto";
 import { RecordingPublicDto } from "../models/recording-public.dto";
 import { INewRecording, IRecording } from "../types";
-// import { IRecording } from "../types";
 import { RecordingsService } from "./recordings.service";
 
 describe("RecordingsService", () => {
@@ -152,7 +149,6 @@ describe("RecordingsService", () => {
     expect(res).toEqual([expectedResult]);
   });
 
-  //TODO: Fix this test or fix the service so that the test pass //Klara
   // it("save, should save entry", async () => {
   //   //arrange
   //   const d = new Date(2021, 1, 1, 1, 1, 1, 1);
@@ -210,55 +206,22 @@ describe("RecordingsService", () => {
     //assert
     expect(repositoryMock.purgeOld).toHaveBeenCalledWith(seasonId);
   });
+
+  //     it("should purge old", async () => {
+  //       jest
+  //         .spyOn(recordingsRepository, "create")
+  //         .mockReturnValue(new Promise((resolve) => resolve(null)));
+  //       const mock = jest
+  //         .spyOn(recordingsRepository, "purgeOld")
+  //         .mockReturnValue(new Promise((resolve) => resolve(undefined)));
+
+  //       await recordingsService.save({
+  //         boardIndex: 0,
+  //         botName: "name",
+  //         score: 1,
+  //         seasonId: "id",
+  //       });
+
+  //       expect(mock).toHaveBeenCalledWith("id");
+  //     });
 });
-
-// describe("RecordingsService", () => {
-
-//   describe("getById", () => {
-
-//   describe("allBySeasonIdList", () => {
-
-//   describe("save", () => {
-//     it("should create entry", async () => {
-//       const mock = jest
-//         .spyOn(recordingsRepository, "create")
-//         .mockReturnValue(new Promise((resolve) => resolve(null)));
-//       jest
-//         .spyOn(recordingsRepository, "purgeOld")
-//         .mockReturnValue(new Promise((resolve) => resolve(undefined)));
-
-//       await recordingsService.save({
-//         boardIndex: 0,
-//         botName: "name",
-//         score: 1,
-//         seasonId: "id",
-//       });
-
-//       expect(mock).toHaveBeenCalledWith({
-//         board: 0,
-//         botName: "name",
-//         score: 1,
-//         seasonId: "id",
-//         recording: "[]",
-//       });
-//     });
-
-//     it("should purge old", async () => {
-//       jest
-//         .spyOn(recordingsRepository, "create")
-//         .mockReturnValue(new Promise((resolve) => resolve(null)));
-//       const mock = jest
-//         .spyOn(recordingsRepository, "purgeOld")
-//         .mockReturnValue(new Promise((resolve) => resolve(undefined)));
-
-//       await recordingsService.save({
-//         boardIndex: 0,
-//         botName: "name",
-//         score: 1,
-//         seasonId: "id",
-//       });
-
-//       expect(mock).toHaveBeenCalledWith("id");
-//     });
-//   });
-// });

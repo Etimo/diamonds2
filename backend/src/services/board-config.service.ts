@@ -20,9 +20,6 @@ export class BoardConfigService {
   }
 
   public async add(dto: INewBoardConfig) {
-    // TODO: Add validation
-
-    // Add the season
     return this.repo.create(dto);
   }
 }
