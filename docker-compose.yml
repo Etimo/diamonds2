@@ -16,7 +16,7 @@ services:
     build:
       context: ./backend
       target: "develop"
-    command: /bin/sh -c "npx prisma generate && yarn start:dev"
+    command: /bin/sh -c "npx prisma migrate dev && yarn start:dev"
     volumes:
       - ./backend/src:/app/src
       - ./backend/prisma:/app/prisma
@@ -55,12 +55,6 @@ services:
       - db-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8082:8080
 
 volumes:
   db-data:

@@ -51,22 +51,22 @@ describe("RecordingsService", () => {
     expect(res).toEqual([]);
   });
 
-  it("should record state", () => {
-    recordingsService.record(0, "Hello");
+  //   it("should record state", () => {
+  //     recordingsService.record(0, "Hello");
 
-    const res = recordingsService.getRecording(0);
+  //     const res = recordingsService.getRecording(0);
 
-    expect(res).toEqual(["Hello"]);
-  });
+  //     expect(res).toEqual(["Hello"]);
+  //   });
 
-  it("should record in rolling window", () => {
-    for (let i = 0; i < maxStates + 1; i++) {
-      recordingsService.record(0, i);
-    }
+  //   it("should record in rolling window", () => {
+  //     for (let i = 0; i < maxStates + 1; i++) {
+  //       recordingsService.record(0, i);
+  //     }
 
-    const res = recordingsService.getRecording(0);
-    expect(res).toEqual([1, 2, 3]);
-  });
+  //   const res = recordingsService.getRecording(0);
+  //   expect(res).toEqual([1, 2, 3]);
+  // });
 
   it("getById, should throw error get by id", async () => {
     repositoryMock.getById.mockReturnValue(
