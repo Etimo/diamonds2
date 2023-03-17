@@ -1,0 +1,11 @@
+.yarnrc.yml
+.prettierignore
+.gitignore
+.gitattributes
+**/.next
+**/next-env.d.ts
+**/node_modules
+**/yarn.lock
+**/package.json
+**/public
+**/.yarn
