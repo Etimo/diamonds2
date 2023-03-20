@@ -1,26 +1,27 @@
 import React, { FC, memo, useState } from 'react';
 import { BoardPicker } from '../BoardPicker';
 import { HighScoreTable } from '../HighScoreTable';
+import { PlayerTable } from '../PlayerTable';
 import { Rules } from '../Rules';
 import { SeasonPicker } from '../SeasonPicker';
-import { PlayerTable } from '../PlayerTable';
 
-export const SideMenu: FC = memo(() => {
-  // const currentSeason = getCurrentSeason();
+type SideMenuProps = {
+  boardId: number;
+  onBoardChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+};
+
+export const SideMenu: FC<SideMenuProps> = memo((props) => {
+  const { boardId, onBoardChange } = props;
+  // const currentSeason = useCurrentSeason();
   // const [rows, bots] = useBoard(boardId, delay);
-  const [boardId, setBoardId] = useState(1);
+  //const [boardId, setBoardId] = useState(1);
   const [seasonId, setSeasonId] = useState('0');
   const delay = 2000; // 0.25 s
   const [rulesVisible, setRulesVisible] = useState<boolean>(false);
 
-  const onBoardChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setBoardId(parseInt(event.target.value));
-  };
-
   const onSeasonChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSeasonId(event.target.value);
   };
-
 
   const closeRules = () => {
     setRulesVisible(false);
@@ -29,7 +30,7 @@ export const SideMenu: FC = memo(() => {
   return (
     <div className="border border-gray-200 rounded-lg overflow-y-scroll flex flex-col p-4">
       <div className="mb-6">
-        <BoardPicker boardId={boardId} onChange={onBoardChange}/>
+        <BoardPicker boardId={boardId} onChange={onBoardChange} />
       </div>
 
       <div>
@@ -37,7 +38,7 @@ export const SideMenu: FC = memo(() => {
       </div>
 
       <div className="my-6">
-        <SeasonPicker seasonId={seasonId} onChange={onSeasonChange}/>
+        <SeasonPicker seasonId={seasonId} onChange={onSeasonChange} />
 
         <div className="mt-2">
           <button
@@ -50,7 +51,7 @@ export const SideMenu: FC = memo(() => {
       </div>
 
       <div>
-        <HighScoreTable seasonId={seasonId}/>
+        <HighScoreTable seasonId={seasonId} />
       </div>
 
       <Rules onClose={closeRules} visible={rulesVisible} seasonId={seasonId} />
