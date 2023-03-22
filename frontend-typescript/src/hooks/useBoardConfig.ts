@@ -1,36 +1,48 @@
-import { useState, useEffect } from "react";
-
-//TODO: use fetch hook instead of test data //Klara
-function getBoardConfig(seasonId: string): IRules {
-    if (seasonId === '0'){
-        const seasonRules: IRules = { minimumDelayBetweenMoves: '100', inventorySize: '5', useTelporters: 'On', teleporters: '3', sessionLength: '2', canTackle: 'On', teleportersRelocation: '50', gridSize: '15 X 15' };
-        return seasonRules;
-    }
-    else{
-        const seasonRules: IRules = { minimumDelayBetweenMoves: '100', inventorySize: '5', useTelporters: 'On', teleporters: '3', sessionLength: '2', canTackle: 'On', teleportersRelocation: '50', gridSize: '10 X 10' };
-        return seasonRules;
-    }
-
-}
+import { useEffect, useState } from 'react';
+import useFetch from './useFetch';
 
 export function useBoardConfig(seasonId: string): IRules {
+  const delay = 60000; // 1min
 
-    const [boardConfig, setBoardConfig] = useState<IRules>(() => getBoardConfig(seasonId));
+  const { response, error, isLoading } = useFetch(
+    `api/seasons/rules/${seasonId}`,
+    [],
+  );
 
-    useEffect(() => {
-        setBoardConfig(getBoardConfig(seasonId));
-    }, [seasonId]);
-    return boardConfig;
+  const [boardConfig, setBoardConfig] = useState<IRules>({
+    inventorySize: response.inventorySize,
+    minimumDelayBetweenMoves: response.minimumDelayBetweenMoves,
+    sessionLength: response.sessionLength,
+    canTackle: response.canTackle ? 'On' : 'Off',
+    useTelporters: response.useTelporters ? 'On' : 'Off',
+    teleportersRelocation: `${response.teleportRelocation} s`,
+    teleporters: response.teleporters,
+    gridSize: `${response.width} X ${response.height}`,
+  });
+
+  useEffect(() => {
+    setBoardConfig({
+      inventorySize: response.inventorySize,
+      minimumDelayBetweenMoves: response.minimumDelayBetweenMoves,
+      sessionLength: response.sessionLength,
+      teleporters: response.teleporters,
+      useTelporters: response.useTelporters ? 'On' : 'Off',
+      canTackle: response.canTackle ? 'On' : 'Off',
+      teleportersRelocation: `${response.teleportRelocation} s`,
+      gridSize: `${response.width} X ${response.height}`,
+    } as IRules);
+  }, [response]);
+
+  return boardConfig;
 }
 
-
-export interface IRules{
-    minimumDelayBetweenMoves: string;
-    inventorySize: string;
-    sessionLength: string;
-    canTackle: string;
-    teleporters: string;
-    teleportersRelocation: string;
-    useTelporters: string;
-    gridSize: string;
-  }
+export interface IRules {
+  minimumDelayBetweenMoves: number;
+  inventorySize: number;
+  sessionLength: number;
+  canTackle: string;
+  teleporters: number;
+  teleportersRelocation: string;
+  useTelporters: string;
+  gridSize: string;
+}

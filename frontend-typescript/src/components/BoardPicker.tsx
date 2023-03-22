@@ -1,25 +1,23 @@
-import { FC, memo } from "react";
-import { Select } from "./Inputs";
+import { FC, memo } from 'react';
+import { IBoard, useBoardIds } from '../hooks/useBoardIds';
+import { Select } from './Inputs';
 
-const boards: IBoard[] = [{ id: 1 }, { id: 2 }, { id: 3 }];
+type BoardPickerProps = {
+  boardId: number;
+  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+};
 
-type SeasonPickerProps = {
-    boardId: number;
-    onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-  };
-
-export const BoardPicker: FC<SeasonPickerProps> = memo((props) => { 
-    const { boardId, onChange } = props;
-    return ( 
-        <Select
-          label="Select board"
-          onChange={onChange}
-          options={boards.map((season) => {return { label: season.id.toString(), value:season.id.toString()};})}
-          value={boardId}
-        />
-    )
+export const BoardPicker: FC<BoardPickerProps> = memo((props) => {
+  const { boardId, onChange } = props;
+  const ids: IBoard[] = useBoardIds();
+  return (
+    <Select
+      label="Select board"
+      onChange={onChange}
+      options={ids.map((id) => {
+        return { label: id.toString(), value: id.toString() };
+      })}
+      value={boardId}
+    />
+  );
 });
-
-interface IBoard {
-    id: number;
-  };

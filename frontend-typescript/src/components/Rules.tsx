@@ -1,5 +1,5 @@
-import React, { FC, memo } from 'react';
-import { useBoardConfig, IRules } from '../hooks/useBoardConfig';
+import { FC, memo } from 'react';
+import { IRules, useBoardConfig } from '../hooks/useBoardConfig';
 
 type RulesProps = {
   onClose: () => void;

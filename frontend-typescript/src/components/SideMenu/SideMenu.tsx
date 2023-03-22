@@ -1,4 +1,5 @@
 import React, { FC, memo, useState } from 'react';
+import useFetch from '../../hooks/useFetch';
 import { BoardPicker } from '../BoardPicker';
 import { HighScoreTable } from '../HighScoreTable';
 import { PlayerTable } from '../PlayerTable';
@@ -12,10 +13,16 @@ type SideMenuProps = {
 
 export const SideMenu: FC<SideMenuProps> = memo((props) => {
   const { boardId, onBoardChange } = props;
-  // const currentSeason = useCurrentSeason();
+
+  const {
+    response: currentSeason,
+    error,
+    isLoading,
+  } = useFetch('api/seasons/current', '0');
+
   // const [rows, bots] = useBoard(boardId, delay);
   //const [boardId, setBoardId] = useState(1);
-  const [seasonId, setSeasonId] = useState('0');
+  const [seasonId, setSeasonId] = useState<string>('0');
   const delay = 2000; // 0.25 s
   const [rulesVisible, setRulesVisible] = useState<boolean>(false);
 
@@ -38,7 +45,10 @@ export const SideMenu: FC<SideMenuProps> = memo((props) => {
       </div>
 
       <div className="my-6">
-        <SeasonPicker seasonId={seasonId} onChange={onSeasonChange} />
+        <SeasonPicker
+          seasonId={seasonId != '0' ? seasonId : currentSeason.id}
+          onChange={onSeasonChange}
+        />
 
         <div className="mt-2">
           <button
@@ -51,10 +61,16 @@ export const SideMenu: FC<SideMenuProps> = memo((props) => {
       </div>
 
       <div>
-        <HighScoreTable seasonId={seasonId} />
+        <HighScoreTable
+          seasonId={seasonId != '0' ? seasonId : currentSeason.id}
+        />
       </div>
 
-      <Rules onClose={closeRules} visible={rulesVisible} seasonId={seasonId} />
+      <Rules
+        onClose={closeRules}
+        visible={rulesVisible}
+        seasonId={seasonId != '0' ? seasonId : currentSeason.id}
+      />
     </div>
   );
 });

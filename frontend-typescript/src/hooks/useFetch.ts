@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 export default (url: string, baseResponse: any) => {
   const [response, setResponse] = useState(baseResponse);
@@ -8,7 +8,7 @@ export default (url: string, baseResponse: any) => {
   const fetch = async () => {
     try {
       const response = await axios.get(url);
-      setResponse(response.data.data);
+      setResponse(response.data);
     } catch (error) {
       setResponse(undefined);
       setError(true);
