@@ -22,16 +22,16 @@ export const Cell: FC<CellProps> = memo((props) => {
     return (
       <div
         key={id}
-        className="border-x w-full aspect-square flex items-center justify-center"
+        className="border-l w-full aspect-square flex items-center justify-center"
       >
         <img src={diamond} className=" w-3/4 h-3/4" />
       </div>
     );
-  } else if (type === 'robot') {
+  } else if (type === 'BotGameObject') {
     return (
       <div
         key={id}
-        className="border-x w-full aspect-square flex items-center justify-center"
+        className="border-l w-full aspect-square flex items-center justify-center"
       >
         <img src={robot} className=" w-3/4 h-3/4" />
       </div>
@@ -41,7 +41,7 @@ export const Cell: FC<CellProps> = memo((props) => {
     return (
       <div
         key={id}
-        className="border-x w-full aspect-square flex items-center justify-center"
+        className="border-l w-full aspect-square flex items-center justify-center"
       >
         <img src={redButton} className=" w-3/4 h-3/4" />
       </div>
@@ -50,32 +50,35 @@ export const Cell: FC<CellProps> = memo((props) => {
     return (
       <div
         key={id}
-        className="border-x w-full aspect-square flex items-center justify-center"
+        className="border-l w-full aspect-square flex items-center justify-center"
       >
         <img src={teleporter} className=" w-3/4 h-3/4" />
       </div>
     );
-  } else if (type === 'botBase') {
+  } else if (
+    type === 'BotGameObjectBaseGameObject' ||
+    type === 'BaseGameObjectBotGameObject'
+  ) {
     return (
       <div
         key={id}
-        className="border-x w-full aspect-square flex items-center justify-center"
+        className="border-l w-full aspect-square flex items-center justify-center"
       >
         <img src={botBase} className=" w-3/4 h-3/4" />
       </div>
     );
-  } else if (type === 'home') {
+  } else if (type === 'BaseGameObject') {
     return (
       <div
         key={id}
-        className="border-x w-full aspect-square flex items-center justify-center"
+        className="border-l w-full aspect-square flex items-center justify-center"
       >
         <img src={home} className=" w-3/4 h-3/4" />
       </div>
     );
   } else {
     return (
-      <div key={id} className="border-x justify-center w-full aspect-square">
+      <div key={id} className="border-l justify-center w-full aspect-square">
         {type}
       </div>
     );

@@ -1,20 +1,31 @@
 import { useEffect, useRef, useState } from 'react';
 
-export default (options: any) => {
-  const containerRef = useRef(null);
-  const [maxWidth, setMaxWidth] = useState({
+type Options = {
+  [key: string]: any;
+};
+
+type MaxWidth = {
+  maxWidth: string;
+};
+
+type UseResponsiveContainer = (
+  options?: Options,
+) => [React.RefObject<HTMLDivElement>, MaxWidth];
+
+const useResize: UseResponsiveContainer = (options = {}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [maxWidth, setMaxWidth] = useState<MaxWidth>({
     maxWidth: '100%',
   });
 
-  const callbackFunction = (entries: ResizeObserverEntry[]) => {
+  const callbackFunction: ResizeObserverCallback = (entries) => {
     const [entry] = entries;
 
     const parent = entry.target.parentElement;
     if (!parent) return;
-
     if (parent.offsetWidth > parent.offsetHeight) {
       setMaxWidth({
-        maxWidth: `${parent.offsetHeight}px`,
+        maxWidth: `${parent.offsetHeight * 0.95}px`,
       });
     } else {
       setMaxWidth({
@@ -33,3 +44,5 @@ export default (options: any) => {
 
   return [containerRef, maxWidth];
 };
+
+export default useResize;
