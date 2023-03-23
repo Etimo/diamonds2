@@ -71,7 +71,8 @@ export let recordingsRepositoryMock = {
   getById: jest.fn(),
   allBySeasonIdRaw: jest.fn(),
   create: jest.fn(),
-  purgeOld: jest.fn(),
+  getScores: jest.fn(),
+  deleteRecordingsWithLowScore: jest.fn(),
 };
 
 export let botRepositryMock = {

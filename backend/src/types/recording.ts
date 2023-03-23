@@ -18,4 +18,10 @@ export type INewRecording = Omit<
   IRecording,
   "id" | "createTimeStamp" | "bot" | "season"
 >;
+
+export type ISaveRecording = Omit<
+  IRecording,
+  "id" | "createTimeStamp" | "bot" | "season" | "recording"
+>;
+
 export type IUpdateRecording = Omit<IRecording, "id" | "bot" | "season">;

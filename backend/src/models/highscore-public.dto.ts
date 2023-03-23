@@ -18,7 +18,6 @@ export class HighscorePublicDto {
   teamLogotype: string;
 
   public static fromEntity(entity: IHighscore): HighscorePublicDto {
-    console.log(entity);
     return {
       botName: entity.bot.name,
       score: entity.score,

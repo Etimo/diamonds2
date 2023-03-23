@@ -1,6 +1,6 @@
 import { IPosition } from "src/common/interfaces/position.interface";
-import { AbstractGameObject } from "../abstract-game-object";
 import { Board } from "src/gameengine/board";
+import { AbstractGameObject } from "../abstract-game-object";
 
 export interface BotGameObjectProperties {
   base: IPosition;
@@ -24,6 +24,7 @@ export class BotGameObject extends AbstractGameObject {
   score: number;
   name: string;
   nextMoveAvailableAt: Date;
+  botId: string;
 
   get properties(): BotGameObjectProperties {
     return {

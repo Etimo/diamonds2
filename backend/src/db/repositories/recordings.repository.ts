@@ -21,9 +21,19 @@ export class RecordingsRepository {
     });
   }
 
-  public async purgeOld(seasonId: string) {
-    const maxEntries = 10;
-    const existing = await this.prisma.recording.findMany({
+  public async getById(id: string) {
+    return this.prisma.recording.findMany({
+      where: {
+        id,
+      },
+    });
+  }
+
+  public async getScores(
+    seasonId: string,
+    maxEntries: number,
+  ): Promise<number[]> {
+    const recordings = await this.prisma.recording.findMany({
       select: {
         score: true,
       },
@@ -33,26 +43,22 @@ export class RecordingsRepository {
       orderBy: {
         score: "desc",
       },
-      take: maxEntries + 1,
+      take: maxEntries,
     });
 
-    if (existing.length > maxEntries) {
-      // Remove if we have more than 10 recordings
-      await this.prisma.recording.deleteMany({
-        where: {
-          seasonId,
-          score: {
-            lt: existing[maxEntries - 1].score,
-          },
-        },
-      });
-    }
+    return recordings.map((e) => e.score);
   }
 
-  public async getById(id: string) {
-    return this.prisma.recording.findMany({
+  public async deleteRecordingsWithLowScore(
+    seasonId: string,
+    higestScore: number,
+  ) {
+    await this.prisma.recording.deleteMany({
       where: {
-        id,
+        seasonId,
+        score: {
+          lt: higestScore,
+        },
       },
     });
   }

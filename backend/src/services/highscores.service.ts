@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { HighscoresRepository } from "../db/repositories/highscores.repository";
 import { HighscorePrivateDto } from "../models/highscore-private.dto";
-import { IHighscore } from "../types";
+import { IHighscore, INewHighscore } from "../types";
 import { SeasonsService } from "./seasons.service";
 
 @Injectable()
@@ -11,7 +11,7 @@ export class HighscoresService {
     private repo: HighscoresRepository,
   ) {}
 
-  public async addOrUpdate(input: IHighscore): Promise<boolean> {
+  public async addOrUpdate(input: INewHighscore): Promise<boolean> {
     const seasonAllTimeBest = await this.getSeasonBestHighScore(input.seasonId);
 
     if (await this.isNewHighScore(input)) {
@@ -25,7 +25,7 @@ export class HighscoresService {
     return this.repo.getBotScore(newScore.botId);
   }
 
-  private async isNewHighScore(newScore: IHighscore) {
+  private async isNewHighScore(newScore: INewHighscore) {
     let isNew: boolean = true;
     const season = await this.seasonService.getCurrentSeason();
 
@@ -79,7 +79,7 @@ export class HighscoresService {
     return this.allBySeasonId(seasonId);
   }
 
-  public async create(data: IHighscore) {
+  public async create(data: INewHighscore) {
     return this.repo.create(data);
   }
 
