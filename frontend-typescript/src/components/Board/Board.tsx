@@ -1,21 +1,19 @@
 import { FC, memo } from 'react';
-import useBoard from '../../hooks/useBoard';
+import { IBoard } from '../../hooks/useBoard';
 import useResize from '../../hooks/useResize';
 import { Cell } from './Cell';
 
 type BoardProps = {
-  boardId: number;
+  board: IBoard;
 };
 
 export const Board: FC<BoardProps> = memo((props) => {
-  const { boardId } = props;
-  const board = useBoard(boardId, 2000);
+  const { board } = props;
   const [containerRef, maxWidth] = useResize({
     root: document.querySelector('#test'),
     rootMargin: '0px',
     threshold: 0,
   });
-  // console.log(maxWidth.maxWidth);
   return (
     <div id="test">
       <div
@@ -31,20 +29,12 @@ export const Board: FC<BoardProps> = memo((props) => {
             >
               {row.map((cell, columnIndex) => {
                 if (cell) {
-                  if (cell.type) {
+                  if (cell) {
                     return (
                       <Cell
                         id={`row ${rowIndex} column ${columnIndex}`}
                         key={`row ${rowIndex} column ${columnIndex}`}
-                        type={cell.type}
-                      />
-                    );
-                  } else {
-                    return (
-                      <Cell
-                        key={`row ${rowIndex} column ${columnIndex}`}
-                        id={`row ${rowIndex}`}
-                        type={''}
+                        gameObject={cell}
                       />
                     );
                   }
@@ -53,7 +43,7 @@ export const Board: FC<BoardProps> = memo((props) => {
                     <Cell
                       key={`row ${rowIndex} column ${columnIndex}`}
                       id={`row ${rowIndex}`}
-                      type={''}
+                      gameObject={null}
                     />
                   );
                 }

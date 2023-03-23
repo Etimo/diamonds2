@@ -1,23 +1,19 @@
-import { FC, memo } from "react";
-import { usePlayer, IPlayer } from "../hooks/usePlayer";
-import { Table } from "./Table";
+import { FC, memo } from 'react';
+import { IBot } from '../hooks/useBoard';
+import { Table } from './Table';
 
-  type PlayerTableProps = {
-    boardId: number;
-  };
+type PlayerTableProps = {
+  bots: IBot[];
+};
 
 export const PlayerTable: FC<PlayerTableProps> = memo((props) => {
-    const { boardId } = props;
+  const bots = props.bots;
 
-    const players: IPlayer[] = usePlayer(boardId);
-    return (
-        <Table
-          label="Board 1 Players"
-          cols={['Name', 'Diamonds', 'Score', 'Time']}
-          data={players}
-        />
-    );
+  return (
+    <Table
+      label="Board 1 Players"
+      cols={['Name', 'Diamonds', 'Score', 'Time']}
+      data={bots}
+    />
+  );
 });
-
-
-

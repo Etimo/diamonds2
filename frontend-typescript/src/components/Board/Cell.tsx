@@ -1,86 +1,91 @@
 import { FC, memo } from 'react';
 import {
+  GameObjectType,
+  IBase,
+  IBot,
+  IDiamond,
+  IGameObject,
+} from '../../hooks/useBoard';
+import {
+  base,
   botBase,
+  botDiamond,
   diamond,
-  home,
+  diamondRed,
   redButton,
   robot,
   teleporter,
+  wall,
 } from '../images';
 
 type CellProps = {
-  type: string;
+  gameObject: IGameObject | null;
   id: string;
 };
 
-export const Cell: FC<CellProps> = memo((props) => {
-  const { type, id } = props;
+type GameObjectMap = {
+  [key in GameObjectType]: string;
+};
 
-  //TODO: add more types//Klara
+function getGameCharacter(gameObject: IGameObject) {
+  const goImgMap: GameObjectMap = {
+    Teleporter: teleporter,
+    Wall: wall,
+    DiamondButtonGameObject: redButton,
+    DiamondGameObject: diamond,
+    DiamondGameObjectDiamondGameObject: diamond,
+    BotGameObject: robot,
+    BaseGameObject: base,
+    BotGameObjectBaseGameObject: botBase,
+    BaseGameObjectBotGameObject: botBase,
+    DiamondGameObjectBotGameObject: botDiamond,
+    BotGameObjectDiamondGameObject: botDiamond,
+    TeleportGameObject: teleporter,
+  };
 
-  if (type === 'DiamondGameObject') {
-    return (
-      <div
-        key={id}
-        className="border-l w-full aspect-square flex items-center justify-center"
-      >
-        <img src={diamond} className=" w-3/4 h-3/4" />
-      </div>
-    );
-  } else if (type === 'BotGameObject') {
-    return (
-      <div
-        key={id}
-        className="border-l w-full aspect-square flex items-center justify-center"
-      >
-        <img src={robot} className=" w-3/4 h-3/4" />
-      </div>
-    );
-  } else if (type === 'DiamondButtonGameObject') {
-    //TODO: Make red diamonds red //Klara
-    return (
-      <div
-        key={id}
-        className="border-l w-full aspect-square flex items-center justify-center"
-      >
-        <img src={redButton} className=" w-3/4 h-3/4" />
-      </div>
-    );
-  } else if (type === 'TeleportGameObject') {
-    return (
-      <div
-        key={id}
-        className="border-l w-full aspect-square flex items-center justify-center"
-      >
-        <img src={teleporter} className=" w-3/4 h-3/4" />
-      </div>
-    );
-  } else if (
-    type === 'BotGameObjectBaseGameObject' ||
-    type === 'BaseGameObjectBotGameObject'
+  if (
+    gameObject.type === 'DiamondGameObject' &&
+    (gameObject.object as IDiamond)
   ) {
+    const diamond = gameObject.object as IDiamond;
+    if (diamond.points === 2) {
+      return diamondRed;
+    }
+  }
+
+  return goImgMap[gameObject.type as GameObjectType];
+}
+
+function getCharacterName(gameObject: IGameObject) {
+  if (gameObject.object as IBase) {
+    const base = gameObject.object as IBase;
+    return base.name;
+  } else if (gameObject.object as IBot) {
+    const bot = gameObject.object as IBot;
+    return bot.name;
+  }
+  return '';
+}
+
+export const Cell: FC<CellProps> = memo((props) => {
+  const { gameObject, id } = props;
+
+  if (gameObject && (gameObject.type as GameObjectType)) {
     return (
       <div
         key={id}
-        className="border-l w-full aspect-square flex items-center justify-center"
+        className="border-l w-full aspect-square flex items-center justify-center "
       >
-        <img src={botBase} className=" w-3/4 h-3/4" />
-      </div>
-    );
-  } else if (type === 'BaseGameObject') {
-    return (
-      <div
-        key={id}
-        className="border-l w-full aspect-square flex items-center justify-center"
-      >
-        <img src={home} className=" w-3/4 h-3/4" />
+        <div>{getCharacterName(gameObject)}</div>
+        <img src={getGameCharacter(gameObject)} className=" w-3/4 h-3/4" />
       </div>
     );
   } else {
     return (
-      <div key={id} className="border-l justify-center w-full aspect-square">
-        {type}
-      </div>
+      <div
+        key={id}
+        className="border-l justify-center w-full aspect-square"
+      ></div>
     );
   }
 });

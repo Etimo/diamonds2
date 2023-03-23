@@ -1,4 +1,5 @@
 import React, { FC, memo, useState } from 'react';
+import { IBot } from '../../hooks/useBoard';
 import useFetch from '../../hooks/useFetch';
 import { BoardPicker } from '../BoardPicker';
 import { HighScoreTable } from '../HighScoreTable';
@@ -9,10 +10,11 @@ import { SeasonPicker } from '../SeasonPicker';
 type SideMenuProps = {
   boardId: number;
   onBoardChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  bots: IBot[];
 };
 
 export const SideMenu: FC<SideMenuProps> = memo((props) => {
-  const { boardId, onBoardChange } = props;
+  const { boardId, onBoardChange, bots } = props;
 
   const {
     response: currentSeason,
@@ -41,7 +43,7 @@ export const SideMenu: FC<SideMenuProps> = memo((props) => {
       </div>
 
       <div>
-        <PlayerTable boardId={boardId} />
+        <PlayerTable bots={bots} />
       </div>
 
       <div className="my-6">
