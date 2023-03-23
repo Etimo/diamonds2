@@ -13,8 +13,7 @@ let provider: DiamondProvider;
 const botExampleData: IBot = {
   id: "1",
   email: "email",
-  botName: "name",
-  token: "1",
+  name: "name",
 };
 
 beforeEach(() => {
@@ -59,7 +58,7 @@ describe("sessionFinishedCallbacks and join", () => {
 
     jest.runAllTimers();
 
-    expect(board.getBot(botExampleData.token)).toBeFalsy();
+    expect(board.getBotById(botExampleData.id)).toBeFalsy();
   });
 
   test("join notifies providers", async () => {
@@ -73,7 +72,7 @@ describe("sessionFinishedCallbacks and join", () => {
   test("possible to get bot when joined", async () => {
     await board.join(botExampleData);
 
-    expect(board.getBot(botExampleData.token)).toEqual(botExampleData);
+    expect(board.getBotById(botExampleData.id)).toEqual(botExampleData);
   });
 });
 

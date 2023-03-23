@@ -113,11 +113,7 @@ export class BoardsService {
     return dto;
   }
 
-  public async move(
-    boardId: number,
-    botToken: string,
-    direction: MoveDirection,
-  ) {
+  public async move(boardId: number, botId: string, direction: MoveDirection) {
     // Get board to move on
     const board = this.getBoardById(boardId);
     if (!board) {
@@ -125,7 +121,7 @@ export class BoardsService {
     }
 
     // Get bot to move from board
-    let bot = board.getBot(botToken);
+    let bot = board.getBotById(botId);
     if (!bot) {
       throw new UnauthorizedError("Invalid botToken");
     }

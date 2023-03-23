@@ -1,8 +1,8 @@
-import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
-import { IBot } from "src/interfaces/bot.interface";
-import { Board } from "src/gameengine/board";
-import { BotGameObject } from "./bot";
 import { IPosition } from "src/common/interfaces/position.interface";
+import { Board } from "src/gameengine/board";
+import { IBot } from "src/interfaces/bot.interface";
+import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
+import { BotGameObject } from "./bot";
 
 export interface BotProviderConfig {
   /**
@@ -39,7 +39,7 @@ export class BotProvider extends AbstractGameObjectProvider<BotProviderConfig> {
     botGameObject.score = 0;
     botGameObject.inventorySize = this.config.inventorySize;
     botGameObject.canTackle = this.config.canTackle;
-    botGameObject.name = data.botName;
+    botGameObject.name = data.name;
     return botGameObject;
   }
 }
