@@ -7,7 +7,7 @@ export function useHighScore(seasonId: string): IHighScore[] {
 
   useEffect(() => {
     if (higheScore) {
-      const mappedHighScores = higheScore.map((highScore: any) => ({
+      const mappedHighScores = higheScore.map((highScore: HighScore) => ({
         name: highScore.botName,
         team: '',
         score: highScore.score,
@@ -22,6 +22,11 @@ export function useHighScore(seasonId: string): IHighScore[] {
   }
   return mappedHighScores;
 }
+
+type HighScore = {
+  botName: string;
+  score: number;
+};
 
 export interface IHighScore {
   name: string;
