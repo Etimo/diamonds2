@@ -1,4 +1,4 @@
-import { RecordingsEntity } from "src/db/models/recordings.entity";
+import { IRecording } from "../types";
 
 export class RecordingDto {
   botName: string;
@@ -15,9 +15,9 @@ export class RecordingDto {
     return recordingObj;
   }
 
-  public static fromEntity(entity: RecordingsEntity) {
+  public static fromEntity(entity: IRecording) {
     return this.from({
-      botName: entity.botName,
+      botName: entity.bot.name,
       score: entity.score,
       seasonId: entity.seasonId,
       recording: entity.recording,
