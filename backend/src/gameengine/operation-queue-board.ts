@@ -66,6 +66,7 @@ export class OperationQueueBoard extends Board {
    */
   public async enqueueJoin(bot: IBot): Promise<boolean> {
     // Queue join
+    console.log("Enqueue join", bot.name);
     const event = new OperationQueueJoinEvent(bot, this);
     return new Promise((resolve, reject) => {
       this.opQueue.push(event, (res, err) => {
