@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Param, Post } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { BotRecoveryDto } from "src/models/bot-recovery.dto";
 import { BotRegistrationPublicDto } from "src/models/bot-registration-public.dto";
@@ -9,6 +9,26 @@ import { BotsService } from "src/services/bots.service";
 @Controller("api/bots")
 export class BotsController {
   constructor(private botService: BotsService) {}
+
+  /**
+   * Get information for a registered bot.
+   *
+   * @param id The secret id of the previously registered bot.
+   */
+  @ApiResponse({
+    status: 200,
+    description: "Returns bot",
+    type: BotRegistrationPublicDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: "Bot not found",
+  })
+  @Get(":id")
+  async find(@Param("id") id: string): Promise<BotRegistrationPublicDto> {
+    const bot = await this.botService.get(id);
+    return BotRegistrationPublicDto.fromEntity(bot);
+  }
 
   /**
    * Register a new bot.

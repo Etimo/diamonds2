@@ -1,5 +1,5 @@
-import { client } from "./client";
 import { Bot } from "../models/bot";
+import { client } from "./client";
 import { logResponseError } from "./utils";
 
 export const registerBot = async (inputName, inputEmail, password, team) => {
@@ -8,7 +8,7 @@ export const registerBot = async (inputName, inputEmail, password, team) => {
       email: inputEmail,
       botName: inputName,
       password: password,
-      team: team
+      team: team,
     });
     const { botName, email, token } = data.data;
     return new Bot(botName, email, token);
@@ -17,11 +17,12 @@ export const registerBot = async (inputName, inputEmail, password, team) => {
   }
 };
 
-export const getBot = async botToken => {
+export const getBot = async (botToken) => {
   try {
     const { data } = await client.get(`/bots/${botToken}`);
-    const { botName, email, token } = data.data;
-    return new Bot(botName, email, token);
+    const { name, email, id } = data;
+
+    return new Bot(name, email, id);
   } catch (error) {
     logResponseError(error);
   }
