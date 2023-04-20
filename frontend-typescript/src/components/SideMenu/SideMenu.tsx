@@ -37,7 +37,7 @@ export const SideMenu: FC<SideMenuProps> = memo((props) => {
   };
 
   return (
-    <div className="border border-gray-200 rounded-lg overflow-y-scroll flex flex-col p-4">
+    <div className="border border-gray-200 dark:border-slate-400 rounded-lg overflow-y-auto flex flex-col p-4">
       <div className="mb-6">
         <BoardPicker boardId={boardId} onChange={onBoardChange} />
       </div>
@@ -55,7 +55,7 @@ export const SideMenu: FC<SideMenuProps> = memo((props) => {
         <div className="mt-2">
           <button
             onClick={() => setRulesVisible(true)}
-            className="font-sans text-etimo text-xs font-normal"
+            className="font-sans text-etimo dark:text-slate-400 text-xs font-normal"
           >
             Season rules
           </button>

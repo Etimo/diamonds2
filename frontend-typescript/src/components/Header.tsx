@@ -1,9 +1,16 @@
 import { FC, memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import etimoLogo from '../assets/etimoLogo.png';
+import { MoonIcon } from './MoonIcon';
+import { SunIcon } from './SunIcon';
 
-export const Header: FC = memo(() => {
+type HeaderProps = {
+  darkMode: boolean;
+  toggleDarkMode: () => void;
+};
+
+export const Header: FC<HeaderProps> = memo((props) => {
   const location = useLocation();
+  const { darkMode, toggleDarkMode } = props;
 
   const toggleLink = (location: string) => {
     if (location.includes('teams')) {
@@ -13,12 +20,9 @@ export const Header: FC = memo(() => {
   };
 
   return (
-    <div className="text-header grid grid-cols-[70px,1fr,2fr] lg:grid-cols-3 mx-3 my-2 lg:mx-14 lg:my-6 items-center lg:items-baseline border-b-2 pb-2">
-      <div className="w-full lg:w-1/3">
-        <img src={etimoLogo} alt="etimo-logo" />
-      </div>
-      <p className="justify-self-center font-bold">Diamonds</p>
-      <div className="justify-self-end font-bold">
+    <div className="text-header grid grid-cols-2 mx-3 my-2 lg:mx-14 lg:my-6 items-center lg:items-center border-gray-100 dark:border-slate-700 border-b-2 pb-2">
+      <p className="font-bold dark:text-gray-300">Diamonds</p>
+      <div className="flex justify-self-end">
         {toggleLink(location.pathname)}
 
         <Link
@@ -28,6 +32,10 @@ export const Header: FC = memo(() => {
         >
           How to play
         </Link>
+
+        <button onClick={toggleDarkMode} className="ml-6">
+          {darkMode ? <SunIcon /> : <MoonIcon />}
+        </button>
       </div>
     </div>
   );

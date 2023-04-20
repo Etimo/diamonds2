@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply font-sans antialiased text-etimo;
+    @apply bg-gray-50 dark:bg-gray-800 font-sans antialiased text-etimo dark:text-slate-400;
   }
 
   .text-header {
@@ -17,29 +17,46 @@
 
   .text-label {
     @apply font-sans not-italic font-bold mb-1;
-    @apply text-sm text-etimo block;
+    @apply text-sm text-etimo dark:text-slate-400 block;
   }
 
   .text-body {
     @apply font-sans not-italic mb-1;
-    @apply text-sm text-etimo block;
+    @apply text-sm text-etimo dark:text-slate-400 block;
   }
 
-  a {
-    @apply hover:text-etimo-light ease-in duration-200;
+  a,
+  button {
+    @apply hover:text-etimo-light dark:hover:text-zinc-50 dark:text-slate-400 ease-in duration-200;
   }
 
   p {
-    @apply text-etimo;
+    @apply text-etimo dark:text-slate-400;
+  }
+
+  tr {
+    @apply bg-gray-100 dark:bg-slate-400;
+  }
+
+  td {
+    @apply dark:text-slate-800;
+  }
+
+  select {
+    @apply dark:text-slate-800 dark:bg-slate-300 text-sm;
   }
 }
 
 @layer components {
   .modal-wrapper {
-    @apply flex flex-col absolute top-[15%] lg:top-[20%] min-w-[360px] border border-gray-200 bg-white rounded-md p-4 shadow-md left-[50%] translate-x-[-50%];
+    @apply flex flex-col absolute top-[15%] lg:top-[20%] min-w-[360px] border border-gray-200 bg-white dark:bg-gray-800 rounded-md p-4 shadow-md left-[50%] translate-x-[-50%];
   }
 
   .modal-button {
     @apply absolute top-[6px] right-[12px];
   }
+}
+
+.dark {
+  @apply bg-gray-800 text-slate-400;
 }
