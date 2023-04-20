@@ -12,6 +12,9 @@ export class HighscorePublicDto {
   seasonId: string;
 
   @ApiProperty()
+  team: string;
+
+  @ApiProperty()
   teamLogotype: string;
 
   public static fromEntity(entity: IHighscore): HighscorePublicDto {
@@ -19,6 +22,7 @@ export class HighscorePublicDto {
       botName: entity.bot.name,
       score: entity.score,
       seasonId: entity.seasonId,
+      team: entity.bot.team.name,
       teamLogotype: entity.bot.team.logotypeUrl,
     };
   }

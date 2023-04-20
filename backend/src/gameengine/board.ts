@@ -88,15 +88,6 @@ export class Board {
   }
 
   /**
-   * Return a bot on the board matching the given token.
-   *
-   * @param token The token of the bot to find.
-   */
-  getBot(token: string): IBot {
-    return this.bots[token];
-  }
-
-  /**
    * Return a bot on the board matching the given id.
    *
    * @param id The id of the bot to find.
@@ -122,7 +113,7 @@ export class Board {
    */
   public async move(bot: IBot, delta: IPosition) {
     const botGameObject = this.getGameObjectsByType(BotGameObject).find(
-      (b) => b.name === bot.botName,
+      (b) => b.name === bot.name,
     );
 
     if (botGameObject) {
@@ -141,18 +132,18 @@ export class Board {
   private createNewExpirationTimer(bot: IBot, time: number = null) {
     const id = setTimeout(
       (_) => {
-        this.logger.debug(`Purge bot ${bot.botName}`);
+        this.logger.debug(`Purge bot ${bot.name}`);
         const botGameObject = this.getGameObjectsByType(BotGameObject).find(
-          (b) => b.name === bot.botName,
+          (b) => b.name === bot.name,
         );
         if (!botGameObject) {
           return;
         }
 
         // Remove locally
-        delete this.bots[bot.token];
-        delete this.botMoves[bot.botName];
-        delete this.botRateLimitViolations[bot.botName];
+        delete this.bots[bot.id];
+        delete this.botMoves[bot.name];
+        delete this.botRateLimitViolations[bot.name];
 
         // Notify all session finished callbacks
         this.sessionFinishedCallbacks.forEach((sfc) => sfc(botGameObject));
@@ -400,23 +391,26 @@ export class Board {
     return outOfX || outOfY;
   }
 
+  // TODO: Get by id instead? //Klara
   getLastMove(bot: IBot) {
-    return this.botMoves[bot.botName];
+    return this.botMoves[bot.name];
   }
 
+  // TODO: Update by id instead? //Klara
   updateLastMove(bot: IBot) {
-    this.botMoves[bot.botName] = Date.now();
+    this.botMoves[bot.name] = Date.now();
   }
-
+  // TODO: Get by id instead? //Klara
   getRateLimitViolations(bot: IBot) {
-    return this.botRateLimitViolations[bot.botName];
+    return this.botRateLimitViolations[bot.name];
   }
+  // TODO: Update by id instead? //Klara
 
   updateRateLimitViolations(bot: IBot) {
-    if (!this.botRateLimitViolations[bot.botName]) {
-      this.botRateLimitViolations[bot.botName] = 1;
+    if (!this.botRateLimitViolations[bot.name]) {
+      this.botRateLimitViolations[bot.name] = 1;
     }
-    this.botRateLimitViolations[bot.botName] += 1;
+    this.botRateLimitViolations[bot.name] += 1;
   }
 
   notifyGameObjectEvent(

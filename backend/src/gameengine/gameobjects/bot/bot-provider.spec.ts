@@ -1,6 +1,6 @@
-import { BotGameObject } from "../bot/bot";
 import { Board } from "../../board";
 import createTestBoard from "../../util/test-board";
+import { BotGameObject } from "../bot/bot";
 import { BotProvider } from "./bot-provider";
 
 let provider: BotProvider;
@@ -14,7 +14,7 @@ beforeEach(() => {
   });
   board = createTestBoard();
   data = {
-    botName: "name",
+    name: "name",
   };
 });
 

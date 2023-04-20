@@ -23,7 +23,7 @@ export class DummyBotProvider extends BotProvider {
     for (let i = 1; i < config.count + 1; i++) {
       const bot = this.getInitializedBot(
         {
-          botName: config.prefix + " " + i,
+          name: config.prefix + " " + i,
         },
         board.getEmptyPosition(),
         board,

@@ -5,19 +5,13 @@ import SilentLogger from "../gameengine/util/silent-logger";
 import { CustomLogger } from "../logger";
 import { RecordingListDto } from "../models/recording-list.dto";
 import { RecordingPublicDto } from "../models/recording-public.dto";
-import { INewRecording, IRecording } from "../types";
+import { INewRecording, IRecording, ISaveRecording } from "../types";
 import { RecordingsService } from "./recordings.service";
+import { recordingsRepositoryMock } from "./testHelper";
 
 describe("RecordingsService", () => {
   let recordingsService: RecordingsService;
   const maxStates = 3;
-
-  let repositoryMock = {
-    getById: jest.fn(),
-    allBySeasonIdRaw: jest.fn(),
-    create: jest.fn(),
-    purgeOld: jest.fn(),
-  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -25,7 +19,7 @@ describe("RecordingsService", () => {
         RecordingsService,
         {
           provide: RecordingsRepository,
-          useValue: repositoryMock,
+          useValue: recordingsRepositoryMock,
         },
         {
           provide: CustomLogger,
@@ -48,25 +42,24 @@ describe("RecordingsService", () => {
     expect(res).toEqual([]);
   });
 
-  //   it("should record state", () => {
-  //     recordingsService.record(0, "Hello");
+  it("should record state", () => {
+    recordingsService.record(0, "Hello");
 
-  //     const res = recordingsService.getRecording(0);
+    const res = recordingsService.getRecording(0);
 
-  //     expect(res).toEqual(["Hello"]);
-  //   });
+    expect(res).toEqual(["Hello"]);
+  });
 
-  //   it("should record in rolling window", () => {
-  //     for (let i = 0; i < maxStates + 1; i++) {
-  //       recordingsService.record(0, i);
-  //     }
-
-  //   const res = recordingsService.getRecording(0);
-  //   expect(res).toEqual([1, 2, 3]);
-  // });
+  it("should record in rolling window", () => {
+    for (let i = 0; i < maxStates + 1; i++) {
+      recordingsService.record(0, i);
+    }
+    const res = recordingsService.getRecording(0);
+    expect(res).toEqual([1, 2, 3]);
+  });
 
   it("getById, should throw error get by id", async () => {
-    repositoryMock.getById.mockReturnValue(
+    recordingsRepositoryMock.getById.mockReturnValue(
       new Promise((resolve) => resolve([])),
     );
 
@@ -99,7 +92,7 @@ describe("RecordingsService", () => {
       recording: "{}",
     };
 
-    repositoryMock.getById.mockReturnValue(
+    recordingsRepositoryMock.getById.mockReturnValue(
       new Promise((resolve) => resolve([recordingFromRepo] as IRecording[])),
     );
 
@@ -111,7 +104,7 @@ describe("RecordingsService", () => {
   });
 
   it("allBySeasonIdList, should throw error if invalid season", async () => {
-    repositoryMock.allBySeasonIdRaw.mockReturnValue(
+    recordingsRepositoryMock.allBySeasonIdRaw.mockReturnValue(
       new Promise((resolve) => resolve([])),
     );
 
@@ -140,7 +133,7 @@ describe("RecordingsService", () => {
       botName: "",
     };
 
-    repositoryMock.allBySeasonIdRaw.mockReturnValue(
+    recordingsRepositoryMock.allBySeasonIdRaw.mockReturnValue(
       new Promise((resolve) => resolve([dataFromRepo])),
     );
 
@@ -149,34 +142,46 @@ describe("RecordingsService", () => {
     expect(res).toEqual([expectedResult]);
   });
 
-  // it("save, should save entry", async () => {
-  //   //arrange
-  //   const d = new Date(2021, 1, 1, 1, 1, 1, 1);
-  //   const seasonId = "id";
-  //   const newRecording: INewRecording = {
-  //     score: 1,
-  //     board: 0,
-  //     seasonId: seasonId,
-  //     botId: "Hello",
-  //     recording: "{}",
-  //   };
-  //   const dataFromRepo: IRecording = {
-  //     id: "id",
-  //     score: 1,
-  //     board: 0,
-  //     seasonId: seasonId,
-  //     createTimeStamp: d,
-  //     botId: "Hello",
-  //     recording: "{}",
-  //   };
-  //   var mockCreate = repositoryMock.create.mockReturnValue(dataFromRepo);
-  //
-  //   //act
-  //   await recordingsService.save(newRecording);
-  //
-  //   //assert
-  //   expect(mockCreate).toHaveBeenCalledWith(newRecording);
-  // });
+  it("save, should save entry", async () => {
+    //arrange
+    const d = new Date(2021, 1, 1, 1, 1, 1, 1);
+    const seasonId = "id";
+    const newRecording: ISaveRecording = {
+      score: 1,
+      board: 0,
+      seasonId: seasonId,
+      botId: "Hello",
+    };
+    const dataFromRepo: IRecording = {
+      id: "id",
+      score: 1,
+      board: 0,
+      seasonId: seasonId,
+      createTimeStamp: d,
+      botId: "Hello",
+      recording: "[4]",
+    };
+
+    const expectedRepoCreateParameter: INewRecording = {
+      score: 1,
+      board: 0,
+      seasonId: seasonId,
+      botId: "Hello",
+      recording: "[4]",
+    };
+    recordingsService.record(0, 4);
+    var mockCreate =
+      recordingsRepositoryMock.create.mockReturnValue(dataFromRepo);
+    recordingsRepositoryMock.getScores.mockReturnValue([
+      11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1,
+    ]);
+
+    //act
+    await recordingsService.save(newRecording);
+
+    //assert
+    expect(mockCreate).toHaveBeenCalledWith(expectedRepoCreateParameter);
+  });
 
   it("save, should purge old", async () => {
     //arrange
@@ -198,30 +203,17 @@ describe("RecordingsService", () => {
       botId: "Hello",
       recording: "{}",
     };
-    repositoryMock.create.mockReturnValue(dataFromRepo);
+    recordingsRepositoryMock.create.mockReturnValue(dataFromRepo);
+    recordingsRepositoryMock.getScores.mockReturnValue([
+      11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1,
+    ]);
 
     //act
     await recordingsService.save(newRecording);
 
     //assert
-    expect(repositoryMock.purgeOld).toHaveBeenCalledWith(seasonId);
+    expect(
+      recordingsRepositoryMock.deleteRecordingsWithLowScore,
+    ).toHaveBeenCalledWith(seasonId, 2);
   });
-
-  //     it("should purge old", async () => {
-  //       jest
-  //         .spyOn(recordingsRepository, "create")
-  //         .mockReturnValue(new Promise((resolve) => resolve(null)));
-  //       const mock = jest
-  //         .spyOn(recordingsRepository, "purgeOld")
-  //         .mockReturnValue(new Promise((resolve) => resolve(undefined)));
-
-  //       await recordingsService.save({
-  //         boardIndex: 0,
-  //         botName: "name",
-  //         score: 1,
-  //         seasonId: "id",
-  //       });
-
-  //       expect(mock).toHaveBeenCalledWith("id");
-  //     });
 });

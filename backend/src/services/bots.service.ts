@@ -39,7 +39,7 @@ export class BotsService {
     return this.create(newBot);
   }
 
-  public async get(id: string) {
+  public async get(id: string): Promise<IBot> {
     return this.repo.get(id);
   }
 

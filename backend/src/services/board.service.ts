@@ -21,6 +21,7 @@ import { BoardDto } from "../models/board.dto";
 import { GameObjectDto } from "../models/game-object.dto";
 import { BoardConfigService } from "./board-config.service";
 import { BotsService } from "./bots.service";
+import { HighscoresService } from "./highscores.service";
 import { RecordingsService } from "./recordings.service";
 import { SeasonsService } from "./seasons.service";
 
@@ -33,26 +34,27 @@ export class BoardsService {
     private seasonsService: SeasonsService,
     private recordingsService: RecordingsService,
     private boardConfigService: BoardConfigService,
+    private highscoresService: HighscoresService,
     private logger: CustomLogger,
     @Inject("NUMBER_OF_BOARDS") private numberOfBoards,
   ) {
     this.createInMemoryBoards(this.numberOfBoards).then(async () => {
       this.boards.forEach((board) => {
         board.registerSessionFinishedCallback(async (bot: BotGameObject) => {
-          // const currentSeason = await this.seasonsService.getCurrentSeason();
-          // const better = await this.highscoresService.addOrUpdate({
-          //   name: bot.name,
-          //   score: bot.score,
-          //   seasonId: currentSeason.id,
-          // });
-          // if (better) {
-          //   this.recordingsService.save({
-          //     boardIndex: this.getBoardIndex(board),
-          //     botName: bot.name,
-          //     score: bot.score,
-          //     seasonId: currentSeason.id,
-          //   });
-          // }
+          const currentSeason = await this.seasonsService.getCurrentSeason();
+          const better = await this.highscoresService.addOrUpdate({
+            score: bot.score,
+            seasonId: currentSeason.id,
+            botId: bot.botId,
+          });
+          if (better) {
+            this.recordingsService.save({
+              board: this.getBoardIndex(board),
+              botId: bot.botId,
+              score: bot.score,
+              seasonId: currentSeason.id,
+            });
+          }
         });
       });
     });
@@ -113,11 +115,7 @@ export class BoardsService {
     return dto;
   }
 
-  public async move(
-    boardId: number,
-    botToken: string,
-    direction: MoveDirection,
-  ) {
+  public async move(boardId: number, botId: string, direction: MoveDirection) {
     // Get board to move on
     const board = this.getBoardById(boardId);
     if (!board) {
@@ -125,7 +123,7 @@ export class BoardsService {
     }
 
     // Get bot to move from board
-    let bot = board.getBot(botToken);
+    let bot = board.getBotById(botId);
     if (!bot) {
       throw new UnauthorizedError("Invalid botToken");
     }

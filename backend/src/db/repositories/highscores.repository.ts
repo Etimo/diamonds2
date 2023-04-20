@@ -24,6 +24,7 @@ export class HighscoresRepository {
           include: {
             team: {
               select: {
+                name: true,
                 logotypeUrl: true,
               },
             },
