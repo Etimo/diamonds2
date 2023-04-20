@@ -10,14 +10,14 @@ export interface IBoardConfig {
   width: number;
   minimumDelayBetweenMoves: number;
   sessionLength: number;
+  dummyBots: number;
   createTimeStamp: Date;
   updateTimeStamp: Date;
 
   season?: ISeason;
 }
 
-export type INewBoardConfig = Omit<
-  IBoardConfig,
-  "id" | "createTimeStamp" | "updateTimeStamp" | "season"
+export type INewBoardConfig = Partial<
+  Omit<IBoardConfig, "id" | "createTimeStamp" | "updateTimeStamp" | "season">
 >;
 export type IUpdateBoardConfig = Omit<IBoardConfig, "id" | "season">;

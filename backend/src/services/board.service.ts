@@ -15,6 +15,7 @@ import {
   BotProvider,
   DiamondButtonProvider,
   DiamondProvider,
+  DummyBotProvider,
   OperationQueueBoard,
   TeleportProvider,
   TeleportRelocationProvider,
@@ -253,9 +254,6 @@ export class BoardsService {
         minRatioForGeneration: 0.01,
         redRatio: 0.2,
       }),
-      // new DummyBotProvider({
-      //   inventorySize: 5,
-      // }),
       new BotProvider({
         inventorySize: boardConfig.inventorySize,
         canTackle: boardConfig.canTackle,
@@ -267,6 +265,16 @@ export class BoardsService {
         seconds: boardConfig.teleportRelocation,
       }),
     ];
+    if (boardConfig.dummyBots) {
+      providers.push(
+        new DummyBotProvider({
+          canTackle: boardConfig.canTackle,
+          inventorySize: boardConfig.inventorySize,
+          count: boardConfig.dummyBots,
+          prefix: "Dummy",
+        }),
+      );
+    }
     const sessionLength = boardConfig.sessionLength;
     const minimumDelayBetweenMoves = boardConfig.minimumDelayBetweenMoves;
     if (this.recordingsService) {
