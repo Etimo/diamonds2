@@ -1,13 +1,16 @@
+import { jest } from "@jest/globals";
 import { Test, TestingModule } from "@nestjs/testing";
-import { BoardConfigRepository } from "../db/repositories/boardConfig.repository";
-import { BotRegistrationsRepository } from "../db/repositories/botRegistrations.repository";
-import { HighscoresRepository } from "../db/repositories/highscores.repository";
-import { RecordingsRepository } from "../db/repositories/recordings.repository";
-import { SeasonsRepository } from "../db/repositories/seasons.repository";
-import { TeamsRepository } from "../db/repositories/teams.repository";
-import SilentLogger from "../gameengine/util/silent-logger";
+import {
+  BoardConfigRepository,
+  BotRegistrationsRepository,
+  HighscoresRepository,
+  RecordingsRepository,
+  SeasonsRepository,
+  TeamsRepository,
+} from "../db";
+import { SilentLogger } from "../gameengine";
 import { CustomLogger } from "../logger";
-import { offSeasonId } from "../utils/slack/utils";
+import { offSeasonId } from "../utils";
 import { BoardConfigService } from "./board-config.service";
 import { BoardsService } from "./board.service";
 import { BotsService } from "./bots.service";

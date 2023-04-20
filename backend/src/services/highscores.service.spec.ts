@@ -1,13 +1,13 @@
 import { TestingModule } from "@nestjs/testing";
 import { IHighscore, INewHighscore } from "../types";
-import { offSeasonId } from "../utils/slack/utils";
+import { offSeasonId } from "../utils";
 import { HighscoresService } from "./highscores.service";
 import { SeasonsService } from "./seasons.service";
 import {
   GetTestModule,
   highscoresRepositoryMock,
   seasonsRepositoryMock,
-} from "./testHelper";
+} from "./test-helper.spec";
 
 describe("HighScoresService", () => {
   let highScoresService: HighscoresService;

@@ -1,9 +1,8 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { SeasonsRepository } from "../db/repositories/seasons.repository";
-import ConflictError from "../errors/conflict.error";
-import ForbiddenError from "../errors/forbidden.error";
+import { SeasonsRepository } from "../db";
+import { ConflictError, ForbiddenError } from "../errors";
 import { INewSeason, ISeason } from "../types";
-import { offSeasonId } from "../utils/slack/utils";
+import { offSeasonId } from "../utils";
 import { SeasonsService } from "./seasons.service";
 
 describe("SeasonsService", () => {

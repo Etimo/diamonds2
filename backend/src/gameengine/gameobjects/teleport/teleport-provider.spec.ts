@@ -1,7 +1,7 @@
 import { Board } from "../../board";
-import createTestBoard from "../../util/test-board";
-import { TeleportProvider } from "./teleport-provider";
+import { createTestBoard } from "../../util";
 import { TeleportGameObject } from "./teleport";
+import { TeleportProvider } from "./teleport-provider";
 
 let provider: TeleportProvider;
 let board: Board;

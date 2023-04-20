@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEnum } from "class-validator";
-import { MoveDirection } from "src/enums/move-direction.enum";
+import { MoveDirection } from "../enums";
 
 export class MoveInputDto {
   @ApiProperty({

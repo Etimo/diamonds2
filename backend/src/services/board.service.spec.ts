@@ -1,7 +1,6 @@
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { TestingModule } from "@nestjs/testing";
-import ConflictError from "../errors/conflict.error";
-import NotFoundError from "../errors/not-found.error";
-import UnauthorizedError from "../errors/unauthorized.error";
+import { ConflictError, NotFoundError, UnauthorizedError } from "../errors";
 import { IBot } from "../types";
 import { BoardConfigService } from "./board-config.service";
 import { BoardsService } from "./board.service";
@@ -10,12 +9,12 @@ import { HighscoresService } from "./highscores.service";
 import { RecordingsService } from "./recordings.service";
 import { SeasonsService } from "./seasons.service";
 import {
+  GetTestModule,
   boardConfigRepositoryMock,
   botRepositryMock,
-  GetTestModule,
   offSeasonTest,
   seasonsRepositoryMock,
-} from "./testHelper";
+} from "./test-helper.spec";
 
 describe("BoardsService", () => {
   let botsService: BotsService;

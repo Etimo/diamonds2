@@ -1,7 +1,7 @@
 import { Controller, Get, Param } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
-import { HighscorePublicDto } from "src/models/highscore-public.dto";
-import { HighscoresService } from "src/services/highscores.service";
+import { HighscorePublicDto } from "../models";
+import { HighscoresService } from "../services";
 
 @ApiTags("Highscores")
 @Controller("api/highscores")

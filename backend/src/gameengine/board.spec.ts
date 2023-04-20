@@ -5,7 +5,7 @@ import { BaseGameObject } from "./gameobjects/base/base";
 import { BotGameObject } from "./gameobjects/bot/bot";
 import { BotProvider } from "./gameobjects/bot/bot-provider";
 import { DiamondProvider } from "./gameobjects/diamond/diamond-provider";
-import createTestBoard from "./util/test-board";
+import { createTestBoard } from "./util";
 
 let board: Board;
 let opponent: BotGameObject;

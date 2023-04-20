@@ -1,4 +1,4 @@
-export default class DiamondsBaseError extends Error {
+export class DiamondsBaseError extends Error {
   errorTag?: string;
   constructor(message: string, errorTag: string = null) {
     super(message);

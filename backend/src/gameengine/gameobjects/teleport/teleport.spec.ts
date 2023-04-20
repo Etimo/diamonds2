@@ -1,7 +1,7 @@
-import { TeleportGameObject } from "./teleport";
-import createTestBoard from "../../util/test-board";
-import { BotGameObject } from "../bot/bot";
 import { Board } from "../../board";
+import { createTestBoard } from "../../util";
+import { BotGameObject } from "../bot/bot";
+import { TeleportGameObject } from "./teleport";
 
 let teleporterToEnter: TeleportGameObject;
 let teleporterPaired: TeleportGameObject;

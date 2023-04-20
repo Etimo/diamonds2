@@ -1,8 +1,8 @@
-import { DiamondButtonGameObject } from "./diamond-button";
-import { BotGameObject } from "../bot/bot";
 import { Board } from "src/gameengine/board";
-import createTestBoard from "../../util/test-board";
+import { createTestBoard } from "../../util";
+import { BotGameObject } from "../bot/bot";
 import { DiamondGameObject } from "../diamond/diamond";
+import { DiamondButtonGameObject } from "./diamond-button";
 
 let button: DiamondButtonGameObject;
 let board: Board;

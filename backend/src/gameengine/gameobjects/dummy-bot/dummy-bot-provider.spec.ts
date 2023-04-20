@@ -1,7 +1,7 @@
 import { Board } from "../../board";
-import createTestBoard from "../../util/test-board";
-import { DummyBotProvider } from "./dummy-bot-provider";
+import { createTestBoard } from "../../util";
 import { DummyBotGameObject } from "./dummy-bot";
+import { DummyBotProvider } from "./dummy-bot-provider";
 
 let provider: DummyBotProvider;
 let board: Board;

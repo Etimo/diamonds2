@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { HighscoresRepository } from "../db/repositories/highscores.repository";
-import { HighscorePrivateDto } from "../models/highscore-private.dto";
+import { HighscoresRepository } from "../db";
+import { HighscorePrivateDto } from "../models";
 import { IHighscore, INewHighscore } from "../types";
 import { SeasonsService } from "./seasons.service";
 

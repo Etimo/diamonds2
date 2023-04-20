@@ -1,9 +1,12 @@
 import { Body, Controller, Get, HttpCode, Param, Post } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
-import { BoardDto } from "src/models/board.dto";
-import { JoinInputDto } from "src/models/join-input.dto";
-import { MoveInputDto } from "src/models/move-input.dto";
-import { BoardsService } from "src/services/board.service";
+import {
+  BoardDto,
+  BoardMetadataDto,
+  JoinInputDto,
+  MoveInputDto,
+} from "../models";
+import { BoardsService } from "../services";
 
 @ApiTags("Boards")
 @Controller("api/boards")
@@ -16,12 +19,12 @@ export class BoardsController {
   @ApiResponse({
     status: 200,
     isArray: true,
-    description: "Return boards",
-    type: BoardDto,
+    description: "Return all boards",
+    type: BoardMetadataDto,
   })
   @Get()
-  public findAll(): BoardDto[] {
-    return this.boardsService.getAll();
+  public findAll(): BoardMetadataDto[] {
+    return this.boardsService.getAllMetadata();
   }
 
   /**

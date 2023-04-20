@@ -1,8 +1,8 @@
 import { Board } from "../board";
-import SilentLogger from "./silent-logger";
 import { AbstractGameObjectProvider } from "../gameobjects/abstract-game-object-providers";
+import { SilentLogger } from "./silent-logger";
 
-export default function createTestBoard(
+export function createTestBoard(
   providers: AbstractGameObjectProvider[] = [],
 ): Board {
   return new Board(

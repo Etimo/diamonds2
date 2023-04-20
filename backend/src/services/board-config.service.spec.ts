@@ -1,8 +1,9 @@
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { TestingModule } from "@nestjs/testing";
-import { offSeasonId } from "../utils/slack/utils";
+import { offSeasonId } from "../utils";
 import { BoardConfigService } from "./board-config.service";
 import { SeasonsService } from "./seasons.service";
-import { GetTestModule, seasonsRepositoryMock } from "./testHelper";
+import { GetTestModule, seasonsRepositoryMock } from "./test-helper.spec";
 
 describe("BoardConfigService", () => {
   let boardConfigService: BoardConfigService;

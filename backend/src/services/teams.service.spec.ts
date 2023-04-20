@@ -1,7 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { TeamsRepository } from "../db/repositories/teams.repository";
-import ConflictError from "../errors/conflict.error";
-import ForbiddenError from "../errors/forbidden.error";
+import { ConflictError, ForbiddenError } from "../errors";
 import { ITeam } from "../types";
 import { TeamsService } from "./teams.service";
 
