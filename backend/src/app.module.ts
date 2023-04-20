@@ -61,7 +61,11 @@ import {
     AuthorizationService,
     {
       provide: "NUMBER_OF_BOARDS",
-      useValue: 4,
+      useValue: 1,
+    },
+    {
+      provide: "MAX_EPHEMERAL_BOARDS",
+      useValue: 10,
     },
   ],
 })

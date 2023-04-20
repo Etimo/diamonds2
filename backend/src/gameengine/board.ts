@@ -10,7 +10,7 @@ export type SessionFinishedCallbackFunction = (bot: BotGameObject) => void;
 export class Board {
   private readonly _id: number;
 
-  private bots: Object = {};
+  private bots: Record<string, IBot> = {};
 
   /** List of game objects on the board. */
   private gameObjects: AbstractGameObject[] = [];
@@ -24,8 +24,8 @@ export class Board {
 
   constructor(
     id: number,
-    public config: BoardConfig,
-    public gameObjectProviders: AbstractGameObjectProvider[],
+    public readonly config: BoardConfig,
+    public readonly gameObjectProviders: AbstractGameObjectProvider[],
     protected logger: any,
   ) {
     this._id = id;
@@ -100,8 +100,12 @@ export class Board {
    * Return all bots on board
    * @returns All bots
    */
-  getBots(): Object {
+  getBots() {
     return this.bots;
+  }
+
+  getBotsCount() {
+    return Object.keys(this.bots).length;
   }
 
   /**

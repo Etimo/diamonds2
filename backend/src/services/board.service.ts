@@ -22,6 +22,7 @@ import {
 import { IBot } from "../interfaces/bot.interface";
 import { CustomLogger } from "../logger";
 import { BoardDto, BoardMetadataDto, GameObjectDto } from "../models";
+import { IBoardConfig } from "../types";
 import { BoardConfigService } from "./board-config.service";
 import { BotsService } from "./bots.service";
 import { HighscoresService } from "./highscores.service";
@@ -30,7 +31,9 @@ import { SeasonsService } from "./seasons.service";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
+  private static nextBoardId = 1;
   private boards: OperationQueueBoard[] = [];
+  private ephemeralBoards: OperationQueueBoard[] = [];
 
   constructor(
     private botsService: BotsService,
@@ -39,28 +42,56 @@ export class BoardsService {
     private boardConfigService: BoardConfigService,
     private highscoresService: HighscoresService,
     private logger: CustomLogger,
-    @Inject("NUMBER_OF_BOARDS") private numberOfBoards,
+    @Inject("NUMBER_OF_BOARDS") numberOfBoards,
+    @Inject("MAX_EPHEMERAL_BOARDS") private numEphemeralBoards,
   ) {
-    this.createInMemoryBoards(this.numberOfBoards).then(async () => {
-      this.boards.forEach((board) => {
-        board.registerSessionFinishedCallback(async (bot: BotGameObject) => {
-          const currentSeason = await this.seasonsService.getCurrentSeason();
-          const better = await this.highscoresService.addOrUpdate({
+    this.initialize(numberOfBoards, numEphemeralBoards).then(() => {
+      logger.info("Boards initialized");
+    });
+  }
+
+  private async initialize(numberOfBoards: number, numEphemeralBoards: number) {
+    const boardConfig = await this.boardConfigService.getCurrentBoardConfig();
+    this.boards = await this.createInMemoryBoards(numberOfBoards, boardConfig);
+    this.ephemeralBoards = await this.createInMemoryBoards(
+      numEphemeralBoards,
+      boardConfig,
+    );
+
+    const fixBoard = (board: OperationQueueBoard) =>
+      board.registerSessionFinishedCallback(async (bot: BotGameObject) => {
+        const currentSeason = await this.seasonsService.getCurrentSeason();
+        const better = await this.highscoresService.addOrUpdate({
+          score: bot.score,
+          seasonId: currentSeason.id,
+          botId: bot.botId,
+        });
+        if (better) {
+          this.recordingsService.save({
+            board: board.getId(),
+            botId: bot.botId,
             score: bot.score,
             seasonId: currentSeason.id,
-            botId: bot.botId,
           });
-          if (better) {
-            this.recordingsService.save({
-              board: this.getBoardIndex(board),
-              botId: bot.botId,
-              score: bot.score,
-              seasonId: currentSeason.id,
-            });
-          }
-        });
+        }
       });
-    });
+
+    this.boards.forEach(fixBoard);
+    this.logger.info(`${numberOfBoards} Live board(s) initialized`);
+    this.ephemeralBoards.forEach(fixBoard);
+    this.logger.info(`${numEphemeralBoards} Ephmeral board(s) initialized`);
+
+    if (this.recordingsService) {
+      const sessionLength = boardConfig.sessionLength;
+      const minimumDelayBetweenMoves = boardConfig.minimumDelayBetweenMoves;
+      const extraFactor = 1.5;
+      const maxMoves =
+        (1000 / minimumDelayBetweenMoves) * sessionLength * extraFactor;
+      this.recordingsService.setup(
+        numberOfBoards + numEphemeralBoards,
+        maxMoves,
+      );
+    }
   }
 
   /**
@@ -96,28 +127,47 @@ export class BoardsService {
     if (!bot) {
       throw new UnauthorizedError("Invalid bot");
     }
-    const board = this.getBoardById(boardId);
+
+    // Check if bot is on any board
+    [...this.boards, ...this.ephemeralBoards].forEach((b) => {
+      if (b.getBotById(botId)) {
+        throw new ConflictError("Already playing");
+      }
+    });
+
+    const boardConfig = await this.boardConfigService.getCurrentBoardConfig();
+    let board: OperationQueueBoard | null = null;
+    if (boardConfig.separateBoards) {
+      // Ephemeral boards should only be used by one bot at a time so we accept no other bots
+      this.logger.debug("Find ephemeral board");
+      board = this.ephemeralBoards.find((board) => {
+        console.log(board.getBotsCount());
+        return board.getBotsCount() === 0;
+      });
+      if (!board) {
+        throw new ConflictError("No board available");
+      }
+    } else {
+      // Join a live board
+      board = this.getBoardById(boardId);
+    }
 
     if (!board) {
       throw new NotFoundError("Board not found");
     }
 
-    // Check if bot is on any board
-    this.boards.forEach((b) => {
-      if (b.getBotById(botId)) {
-        throw new ConflictError("Already playing");
-      }
-    });
+    // Try to join
     const result = await board.enqueueJoin(bot);
     if (!result) {
       throw new ConflictError("Board full");
     }
+    this.logger.info(`Bot ${botId} joined board ${board.getId()}`);
     return this.returnAndSaveDto(board);
   }
 
   private returnAndSaveDto(board: Board) {
     const dto = this.getAsDto(board);
-    const index = this.getBoardIndex(board);
+    const index = board.getId();
     if (this.recordingsService) this.recordingsService.record(index, dto);
     return dto;
   }
@@ -172,7 +222,9 @@ export class BoardsService {
   }
 
   private getBoardById(id: number): OperationQueueBoard {
-    return this.boards.find((b) => b.getId() === id);
+    return [...this.boards, ...this.ephemeralBoards].find(
+      (b) => b.getId() === id,
+    );
   }
 
   private getBoardIndex(board: Board): number {
@@ -243,8 +295,10 @@ export class BoardsService {
   /**
    * Create an example board for debugging purpose.
    */
-  public async createInMemoryBoards(numberOfBoards: number): Promise<void> {
-    const boardConfig = await this.boardConfigService.getCurrentBoardConfig();
+  public async createInMemoryBoards(
+    numberOfBoards: number,
+    boardConfig: IBoardConfig,
+  ): Promise<OperationQueueBoard[]> {
     const providers = [
       new DiamondButtonProvider(),
       new BaseProvider(),
@@ -269,13 +323,8 @@ export class BoardsService {
     ];
     const sessionLength = boardConfig.sessionLength;
     const minimumDelayBetweenMoves = boardConfig.minimumDelayBetweenMoves;
-    if (this.recordingsService) {
-      const extraFactor = 1.5;
-      const maxMoves =
-        (1000 / minimumDelayBetweenMoves) * sessionLength * extraFactor;
-      this.recordingsService.setup(numberOfBoards, maxMoves);
-    }
 
+    const ret: OperationQueueBoard[] = [];
     for (let i = 0; i < numberOfBoards; i++) {
       const config: BoardConfig = {
         height: boardConfig.height,
@@ -284,52 +333,14 @@ export class BoardsService {
         sessionLength,
       };
       const board = new OperationQueueBoard(
-        this.getNextBoardId(),
+        BoardsService.nextBoardId++,
         config,
         providers,
         this.logger,
       );
-      this.boards.push(board);
+      ret.push(board);
     }
-  }
-
-  public removeEmptyBoards(numberOfBoards: number) {
-    // Fetches empty boards (No bot playing).
-    // Removing X number of boards that are empty.
-    const removeIndex = [];
-    this.boards.forEach((board, index) => {
-      if (Object.keys(board.getBots()).length === 0) {
-        // Do not remove board 1
-        if (board.getId() != 1) {
-          removeIndex.push(index);
-        }
-      }
-    });
-
-    // Read backwards (Removing the higher ids first)
-    removeIndex
-      .slice()
-      .reverse()
-      .forEach((removeIndex, index) => {
-        if (index < numberOfBoards) {
-          this.boards.splice(removeIndex, 1);
-        }
-      });
-  }
-
-  private getNextBoardId() {
-    // Fetch the highest board id
-    // Returns 1 if no boards are created yet.
-    if (this.boards.length === 0) {
-      return 1;
-    }
-    const highestId = Math.max.apply(
-      Math,
-      this.boards.map(function (board) {
-        return board.getId();
-      }),
-    );
-    return highestId + 1;
+    return ret;
   }
 
   private tooManyRateLimitViolations(board: OperationQueueBoard, bot: IBot) {

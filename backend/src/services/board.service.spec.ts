@@ -154,22 +154,4 @@ describe("BoardsService", () => {
       boardsService.join(dummyBoardId, dummyBoardToken),
     ).rejects.toThrowError(NotFoundError);
   });
-  it("Should not remove board 1 and 3", async () => {
-    botRepositryMock.get.mockReturnValue({} as IBot);
-    let boards = newBoardsService.getAll();
-    await newBoardsService.join(boards[2].id, dummyBoardToken);
-    newBoardsService.removeEmptyBoards(4);
-    boards = newBoardsService.getAll();
-    expect(boards[0].id).toEqual(1);
-    expect(boards[1].id).toEqual(3);
-    expect(boards.length).toEqual(2);
-  });
-  it("Should remove all boards except board 1", async () => {
-    botRepositryMock.get.mockReturnValue({} as IBot);
-    let boards = newBoardsService.getAll();
-    newBoardsService.removeEmptyBoards(10);
-    boards = newBoardsService.getAll();
-    expect(boards[0].id).toEqual(1);
-    expect(boards.length).toEqual(1);
-  });
 });
