@@ -1,7 +1,7 @@
 import { Board } from "../../board";
-import createTestBoard from "../../util/test-board";
-import { DiamondProvider } from "./diamond-provider";
+import { createTestBoard } from "../../util";
 import { DiamondGameObject } from "./diamond";
+import { DiamondProvider } from "./diamond-provider";
 
 let provider: DiamondProvider;
 let board: Board;

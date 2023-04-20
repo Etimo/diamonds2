@@ -1,9 +1,11 @@
 import { Body, Controller, Get, HttpCode, Param, Post } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
-import { BotRecoveryDto } from "src/models/bot-recovery.dto";
-import { BotRegistrationPublicDto } from "src/models/bot-registration-public.dto";
-import { BotRegistrationDto } from "src/models/bot-registration.dto";
-import { BotsService } from "src/services/bots.service";
+import {
+  BotRecoveryDto,
+  BotRegistrationDto,
+  BotRegistrationPublicDto,
+} from "../models";
+import { BotsService } from "../services";
 
 @ApiTags("Bots")
 @Controller("api/bots")

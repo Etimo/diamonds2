@@ -1,16 +1,16 @@
 import { Injectable } from "@nestjs/common";
-import ForbiddenError from "../errors/forbidden.error";
-import { BotDto } from "../models/bot.dto";
-import { SeasonDto } from "../models/season.dto";
-import { TeamDto } from "../models/team.dto";
+import { ForbiddenError } from "../errors";
+import { BotDto, SeasonDto, TeamDto } from "../models";
 import { INewBoardConfig, INewSeason } from "../types";
 import {
   getAddSeasonBody,
+  getAddTeamBody,
   getSeasonListBody,
-} from "../utils/slack/season.utils";
-import { getAddTeamBody, getTeamListBody } from "../utils/slack/teams.utils";
-import { getWinnerListBody } from "../utils/slack/user.utils";
-import { showModal, slackError } from "../utils/slack/utils";
+  getTeamListBody,
+  getWinnerListBody,
+  showModal,
+  slackError,
+} from "../utils";
 import { BoardConfigService } from "./board-config.service";
 import { HighscoresService } from "./highscores.service";
 import { SeasonsService } from "./seasons.service";

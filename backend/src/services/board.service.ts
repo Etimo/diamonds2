@@ -1,24 +1,27 @@
 import { Inject, Injectable, Scope } from "@nestjs/common";
 import { IPosition } from "../common/interfaces/position.interface";
-import { MoveDirection } from "../enums/move-direction.enum";
-import ConflictError from "../errors/conflict.error";
-import ForbiddenError from "../errors/forbidden.error";
-import NotFoundError from "../errors/not-found.error";
-import UnauthorizedError from "../errors/unauthorized.error";
-import { Board } from "../gameengine/board";
-import { BoardConfig } from "../gameengine/board-config";
-import { BaseProvider } from "../gameengine/gameobjects/base/base-provider";
-import { BotGameObject } from "../gameengine/gameobjects/bot/bot";
-import { BotProvider } from "../gameengine/gameobjects/bot/bot-provider";
-import { DiamondButtonProvider } from "../gameengine/gameobjects/diamond-button/diamond-button-provider";
-import { DiamondProvider } from "../gameengine/gameobjects/diamond/diamond-provider";
-import { TeleportRelocationProvider } from "../gameengine/gameobjects/teleport-relocation-provider/teleport-relocation-provider";
-import { TeleportProvider } from "../gameengine/gameobjects/teleport/teleport-provider";
-import { OperationQueueBoard } from "../gameengine/operation-queue-board";
+import { MoveDirection } from "../enums";
+import {
+  ConflictError,
+  ForbiddenError,
+  NotFoundError,
+  UnauthorizedError,
+} from "../errors";
+import {
+  BaseProvider,
+  Board,
+  BoardConfig,
+  BotGameObject,
+  BotProvider,
+  DiamondButtonProvider,
+  DiamondProvider,
+  OperationQueueBoard,
+  TeleportProvider,
+  TeleportRelocationProvider,
+} from "../gameengine";
 import { IBot } from "../interfaces/bot.interface";
 import { CustomLogger } from "../logger";
-import { BoardDto } from "../models/board.dto";
-import { GameObjectDto } from "../models/game-object.dto";
+import { BoardDto, BoardMetadataDto, GameObjectDto } from "../models";
 import { BoardConfigService } from "./board-config.service";
 import { BotsService } from "./bots.service";
 import { HighscoresService } from "./highscores.service";
@@ -65,6 +68,10 @@ export class BoardsService {
    */
   public getAll(): BoardDto[] {
     return this.boards.map((b) => this.getAsDto(b));
+  }
+
+  public getAllMetadata(): BoardMetadataDto[] {
+    return this.boards.map((b) => this.getAsMetadataDto(b));
   }
 
   /**
@@ -214,6 +221,21 @@ export class BoardsService {
           type: g.constructor.name,
           properties: g.properties,
         } as GameObjectDto;
+      }),
+    };
+  }
+
+  private getAsMetadataDto(board: Board): BoardMetadataDto {
+    return {
+      id: board.getId(),
+      width: board.width,
+      height: board.height,
+      minimumDelayBetweenMoves: board.getConfig().minimumDelayBetweenMoves,
+      features: board.gameObjectProviders.map((gop) => {
+        return {
+          name: gop.constructor.name,
+          config: gop.config,
+        };
       }),
     };
   }

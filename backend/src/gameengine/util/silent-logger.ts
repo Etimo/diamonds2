@@ -1,4 +1,4 @@
-export default class SilentLogger {
+export class SilentLogger {
   info() {}
   debug() {}
   warn() {}

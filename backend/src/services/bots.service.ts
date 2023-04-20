@@ -1,10 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
-import { BotRegistrationDto } from "src/models/bot-registration.dto";
-import { BotRegistrationsRepository } from "../db/repositories/botRegistrations.repository";
-import ConflictError from "../errors/conflict.error";
-import NotFoundError from "../errors/not-found.error";
-import { BotRecoveryDto } from "../models/bot-recovery.dto";
+import { BotRegistrationsRepository } from "../db";
+import { ConflictError, NotFoundError } from "../errors";
+import { BotRecoveryDto, BotRegistrationDto } from "../models";
 import { IBot, INewBot } from "../types";
 import { TeamsService } from "./teams.service";
 

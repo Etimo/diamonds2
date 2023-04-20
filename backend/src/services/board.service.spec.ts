@@ -1,7 +1,6 @@
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { TestingModule } from "@nestjs/testing";
-import ConflictError from "../errors/conflict.error";
-import NotFoundError from "../errors/not-found.error";
-import UnauthorizedError from "../errors/unauthorized.error";
+import { ConflictError, NotFoundError, UnauthorizedError } from "../errors";
 import { IBot } from "../types";
 import { BoardConfigService } from "./board-config.service";
 import { BoardsService } from "./board.service";
@@ -12,10 +11,10 @@ import { SeasonsService } from "./seasons.service";
 import {
   boardConfigRepositoryMock,
   botRepositryMock,
-  GetTestModule,
+  createTestModule,
   offSeasonTest,
   seasonsRepositoryMock,
-} from "./testHelper";
+} from "./test-helper.spec";
 
 describe("BoardsService", () => {
   let botsService: BotsService;
@@ -49,7 +48,7 @@ describe("BoardsService", () => {
     seasonsRepositoryMock.getCurrentSeason.mockReturnValue(offSeasonTest);
     boardConfigRepositoryMock.getBoardConfigById.mockReturnValue(boardConfig);
 
-    const module: TestingModule = await GetTestModule();
+    const module: TestingModule = await createTestModule();
 
     highscoresService = module.get<HighscoresService>(HighscoresService);
     botsService = module.get<BotsService>(BotsService);

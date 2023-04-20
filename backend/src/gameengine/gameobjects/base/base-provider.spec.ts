@@ -1,8 +1,7 @@
-import { BaseGameObject } from "./base";
+import { Board } from "../../board";
+import { createTestBoard } from "../../util";
 import { BotGameObject } from "../bot/bot";
 import { BaseProvider } from "./base-provider";
-import { Board } from "../../board";
-import createTestBoard from "../../util/test-board";
 
 let provider: BaseProvider;
 let board: Board;

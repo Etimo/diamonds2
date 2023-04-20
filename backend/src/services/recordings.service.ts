@@ -1,9 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { RecordingsRepository } from "../db/repositories/recordings.repository";
-import NotFoundError from "../errors/not-found.error";
+import { RecordingsRepository } from "../db";
+import { NotFoundError } from "../errors";
 import { CustomLogger } from "../logger";
-import { RecordingListDto } from "../models/recording-list.dto";
-import { RecordingPublicDto } from "../models/recording-public.dto";
+import { RecordingListDto, RecordingPublicDto } from "../models";
 import { ISaveRecording } from "../types";
 
 @Injectable()

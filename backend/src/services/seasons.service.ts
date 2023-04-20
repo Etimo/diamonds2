@@ -1,9 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { SeasonsRepository } from "../db/repositories/seasons.repository";
-import ConflictError from "../errors/conflict.error";
-import ForbiddenError from "../errors/forbidden.error";
+import { SeasonsRepository } from "../db";
+import { ConflictError, ForbiddenError } from "../errors";
 import { INewSeason } from "../types";
-import { offSeasonId } from "../utils/slack/utils";
+import { offSeasonId } from "../utils";
 
 @Injectable()
 export class SeasonsService {

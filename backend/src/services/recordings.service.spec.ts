@@ -1,13 +1,13 @@
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { Test, TestingModule } from "@nestjs/testing";
-import { RecordingsRepository } from "../db/repositories/recordings.repository";
-import NotFoundError from "../errors/not-found.error";
-import SilentLogger from "../gameengine/util/silent-logger";
+import { RecordingsRepository } from "../db";
+import { NotFoundError } from "../errors";
+import { SilentLogger } from "../gameengine";
 import { CustomLogger } from "../logger";
-import { RecordingListDto } from "../models/recording-list.dto";
-import { RecordingPublicDto } from "../models/recording-public.dto";
+import { RecordingListDto, RecordingPublicDto } from "../models";
 import { INewRecording, IRecording, ISaveRecording } from "../types";
 import { RecordingsService } from "./recordings.service";
-import { recordingsRepositoryMock } from "./testHelper";
+import { recordingsRepositoryMock } from "./test-helper.spec";
 
 describe("RecordingsService", () => {
   let recordingsService: RecordingsService;

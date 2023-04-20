@@ -1,5 +1,5 @@
 import { Board } from "../../board";
-import createTestBoard from "../../util/test-board";
+import { createTestBoard } from "../../util";
 import { BotGameObject } from "../bot/bot";
 import { BotProvider } from "./bot-provider";
 

@@ -1,6 +1,6 @@
+import { createTestBoard } from "../../util";
 import { BotGameObject } from "../bot/bot";
 import { DiamondGameObject } from "./diamond";
-import createTestBoard from "../../util/test-board";
 
 let gameObject: DiamondGameObject;
 

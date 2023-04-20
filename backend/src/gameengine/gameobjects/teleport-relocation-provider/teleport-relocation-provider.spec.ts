@@ -1,5 +1,5 @@
 import { Board } from "../../board";
-import createTestBoard from "../../util/test-board";
+import { createTestBoard } from "../../util";
 import { TeleportGameObject } from "../teleport/teleport";
 import { TeleportRelocationProvider } from "./teleport-relocation-provider";
 

@@ -1,11 +1,9 @@
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { Test, TestingModule } from "@nestjs/testing";
 import * as bcrypt from "bcrypt";
-import { BotRegistrationsRepository } from "../db/repositories/botRegistrations.repository";
-import { TeamsRepository } from "../db/repositories/teams.repository";
-import ConflictError from "../errors/conflict.error";
-import NotFoundError from "../errors/not-found.error";
-import { BotRecoveryDto } from "../models/bot-recovery.dto";
-import { BotRegistrationDto } from "../models/bot-registration.dto";
+import { BotRegistrationsRepository, TeamsRepository } from "../db";
+import { ConflictError, NotFoundError } from "../errors";
+import { BotRecoveryDto, BotRegistrationDto } from "../models";
 import { IBot } from "../types";
 import { BotsService } from "./bots.service";
 import { TeamsService } from "./teams.service";
