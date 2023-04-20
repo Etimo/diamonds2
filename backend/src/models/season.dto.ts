@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { SeasonsEntity } from "../db/models/seasons.entity";
+import { ISeason } from "../types";
 
 export class SeasonDto {
   @ApiProperty()
@@ -29,7 +29,7 @@ export class SeasonDto {
     return seasonObj;
   }
 
-  public static fromEntity(entity: SeasonsEntity) {
+  public static fromEntity(entity: ISeason) {
     return this.from({
       id: entity.id,
       name: entity.name,

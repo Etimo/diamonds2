@@ -4,7 +4,7 @@ import NotFoundError from "../errors/not-found.error";
 import { CustomLogger } from "../logger";
 import { RecordingListDto } from "../models/recording-list.dto";
 import { RecordingPublicDto } from "../models/recording-public.dto";
-import { INewRecording } from "../types";
+import { ISaveRecording } from "../types";
 
 @Injectable()
 export class RecordingsService {
@@ -45,15 +45,16 @@ export class RecordingsService {
       .filter((r) => r);
   }
 
-  async save(data: INewRecording) {
+  async save(data: ISaveRecording) {
     this.logger.debug(
       `Saving new recording for ${data.botId} with score ${data.score}`,
     );
+
     await this.repo.create({
       ...data,
       recording: JSON.stringify(this.getRecording(data.board)),
     });
-    await this.repo.purgeOld(data.seasonId);
+    await this.purgeOld(data.seasonId);
   }
 
   public async allBySeasonIdList(
@@ -63,7 +64,6 @@ export class RecordingsService {
     if (data.length === 0) {
       throw new NotFoundError("Season not found");
     }
-    //TODO: should botName be empty string?  //Klara
     return data.map((e) => ({
       board: e.board,
       botName: "",
@@ -78,7 +78,6 @@ export class RecordingsService {
     if (data.length === 0) {
       throw new NotFoundError("Data not found");
     }
-    //TODO: should botName be empty string?  //Klara
     return data.map(
       (e) =>
         ({
@@ -90,5 +89,18 @@ export class RecordingsService {
           seasonId: e.seasonId,
         } as RecordingPublicDto),
     )[0];
+  }
+
+  public async purgeOld(seasonId: string) {
+    const maxEntries = 10;
+    const existing = await this.repo.getScores(seasonId, maxEntries + 1);
+
+    if (existing.length > maxEntries) {
+      // Remove if we have more than 10 recordings
+      await this.repo.deleteRecordingsWithLowScore(
+        seasonId,
+        existing[maxEntries - 1],
+      );
+    }
   }
 }

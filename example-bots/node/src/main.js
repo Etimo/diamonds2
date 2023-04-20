@@ -1,11 +1,15 @@
-import { registerBot, getBot } from "./api/bot";
 import { joinBoard, moveBotOnBoard } from "./api/board";
-import { sleep } from "./utils";
-import { registrationSuccessful, registrationFailed } from "./messages";
-import { getDirection } from "./logic/utils";
+import { getBot, registerBot } from "./api/bot";
 import { getFirstDiamond } from "./logic/firstDiamondLogic";
-import { positionIsSame } from "./utils";
-import { invalidLogic, couldNotJoinBoard, gameStarted } from "./messages";
+import { getDirection } from "./logic/utils";
+import {
+  couldNotJoinBoard,
+  gameStarted,
+  invalidLogic,
+  registrationFailed,
+  registrationSuccessful,
+} from "./messages";
+import { positionIsSame, sleep } from "./utils";
 
 const logics = { firstDiamondLogic: getFirstDiamond };
 
@@ -29,6 +33,7 @@ export const play = async (token, logic, boardId) => {
 
   // Join board
   let board = await joinBoard(token, boardId);
+
   if (!board) {
     couldNotJoinBoard();
   }
@@ -38,6 +43,7 @@ export const play = async (token, logic, boardId) => {
     bot.updateBotInfo(board);
 
     let targetPosition = getTargetPosition(bot, board, logicFunction);
+
     if (targetPosition) {
       bot.targetPosition = targetPosition;
     }
@@ -68,8 +74,8 @@ const getTargetPosition = (bot, board, logicFunction) => {
   return false;
 };
 
-const getLogic = logic => {
-  const logicArray = Object.entries(logics).find(item => item[0] === logic);
+const getLogic = (logic) => {
+  const logicArray = Object.entries(logics).find((item) => item[0] === logic);
   if (logicArray) {
     return logicArray[1];
   }

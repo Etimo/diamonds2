@@ -35,8 +35,6 @@ describe("SlackService", () => {
     expect(BoardConfigService).toBeDefined();
   });
 
-  //TODO: Fix this test //Klara
-
   //   it("handleInteract, Should return error in slack format", async () => {
   //     const payload = {
   //       payload:
