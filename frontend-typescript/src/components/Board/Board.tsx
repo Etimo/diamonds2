@@ -17,7 +17,7 @@ export const Board: FC<BoardProps> = memo((props) => {
   return (
     <div id="test">
       <div
-        className=" items-center flex flex-col relative m-auto border-t w-3/4"
+        className="items-center flex flex-col relative m-auto border-t w-full lg:w-3/4"
         ref={containerRef}
         style={{ maxWidth: maxWidth.maxWidth }}
       >
@@ -25,7 +25,7 @@ export const Board: FC<BoardProps> = memo((props) => {
           return (
             <div
               key={rowIndex}
-              className="items-center flex flex-row border-r border-b w-full h-full "
+              className="items-center flex flex-row border-r border-b w-full h-full"
             >
               {row.map((cell, columnIndex) => {
                 if (cell) {

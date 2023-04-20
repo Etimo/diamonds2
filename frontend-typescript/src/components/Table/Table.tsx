@@ -11,8 +11,8 @@ export const Table: FC<TableProps> = memo((props) => {
   return (
     <>
       <label className="text-label mb-2.5">{label}</label>
-      <table>
-        <thead className="bg-gray-100  border-b border-b-gray-400">
+      <table className="w-full">
+        <thead className="bg-gray-100  border-b border-b-gray-500 w-full">
           <tr className="">
             {cols.map((col, index) => (
               <th
@@ -28,7 +28,7 @@ export const Table: FC<TableProps> = memo((props) => {
           {data.map((item, index) => (
             <tr
               key={'tr-' + index}
-              className="font-sans text-etimo text-xs font-normal border-b border-b-gray-400 last:border-none"
+              className="font-sans text-etimo text-xs font-normal border-b border-b-gray-500 last:border-none"
             >
               {Object.values(item).map((value: any, index2) => (
                 <td
