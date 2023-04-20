@@ -1,4 +1,4 @@
-import { jest } from "@jest/globals";
+import { describe, expect, it, jest } from "@jest/globals";
 import { Test, TestingModule } from "@nestjs/testing";
 import {
   BoardConfigRepository,
@@ -21,7 +21,7 @@ import { SlackService } from "./slack.service";
 import { TeamsService } from "./teams.service";
 
 // Mocked data
-export let boardConfigTest = {
+export const boardConfigTest = {
   id: "test",
   seasonId: "321",
   inventorySize: 5,
@@ -34,7 +34,7 @@ export let boardConfigTest = {
   sessionLength: 60,
 };
 
-export let offSeasonTest = {
+export const offSeasonTest = {
   id: offSeasonId,
   name: "Off Season",
   startDate: new Date(),
@@ -42,7 +42,7 @@ export let offSeasonTest = {
 };
 
 // Mocked repositories
-export let seasonsRepositoryMock = {
+export const seasonsRepositoryMock = {
   getById: jest.fn(),
   getAll: jest.fn(),
   getCurrentSeason: jest.fn(),
@@ -51,13 +51,13 @@ export let seasonsRepositoryMock = {
   getByName: jest.fn(),
 };
 
-export let teamsRepositoryMock = {
+export const teamsRepositoryMock = {
   get: jest.fn(),
   create: jest.fn(),
   getByAbbreviation: jest.fn(),
 };
 
-export let highscoresRepositoryMock = {
+export const highscoresRepositoryMock = {
   create: jest.fn(),
   allBySeasonIdRaw: jest.fn(),
   getBestBotScore: jest.fn(),
@@ -65,12 +65,12 @@ export let highscoresRepositoryMock = {
   updateBestBotScore: jest.fn(),
 };
 
-export let boardConfigRepositoryMock = {
+export const boardConfigRepositoryMock = {
   create: jest.fn(),
   getBoardConfigById: jest.fn(),
 };
 
-export let recordingsRepositoryMock = {
+export const recordingsRepositoryMock = {
   getById: jest.fn(),
   allBySeasonIdRaw: jest.fn(),
   create: jest.fn(),
@@ -78,7 +78,7 @@ export let recordingsRepositoryMock = {
   deleteRecordingsWithLowScore: jest.fn(),
 };
 
-export let botRepositryMock = {
+export const botRepositryMock = {
   getByEmail: jest.fn(),
   getByName: jest.fn(),
   create: jest.fn(),
@@ -86,7 +86,7 @@ export let botRepositryMock = {
 };
 
 // Test module
-export async function GetTestModule() {
+export async function createTestModule() {
   const numberOfBoards = 4;
 
   let slackService: SlackService;
@@ -196,3 +196,10 @@ export async function GetTestModule() {
   }).compile();
   return module;
 }
+
+describe("Test helper", () => {
+  it("should create a test module", async () => {
+    const module = await createTestModule();
+    expect(module).toBeDefined();
+  });
+});

@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { Test, TestingModule } from "@nestjs/testing";
 import * as bcrypt from "bcrypt";
 import { BotRegistrationsRepository, TeamsRepository } from "../db";

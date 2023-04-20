@@ -1,10 +1,11 @@
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { TestingModule } from "@nestjs/testing";
 import { IHighscore, INewHighscore } from "../types";
 import { offSeasonId } from "../utils";
 import { HighscoresService } from "./highscores.service";
 import { SeasonsService } from "./seasons.service";
 import {
-  GetTestModule,
+  createTestModule,
   highscoresRepositoryMock,
   seasonsRepositoryMock,
 } from "./test-helper.spec";
@@ -16,7 +17,7 @@ describe("HighScoresService", () => {
   let testBotName: string = "testBot";
 
   beforeEach(async () => {
-    const module: TestingModule = await GetTestModule();
+    const module: TestingModule = await createTestModule();
 
     highScoresService = module.get<HighscoresService>(HighscoresService);
     seasonsService = module.get<SeasonsService>(SeasonsService);

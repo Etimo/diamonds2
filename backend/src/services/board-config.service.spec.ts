@@ -3,14 +3,14 @@ import { TestingModule } from "@nestjs/testing";
 import { offSeasonId } from "../utils";
 import { BoardConfigService } from "./board-config.service";
 import { SeasonsService } from "./seasons.service";
-import { GetTestModule, seasonsRepositoryMock } from "./test-helper.spec";
+import { createTestModule, seasonsRepositoryMock } from "./test-helper.spec";
 
 describe("BoardConfigService", () => {
   let boardConfigService: BoardConfigService;
   let seasonService: SeasonsService;
 
   beforeEach(async () => {
-    const module: TestingModule = await GetTestModule();
+    const module: TestingModule = await createTestModule();
 
     boardConfigService = module.get<BoardConfigService>(BoardConfigService);
     seasonService = module.get<SeasonsService>(SeasonsService);

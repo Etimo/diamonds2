@@ -6,7 +6,7 @@ import { HighscoresService } from "./highscores.service";
 import { SeasonsService } from "./seasons.service";
 import { SlackService } from "./slack.service";
 import { TeamsService } from "./teams.service";
-import { GetTestModule } from "./test-helper.spec";
+import { createTestModule } from "./test-helper.spec";
 
 describe("SlackService", () => {
   let slackService: SlackService;
@@ -16,7 +16,7 @@ describe("SlackService", () => {
   let boardConfigService: BoardConfigService;
 
   beforeEach(async () => {
-    const module: TestingModule = await GetTestModule();
+    const module: TestingModule = await createTestModule();
     slackService = module.get<SlackService>(SlackService);
     seasonsService = module.get<SeasonsService>(SeasonsService);
     boardConfigService = module.get<BoardConfigService>(BoardConfigService);

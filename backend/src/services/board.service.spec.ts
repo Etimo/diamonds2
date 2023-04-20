@@ -9,9 +9,9 @@ import { HighscoresService } from "./highscores.service";
 import { RecordingsService } from "./recordings.service";
 import { SeasonsService } from "./seasons.service";
 import {
-  GetTestModule,
   boardConfigRepositoryMock,
   botRepositryMock,
+  createTestModule,
   offSeasonTest,
   seasonsRepositoryMock,
 } from "./test-helper.spec";
@@ -48,7 +48,7 @@ describe("BoardsService", () => {
     seasonsRepositoryMock.getCurrentSeason.mockReturnValue(offSeasonTest);
     boardConfigRepositoryMock.getBoardConfigById.mockReturnValue(boardConfig);
 
-    const module: TestingModule = await GetTestModule();
+    const module: TestingModule = await createTestModule();
 
     highscoresService = module.get<HighscoresService>(HighscoresService);
     botsService = module.get<BotsService>(BotsService);
