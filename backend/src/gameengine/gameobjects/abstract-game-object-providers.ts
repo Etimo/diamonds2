@@ -1,7 +1,6 @@
-/* istanbul ignore file */
+import { IBot } from "src/interfaces/bot.interface";
 import { Board } from "../board";
 import { AbstractGameObject } from "./abstract-game-object";
-import { IBot } from "src/interfaces/bot.interface";
 
 export abstract class AbstractGameObjectProvider<T = {}> {
   public config: T;
