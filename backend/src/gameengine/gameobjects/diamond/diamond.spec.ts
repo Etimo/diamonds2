@@ -1,3 +1,4 @@
+import { beforeEach, expect, it } from "@jest/globals";
 import { createTestBoard } from "../../util";
 import { BotGameObject } from "../bot/bot";
 import { DiamondGameObject } from "./diamond";
@@ -8,7 +9,7 @@ beforeEach(() => {
   gameObject = new DiamondGameObject({ x: 0, y: 0 }, 1);
 });
 
-test("Stepping on a diamond increases score for bot if there is space in inventory", () => {
+it("Stepping on a diamond increases score for bot if there is space in inventory", () => {
   const bot = new BotGameObject({ x: 0, y: 0 });
   bot.diamonds = 0;
   bot.inventorySize = 5;
@@ -18,7 +19,7 @@ test("Stepping on a diamond increases score for bot if there is space in invento
   expect(bot.diamonds).toBe(1);
 });
 
-test("Stepping on a diamond does not change score if there is no space in inventory", () => {
+it("Stepping on a diamond does not change score if there is no space in inventory", () => {
   const bot = new BotGameObject({ x: 0, y: 0 });
   bot.diamonds = 5;
   bot.inventorySize = 5;
@@ -28,7 +29,7 @@ test("Stepping on a diamond does not change score if there is no space in invent
   expect(bot.diamonds).toBe(5);
 });
 
-test("Stepping on a diamond does not remove diamond if there is no space in inventory", () => {
+it("Stepping on a diamond does not remove diamond if there is no space in inventory", () => {
   const bot = new BotGameObject({ x: 0, y: 0 });
   bot.diamonds = 5;
   bot.inventorySize = 5;
@@ -40,6 +41,6 @@ test("Stepping on a diamond does not remove diamond if there is no space in inve
   expect(board.getGameObjectsByType(DiamondGameObject).length).toBe(1);
 });
 
-test("Returns points in properties", () => {
+it("Returns points in properties", () => {
   expect(gameObject.properties["points"]).toBe(1);
 });

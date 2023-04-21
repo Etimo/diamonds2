@@ -1,3 +1,4 @@
+import { beforeEach, expect, it, jest } from "@jest/globals";
 import { Board } from "../../board";
 import { createTestBoard } from "../../util";
 import { DummyBotGameObject } from "./dummy-bot";
@@ -10,30 +11,16 @@ beforeEach(() => {
   provider = new DummyBotProvider({
     inventorySize: 5,
     canTackle: true,
-    count: 1,
+    count: 2,
     prefix: "DummyBot",
   });
   board = createTestBoard();
   jest.useFakeTimers();
 });
 
-test("Creates dummy bots when board initializes", () => {
+it("Creates configured number of dummy bots when board initializes", () => {
   provider.onBoardInitialized(board);
-  jest.runOnlyPendingTimers();
-
-  expect(board.getGameObjectsByType(DummyBotGameObject).length).toBe(1);
-});
-
-test("Creates configured number of dummy bots when board initializes", () => {
-  provider = new DummyBotProvider({
-    inventorySize: 5,
-    canTackle: true,
-    count: 2,
-    prefix: "DummyBot",
-  });
-
-  provider.onBoardInitialized(board);
-  jest.runOnlyPendingTimers();
+  jest.advanceTimersByTime(1001); // Wait for bots to be created
 
   expect(board.getGameObjectsByType(DummyBotGameObject).length).toBe(2);
 });

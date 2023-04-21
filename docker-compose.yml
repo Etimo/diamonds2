@@ -33,17 +33,17 @@ services:
         max-size: "100m"
         max-file: "1"
 
-  bots:
-    build:
-      context: ./example-bots/python
-    restart: always
-    volumes:
-      - bot-data:/bot-data
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "100m"
-        max-file: "1"
+  # bots:
+  #   build:
+  #     context: ./example-bots/python
+  #   restart: always
+  #   volumes:
+  #     - bot-data:/bot-data
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "100m"
+  #       max-file: "1"
 
   database:
     image: postgres:14

@@ -1,6 +1,7 @@
 import { Board } from "src/gameengine/board";
 import { BotProvider, BotProviderConfig } from "../bot/bot-provider";
 import { DummyBotGameObject } from "./dummy-bot";
+import { AbstractGameObject } from "../abstract-game-object";
 
 export interface DummyBotProviderConfig extends BotProviderConfig {
   /**
@@ -38,8 +39,24 @@ export class DummyBotProvider extends BotProvider {
       dummyBot.canTackle = bot.canTackle;
       dummyBot.name = bot.name;
 
+      // Register move timer
       board.registerGameObjectForCallbackLoop(dummyBot, 1000);
+
+      // Register session finished timer
+      const boardConfig = board.getConfig();
+      board.registerGameObjectForCallbackLoop(
+        dummyBot,
+        boardConfig.sessionLength * 1000,
+      );
       board.addGameObjects([dummyBot]);
+    }
+  }
+
+  onGameObjectsRemoved(board: Board, gameObjects: AbstractGameObject[]): void {
+    const dummyBots = board.getGameObjectsByType(DummyBotGameObject);
+    if (dummyBots.length == 0) {
+      // Recreate the bots
+      this.onBoardInitialized(board);
     }
   }
 }

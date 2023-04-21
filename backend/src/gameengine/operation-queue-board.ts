@@ -1,8 +1,8 @@
 import * as async from "async";
 import { IPosition } from "src/common/interfaces/position.interface";
 import { IBot } from "src/interfaces/bot.interface";
+import { IBoardConfig } from "../types";
 import { Board } from "./board";
-import { BoardConfig } from "./board-config";
 import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
 
 /**
@@ -18,7 +18,7 @@ export class OperationQueueBoard extends Board {
 
   constructor(
     id: number,
-    config: BoardConfig,
+    config: IBoardConfig,
     gameObjectProviders: AbstractGameObjectProvider[],
     protected logger: any,
   ) {
