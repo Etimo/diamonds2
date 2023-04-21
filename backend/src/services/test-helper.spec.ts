@@ -87,7 +87,8 @@ export const botRepositryMock = {
 
 // Test module
 export async function createTestModule() {
-  const numberOfBoards = 4;
+  const numberOfBoards = 1;
+  const maxNumberOfBoards = 10;
 
   let slackService: SlackService;
   let botsService: BotsService;
@@ -191,6 +192,10 @@ export async function createTestModule() {
       {
         useValue: numberOfBoards,
         provide: "NUMBER_OF_BOARDS",
+      },
+      {
+        useValue: maxNumberOfBoards,
+        provide: "MAX_EPHEMERAL_BOARDS",
       },
     ],
   }).compile();

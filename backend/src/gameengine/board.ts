@@ -10,7 +10,7 @@ export type SessionFinishedCallbackFunction = (bot: BotGameObject) => void;
 export class Board {
   private readonly _id: number;
 
-  private bots: Object = {};
+  private bots: Record<string, IBot> = {};
 
   /** List of game objects on the board. */
   private gameObjects: AbstractGameObject[] = [];
@@ -73,6 +73,7 @@ export class Board {
     // ...and notify all providers
     this.notifyProvidersBoardBotJoined(bot);
 
+    this.logger.debug(`Bot ${bot.name} joined board ${this._id}`);
     return true;
   }
 
@@ -92,7 +93,7 @@ export class Board {
    *
    * @param id The id of the bot to find.
    */
-  getBotById(id: string): IBot {
+  getBotById(id: string): IBot | undefined {
     return this.bots[id];
   }
 
@@ -100,8 +101,12 @@ export class Board {
    * Return all bots on board
    * @returns All bots
    */
-  getBots(): Object {
+  getBots() {
     return this.bots;
+  }
+
+  getBotsCount() {
+    return Object.keys(this.bots).length;
   }
 
   /**

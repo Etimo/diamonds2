@@ -17,7 +17,7 @@ services:
     build:
       context: ./backend
       target: "develop"
-    command: /bin/sh -c "npx prisma migrate dev && yarn start:dev"
+    command: /bin/sh -c "npx prisma db push --accept-data-loss && npx prisma db seed && yarn start:dev"
     volumes:
       - ./backend/src:/app/src
       - ./backend/prisma:/app/prisma

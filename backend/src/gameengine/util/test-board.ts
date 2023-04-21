@@ -19,6 +19,7 @@ export function createTestBoard(
       dummyBots: 2,
       updateTimeStamp: new Date(),
       createTimeStamp: new Date(),
+      separateBoards: false,
       id: "",
     },
     providers,

@@ -27,6 +27,7 @@ export class BoardConfigRepository {
         teleportRelocation: newBoardConfig.teleportRelocation,
         width: newBoardConfig.width,
         sessionLength: newBoardConfig.sessionLength,
+        separateBoards: newBoardConfig.separateBoards,
       },
     });
   }

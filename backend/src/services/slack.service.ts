@@ -97,6 +97,8 @@ export class SlackService {
       "value",
     );
     const sessionLength = this.parseValue(payload, "session_length", "value");
+    const separateBoards =
+      this.parseValue(payload, "separate_boards", "value") === "true";
     const boardConfig: INewBoardConfig = {
       inventorySize,
       canTackle,
@@ -106,6 +108,7 @@ export class SlackService {
       width,
       minimumDelayBetweenMoves,
       sessionLength,
+      separateBoards,
     };
     const createdBoardConfig = await this.boardConfigService.add(boardConfig);
     const season: INewSeason = {

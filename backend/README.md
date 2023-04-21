@@ -20,6 +20,7 @@ If you want to make changes to the schema you do the changes directly in the sch
 
 1. Forcefully reset the whole database with the new schema: `npx prisma db push`
 2. Create a new migration for the changes in the schema: `npx prisma migrate dev --name <name of migration>`
+3. Update our `types` with changed fields and models.
 
 Option 1 can be used locally when iterating and trying out new changes. When you are happy with the final changes in the schema you must create a migration using option 2. The new migration(s) must then be added to git.
 

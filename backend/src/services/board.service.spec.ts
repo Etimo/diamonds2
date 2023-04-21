@@ -1,12 +1,10 @@
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { TestingModule } from "@nestjs/testing";
-import { ConflictError, NotFoundError, UnauthorizedError } from "../errors";
+import { ConflictError, UnauthorizedError } from "../errors";
 import { IBot } from "../types";
-import { BoardConfigService } from "./board-config.service";
 import { BoardsService } from "./board.service";
 import { BotsService } from "./bots.service";
 import { HighscoresService } from "./highscores.service";
-import { RecordingsService } from "./recordings.service";
 import { SeasonsService } from "./seasons.service";
 import {
   boardConfigRepositoryMock,
@@ -21,13 +19,9 @@ describe("BoardsService", () => {
   let highscoresService: HighscoresService;
   let seasonsService: SeasonsService;
   let boardsService: BoardsService;
-  let boardConfigService: BoardConfigService;
-  let newBoardsService: BoardsService;
-  let recordingsService: RecordingsService;
 
   const dummyBoardId = 1111111;
   const dummyBoardToken = "dummy";
-  const dummyBotId = "dummyId";
 
   const boardConfig = {
     id: "test",
@@ -42,7 +36,8 @@ describe("BoardsService", () => {
     sessionLength: 60,
   };
 
-  const numberOfBoards = 4;
+  let numberOfBoards = 1;
+  let numberOfEphemeralBoards = 1;
 
   beforeEach(async () => {
     seasonsRepositoryMock.getCurrentSeason.mockReturnValue(offSeasonTest);
@@ -53,11 +48,9 @@ describe("BoardsService", () => {
     highscoresService = module.get<HighscoresService>(HighscoresService);
     botsService = module.get<BotsService>(BotsService);
     seasonsService = module.get<SeasonsService>(SeasonsService);
-    recordingsService = module.get<RecordingsService>(RecordingsService);
-    boardConfigService = module.get<BoardConfigService>(BoardConfigService);
     boardsService = module.get<BoardsService>(BoardsService);
-    newBoardsService = module.get<BoardsService>(BoardsService);
-
+    numberOfBoards = module.get<number>("NUMBER_OF_BOARDS");
+    numberOfEphemeralBoards = module.get<number>("MAX_EPHEMERAL_BOARDS");
     jest.clearAllMocks();
   });
 
@@ -79,7 +72,7 @@ describe("BoardsService", () => {
 
     const boards = boardsService.getAll();
 
-    expect(boards.length).toBe(numberOfBoards);
+    expect(boards.length).toBe(numberOfBoards + numberOfEphemeralBoards);
   });
 
   it("join, should be possible to join board", async () => {
@@ -129,7 +122,7 @@ describe("BoardsService", () => {
     } as IBot);
 
     await boardsService.join(boards[0].id, dummyBoardToken);
-    let act = boardsService.join(boards[1].id, dummyBoardToken);
+    const act = boardsService.join(boards[1].id, dummyBoardToken);
     expect(act).rejects.toThrowError(ConflictError);
   });
 
@@ -149,27 +142,9 @@ describe("BoardsService", () => {
       boardsService.join(boards[0].id, dummyBoardToken),
     ).rejects.toThrowError(ConflictError);
   });
-  it("Should throw NotFoundError when board not exists", async () => {
+  it("Should throw ConflictError when board not exists", async () => {
     await expect(
       boardsService.join(dummyBoardId, dummyBoardToken),
-    ).rejects.toThrowError(NotFoundError);
-  });
-  it("Should not remove board 1 and 3", async () => {
-    botRepositryMock.get.mockReturnValue({} as IBot);
-    let boards = newBoardsService.getAll();
-    await newBoardsService.join(boards[2].id, dummyBoardToken);
-    newBoardsService.removeEmptyBoards(4);
-    boards = newBoardsService.getAll();
-    expect(boards[0].id).toEqual(1);
-    expect(boards[1].id).toEqual(3);
-    expect(boards.length).toEqual(2);
-  });
-  it("Should remove all boards except board 1", async () => {
-    botRepositryMock.get.mockReturnValue({} as IBot);
-    let boards = newBoardsService.getAll();
-    newBoardsService.removeEmptyBoards(10);
-    boards = newBoardsService.getAll();
-    expect(boards[0].id).toEqual(1);
-    expect(boards.length).toEqual(1);
+    ).rejects.toThrowError(ConflictError);
   });
 });

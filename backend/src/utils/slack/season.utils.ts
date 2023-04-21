@@ -252,6 +252,19 @@ export const getAddSeasonBody = (trigger_id) => {
             emoji: true,
           },
         },
+        {
+          type: "input",
+          block_id: "separate_boards",
+          element: {
+            type: "plain_text_input",
+            initial_value: "true",
+          },
+          label: {
+            type: "plain_text",
+            text: "Should each bot be assigned a separate board? (true / false)",
+            emoji: true,
+          },
+        },
       ],
     },
   };

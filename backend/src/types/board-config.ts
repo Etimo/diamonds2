@@ -10,6 +10,7 @@ export interface IBoardConfig {
   width: number;
   minimumDelayBetweenMoves: number;
   sessionLength: number;
+  separateBoards: boolean;
   dummyBots: number;
   createTimeStamp: Date;
   updateTimeStamp: Date;
