@@ -1,6 +1,6 @@
 import { IBot } from "src/interfaces/bot.interface";
 import { IPosition } from "../common/interfaces/position.interface";
-import { BoardConfig } from "./board-config";
+import { IBoardConfig } from "../types";
 import { AbstractGameObject } from "./gameobjects/abstract-game-object";
 import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
 import { BotGameObject } from "./gameobjects/bot/bot";
@@ -24,8 +24,8 @@ export class Board {
 
   constructor(
     id: number,
-    public config: BoardConfig,
-    public gameObjectProviders: AbstractGameObjectProvider[],
+    public readonly config: IBoardConfig,
+    public readonly gameObjectProviders: AbstractGameObjectProvider[],
     protected logger: any,
   ) {
     this._id = id;
@@ -237,7 +237,7 @@ export class Board {
     };
   }
 
-  getConfig(): BoardConfig {
+  getConfig() {
     return this.config;
   }
 
