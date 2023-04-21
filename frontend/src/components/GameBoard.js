@@ -1,22 +1,20 @@
-import React from "react";
 import _ from "lodash";
 import Board from "../blocks/Board";
+import { useResize } from "../hooks";
 import {
   base,
-  botBaseDiamond,
   botBase,
+  botDiamond,
   diamond,
   diamondRed,
-  botDiamond,
+  redButton,
   robot,
   teleporter,
   wall,
-  redButton
 } from "../images";
-import { useResize } from "../hooks";
 
 export default ({ rows, activeBot }) => {
-  const decideCharacter = content => {
+  const decideCharacter = (content) => {
     const goImgMap = {
       Teleporter: teleporter,
       Wall: wall,
@@ -28,7 +26,7 @@ export default ({ rows, activeBot }) => {
       BaseGameObjectBotGameObject: botBase,
       DiamondGameObjectBotGameObject: botDiamond,
       BotGameObjectDiamondGameObject: botDiamond,
-      TeleportGameObject: teleporter
+      TeleportGameObject: teleporter,
     };
     if (content.type == "DiamondGameObject") {
       if (content.properties.points === 1) {
@@ -40,7 +38,7 @@ export default ({ rows, activeBot }) => {
     return goImgMap[content.type];
   };
 
-  const decideCharacterName = content => {
+  const decideCharacterName = (content) => {
     if (_.has(content.properties, "name")) {
       return content.properties.name;
     }
@@ -54,7 +52,7 @@ export default ({ rows, activeBot }) => {
   const [containerRef, maxWidth] = useResize({
     root: document.querySelector("#test"),
     rootMargin: "0px",
-    threshold: 0
+    threshold: 0,
   });
 
   return (
