@@ -16,7 +16,7 @@ export const Teams = () => {
             return {
               name: team.name,
               abbreviation: team.abbreviation,
-              icon: <img src="" alt="school-logo"></img>,
+              icon: <img src={team.logotypeUrl} alt="school-logo"></img>,
             };
           })}
         />
@@ -29,4 +29,5 @@ interface ITeam {
   id: string;
   name: string;
   abbreviation: string;
+  logotypeUrl: string;
 }
