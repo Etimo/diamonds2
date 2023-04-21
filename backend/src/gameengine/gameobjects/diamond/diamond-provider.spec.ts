@@ -1,3 +1,4 @@
+import { beforeEach, expect, it } from "@jest/globals";
 import { Board } from "../../board";
 import { createTestBoard } from "../../util";
 import { DiamondGameObject } from "./diamond";
@@ -15,13 +16,13 @@ beforeEach(() => {
   board = createTestBoard();
 });
 
-test("Generates diamonds when board initializes", () => {
+it("Generates diamonds when board initializes", () => {
   provider.onBoardInitialized(board);
 
   expect(board.getGameObjectsByType(DiamondGameObject).length).toBe(10);
 });
 
-test("Generates diamonds when all diamonds have been removed", () => {
+it("Generates diamonds when all diamonds have been removed", () => {
   expect(board.getGameObjectsByType(DiamondGameObject).length).toBe(0);
   // Simulate something was removed
   provider.onGameObjectsRemoved(board, []);
@@ -29,7 +30,7 @@ test("Generates diamonds when all diamonds have been removed", () => {
   expect(board.getGameObjectsByType(DiamondGameObject).length).toBe(10);
 });
 
-test("Doesnt generates diamonds when some diamonds have been removed only", () => {
+it("Doesnt generates diamonds when some diamonds have been removed only", () => {
   board.addGameObjects([new DiamondGameObject({ x: 0, y: 0 }, 1)]);
 
   // Simulate something was removed

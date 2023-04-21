@@ -1,3 +1,4 @@
+import { beforeEach, expect, it } from "@jest/globals";
 import { Board } from "../../board";
 import { createTestBoard } from "../../util";
 import { BotGameObject } from "../bot/bot";
@@ -21,7 +22,7 @@ beforeEach(() => {
   ]);
 });
 
-test("Stepping on a teleporter moves bot to position of paired teleporter", () => {
+it("Stepping on a teleporter moves bot to position of paired teleporter", () => {
   const bot = new BotGameObject({ x: 0, y: 1 });
   bot.position = { x: 0, y: 0 };
 

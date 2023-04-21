@@ -10,7 +10,6 @@ import {
 import {
   BaseProvider,
   Board,
-  BoardConfig,
   BotGameObject,
   BotProvider,
   DiamondButtonProvider,
@@ -285,15 +284,9 @@ export class BoardsService {
     }
 
     for (let i = 0; i < numberOfBoards; i++) {
-      const config: BoardConfig = {
-        height: boardConfig.height,
-        width: boardConfig.width,
-        minimumDelayBetweenMoves,
-        sessionLength,
-      };
       const board = new OperationQueueBoard(
         this.getNextBoardId(),
-        config,
+        boardConfig,
         providers,
         this.logger,
       );
