@@ -87,7 +87,8 @@ export class BotsController {
 
   @ApiResponse({
     status: 200,
-    description: "Joined a board",
+    description: "Returns the board the bot joined",
+    type: BoardDto,
   })
   @ApiResponse({
     status: 401,
@@ -99,7 +100,7 @@ export class BotsController {
   })
   @ApiOperation({
     summary: "Join a board",
-    description: "Let the bot join a board to starta new play session",
+    description: "Try to join a board to start a new play session",
   })
   @HttpCode(200)
   @Post(":id/join")
@@ -109,7 +110,7 @@ export class BotsController {
 
   @ApiResponse({
     status: 200,
-    description: "Returns specific board",
+    description: "Returns the state of board after the move",
     type: BoardDto,
   })
   @ApiResponse({

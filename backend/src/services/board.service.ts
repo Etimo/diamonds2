@@ -49,6 +49,9 @@ export class BoardsService {
     this.initialize(numberOfBoards, numEphemeralBoards).then(() => {
       logger.info("Boards initialized");
     });
+
+    // We reset id whenever this service is reinitialized
+    BoardsService.nextBoardId = 1;
   }
 
   private async initialize(numberOfBoards: number, numEphemeralBoards: number) {
@@ -95,15 +98,19 @@ export class BoardsService {
     }
   }
 
+  private _getAllBoards(): OperationQueueBoard[] {
+    return [...this.boards, ...this.ephemeralBoards];
+  }
+
   /**
    * Return all boards.
    */
   public getAll(): BoardDto[] {
-    return this.boards.map((b) => this.getAsDto(b));
+    return this._getAllBoards().map((b) => this.getAsDto(b));
   }
 
   public getAllMetadata(): BoardMetadataDto[] {
-    return this.boards.map((b) => this.getAsMetadataDto(b));
+    return this._getAllBoards().map((b) => this.getAsMetadataDto(b));
   }
 
   /**
@@ -131,7 +138,7 @@ export class BoardsService {
     }
 
     // Check if bot is on any board
-    [...this.boards, ...this.ephemeralBoards].forEach((b) => {
+    this._getAllBoards().forEach((b) => {
       if (b.getBotById(botId)) {
         throw new ConflictError("Already playing");
       }
@@ -225,15 +232,11 @@ export class BoardsService {
   }
 
   private getBoardById(id: number): OperationQueueBoard {
-    return [...this.boards, ...this.ephemeralBoards].find(
-      (b) => b.getId() === id,
-    );
+    return this._getAllBoards().find((b) => b.getId() === id);
   }
 
   private getBoardFromBotId(botId: string): OperationQueueBoard {
-    return [...this.boards, ...this.ephemeralBoards].find((b) =>
-      b.getBotById(botId),
-    );
+    return this._getAllBoards().find((b) => b.getBotById(botId));
   }
 
   /**
