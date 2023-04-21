@@ -172,8 +172,6 @@ export class Board {
     if (!(interval in this.callbackLoopsRegistered)) {
       // Setup new interval in callbackloops
       const id = setInterval((_) => {
-        // TODO: add lock
-        this.logger.debug(`Callback loop triggered for interval ${interval}`);
         this.callbackLoopsRegistered[interval].forEach(
           (g: AbstractGameObject) =>
             g.onGameObjectCallbackNotified(this, interval),
