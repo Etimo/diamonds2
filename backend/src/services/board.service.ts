@@ -44,7 +44,7 @@ export class BoardsService {
     private highscoresService: HighscoresService,
     private logger: CustomLogger,
     @Inject("NUMBER_OF_BOARDS") numberOfBoards,
-    @Inject("MAX_EPHEMERAL_BOARDS") private numEphemeralBoards,
+    @Inject("MAX_EPHEMERAL_BOARDS") numEphemeralBoards,
   ) {
     this.initialize(numberOfBoards, numEphemeralBoards).then(() => {
       logger.info("Boards initialized");
@@ -165,7 +165,6 @@ export class BoardsService {
     if (!result) {
       throw new ConflictError("Board full");
     }
-    this.logger.info(`Bot ${botId} joined board ${board.getId()}`);
     return this.returnAndSaveDto(board);
   }
 
