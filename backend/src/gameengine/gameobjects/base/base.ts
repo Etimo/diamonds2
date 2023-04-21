@@ -1,12 +1,12 @@
-import { AbstractGameObject } from "../abstract-game-object";
 import { Board } from "src/gameengine/board";
+import { AbstractGameObject } from "../abstract-game-object";
 import { BotGameObject } from "../bot/bot";
 
 export class BaseGameObject extends AbstractGameObject {
   constructor(private bot: BotGameObject) {
     super(bot.base);
   }
-  public get properties(): object {
+  public get properties() {
     return {
       name: this.bot.name,
     };

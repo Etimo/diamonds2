@@ -20,6 +20,7 @@ model BoardConfig {
   minimumDelayBetweenMoves Int      @default(100)
   sessionLength            Int      @default(60)
   separateBoards           Boolean  @default(false)
+  dummyBots                Int      @default(0) @db.SmallInt
   createTimeStamp          DateTime @default(now()) @db.Timestamptz(6)
   updateTimeStamp          DateTime @default(now()) @db.Timestamptz(6)
   season                   Season[]
