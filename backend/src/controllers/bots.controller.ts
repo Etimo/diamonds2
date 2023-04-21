@@ -1,16 +1,22 @@
 import { Body, Controller, Get, HttpCode, Param, Post } from "@nestjs/common";
-import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import {
+  BoardDto,
   BotRecoveryDto,
   BotRegistrationDto,
   BotRegistrationPublicDto,
+  JoinInputDto,
+  MoveInputDto,
 } from "../models";
-import { BotsService } from "../services";
+import { BoardsService, BotsService } from "../services";
 
 @ApiTags("Bots")
 @Controller("api/bots")
 export class BotsController {
-  constructor(private botService: BotsService) {}
+  constructor(
+    private botsService: BotsService,
+    private boardsService: BoardsService,
+  ) {}
 
   /**
    * Get information for a registered bot.
@@ -28,7 +34,7 @@ export class BotsController {
   })
   @Get(":id")
   async find(@Param("id") id: string): Promise<BotRegistrationPublicDto> {
-    const bot = await this.botService.get(id);
+    const bot = await this.botsService.get(id);
     return BotRegistrationPublicDto.fromEntity(bot);
   }
 
@@ -49,12 +55,16 @@ export class BotsController {
     status: 409,
     description: "The name and/or email is already taken",
   })
+  @ApiOperation({
+    summary: "Create new bot",
+    description: "Creates a new bot and returns the secret id.",
+  })
   @HttpCode(200)
   @Post()
   async create(
     @Body() botRegistration: BotRegistrationDto,
   ): Promise<BotRegistrationPublicDto> {
-    const bot = await this.botService.add(botRegistration);
+    const bot = await this.botsService.add(botRegistration);
     return BotRegistrationPublicDto.fromEntity(bot);
   }
 
@@ -71,7 +81,56 @@ export class BotsController {
   async recover(
     @Body() botRecoveryDto: BotRecoveryDto,
   ): Promise<BotRegistrationPublicDto> {
-    const bot = await this.botService.getByEmailAndPassword(botRecoveryDto);
+    const bot = await this.botsService.getByEmailAndPassword(botRecoveryDto);
     return BotRegistrationPublicDto.fromEntity(bot);
+  }
+
+  @ApiResponse({
+    status: 200,
+    description: "Joined a board",
+  })
+  @ApiResponse({
+    status: 401,
+    description: "Invalid bot id",
+  })
+  @ApiResponse({
+    status: 409,
+    description: "Board full, bot already playing or no boards available",
+  })
+  @ApiOperation({
+    summary: "Join a board",
+    description: "Let the bot join a board to starta new play session",
+  })
+  @HttpCode(200)
+  @Post(":id/join")
+  join(@Param("id") botId: string, @Body() input: JoinInputDto) {
+    return this.boardsService.join(input.preferredBoardId, botId);
+  }
+
+  @ApiResponse({
+    status: 200,
+    description: "Returns specific board",
+    type: BoardDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: "Invalid botId",
+  })
+  @ApiResponse({
+    status: 403,
+    description: "Move not legal",
+  })
+  @ApiResponse({
+    status: 403,
+    description: "Bot not active in a game",
+  })
+  @ApiOperation({
+    summary: "Move bot",
+    description: "Perform a move for the bot on the bot's current board",
+  })
+  @HttpCode(200)
+  @Post(":id/move")
+  async move(@Param("id") botId: string, @Body() input: MoveInputDto) {
+    return this.boardsService.move(botId, input.direction);
   }
 }

@@ -4,11 +4,6 @@ import { MoveDirection } from "../enums";
 
 export class MoveInputDto {
   @ApiProperty({
-    description: "The id of the bot that you want to move.",
-  })
-  botId: string;
-
-  @ApiProperty({
     description: "The direction you want to move your bot in.",
     enum: MoveDirection,
   })

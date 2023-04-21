@@ -119,10 +119,11 @@ export class BoardsService {
 
   /**
    *
-   * @param boardId
+   * @param preferredBoardId
    * @param bot
    */
-  public async join(boardId: number, botId: string) {
+  public async join(preferredBoardId: number, botId: string) {
+    // Check if bot exists
     const bot = await this.botsService.get(botId);
     if (!bot) {
       throw new UnauthorizedError("Invalid bot");
@@ -149,11 +150,13 @@ export class BoardsService {
       }
     } else {
       // Join a live board
-      board = this.getBoardById(boardId);
+      board = this.getBoardById(preferredBoardId);
+
+      // TODO: join another board
     }
 
     if (!board) {
-      throw new NotFoundError("Board not found");
+      throw new ConflictError("Board not found");
     }
 
     // Try to join
@@ -172,17 +175,17 @@ export class BoardsService {
     return dto;
   }
 
-  public async move(boardId: number, botId: string, direction: MoveDirection) {
-    // Get board to move on
-    const board = this.getBoardById(boardId);
+  public async move(botId: string, direction: MoveDirection) {
+    // Get board where the bot is located
+    const board = this.getBoardFromBotId(botId);
     if (!board) {
-      throw new NotFoundError("Board not found");
+      throw new ForbiddenError("Bot is not playing on a board");
     }
 
     // Get bot to move from board
-    let bot = board.getBotById(botId);
+    const bot = board.getBotById(botId);
     if (!bot) {
-      throw new UnauthorizedError("Invalid botToken");
+      throw new UnauthorizedError("Invalid botId");
     }
 
     // Rate limit moves
@@ -227,8 +230,10 @@ export class BoardsService {
     );
   }
 
-  private getBoardIndex(board: Board): number {
-    return this.boards.findIndex((b) => b === board);
+  private getBoardFromBotId(botId: string): OperationQueueBoard {
+    return [...this.boards, ...this.ephemeralBoards].find((b) =>
+      b.getBotById(botId),
+    );
   }
 
   /**

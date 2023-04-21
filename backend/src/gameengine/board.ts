@@ -73,6 +73,7 @@ export class Board {
     // ...and notify all providers
     this.notifyProvidersBoardBotJoined(bot);
 
+    this.logger.debug(`Bot ${bot.name} joined board ${this._id}`);
     return true;
   }
 
@@ -92,7 +93,7 @@ export class Board {
    *
    * @param id The id of the bot to find.
    */
-  getBotById(id: string): IBot {
+  getBotById(id: string): IBot | undefined {
     return this.bots[id];
   }
 
