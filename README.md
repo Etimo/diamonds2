@@ -6,17 +6,14 @@
 
 Diamonds is a programming challenge. Program a bot and compete to get the highest score.
 
-## Want to play?
+## Want to play? 🕹
 
-- Read the [game rules](RULES.md).
-- Try the api out using Swagger either [locally](http://localhost:8081/docs) or [live](http://diamonds.etimo.se/docs/)
-- Run the example bot locally and implement your logic
-- Register a bot live using the `POST /api/bots` endpoint
-- Run the bot against the live game
+- Read the [game rules and how to get started](RULES.md).
+- Try the api using Swagger either [locally](http://localhost:8081/docs) or [live](http://diamonds.etimo.se/docs/)
 
 If you find a bug or has a suggestion for improvement you are more than welcome to [submit an issue](https://github.com/Etimo/diamonds2/issues/new) or [pull request](https://github.com/Etimo/diamonds2/compare)!
 
-## Development
+## Development 💻
 
 Run the following commands to setup a development environment using Docker:
 
@@ -27,32 +24,3 @@ docker-compose up --build
 - Frontend: [http://localhost:8080](http://localhost:8080)
 - API: [http://localhost:8081](http://localhost:8081)
 - Swagger: [http://localhost:8081/docs](http://localhost:8081/docs)
-
-## Production (from source)
-
-To run Diamonds from source in production mode you first need to have a database setup somewhere. Then you need to expose the following environment variables pointing out the database:
-
-```
-TYPEORM_HOST
-TYPEORM_PORT
-TYPEORM_DATABASE
-TYPEORM_USERNAME
-TYPEORM_PASSWORD
-```
-
-Then run the following commands from the root folder:
-
-```
-docker-compose -f docker-compose.prod-build.yml build --parallel
-docker-compose -f docker-compose.prod-build.yml up
-```
-
-This will not expose the database like in development mode, and serve frontend from nginx instead of using node. It will also install less packages.
-
-## Production (using prebuilt docker images)
-
-To run Diamonds in production mode using prebuilt docker images you will need the same environment variables as described in the previous section. Then run docker-compose using a specific tag as environment variable:
-
-```
-DIAMONDS_DOCKER_TAG=latest docker-compose -f docker-compose.prod-run.yml up
-```
