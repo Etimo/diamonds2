@@ -53,30 +53,30 @@ All bots will have a home base with their name on. This is where you have to go 
 
 Each season has a configuration describing all the rules, both for the features and providers described above but also regarding the overall rules of the game. The rule configuration can be found using the [`GET /seasons/rules/:id`](http://localhost:8081/docs#/Seasons/SeasonsController_getCurrentSeasonRules) endpoint.
 
-## Tackle - `canTackle`
+### Tackle - `canTackle`
 
 Bots can tackle each other. If bot A tackles bot B (walk into bot B's position) bot B will be sent to its base and lose all diamonds. Bot A will receive bot B's diamonds.
 
-## Inventory size - `inventorySize`
+### Inventory size - `inventorySize`
 
 The maximum amount of points/diamonds a bot can carry at the same time.
 
-## Teleporters - `teleporters`
+### Teleporters - `teleporters`
 
 The number of teleporters available on boards.
 
-## Teleport relocation interval - `teleportRelocation`
+### Teleport relocation interval - `teleportRelocation`
 
 The number of seconds between each relocation of teleporters.
 
-## Width and height - `width` and `height`
+### Width and height - `width` and `height`
 
 The base size of each board.
 
-## Minimum delay between moves - `minimumDelayBetweenMoves`
+### Minimum delay between moves - `minimumDelayBetweenMoves`
 
 The minimum number of milliseconds that a bot will have to wait before performing its next move. If you exceed this you will eventually be kicked out of the game. This is basically a rate limit.
 
-## Session length - `sessionLength`
+### Session length - `sessionLength`
 
 The number of seconds each play session lasts.
