@@ -39,10 +39,18 @@ const getGameCharacter = (gameObject: IGameObject) => {
     DummyBotGameObject: robot,
     BaseGameObject: base,
     BotGameObjectBaseGameObject: botBase,
+    DummyBotGameObjectBaseGameObject: botBase,
     BaseGameObjectBotGameObject: botBase,
+    BaseGameObjectDummyBotGameObject: botBase,
     DiamondGameObjectBotGameObject: botDiamond,
+    DiamondGameObjectDummyBotGameObject: botDiamond,
     BotGameObjectDiamondGameObject: botDiamond,
+    DummyBotGameObjectDiamondGameObject: botDiamond,
     TeleportGameObject: teleporter,
+    BotGameObjectTeleportGameObject: teleporter,
+    DummyBotGameObjectTeleportGameObject: teleporter,
+    TeleportGameObjectBotGameObject: teleporter,
+    TeleportGameObjectDummyBotGameObject: teleporter,
   };
 
   if (
