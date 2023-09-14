@@ -1,4 +1,4 @@
-FROM node:16-alpine3.17 as develop
+FROM node:20.6.1-alpine3.18 as develop
 WORKDIR /app
 RUN apk add openssl1.1-compat
 COPY package.json yarn.lock ./

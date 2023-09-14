@@ -3,14 +3,14 @@ version: "3.7"
 services:
   frontend:
     build:
-      context: ./frontend
+      context: ./frontend-typescript
       target: "develop"
-    command: /bin/sh -c "yarn run start"
+    command: /bin/sh -c "VITE_API_BASE_URL=http://backend:3000/api yarn run start"
     volumes:
-      - ./frontend/src:/app/src
+      - ./frontend-typescript/src:/app/src
       # - /app/node_modules
     ports:
-      - 8080:3000
+      - 8080:8082
 
   backend:
     platform: linux/x86_64
