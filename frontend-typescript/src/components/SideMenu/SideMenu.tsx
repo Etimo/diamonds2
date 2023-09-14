@@ -52,7 +52,7 @@ export const SideMenu: FC<SideMenuProps> = memo((props) => {
         <div className="mt-2">
           <button
             onClick={() => setRulesVisible(true)}
-            className="font-sans text-etimo dark:text-slate-400 text-xs font-normal"
+            className="font-sans text-etimo dark:text-slate-400 text-xs 4xl:text-lg font-normal"
           >
             Season rules
           </button>
