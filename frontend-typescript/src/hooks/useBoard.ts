@@ -94,10 +94,18 @@ export type GameObjectType =
   | 'DummyBotGameObject'
   | 'BaseGameObject'
   | 'BotGameObjectBaseGameObject'
+  | 'DummyBotGameObjectBaseGameObject'
   | 'BaseGameObjectBotGameObject'
+  | 'BaseGameObjectDummyBotGameObject'
   | 'DiamondGameObjectBotGameObject'
+  | 'DiamondGameObjectDummyBotGameObject'
   | 'BotGameObjectDiamondGameObject'
-  | 'TeleportGameObject';
+  | 'DummyBotGameObjectDiamondGameObject'
+  | 'TeleportGameObject'
+  | 'TeleportGameObjectBotGameObject'
+  | 'TeleportGameObjectDummyBotGameObject'
+  | 'DummyBotGameObjectTeleportGameObject'
+  | 'BotGameObjectTeleportGameObject';
 
 export interface IDiamond {
   points: number;
