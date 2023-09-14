@@ -1,25 +1,20 @@
-import { FC, memo, useCallback, useState } from 'react';
+import { FC, memo } from 'react';
 
 type SelectProps = {
   label: string;
   value: number | string;
-  options: {label:string, value: string}[];
+  options: { label: string; value: string }[];
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 };
 
-export const Select: FC<SelectProps> = memo(props => {
+export const Select: FC<SelectProps> = memo((props) => {
   const { label, value, options, onChange } = props;
-  //const [selectedValue, setSelectedValue] = useState(value);
-
-  // const handleOnChange = useCallback(() => {
-  //   onChange();
-  // }, [onChange]);
 
   return (
     <div className="flex flex-col">
       <label className="text-label">{label}</label>
       <select
-        className="border border-gray-800 rounded-md w-full max-w-[200px] p-1"
+        className="border border-gray-800 rounded-md w-full max-w-[200px] h-8 p-1"
         value={value}
         onChange={onChange}
       >
@@ -31,5 +26,5 @@ export const Select: FC<SelectProps> = memo(props => {
       </select>
     </div>
   );
-}); 
+});
 Select.displayName = 'Select';
