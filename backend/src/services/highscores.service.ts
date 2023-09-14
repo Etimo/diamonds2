@@ -7,7 +7,7 @@ import { SeasonsService } from "./seasons.service";
 @Injectable()
 export class HighscoresService {
   constructor(
-    private seasonService: SeasonsService,
+    private seasonsService: SeasonsService,
     private repo: HighscoresRepository,
   ) {}
 
@@ -27,7 +27,7 @@ export class HighscoresService {
 
   private async isNewHighScore(newScore: INewHighscore) {
     let isNew: boolean = true;
-    const season = await this.seasonService.getCurrentSeason();
+    const season = await this.seasonsService.getCurrentSeason();
 
     const resultSetHighScore = await this.repo.getBestBotScore(
       newScore.botId,
@@ -59,7 +59,7 @@ export class HighscoresService {
   }
 
   private async allBySeasonId(seasonId: string, limit: number = 0) {
-    const currentSeason = await this.seasonService.getCurrentSeason();
+    const currentSeason = await this.seasonsService.getCurrentSeason();
     return this.repo.allBySeasonIdRaw(seasonId, currentSeason.id);
   }
 
