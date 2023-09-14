@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { SeasonsRepository } from "../db";
 import { ConflictError, ForbiddenError } from "../errors";
-import { INewSeason } from "../types";
+import { INewSeason, ISeason } from "../types";
 import { offSeasonId } from "../utils";
 
 @Injectable()
@@ -9,24 +9,24 @@ export class SeasonsService {
   constructor(private repo: SeasonsRepository) {}
 
   public async getOffSeason() {
-    return this.repo.getById(offSeasonId, false);
+    return await this.repo.getById(offSeasonId, false);
   }
 
   public async getSeason(seasonId: string) {
-    return this.repo.getById(seasonId, true);
+    return await this.repo.getById(seasonId, true);
   }
 
   public async getCurrentSeason() {
-    let currentSeason = this.repo.getCurrentSeason();
+    let currentSeason = await this.repo.getCurrentSeason();
     if (currentSeason) {
       return currentSeason;
     }
 
-    return this.getOffSeason();
+    return await this.getOffSeason();
   }
 
   public async all() {
-    return this.repo.getAll();
+    return await this.repo.getAll();
   }
 
   public async add(data: INewSeason) {
@@ -70,7 +70,7 @@ export class SeasonsService {
     return await this.create(data);
   }
 
-  public async create(data: INewSeason) {
-    return this.repo.create(data);
+  public async create(data: INewSeason): Promise<ISeason> {
+    return await this.repo.create(data);
   }
 }
