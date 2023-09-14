@@ -176,7 +176,9 @@ export class BoardsService {
 
   private returnAndSaveDto(board: Board) {
     const dto = this.getAsDto(board);
-    const index = board.getId();
+    const index = this._getAllBoards().findIndex(
+      (b) => b.getId() === board.getId(),
+    );
     if (this.recordingsService) this.recordingsService.record(index, dto);
     return dto;
   }
