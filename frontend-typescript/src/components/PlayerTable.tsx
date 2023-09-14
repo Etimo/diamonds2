@@ -4,14 +4,15 @@ import { Table } from './Table';
 
 type PlayerTableProps = {
   bots: IBot[];
+  boardId: number;
 };
 
 export const PlayerTable: FC<PlayerTableProps> = memo((props) => {
-  const bots = props.bots;
+  const { bots, boardId } = props;
 
   return (
     <Table
-      label="Board 1 Players"
+      label={`Board ${boardId} players`}
       cols={['Name', 'Diamonds', 'Score', 'Time']}
       data={bots}
     />

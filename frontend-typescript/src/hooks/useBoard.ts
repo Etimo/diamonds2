@@ -28,9 +28,12 @@ export function useBoard(boardId: number, delay: number) {
           object = {
             points: gameObject.properties.points,
           } as IDiamond;
-        } else if (gameObject.type === 'BotGameObject') {
+        } else if (
+          gameObject.type === 'DummyBotGameObject' ||
+          gameObject.type === 'BotGameObject'
+        ) {
           object = {
-            name: '',
+            name: gameObject.properties.name,
             diamonds: gameObject.properties.diamonds,
             score: gameObject.properties.score,
             time: Math.round(gameObject.properties.millisecondsLeft / 1000),
@@ -88,6 +91,7 @@ export type GameObjectType =
   | 'DiamondGameObject'
   | 'DiamondGameObjectDiamondGameObject'
   | 'BotGameObject'
+  | 'DummyBotGameObject'
   | 'BaseGameObject'
   | 'BotGameObjectBaseGameObject'
   | 'BaseGameObjectBotGameObject'

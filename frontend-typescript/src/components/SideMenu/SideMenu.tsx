@@ -22,10 +22,7 @@ export const SideMenu: FC<SideMenuProps> = memo((props) => {
     isLoading,
   } = useFetch('api/seasons/current', '0');
 
-  // const [rows, bots] = useBoard(boardId, delay);
-  //const [boardId, setBoardId] = useState(1);
   const [seasonId, setSeasonId] = useState<string>('0');
-  const delay = 2000; // 0.25 s
   const [rulesVisible, setRulesVisible] = useState<boolean>(false);
 
   const onSeasonChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -43,7 +40,7 @@ export const SideMenu: FC<SideMenuProps> = memo((props) => {
       </div>
 
       <div>
-        <PlayerTable bots={bots} />
+        <PlayerTable bots={bots} boardId={boardId} />
       </div>
 
       <div className="my-6">
