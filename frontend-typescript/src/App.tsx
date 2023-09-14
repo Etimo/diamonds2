@@ -14,7 +14,9 @@ const App: FC = () => {
 
   return (
     <div
-      className={`w-screen h-screen flex flex-col ${darkMode ? 'dark' : ''}`}
+      className={`w-screen min-h-screen flex flex-col ${
+        darkMode ? 'dark' : ''
+      }`}
     >
       <BrowserRouter>
         <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
