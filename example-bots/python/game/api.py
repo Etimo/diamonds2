@@ -1,12 +1,13 @@
-import requests
-from requests import Response
 import json
-from colorama import init, Fore, Back, Style
 from dataclasses import dataclass
-from typing import Tuple, Union, List, Optional
-from decode import decode
-from game.models import Bot, Board
+from typing import List, Optional, Tuple, Union
+
+import requests
+from colorama import Back, Fore, Style, init
 from dacite import from_dict
+from decode import decode
+from game.models import Board, Bot
+from requests import Response
 
 
 @dataclass
@@ -39,7 +40,7 @@ class Api:
         return None
 
     def bots_register(self, name: str, email: str, password: str, team: str) -> Optional[Bot]:
-        response = self._req("/bots", "post", {"email": email, "botName": name, "password": password, "team": team})
+        response = self._req("/bots", "post", {"email": email, "name": name, "password": password, "team": team})
         resp, status = self._return_response_and_status(response)
         if status == 200:
             return from_dict(Bot, resp)
@@ -51,11 +52,11 @@ class Api:
         if status == 200:
             return [from_dict(Board, board) for board in resp]
         return None
-        
 
-    def boards_join(self, bot_token: str, board_id: int) -> bool:
+
+    def bots_join(self, bot_token: str, board_id: int) -> bool:
         response = self._req(
-            f"/boards/{board_id}/join", "post", {"botToken": bot_token}
+            f"/bots/{bot_token}/join", "post", {"preferredBoardId": board_id}
         )
 
         resp, status =  self._return_response_and_status(response)
@@ -70,11 +71,11 @@ class Api:
             return from_dict(Board, resp)
         return None
 
-    def boards_move(self, board_id: int, direction: str, bot_token: str) -> Optional[Board]:
+    def bots_move(self, bot_token: str, direction: str) -> Optional[Board]:
         response = self._req(
-            "/boards/{}/move".format(board_id),
+            "/bots/{}/move".format(bot_token),
             "post",
-            {"direction": direction, "botToken": bot_token},
+            {"direction": direction},
         )
         resp, status =  self._return_response_and_status(response)
         if status == 200:
@@ -87,5 +88,5 @@ class Api:
         response_data = resp.get("data") if isinstance(resp, dict) else resp
         if not response_data:
             response_data = resp
-        
+
         return decode(response_data), response.status_code

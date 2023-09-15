@@ -1,10 +1,11 @@
-import requests
-import json
 import hashlib
+import json
 from dataclasses import dataclass
-from game.api import Api
-from game.models import Bot, Board
 from typing import Optional
+
+import requests
+from game.api import Api
+from game.models import Board, Bot
 
 
 @dataclass
@@ -30,12 +31,12 @@ class BotHandler:
 
 
     def join(self, token: str, board_id: int ) -> bool:
-        return self.api.boards_join(token, board_id)
+        return self.api.bots_join(token, board_id)
 
     def move(self, token: str, board_id: int, dx: int, dy: int) -> Optional[Board]:
         # TODO: Returns board??
-        return self.api.boards_move(
-            board_id, BotHandler._get_direction(dx, dy), token
+        return self.api.bots_move(
+             token, BotHandler._get_direction(dx, dy)
         )
 
     def register(self, name: str, email: str, password: str, team: str) -> Optional[Bot]:
