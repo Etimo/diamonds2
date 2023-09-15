@@ -12,7 +12,13 @@ module.exports = {
       },
     },
     fontFamily: { sans: ['Quattrocento Sans', ...defaultSans] },
-    extend: { colors: { etimo: '#2c3e50', 'etimo-light': '#375b7d' } },
+    extend: {
+      colors: { etimo: '#2c3e50', 'etimo-light': '#375b7d' },
+      screens: {
+        '3xl': '1700px',
+        '4xl': '2300px',
+      },
+    },
   },
   plugins: [],
 };

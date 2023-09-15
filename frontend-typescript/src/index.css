@@ -17,12 +17,12 @@
 
   .text-label {
     @apply font-sans not-italic font-bold mb-1;
-    @apply text-sm text-etimo dark:text-slate-400 block;
+    @apply text-sm 4xl:text-xl text-etimo dark:text-slate-400 block;
   }
 
   .text-body {
     @apply font-sans not-italic mb-1;
-    @apply text-sm text-etimo dark:text-slate-400 block;
+    @apply text-sm 4xl:text-lg text-etimo dark:text-slate-400 block;
   }
 
   a,
@@ -53,10 +53,36 @@
   }
 
   .modal-button {
-    @apply absolute top-[6px] right-[12px];
+    @apply absolute text-2xl top-[6px] right-[12px];
   }
 }
 
 .dark {
   @apply bg-gray-800 text-slate-400;
+}
+
+.moving-image-container {
+  position: relative;
+  width: 100%;
+  height: 15vh;
+  overflow: hidden;
+}
+
+.moving-image {
+  position: absolute;
+  animation: moveImage 70s linear infinite;
+  width: 100px;
+  height: auto;
+}
+
+@keyframes moveImage {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(100vw);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
