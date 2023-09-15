@@ -1,5 +1,5 @@
 import { FC, memo } from 'react';
-import { IBoard, useBoardIds } from '../hooks/useBoardIds';
+import { BoardId, useBoardIds } from '../hooks/useBoardIds';
 import { Select } from './Inputs';
 
 type BoardPickerProps = {
@@ -9,7 +9,8 @@ type BoardPickerProps = {
 
 export const BoardPicker: FC<BoardPickerProps> = memo((props) => {
   const { boardId, onChange } = props;
-  const ids: IBoard[] = useBoardIds();
+  const ids: BoardId[] = useBoardIds();
+
   return (
     <Select
       label="Select board"

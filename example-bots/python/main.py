@@ -1,17 +1,18 @@
-import sys
 import argparse
+import sys
 from time import sleep
+
+from colorama import Back, Fore, Style, init
+from game.api import Api
 from game.board_handler import BoardHandler
 from game.bot_handler import BotHandler
-from game.api import Api
-from game.util import *
-from game.logic.random import RandomLogic
 from game.logic.first_diamond import FirstDiamondLogic
+from game.logic.random import RandomLogic
 from game.logic.random_diamond import RandomDiamondLogic
-from colorama import init, Fore, Back, Style
+from game.util import *
 
 init()
-BASE_URL = "https://diamonds.etimo.se/api"
+BASE_URL = "http://localhost:8081/api"
 CONTROLLERS = {
     "Random": RandomLogic,
     "FirstDiamond": FirstDiamondLogic,
@@ -69,17 +70,17 @@ board_handler = BoardHandler(api)
 #
 ###############################################################################
 if not args.token:
-    bot = bot_handler.register(args.email, args.name, args.password, args.team)
+    bot = bot_handler.register(args.name, args.email, args.password, args.team)
     if bot:
         print("")
         print(
             Style.BRIGHT
-            + "Bot registered. Token: {}".format(bot.token)
+            + "Bot registered. Token: {}".format(bot.id)
             + Style.RESET_ALL
         )
-        args.token = bot.token
-        with open(".token-" + bot.bot_name, "w") as f:
-            f.write(bot.token)
+        args.token = bot.id
+        with open(".token-" + bot.name, "w") as f:
+            f.write(bot.id)
     else:
         print("Unable to register bot")
     exit(1)
@@ -96,10 +97,10 @@ if logic_controller not in CONTROLLERS:
     print("Invalid logic controller.")
     exit(1)
 
-if not bot.bot_name:
+if not bot.name:
     print("Bot does not exist.")
     exit(1)
-print("Welcome back", bot.bot_name)
+print("Welcome back", bot.name)
 
 # Setup variables
 logic_class = CONTROLLERS[logic_controller]
@@ -118,16 +119,16 @@ if not current_board_id:
         # Try to join board
         board_joined = False
         current_board_id = board.id
-        success = bot_handler.join(bot.token, current_board_id)
+        success = bot_handler.join(bot.id, current_board_id)
         if success:
             board_joined = True
             break
-    
+
     if not board_joined:
         exit()
 else:
     # Try to join the one we specified
-    success = bot_handler.join(bot.token, current_board_id)
+    success = bot_handler.join(bot.id, current_board_id)
     if not success:
         current_board_id = None
 
@@ -157,7 +158,7 @@ while True:
     delta_x, delta_y = bot_logic.next_move(board_bot, board)
 
     # Try to perform move
-    board = bot_handler.move(bot.token, current_board_id, delta_x, delta_y)
+    board = bot_handler.move(bot.id, current_board_id, delta_x, delta_y)
     if not board:
         # Read new board state
         board = board_handler.get_board(current_board_id)
