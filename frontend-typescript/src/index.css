@@ -60,3 +60,29 @@
 .dark {
   @apply bg-gray-800 text-slate-400;
 }
+
+.moving-image-container {
+  position: relative;
+  width: 100%;
+  height: 15vh;
+  overflow: hidden;
+}
+
+.moving-image {
+  position: absolute;
+  animation: moveImage 70s linear infinite;
+  width: 100px;
+  height: auto;
+}
+
+@keyframes moveImage {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(100vw);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
