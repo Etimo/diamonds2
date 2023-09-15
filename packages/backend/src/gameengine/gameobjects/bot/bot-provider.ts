@@ -1,19 +1,9 @@
+import { BotProviderConfig } from "@etimo/diamonds2-types";
 import { IBot } from "../../../types";
 import { IPosition } from "../../../types/position";
 import { Board } from "../../board";
 import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
 import { BotGameObject } from "./bot";
-
-export interface BotProviderConfig {
-  /**
-   * The maximum number of diamonds a bot can carry at the same time.
-   */
-  inventorySize: number;
-  /**
-   * The bot can tackle other bots.
-   */
-  canTackle: boolean;
-}
 
 export class BotProvider extends AbstractGameObjectProvider<BotProviderConfig> {
   constructor(config: BotProviderConfig) {

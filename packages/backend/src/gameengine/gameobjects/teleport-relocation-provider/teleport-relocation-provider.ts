@@ -1,13 +1,7 @@
+import { TeleportRelocationProviderConfig } from "@etimo/diamonds2-types";
 import { Board } from "../../board";
 import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
 import { TeleportGameObject } from "../teleport/teleport";
-
-export interface TeleportRelocationProviderConfig {
-  /**
-   * The number of seconds to wait before relocating teleporters.
-   */
-  seconds: number;
-}
 
 /**
  * This provider moves all teleporters on the board when a certain time has passed.

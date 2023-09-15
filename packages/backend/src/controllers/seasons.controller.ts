@@ -19,7 +19,8 @@ export class SeasonsController {
   })
   @Get()
   async listAll(): Promise<SeasonDto[]> {
-    return this.seasonsService.all();
+    const seasons = await this.seasonsService.all();
+    return seasons.map((season) => SeasonDto.fromEntity(season));
   }
 
   @ApiResponse({

@@ -1,27 +1,18 @@
+import { DummyBotProviderConfig } from "@etimo/diamonds2-types";
 import { IBot } from "../../../types";
 import { Board } from "../../board";
 import { AbstractGameObject } from "../abstract-game-object";
-import { BotProvider, BotProviderConfig } from "../bot/bot-provider";
+import { BotProvider } from "../bot/bot-provider";
 import { DummyBotGameObject } from "./dummy-bot";
-
-export interface DummyBotProviderConfig extends BotProviderConfig {
-  /**
-   * Number of dummy bots to spawn.
-   */
-  count: number;
-  /**
-   * Name prefix
-   */
-  prefix: string;
-}
 
 export class DummyBotProvider extends BotProvider {
   constructor(config: DummyBotProviderConfig) {
+    // @ts-ignore
     super(config);
   }
 
   onBoardInitialized(board: Board) {
-    const config = this.config as DummyBotProviderConfig;
+    const config = this.config as unknown as DummyBotProviderConfig;
     for (let i = 1; i < config.count + 1; i++) {
       const bot = this.getInitializedBot(
         {

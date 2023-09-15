@@ -1,18 +1,7 @@
+import { BotGameObjectProperties } from "@etimo/diamonds2-types";
 import { IPosition } from "../../../types/position";
 import { Board } from "../../board";
 import { AbstractGameObject } from "../abstract-game-object";
-
-export interface BotGameObjectProperties {
-  base: IPosition;
-  diamonds: number;
-  timeJoined: Date;
-  inventorySize: number;
-  canTackle: boolean;
-  score: number;
-  name: string;
-  nextMoveAvailableAt: Date;
-  millisecondsLeft: number;
-}
 
 export type IBotGameObject = {
   base: IPosition;

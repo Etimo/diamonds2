@@ -1,4 +1,3 @@
-import { ExampleDto } from "@etimo/diamonds2-types";
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
@@ -6,7 +5,6 @@ import { AppModule } from "./app.module";
 import { AllExceptionsFilter } from "./exception-filter";
 import { isLocal } from "./hooks/environment";
 import bodyParser = require("body-parser");
-const a: ExampleDto | null = null;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

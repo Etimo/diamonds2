@@ -1,9 +1,9 @@
-import { ApiProperty } from "@nestjs/swagger";
 import {
   BotGameObjectProperties,
-  DiamondGameObjectProperties,
-  TeleportGameObjectProperties,
-} from "../gameengine";
+  TeleportProperties,
+} from "@etimo/diamonds2-types";
+import { ApiProperty } from "@nestjs/swagger";
+import { DiamondGameObjectProperties } from "../gameengine";
 import { PositionDto } from "./position.dto";
 
 export class GameObjectDto {
@@ -20,7 +20,7 @@ export class GameObjectDto {
   })
   properties!:
     | BotGameObjectProperties
-    | TeleportGameObjectProperties
+    | TeleportProperties
     | DiamondGameObjectProperties
     | {};
 }

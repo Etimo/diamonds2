@@ -1,9 +1,9 @@
-import { ApiProperty } from "@nestjs/swagger";
 import {
   BotProviderConfig,
   DiamondProviderConfig,
-  TeleportProviderConfig,
-} from "../gameengine";
+  TeleportFeatureDto,
+} from "@etimo/diamonds2-types";
+import { ApiProperty } from "@nestjs/swagger";
 
 export default class BoardFeatureDto {
   @ApiProperty()
@@ -14,7 +14,7 @@ export default class BoardFeatureDto {
   config!:
     | DiamondProviderConfig
     | BotProviderConfig
-    | TeleportProviderConfig
+    | TeleportFeatureDto
     | {}
     | null;
 }

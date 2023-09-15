@@ -1,21 +1,7 @@
+import { DiamondProviderConfig } from "@etimo/diamonds2-types";
 import { Board } from "../../board";
 import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
 import { DiamondGameObject } from "./diamond";
-
-export interface DiamondProviderConfig {
-  /**
-   * The minimum ratio (percent of board size) of diamonds before new ones should be generated.
-   */
-  minRatioForGeneration: number;
-  /**
-   * The ratio (percent of board size) of diamonds to generate
-   */
-  generationRatio: number;
-  /**
-   * The ratio (percent of total diamonds generated) of diamonds that should be red
-   */
-  redRatio: number;
-}
 
 export class DiamondProvider extends AbstractGameObjectProvider<DiamondProviderConfig> {
   constructor(config: DiamondProviderConfig) {

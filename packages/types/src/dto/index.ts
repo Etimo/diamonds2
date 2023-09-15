@@ -1,1 +1,1 @@
-export * from "./example-dto";
+export * from "./board-feature-dto";
