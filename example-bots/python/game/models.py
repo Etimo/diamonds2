@@ -1,11 +1,12 @@
 from dataclasses import dataclass
-from typing import Optional, List, Union
+from typing import List, Optional, Union
+
 
 @dataclass
 class Bot:
-    bot_name: str
+    name: str
     email: str
-    token: str
+    id: str
 
 @dataclass
 class Position:
@@ -37,9 +38,9 @@ class Properties:
 class GameObject:
     id: int
     position: Position
-    type: str 
+    type: str
     properties: Optional[Properties] = None
-            
+
 
 @dataclass
 class Config:
@@ -65,7 +66,7 @@ class Board:
     height: int
     features: List[Feature]
     minimum_delay_between_moves: int
-    game_objects: List[GameObject]
+    game_objects: Optional[List[GameObject]]
 
     @property
     def bots(self) -> List[GameObject]:
@@ -77,6 +78,6 @@ class Board:
 
     def get_bot(self, bot: Bot) -> Optional[GameObject]:
         for b in self.bots:
-            if b.properties.name == bot.bot_name:
+            if b.properties.name == bot.name:
                 return b
         return None
