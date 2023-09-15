@@ -4602,9 +4602,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"diamonds-typescript@workspace:packages/frontend-typescript":
+"diamonds-typescript@workspace:packages/frontend":
   version: 0.0.0-use.local
-  resolution: "diamonds-typescript@workspace:packages/frontend-typescript"
+  resolution: "diamonds-typescript@workspace:packages/frontend"
   dependencies:
     "@types/node": ^20.6.0
     "@types/react": ^18.0.27

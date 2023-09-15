@@ -40,7 +40,7 @@
     "coverageDirectory": "./",
     "moduleNameMapper": {
       "^@etimo/diamonds2\\-backend/(.*)$": "<rootDir>/backend/src/$1",
-      "^@etimo/diamonds2\\-frontend/(.*)$": "<rootDir>/frontend-typescript/src/$1",
+      "^@etimo/diamonds2\\-frontend/(.*)$": "<rootDir>/frontend/src/$1",
       "^@etimo/diamonds2\\-types/(.*)$": "<rootDir>/types/src/$1"
     },
     "modulePathIgnorePatterns": [

@@ -10,7 +10,7 @@
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint", "react", "prettier", "unused-imports"],
   "parserOptions": {
-    "project": "./frontend-typescript/tsconfig.json",
+    "project": "./frontend/tsconfig.json",
     "ecmaFeatures": {
       "jsx": true
     },

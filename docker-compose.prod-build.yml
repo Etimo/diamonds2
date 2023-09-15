@@ -3,7 +3,7 @@ version: "3.7"
 services:
   frontend:
     build:
-      context: ./frontend-typescript
+      context: ./frontend
       target: "prod"
     command: /bin/sh -c "nginx -g 'daemon off;'"
     ports:

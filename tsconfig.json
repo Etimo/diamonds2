@@ -13,7 +13,7 @@
     "incremental": true,
     "paths": {
       "@etimo/diamonds2-backend/*": ["backend/src/*"],
-      "@etimo/diamonds2-frontend/*": ["frontend-typescript/src/*"],
+      "@etimo/diamonds2-frontend/*": ["frontend/src/*"],
       "@etimo/diamonds2-types/*": ["types/src/*"]
     }
   },
