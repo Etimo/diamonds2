@@ -12,7 +12,6 @@ const parseArgumentsIntoOptions = (rawArgs) => {
       "--name": String,
       "--email": String,
       "--token": String,
-      "--logic": String,
       "--board": Number,
       "--password": String,
       "--team": String,
@@ -20,7 +19,6 @@ const parseArgumentsIntoOptions = (rawArgs) => {
       "-e": "--email",
       "-t": "--token",
       "-b": "--board",
-      "-l": "--logic",
       "-p": "--password",
       "-T": "--team",
     },
@@ -32,7 +30,6 @@ const parseArgumentsIntoOptions = (rawArgs) => {
     name: args["--name"] || "",
     email: args["--email"] || "",
     token: args["--token"] || "",
-    logic: args["--logic"] || "",
     board: args["--board"] || 1,
     password: args["--password"] || "",
     team: args["--team"] || null,
@@ -65,7 +62,7 @@ const registerBot = (name, email, password, team) => {
 };
 
 const validateArgs = (options) => {
-  const { name, email, token, logic, board, password, action } = options;
+  const { name, email, token, board, password, action } = options;
   if (action === "play" && token === "") {
     playInvalidParameters();
   }
