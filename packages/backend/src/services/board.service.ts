@@ -340,8 +340,6 @@ export class BoardsService {
         }),
       );
     }
-    const sessionLength = boardConfig.sessionLength;
-    const minimumDelayBetweenMoves = boardConfig.minimumDelayBetweenMoves;
 
     const ret: OperationQueueBoard[] = [];
     for (let i = 0; i < numberOfBoards; i++) {

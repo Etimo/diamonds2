@@ -11,7 +11,7 @@ beforeEach(() => {
   jest.useFakeTimers();
   provider = new TeleportRelocationProvider({ seconds: 1 });
   board = createTestBoard([provider]);
-  teleport = new TeleportGameObject(board.getEmptyPosition(), "1");
+  teleport = new TeleportGameObject(board.getEmptyPosition(), { pairId: "1" });
   board.addGameObjects([teleport]);
 });
 
