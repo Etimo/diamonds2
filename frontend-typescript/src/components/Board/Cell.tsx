@@ -1,10 +1,10 @@
 import { FC, memo } from 'react';
 import {
+  GameObject,
   GameObjectType,
   IBase,
   IBot,
   IDiamond,
-  IGameObject,
 } from '../../hooks/useBoard';
 import {
   base,
@@ -19,7 +19,7 @@ import {
 } from '../images';
 
 type CellProps = {
-  gameObject: IGameObject | null;
+  gameObject: GameObject;
   id: string;
 };
 
@@ -27,8 +27,7 @@ type GameObjectMap = {
   [key in GameObjectType]: string;
 };
 
-// TODO: Fix types in this component
-const getGameCharacter = (gameObject: IGameObject) => {
+const getGameCharacter = (gameObject: GameObject) => {
   const goImgMap: GameObjectMap = {
     Teleporter: teleporter,
     Wall: wall,
@@ -55,9 +54,9 @@ const getGameCharacter = (gameObject: IGameObject) => {
 
   if (
     gameObject.type === 'DiamondGameObject' &&
-    (gameObject.object as IDiamond)
+    (gameObject.properties as IDiamond)
   ) {
-    const diamond = gameObject.object as IDiamond;
+    const diamond = gameObject.properties as IDiamond;
     if (diamond.points === 2) {
       return diamondRed;
     }
@@ -66,19 +65,20 @@ const getGameCharacter = (gameObject: IGameObject) => {
   return goImgMap[gameObject.type as GameObjectType];
 };
 
-const getCharacterName = (gameObject: IGameObject) => {
-  if (gameObject.object as IBase) {
-    const base = gameObject.object as IBase;
+const getCharacterName = (gameObject: GameObject) => {
+  if (gameObject.properties as IBase) {
+    const base = gameObject.properties as IBase;
     if (base.name) return base.name.substring(0, 3);
     return base.name;
-  } else if (gameObject.object as IBot) {
-    const bot = gameObject.object as IBot;
+  } else if (gameObject.properties as IBot) {
+    const bot = gameObject.properties as IBot;
     if (bot.name) return bot.name.substring(0, 3);
     return bot.name;
   }
   return '';
 };
 
+// TODO: Fix types in this component
 export const Cell: FC<CellProps> = memo((props) => {
   const { gameObject, id } = props;
 

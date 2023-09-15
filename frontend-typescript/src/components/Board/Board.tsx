@@ -1,10 +1,10 @@
 import { FC, memo } from 'react';
-import { IBoard } from '../../hooks/useBoard';
+import { GameBoard } from '../../hooks/useBoard';
 import useResize from '../../hooks/useResize';
 import { Cell } from './Cell';
 
 type BoardProps = {
-  board: IBoard;
+  board: GameBoard;
 };
 
 export const Board: FC<BoardProps> = memo((props) => {

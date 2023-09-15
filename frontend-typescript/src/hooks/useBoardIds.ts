@@ -7,13 +7,13 @@ export function useBoardIds() {
   const [ids, setIds] = useState([]);
 
   useEffect(() => {
-    const boardIds = boards.map((board: IBoard) => board.id);
+    const boardIds = boards.map((board: BoardId) => board.id);
     setIds(boardIds);
   }, [boards]);
 
   return ids;
 }
 
-export interface IBoard {
+export interface BoardId {
   id: number;
 }
