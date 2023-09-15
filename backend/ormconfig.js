@@ -1,6 +1,6 @@
 const dbConfig = {
   type: "postgres",
-  port: 5432,
+  port: 5433,
   host: process.env["TYPEORM_HOST"] || "localhost",
   username: process.env["TYPEORM_USERNAME"] || "postgres",
   password: process.env["TYPEORM_PASSWORD"] || "postgres",
