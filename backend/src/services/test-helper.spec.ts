@@ -143,6 +143,14 @@ export async function createTestModule() {
         provide: CustomLogger,
         useValue: new SilentLogger() as CustomLogger,
       },
+      {
+        useValue: numberOfBoards,
+        provide: "NUMBER_OF_BOARDS",
+      },
+      {
+        useValue: maxNumberOfBoards,
+        provide: "MAX_EPHEMERAL_BOARDS",
+      },
       BotsService,
       {
         provide: TeamsService,
@@ -152,11 +160,7 @@ export async function createTestModule() {
         provide: BotRegistrationsRepository,
         useValue: botRepositryMock,
       },
-      SeasonsService,
-      {
-        provide: SeasonsRepository,
-        useValue: seasonsRepositoryMock,
-      },
+
       RecordingsService,
       {
         provide: RecordingsRepository,
@@ -189,13 +193,10 @@ export async function createTestModule() {
         provide: BoardConfigRepository,
         useValue: boardConfigRepositoryMock,
       },
+      SeasonsService,
       {
-        useValue: numberOfBoards,
-        provide: "NUMBER_OF_BOARDS",
-      },
-      {
-        useValue: maxNumberOfBoards,
-        provide: "MAX_EPHEMERAL_BOARDS",
+        provide: SeasonsRepository,
+        useValue: seasonsRepositoryMock,
       },
     ],
   }).compile();

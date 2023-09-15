@@ -1,5 +1,4 @@
 import { Module } from "@nestjs/common";
-
 import {
   BoardsController,
   BotsController,
@@ -65,7 +64,7 @@ import {
     },
     {
       provide: "MAX_EPHEMERAL_BOARDS",
-      useValue: 10,
+      useValue: 9,
     },
   ],
 })
