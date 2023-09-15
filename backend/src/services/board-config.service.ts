@@ -12,14 +12,14 @@ export class BoardConfigService {
 
   public async getCurrentBoardConfig() {
     const season = await this.seasonsService.getCurrentSeason();
-    return await this.repo.getBoardConfigById(season.boardConfigId);
+    return this.repo.getBoardConfigById(season.boardConfigId);
   }
 
   public async getBoardConfig(seasonId: string) {
-    return await this.repo.getBoardConfigById(seasonId);
+    return this.repo.getBoardConfigById(seasonId);
   }
 
   public async add(dto: INewBoardConfig) {
-    return await this.repo.create(dto);
+    return this.repo.create(dto);
   }
 }

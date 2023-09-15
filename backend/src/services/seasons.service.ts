@@ -22,11 +22,11 @@ export class SeasonsService {
       return currentSeason;
     }
 
-    return await this.getOffSeason();
+    return this.getOffSeason();
   }
 
   public async all() {
-    return await this.repo.getAll();
+    return this.repo.getAll();
   }
 
   public async add(data: INewSeason) {
@@ -67,10 +67,10 @@ export class SeasonsService {
     }
 
     // Add the season
-    return await this.create(data);
+    return this.create(data);
   }
 
   public async create(data: INewSeason): Promise<ISeason> {
-    return await this.repo.create(data);
+    return this.repo.create(data);
   }
 }
