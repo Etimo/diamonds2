@@ -8,16 +8,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+
       - uses: actions/setup-node@v1
         with:
-          node-version: "16.x"
+          node-version: "20"
+
       - name: Install dependencies
-        run: yarn --cwd=backend install
+        run: yarn
+
       - name: Generate prisma
         working-directory: backend
         run: npx prisma generate
+
       - name: Run tests with coverage report
         run: yarn --cwd=backend run test:coverage --forceExit
+
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
@@ -43,7 +48,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Ref ${{ github.ref }}"
+
       - uses: actions/checkout@v1
+
       - name: Build docker image
         run: docker-compose -f docker-compose.yml build
 
