@@ -1,5 +1,4 @@
-import { joinBoard, moveBotOnBoard } from "./api/board";
-import { getBot, registerBot } from "./api/bot";
+import { getBot, joinBoard, moveBotOnBoard, registerBot } from "./api/bot";
 import { getFirstDiamond } from "./logic/firstDiamondLogic";
 import { getDirection } from "./logic/utils";
 import {

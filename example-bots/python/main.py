@@ -1,8 +1,8 @@
 import sys
 import argparse
 from time import sleep
-from game.board import Board
-from game.bot import Bot
+from game.board_handler import BoardHandler
+from game.bot_handler import BotHandler
 from game.api import Api
 from game.util import *
 from game.logic.random import RandomLogic
@@ -11,7 +11,7 @@ from game.logic.random_diamond import RandomDiamondLogic
 from colorama import init, Fore, Back, Style
 
 init()
-BASE_URL = "http://localhost:8081/api"
+BASE_URL = "https://diamonds.etimo.se/api"
 CONTROLLERS = {
     "Random": RandomLogic,
     "FirstDiamond": FirstDiamondLogic,
@@ -60,10 +60,8 @@ args = parser.parse_args()
 
 time_factor = int(args.time_factor)
 api = Api(args.host)
-logic_controller = args.logic
-if logic_controller not in CONTROLLERS:
-    print("Invalid logic controller.")
-    exit(1)
+bot_handler = BotHandler(api)
+board_handler = BoardHandler(api)
 
 ###############################################################################
 #
@@ -71,34 +69,37 @@ if logic_controller not in CONTROLLERS:
 #
 ###############################################################################
 if not args.token:
-    bot = Bot(args.email, args.name, args.password, args.team, api)
-    resp, status = bot.register()
-    if status == 200:
+    bot = bot_handler.register(args.email, args.name, args.password, args.team)
+    if bot:
         print("")
         print(
             Style.BRIGHT
-            + "Bot registered. Token: {}".format(bot.bot_token)
+            + "Bot registered. Token: {}".format(bot.token)
             + Style.RESET_ALL
         )
-        args.token = bot.bot_token
-        with open(".token-" + bot.name, "w") as f:
-            f.write(bot.bot_token)
+        args.token = bot.token
+        with open(".token-" + bot.bot_name, "w") as f:
+            f.write(bot.token)
     else:
         print("Unable to register bot")
-        exit(1)
+    exit(1)
 
 ###############################################################################
 #
 # Setup bot using token and play game
 #
 ###############################################################################
-bot = Bot("", "", "", "", api)
-bot.bot_token = args.token
-bot.get_my_info()
-if not bot.name:
+# TODO: Get bot
+bot = bot_handler.get_my_info(args.token)
+logic_controller = args.logic
+if logic_controller not in CONTROLLERS:
+    print("Invalid logic controller.")
+    exit(1)
+
+if not bot.bot_name:
     print("Bot does not exist.")
     exit(1)
-print("Welcome back", bot.name)
+print("Welcome back", bot.bot_name)
 
 # Setup variables
 logic_class = CONTROLLERS[logic_controller]
@@ -112,17 +113,22 @@ bot_logic = logic_class()
 current_board_id = args.board
 if not current_board_id:
     # List active boards to find one we can join if we haven't specified one
-    boards = bot.list_boards()
+    boards = board_handler.list_boards()
     for board in boards:
         # Try to join board
+        board_joined = False
         current_board_id = board.id
-        resp, status = bot.join(current_board_id)
-        if status == 200:
+        success = bot_handler.join(bot.token, current_board_id)
+        if success:
+            board_joined = True
             break
+    
+    if not board_joined:
+        exit()
 else:
     # Try to join the one we specified
-    resp, status = bot.join(current_board_id)
-    if status != 200:
+    success = bot_handler.join(bot.token, current_board_id)
+    if not success:
         current_board_id = None
 
 # Did we manage to join a board?
@@ -135,8 +141,8 @@ if not current_board_id:
 # Prepare state from current board
 #
 ###############################################################################
-board = bot.get_board(current_board_id)
-move_delay = board.data["minimumDelayBetweenMoves"] / 1000
+board = board_handler.get_board(current_board_id)
+move_delay = board.minimum_delay_between_moves / 1000
 
 ###############################################################################
 #
@@ -151,12 +157,10 @@ while True:
     delta_x, delta_y = bot_logic.next_move(board_bot, board)
 
     # Try to perform move
-    resp, status = bot.move(current_board_id, delta_x, delta_y)
-    if status == 409 or status == 403:
+    board = bot_handler.move(bot.token, current_board_id, delta_x, delta_y)
+    if not board:
         # Read new board state
-        board = bot.get_board(current_board_id)
-    else:
-        board = Board(resp)
+        board = board_handler.get_board(current_board_id)
 
     # Get new state
     board_bot = board.get_bot(bot)

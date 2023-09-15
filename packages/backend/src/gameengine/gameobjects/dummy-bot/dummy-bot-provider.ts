@@ -1,3 +1,4 @@
+import { IBot } from "../../../types";
 import { Board } from "../../board";
 import { AbstractGameObject } from "../abstract-game-object";
 import { BotProvider, BotProviderConfig } from "../bot/bot-provider";
@@ -42,6 +43,11 @@ export class DummyBotProvider extends BotProvider {
       );
       board.addGameObjects([dummyBot]);
     }
+  }
+
+  onBotJoined(bot: IBot, board: Board) {
+    // DO NOTHING.
+    // Override this function so we don't trigger BotProvider onBotJoined twice.
   }
 
   onGameObjectsRemoved(board: Board, gameObjects: AbstractGameObject[]): void {
