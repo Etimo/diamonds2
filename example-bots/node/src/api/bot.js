@@ -1,3 +1,4 @@
+import { Board } from "../models/board";
 import { Bot } from "../models/bot";
 import { client } from "./client";
 import { logResponseError } from "./utils";
@@ -26,5 +27,29 @@ export const getBot = async (botToken) => {
     return new Bot(name, email, id);
   } catch (error) {
     logResponseError(error);
+  }
+};
+
+export const joinBoard = async (token, boardId) => {
+  try {
+    const { data } = await client.post(`/bots/${token}/join`, {
+      preferredBoardId: boardId,
+    });
+    console.log(data);
+    return Board.dataToBoard(data);
+  } catch (error) {
+    logResponseError(error);
+  }
+};
+
+export const moveBotOnBoard = async (id, token, direction) => {
+  try {
+    const { data } = await client.post(`/bots/${token}/move`, {
+      direction: direction,
+    });
+    return Board.dataToBoard(data);
+  } catch (error) {
+    // Fetch board if move fails
+    return await getBoard(id);
   }
 };
