@@ -49,8 +49,6 @@ class Api:
     def boards_list(self) -> Optional[List[Board]]:
         response = self._req("/boards", "get", {})
         resp, status = self._return_response_and_status(response)
-        print("RESP")
-        print(resp)
         if status == 200:
             return [from_dict(Board, board) for board in resp]
         return None
