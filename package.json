@@ -1,5 +1,22 @@
 {
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npx tsc --build packages/backend packages/frontend-typescript --verbose",
+    "nodemon": "npx nodemon",
+    "start:backend": "cd packages/backend && npm run start:dev",
+    "start:frontend": "cd packages/frontend-typescript && npm run dev",
+    "start": "npm run support && concurrently \"npm run start:backend\" \"npm run start:frontend\" \"npm run nodemon\"",
+    "support": "docker-compose up -d database"
+  },
   "devDependencies": {
-    "husky": "^8.0.3"
+    "@tsconfig/node18": "^18.2.2",
+    "@tsconfig/node20": "^20.1.2",
+    "concurrently": "^8.2.1",
+    "husky": "^8.0.3",
+    "nodemon": "^3.0.1",
+    "typescript": "^5.2.2"
   }
 }
