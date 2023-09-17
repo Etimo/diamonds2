@@ -10,13 +10,14 @@
     "start:backend": "cd packages/backend && npm run start:dev",
     "start:frontend": "cd packages/frontend && npm run dev",
     "start": "npm run support && concurrently \"npm run start:backend\" \"npm run start:frontend\" \"npm run nodemon\"",
-    "support": "docker-compose up -d database"
+    "support": "docker-compose up -d database",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@tsconfig/node18": "^18.2.2",
     "@tsconfig/node20": "^20.1.2",
     "concurrently": "^8.2.1",
-    "husky": "^8.0.3",
+    "husky": "^8.0.0",
     "nodemon": "^3.0.1",
     "typescript": "^5.2.2"
   }

@@ -6640,7 +6640,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"husky@npm:^8.0.3":
+"husky@npm:^8.0.0":
   version: 8.0.3
   resolution: "husky@npm:8.0.3"
   bin:
@@ -11095,7 +11095,7 @@ __metadata:
     "@tsconfig/node18": ^18.2.2
     "@tsconfig/node20": ^20.1.2
     concurrently: ^8.2.1
-    husky: ^8.0.3
+    husky: ^8.0.0
     nodemon: ^3.0.1
     typescript: ^5.2.2
   languageName: unknown
