@@ -16,10 +16,6 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Generate prisma
-        working-directory: backend
-        run: npx prisma generate
-
       - name: Run tests with coverage report
         run: yarn --cwd=backend run test:coverage --forceExit
 
