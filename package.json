@@ -11,9 +11,11 @@
     "start:frontend": "cd packages/frontend && npm run dev",
     "start": "npm run support && concurrently \"npm run start:backend\" \"npm run start:frontend\" \"npm run nodemon\"",
     "support": "docker-compose up -d database",
-    "prepare": "husky install"
+    "postinstall": "husky install"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.7.1",
+    "@commitlint/config-conventional": "^17.7.0",
     "@tsconfig/node18": "^18.2.2",
     "@tsconfig/node20": "^20.1.2",
     "concurrently": "^8.2.1",
