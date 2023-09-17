@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: dcodeIO/setup-node-nvm@master
+      - uses: ./.github/actions/setup-node-using-nvm
 
       - name: Install dependencies
         run: yarn
