@@ -17,7 +17,7 @@ jobs:
         run: npm run build
 
       - name: Run tests with coverage report
-        run: yarn --cwd=backend run test:coverage --forceExit
+        run: yarn --cwd=packages/backend run test:coverage --forceExit
 
       - name: Coveralls
         uses: coverallsapp/github-action@master
