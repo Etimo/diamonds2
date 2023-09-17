@@ -1,23 +1,24 @@
 name: CI/CD
 on:
-  - pull_request
   - push
 jobs:
   test-backend:
     name: Test backend
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "16.x"
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/setup-node-using-nvm
+
       - name: Install dependencies
-        run: yarn --cwd=backend install
-      - name: Generate prisma
-        working-directory: backend
-        run: npx prisma generate
+        run: yarn
+
+      - name: Build
+        run: npm run build
+
       - name: Run tests with coverage report
-        run: yarn --cwd=backend run test:coverage --forceExit
+        run: yarn --cwd=packages/backend run test:coverage --forceExit
+
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
@@ -43,7 +44,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Ref ${{ github.ref }}"
+
       - uses: actions/checkout@v1
+
       - name: Build docker image
         run: docker-compose -f docker-compose.yml build
 

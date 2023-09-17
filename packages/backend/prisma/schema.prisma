@@ -1,0 +1,89 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "foreignKeys"
+}
+
+model BoardConfig {
+  id                       String   @id(map: "PK_1636b437b1255b668e371bc8e23") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  inventorySize            Int      @default(5)
+  canTackle                Boolean  @default(false)
+  teleporters              Int      @default(1)
+  teleportRelocation       Int      @default(10)
+  height                   Int      @default(15)
+  width                    Int      @default(15)
+  minimumDelayBetweenMoves Int      @default(100)
+  sessionLength            Int      @default(60)
+  separateBoards           Boolean  @default(false)
+  dummyBots                Int      @default(0) @db.SmallInt
+  createTimeStamp          DateTime @default(now()) @db.Timestamptz(6)
+  updateTimeStamp          DateTime @default(now()) @db.Timestamptz(6)
+  season                   Season[]
+}
+
+model Bot {
+  id              String      @id(map: "PK_9ada6b90026027b7d2f75c4d3d8") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String      @unique @db.VarChar(300)
+  email           String      @unique @db.VarChar(300)
+  createTimeStamp DateTime    @default(now()) @db.Timestamptz(6)
+  updateTimeStamp DateTime    @default(now()) @db.Timestamptz(6)
+  password        String?     @db.VarChar(300)
+  teamId          String      @db.Uuid
+  team            Team?        @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  highscores      Highscore[]
+  recordings      Recording[]
+}
+
+model Highscore {
+  id              String   @id(map: "PK_da1bb900eb93df2f2d5103d8545") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  score           Int
+  createTimeStamp DateTime @default(now()) @db.Timestamptz(6)
+  updateTimeStamp DateTime @default(now()) @db.Timestamptz(6)
+  seasonId        String   @db.Uuid
+  botId           String   @db.Uuid
+  bot             Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
+  season          Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+
+  @@unique([seasonId, botId])
+  @@index([seasonId, botId])
+}
+
+model Recording {
+  id              String   @id(map: "PK_8c3247d5ee4551d59bb2115a484") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  score           Int
+  board           Int
+  createTimeStamp DateTime @default(now()) @db.Timestamptz(6)
+  recording       String
+  seasonId        String   @db.Uuid
+  botId           String   @db.Uuid
+  bot             Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
+  season          Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+}
+
+model Season {
+  id              String      @id(map: "PK_cb8ed53b5fe109dcd4a4449ec9d") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String      @unique @db.VarChar(300)
+  startDate       DateTime    @db.Timestamptz(6)
+  endDate         DateTime    @db.Timestamptz(6)
+  createTimeStamp DateTime    @default(now()) @db.Timestamptz(6)
+  updateTimeStamp DateTime    @default(now()) @db.Timestamptz(6)
+  highscores      Highscore[]
+  recordings      Recording[]
+  boardConfigId   String      @db.Uuid
+  boardConfig     BoardConfig @relation(fields: [boardConfigId], references: [id])
+}
+
+model Team {
+  id              String   @id(map: "PK_7e5523774a38b08a6236d322403") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String   @db.VarChar(300)
+  abbreviation    String   @db.VarChar(20)
+  logotypeUrl     String   @db.VarChar(1000)
+  createTimeStamp DateTime @default(now()) @db.Timestamptz(6)
+  updateTimeStamp DateTime @default(now()) @db.Timestamptz(6)
+  bots            Bot[]
+}

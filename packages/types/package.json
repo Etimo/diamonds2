@@ -1,0 +1,50 @@
+{
+  "name": "@etimo/diamonds2-types",
+  "version": "1.0.0",
+  "description": "Common types",
+  "license": "ISC",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "bin": "node ../../scripts/run-module-bin.js",
+    "build": "npm run clean && npm run compile",
+    "clean": "node ../../scripts/remove-path.js --recursive dist tsconfig.build.tsbuildinfo tsconfig.tsbuildinfo",
+    "clear": "npm run clean && node ../../scripts/remove-path.js --recursive node_modules",
+    "compile-with-deps": "tsc -b -v",
+    "compile": "npm run bin tsc -- --project tsconfig.build.json",
+    "compile:test": "npm run bin tsc -- --build",
+    "test-integration": "npm run bin jest -- --testMatch='**/src/**/*.integration.ts' --passWithNoTests --detectOpenHandles --forceExit --silent",
+    "test": "npm run bin jest -- --passWithNoTests --detectOpenHandles --forceExit --silent"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.2",
+    "jest": "^28.0.0",
+    "ts-jest": "^28.0.0",
+    "typescript": "^4.4.3"
+  },
+  "jest": {
+    "detectOpenHandles": true,
+    "preset": "ts-jest",
+    "testMatch": [
+      "**/src/**/*.test.ts",
+      "**/src/**/*.spec.ts"
+    ],
+    "globals": {
+      "babelConfig": true
+    },
+    "coverageReporters": [
+      "text",
+      "json-summary",
+      "lcov"
+    ],
+    "coverageDirectory": "./",
+    "moduleNameMapper": {
+      "^@etimo/diamonds2\\-backend/(.*)$": "<rootDir>/backend/src/$1",
+      "^@etimo/diamonds2\\-frontend/(.*)$": "<rootDir>/frontend/src/$1",
+      "^@etimo/diamonds2\\-types/(.*)$": "<rootDir>/types/src/$1"
+    },
+    "modulePathIgnorePatterns": [
+      "d.ts$"
+    ]
+  }
+}

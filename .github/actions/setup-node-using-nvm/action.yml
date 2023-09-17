@@ -1,0 +1,14 @@
+name: Setup node using nvm
+description: Setup node using nvm
+
+runs:
+  using: composite
+  steps:
+    - name: Read .nvmrc
+      shell: bash
+      run: echo NVMRC=`cat .nvmrc` >> $GITHUB_ENV
+
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NVMRC }}

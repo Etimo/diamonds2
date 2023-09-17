@@ -1,0 +1,25 @@
+{
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    },
+    "react": {
+      "version": "detect"
+    }
+  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "react", "prettier", "unused-imports"],
+  "parserOptions": {
+    "project": "./frontend/tsconfig.json",
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "extends": ["prettier"],
+  "rules": {
+    "prettier/prettier": "warn",
+    "unused-imports/no-unused-imports": "warn"
+  }
+}

@@ -3,11 +3,11 @@ version: "3.7"
 services:
   frontend:
     build:
-      context: ./frontend-typescript
+      context: ./packages/frontend
       target: "develop"
     command: /bin/sh -c "VITE_API_BASE_URL=http://backend:3000/api yarn run start"
     volumes:
-      - ./frontend-typescript/src:/app/src
+      - ./frontend/src:/app/src
       # - /app/node_modules
     ports:
       - 8080:8082
@@ -15,7 +15,7 @@ services:
   backend:
     platform: linux/x86_64
     build:
-      context: ./backend
+      context: ./packages/backend
       target: "develop"
     command: /bin/sh -c "npx prisma db push --accept-data-loss && npx prisma db seed && yarn start:dev"
     volumes:

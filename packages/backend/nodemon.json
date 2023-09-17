@@ -1,0 +1,6 @@
+{
+  "watch": ["dist/*", ".env"],
+  "ext": "ts,map,js,json",
+  "delay": 500,
+  "exec": "nest start"
+}
