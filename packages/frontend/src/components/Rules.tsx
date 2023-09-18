@@ -1,6 +1,6 @@
 import { FC, memo } from 'react';
 import { IRules, useBoardConfig } from '../hooks/useBoardConfig';
-import { Modal } from './Modal';
+import Modal from './Modal';
 
 type RulesProps = {
   onClose: () => void;
@@ -13,7 +13,7 @@ export const Rules: FC<RulesProps> = memo((props) => {
   const seasonRules: IRules = useBoardConfig(seasonId);
 
   return visible ? (
-    <Modal>
+    <Modal onClose={onClose}>
       <div>
         <h1 className="text-xl 3xl:text-2xl mb-3">Season rules</h1>
 
