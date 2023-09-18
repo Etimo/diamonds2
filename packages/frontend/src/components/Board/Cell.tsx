@@ -66,13 +66,20 @@ const getGameCharacter = (gameObject: GameObject) => {
 };
 
 const getCharacterName = (gameObject: GameObject) => {
+  let substringLength = 3;
+  if (window.innerWidth >= 1536) {
+    substringLength = 7;
+  } else if (window.innerWidth >= 768) {
+    substringLength = 5;
+  }
+
   if (gameObject.properties as IBase) {
     const base = gameObject.properties as IBase;
-    if (base.name) return base.name.substring(0, 3);
+    if (base.name) return base.name.substring(0, substringLength);
     return base.name;
   } else if (gameObject.properties as IBot) {
     const bot = gameObject.properties as IBot;
-    if (bot.name) return bot.name.substring(0, 3);
+    if (bot.name) return bot.name.substring(0, substringLength);
     return bot.name;
   }
   return '';
@@ -93,7 +100,7 @@ export const Cell: FC<CellProps> = memo((props) => {
     >
       {gameObject && (gameObject.type as GameObjectType) && (
         <div className="flex flex-col w-full">
-          <p className="text-[10px] text-black dark:text-white w-100 self-center">
+          <p className="text-[6px] text-black dark:text-white w-100 self-center sm:text-[10px]">
             {getCharacterName(gameObject)}
           </p>
           <img
