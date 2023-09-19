@@ -73,7 +73,7 @@ export const Cell: FC<CellProps> = memo((props) => {
     <div
       key={id}
       className={`border-l w-full aspect-square relative overflow-hidden ${
-        gameObject && (gameObject.type as GameObjectType)
+        gameObject && gameObject.type
           ? 'flex items-center justify-center'
           : 'justify-center'
       }`}
