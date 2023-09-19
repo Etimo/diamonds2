@@ -93,12 +93,12 @@ export const Cell: FC<CellProps> = memo((props) => {
     <div
       key={id}
       className={`border-l w-full aspect-square ${
-        gameObject && (gameObject.type as GameObjectType)
+        gameObject && gameObject.type
           ? 'flex items-center justify-center'
           : 'justify-center'
       }`}
     >
-      {gameObject && (gameObject.type as GameObjectType) && (
+      {gameObject && gameObject.type && (
         <div className="flex flex-col w-full">
           <p className="text-[6px] text-black dark:text-white w-100 self-center sm:text-[10px]">
             {getCharacterName(gameObject)}
