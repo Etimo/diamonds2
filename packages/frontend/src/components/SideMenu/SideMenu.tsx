@@ -1,6 +1,6 @@
 import React, { FC, memo, useState } from 'react';
 import { IBot } from '../../hooks/useBoard';
-import useFetch from '../../hooks/useFetch';
+import { useCurrentSeason } from '../../hooks/useCurrentSeason';
 import { BoardPicker } from '../BoardPicker';
 import { HighScoreTable } from '../HighScoreTable';
 import { PlayerTable } from '../PlayerTable';
@@ -15,12 +15,7 @@ type SideMenuProps = {
 
 export const SideMenu: FC<SideMenuProps> = memo((props) => {
   const { boardId, onBoardChange, bots } = props;
-
-  const {
-    response: currentSeason,
-    error,
-    isLoading,
-  } = useFetch('api/seasons/current', '0');
+  const currentSeason = useCurrentSeason();
 
   const [seasonId, setSeasonId] = useState<string>('0');
   const [rulesVisible, setRulesVisible] = useState<boolean>(false);
