@@ -45,6 +45,12 @@
   select {
     @apply dark:text-slate-800 dark:bg-slate-300 text-sm;
   }
+
+  *,
+  ::before,
+  ::after {
+    @apply border-gray-400 dark:border-gray-200;
+  }
 }
 
 @layer components {
