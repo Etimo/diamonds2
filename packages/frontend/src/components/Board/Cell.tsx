@@ -85,7 +85,9 @@ export const Cell: FC<CellProps> = memo((props) => {
           </p>
           <img
             src={getGameCharacter(gameObject)}
-            className="w-[70%] h-[70%] self-center"
+            className={`w-[70%] h-[70%] self-center ${
+              gameObject.type.includes('Teleport') ? 'rotate' : ''
+            }`}
           />
         </div>
       )}
