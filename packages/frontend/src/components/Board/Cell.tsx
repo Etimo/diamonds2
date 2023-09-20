@@ -1,11 +1,5 @@
 import { FC, memo } from 'react';
-import {
-  GameObject,
-  GameObjectType,
-  IBase,
-  IBot,
-  IDiamond,
-} from '../../hooks/useBoard';
+import { GameObject, GameObjectType, IDiamond } from '../../hooks/useBoard';
 import {
   base,
   botBase,
@@ -66,23 +60,9 @@ const getGameCharacter = (gameObject: GameObject) => {
 };
 
 const getCharacterName = (gameObject: GameObject) => {
-  let substringLength = 3;
-  if (window.innerWidth >= 1536) {
-    substringLength = 7;
-  } else if (window.innerWidth >= 768) {
-    substringLength = 5;
-  }
+  const name = gameObject.properties?.name || '';
 
-  if (gameObject.properties as IBase) {
-    const base = gameObject.properties as IBase;
-    if (base.name) return base.name.substring(0, substringLength);
-    return base.name;
-  } else if (gameObject.properties as IBot) {
-    const bot = gameObject.properties as IBot;
-    if (bot.name) return bot.name.substring(0, substringLength);
-    return bot.name;
-  }
-  return '';
+  return name;
 };
 
 // TODO: Fix types in this component
@@ -92,7 +72,7 @@ export const Cell: FC<CellProps> = memo((props) => {
   return (
     <div
       key={id}
-      className={`border-l w-full aspect-square ${
+      className={`border-l w-full aspect-square relative overflow-hidden ${
         gameObject && (gameObject.type as GameObjectType)
           ? 'flex items-center justify-center'
           : 'justify-center'
@@ -100,7 +80,7 @@ export const Cell: FC<CellProps> = memo((props) => {
     >
       {gameObject && (gameObject.type as GameObjectType) && (
         <div className="flex flex-col w-full">
-          <p className="text-[6px] text-black dark:text-white w-100 self-center sm:text-[10px]">
+          <p className="text-[6px] text-black dark:text-white max-w-[98%] self-center sm:text-[10px] overflow-hidden whitespace-nowrap truncate">
             {getCharacterName(gameObject)}
           </p>
           <img
