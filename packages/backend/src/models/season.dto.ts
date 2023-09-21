@@ -1,7 +1,8 @@
+import { ISeasonDto } from "@etimo/diamonds2-types";
 import { ApiProperty } from "@nestjs/swagger";
 import { ISeason } from "../types";
 
-export class SeasonDto {
+export class SeasonDto implements ISeasonDto {
   @ApiProperty()
   id!: string;
   @ApiProperty()
