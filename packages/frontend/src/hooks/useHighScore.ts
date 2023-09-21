@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { useFetchRepeatedly } from './useFetchRepeatedly';
 
 export function useHighScore(seasonId: string): IHighscoreDto[] {
-  // const [mappedHighScores, setMappedHighScores] = useState<IHighscoreDto[]>();
   const fetchedHighScore = useFetchRepeatedly(
     `api/highscores/${seasonId}`,
     5000,
@@ -16,8 +15,3 @@ export function useHighScore(seasonId: string): IHighscoreDto[] {
   }
   return fetchedHighScore;
 }
-
-// type HighScore = {
-//   botName: string;
-//   score: number;
-// };

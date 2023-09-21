@@ -1,7 +1,8 @@
+import { ITeamDto } from "@etimo/diamonds2-types";
 import { ApiProperty } from "@nestjs/swagger";
 import { ITeam } from "../types";
 
-export class TeamDto {
+export class TeamDto implements ITeamDto {
   @ApiProperty()
   id!: string;
   @ApiProperty()

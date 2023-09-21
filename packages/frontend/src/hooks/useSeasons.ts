@@ -5,7 +5,7 @@ import { useFetchRepeatedly } from './useFetchRepeatedly';
 export default () => {
   const delay = 60000; // 1min
   const fetchedSeasons = useFetchRepeatedly(`api/seasons`, delay, []);
-  const [seasons, setSeasons] = useState([] as ISeasonDto[]);
+  const [seasons, setSeasons] = useState<ISeasonDto[]>([]);
 
   useEffect(() => {
     setSeasons(fetchedSeasons);

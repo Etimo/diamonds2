@@ -1,14 +1,11 @@
 import useFetch from '../hooks/useFetch';
-import { useFetchRepeatedly } from '../hooks/useFetchRepeatedly';
+import useTeams from '../hooks/useTeams';
 import { HighScoreTable } from './HighScoreTable';
 import { MovingBot } from './MovingBot';
 import { Table } from './Table';
 
-const url: string = 'api/teams';
-const delay: number = 60000; // 1 min
-
 export const Teams = () => {
-  const teams = useFetchRepeatedly(url, delay, []) as ITeam[];
+  const teams = useTeams();
   const { response: currentSeason } = useFetch('api/seasons/current', '0');
 
   return (
@@ -37,10 +34,3 @@ export const Teams = () => {
     </>
   );
 };
-
-interface ITeam {
-  id: string;
-  name: string;
-  abbreviation: string;
-  logotypeUrl: string;
-}
