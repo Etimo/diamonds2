@@ -73,12 +73,12 @@ export const Cell: FC<CellProps> = memo((props) => {
     <div
       key={id}
       className={`border-l w-full aspect-square relative overflow-hidden ${
-        gameObject && gameObject.type
+        gameObject && (gameObject.type as GameObjectType)
           ? 'flex items-center justify-center'
           : 'justify-center'
       }`}
     >
-      {gameObject && gameObject.type && (
+      {gameObject && (gameObject.type as GameObjectType) && (
         <div className="flex flex-col w-full">
           <p className="text-[6px] text-black dark:text-white max-w-[98%] self-center sm:text-[10px] overflow-hidden whitespace-nowrap truncate">
             {getCharacterName(gameObject)}
