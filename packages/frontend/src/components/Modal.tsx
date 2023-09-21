@@ -1,10 +1,18 @@
-export const Modal = ({ children }: React.PropsWithChildren) => {
+import React, { FC } from 'react';
+
+type ModalProps = {
+  onClose: () => void;
+  children: React.ReactNode;
+};
+
+const Modal: FC<ModalProps> = ({ onClose, children }) => {
   return (
     <div
       className="relative z-10"
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
+      onClick={onClose}
     >
       <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
 
@@ -20,3 +28,5 @@ export const Modal = ({ children }: React.PropsWithChildren) => {
     </div>
   );
 };
+
+export default Modal;
