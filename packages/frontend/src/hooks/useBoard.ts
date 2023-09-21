@@ -33,7 +33,7 @@ export const useBoard = (boardId: number, delay: number) => {
             };
           } else if (gameObject.type === 'BaseGameObject') {
             properties = {
-              name: '',
+              name: gameObject.properties.name,
             };
           } else if (
             gameObject.type === 'DummyBotGameObject' ||
