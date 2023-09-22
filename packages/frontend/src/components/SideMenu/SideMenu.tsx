@@ -1,5 +1,5 @@
+import { BotGameObjectProperties } from '@etimo/diamonds2-types';
 import React, { FC, memo, useState } from 'react';
-import { IBot } from '../../hooks/useBoard';
 import { useCurrentSeason } from '../../hooks/useCurrentSeason';
 import { BoardPicker } from '../BoardPicker';
 import { HighScoreTable } from '../HighScoreTable';
@@ -10,7 +10,7 @@ import { SeasonPicker } from '../SeasonPicker';
 type SideMenuProps = {
   boardId: number;
   onBoardChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-  bots: IBot[];
+  bots: BotGameObjectProperties[];
 };
 
 export const SideMenu: FC<SideMenuProps> = memo((props) => {

@@ -1,3 +1,7 @@
+export type DiamondGameObjectProperties = {
+  points: number;
+};
+
 export type DiamondProviderConfig = {
   /**
    * The minimum ratio (percent of board size) of diamonds before new ones should be generated.
