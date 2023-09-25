@@ -92,6 +92,30 @@
   /* transform: rotate(.03turn);  */
 }
 
+.diamond {
+  fill: url(#radialGradient-1);
+  position: relative;
+}
+
+.sparkles {
+  transform: translate(-50%, -50%);
+}
+
+.star {
+  text-shadow: 0 0 white, -115px -75px white;
+  animation: shine 1.8s alternate linear infinite;
+}
+
+@keyframes shine {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 @keyframes spin {
   from {
     transform: rotate(0deg);
