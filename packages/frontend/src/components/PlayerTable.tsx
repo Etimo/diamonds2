@@ -1,10 +1,10 @@
+import { BotGameObjectProperties } from '@etimo/diamonds2-types';
 import { FC, memo } from 'react';
-import { IBot } from '../hooks/useBoard';
 import { Table } from './Table';
 import { diamond } from './images';
 
 type PlayerTableProps = {
-  bots: IBot[];
+  bots: BotGameObjectProperties[];
   boardId: number;
 };
 

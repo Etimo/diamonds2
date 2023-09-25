@@ -1,7 +1,8 @@
+import { IHighscoreDto } from "@etimo/diamonds2-types";
 import { ApiProperty } from "@nestjs/swagger";
 import { IHighscore } from "../types";
 
-export class HighscorePublicDto {
+export class HighscorePublicDto implements IHighscoreDto {
   @ApiProperty()
   botName!: string;
 

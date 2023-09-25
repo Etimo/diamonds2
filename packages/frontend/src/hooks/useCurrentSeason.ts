@@ -1,17 +1,23 @@
+import { ISeasonDto } from '@etimo/diamonds2-types';
 import { useEffect, useState } from 'react';
-import { useFetchRepeatedly } from './useFetchRepeatedly';
+import useFetch from './useFetch';
 
-export default () => {
-  const delay = 1800000; // 30min
-  const fetchedCurrentSeason = useFetchRepeatedly(
-    `api/seasons/current`,
-    delay,
-    '0',
-  );
-  const [currentSeason, setCurrentSeason] = useState('0');
+export const useCurrentSeason = (): ISeasonDto => {
+  const {
+    response: fetchedCurrentSeason,
+    error,
+    isLoading,
+  } = useFetch(`api/seasons/current`, '0');
+  const [currentSeason, setCurrentSeason] = useState<ISeasonDto>({
+    id: '0',
+    name: '',
+    startDate: new Date(),
+    endDate: new Date(),
+  });
 
   useEffect(() => {
-    setCurrentSeason('0');
+    setCurrentSeason(fetchedCurrentSeason);
   }, [fetchedCurrentSeason]);
+
   return currentSeason;
 };

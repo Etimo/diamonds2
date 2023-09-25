@@ -1,9 +1,9 @@
 import {
   BotGameObjectProperties,
+  DiamondGameObjectProperties,
   TeleportProperties,
 } from "@etimo/diamonds2-types";
 import { ApiProperty } from "@nestjs/swagger";
-import { DiamondGameObjectProperties } from "../gameengine";
 import { PositionDto } from "./position.dto";
 
 export class GameObjectDto {

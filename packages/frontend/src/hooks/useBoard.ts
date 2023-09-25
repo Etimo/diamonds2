@@ -1,3 +1,4 @@
+import { BotGameObjectProperties, Position } from '@etimo/diamonds2-types';
 import { useEffect, useState } from 'react';
 import { useFetchRepeatedly } from './useFetchRepeatedly';
 
@@ -7,7 +8,7 @@ export const useBoard = (boardId: number, delay: number) => {
     delay,
     [],
   );
-  const [bots, setBots] = useState<IBot[]>([]);
+  const [bots, setBots] = useState<BotGameObjectProperties[]>([]);
   const [board, setBoard] = useState<GameBoard>({
     width: 0,
     height: 0,
@@ -16,7 +17,7 @@ export const useBoard = (boardId: number, delay: number) => {
 
   useEffect(() => {
     const mappedRows: GameObject[][] = [];
-    const bots: IBot[] = [];
+    const bots: BotGameObjectProperties[] = [];
 
     for (let i = 0; i < fetchedBoard.height; i++) {
       mappedRows.push(Array(fetchedBoard.width).fill(undefined));
@@ -33,7 +34,7 @@ export const useBoard = (boardId: number, delay: number) => {
             };
           } else if (gameObject.type === 'BaseGameObject') {
             properties = {
-              name: '',
+              name: gameObject.properties.name,
             };
           } else if (
             gameObject.type === 'DummyBotGameObject' ||
@@ -47,7 +48,7 @@ export const useBoard = (boardId: number, delay: number) => {
                 gameObject.properties.millisecondsLeft &&
                 Math.round(gameObject.properties.millisecondsLeft / 1000),
             };
-            bots.push(properties as IBot);
+            bots.push(properties as BotGameObjectProperties);
           }
         }
 
@@ -87,10 +88,7 @@ export interface GameBoard {
 
 export type GameObject = {
   type: GameObjectType;
-  position: {
-    x: number;
-    y: number;
-  };
+  position: Position;
   properties: Partial<Properties> | null;
 };
 
@@ -103,10 +101,7 @@ type Properties = {
   millisecondsLeft: number;
   timeJoined: Date;
   points: number;
-  base: {
-    x: number;
-    y: number;
-  };
+  base: Position;
 } | null;
 
 type BoardResponse = {
@@ -144,13 +139,6 @@ export type GameObjectType =
 
 export interface IDiamond {
   points: number;
-}
-
-export interface IBot {
-  name: string;
-  diamonds: number;
-  score: number;
-  millisecondsLeft: number;
 }
 
 export interface IBase {
