@@ -14,7 +14,6 @@ export const HighScoreTable: FC<HighScoreProps> = memo((props) => {
     <Table
       label="Highscore"
       cols={['Name', 'Team', 'Score']}
-      // data={highscore}
       data={highscore.map((item) => {
         return {
           name: item.botName,
