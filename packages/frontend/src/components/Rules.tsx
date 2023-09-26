@@ -1,5 +1,6 @@
 import { FC, memo } from 'react';
 import { useBoardConfig } from '../hooks/useBoardConfig';
+import useFetch from '../hooks/useFetch';
 import Modal from './Modal';
 import { Spinner } from './Spinner';
 
@@ -14,6 +15,7 @@ const setOnOff = (state: boolean | number): string => (state ? 'On' : 'Off');
 export const Rules: FC<RulesProps> = memo((props) => {
   const { visible, seasonId, onClose } = props;
   const seasonRules = useBoardConfig(seasonId);
+  const { response: seasonInfo } = useFetch(`api/seasons/${seasonId}`, '0');
   if (!seasonRules) return <Spinner />;
   const gridSize = `${seasonRules.width} x ${seasonRules.height}`;
 
@@ -42,6 +44,18 @@ export const Rules: FC<RulesProps> = memo((props) => {
               Teleporter relocation time
             </label>
             <p className="mt-0 mb-2">{seasonRules.teleportRelocation}</p>
+            <label className="text-label mb-0">Season Ends</label>
+            {seasonInfo ? (
+              <p className="mt-0 mb-2">
+                {new Date(seasonInfo.endDate).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </p>
+            ) : (
+              ''
+            )}
           </>
         ) : (
           <p>No rules found for the selected season</p>
