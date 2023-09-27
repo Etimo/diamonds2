@@ -1,18 +1,63 @@
 import { FC, memo } from 'react';
 import { GameObject } from '../../hooks/useBoard';
-import { GameObjectComponent } from '../gameObject';
+import {
+  BaseComponent,
+  BotComponent,
+  DiamondComponent,
+  OtherComponent,
+  TeleportComponent,
+} from '../gameObject';
+
+const componentMap: Record<string, FC<GameObjectProps>> = {
+  // GameObject types
+  Teleporter: TeleportComponent,
+  Wall: OtherComponent,
+  DiamondButtonGameObject: OtherComponent,
+  DiamondGameObject: DiamondComponent,
+  BotGameObject: BotComponent,
+  DummyBotGameObject: BotComponent,
+  BaseGameObject: BaseComponent,
+
+  // GameObject combinations
+  BotGameObjectBaseGameObject: BaseComponent,
+  DummyBotGameObjectBaseGameObject: BaseComponent,
+  BaseGameObjectBotGameObject: BaseComponent,
+  BaseGameObjectDummyBotGameObject: BaseComponent,
+  DiamondGameObjectDiamondGameObject: DiamondComponent,
+  DiamondGameObjectBotGameObject: BotComponent,
+  DiamondGameObjectDummyBotGameObject: BotComponent,
+  BotGameObjectDiamondGameObject: BotComponent,
+  DummyBotGameObjectDiamondGameObject: BotComponent,
+
+  // Teleport-related GameObjects
+  TeleportGameObject: TeleportComponent,
+  BotGameObjectTeleportGameObject: TeleportComponent,
+  DummyBotGameObjectTeleportGameObject: TeleportComponent,
+  TeleportGameObjectBotGameObject: TeleportComponent,
+  TeleportGameObjectDummyBotGameObject: TeleportComponent,
+};
 
 type CellProps = {
   gameObject: GameObject;
   id: string;
 };
 
-// TODO: Fix types in this component
+export type GameObjectProps = {
+  gameObject: GameObject;
+};
+
+const renderGameCharacterComponent = (gameObject: GameObject) => {
+  const componentType = gameObject.type;
+
+  const Component = componentMap[componentType] || OtherComponent;
+
+  return <Component gameObject={gameObject} />;
+};
+
 export const Cell: FC<CellProps> = memo((props) => {
   const { gameObject, id } = props;
 
   return (
-    // set cell size
     <div
       key={id}
       className={`border-l w-full aspect-square relative overflow-hidden ${
@@ -22,7 +67,7 @@ export const Cell: FC<CellProps> = memo((props) => {
       }`}
     >
       {gameObject && gameObject.type && (
-        <GameObjectComponent gameObject={gameObject} />
+        <>{renderGameCharacterComponent(gameObject)}</>
       )}
     </div>
   );
