@@ -46,13 +46,16 @@ export const Rules: FC<RulesProps> = memo((props) => {
             <p className="mt-0 mb-2">{seasonRules.teleportRelocation}</p>
             <label className="text-label mb-0">Season Ends</label>
             {seasonInfo ? (
-              <p className="mt-0 mb-2">
-                {new Date(seasonInfo.endDate).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </p>
+              <>
+                <label className="text-label mb-0">Season Ends</label>
+                <p className="mt-0 mb-2">
+                  {new Date(seasonInfo.endDate).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </p>
+              </>
             ) : (
               ''
             )}

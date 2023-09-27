@@ -20,8 +20,8 @@ export class SeasonsRepository {
   public async getById(
     seasonId: string,
     includeBoardConfig: boolean,
-  ): Promise<ISeason | null> {
-    return this.prisma.season.findFirst({
+  ): Promise<ISeason> {
+    const season = await this.prisma.season.findFirst({
       where: {
         id: seasonId,
       },
@@ -29,6 +29,8 @@ export class SeasonsRepository {
         boardConfig: includeBoardConfig,
       },
     });
+
+    return season!;
   }
 
   public async getCurrentSeason(): Promise<ISeason> {
