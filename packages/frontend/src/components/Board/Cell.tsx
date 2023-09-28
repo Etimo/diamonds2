@@ -1,71 +1,59 @@
 import { FC, memo } from 'react';
-import { GameObject, GameObjectType, IDiamond } from '../../hooks/useBoard';
+import { GameObject } from '../../hooks/useBoard';
 import {
-  base,
-  botBase,
-  botDiamond,
-  diamond,
-  diamondRed,
-  redButton,
-  robot,
-  teleporter,
-  wall,
-} from '../images';
+  BaseComponent,
+  BotComponent,
+  DiamondComponent,
+  OtherComponent,
+  TeleportComponent,
+} from '../gameObject';
+
+const componentMap: Record<string, FC<GameObjectProps>> = {
+  // GameObject types
+  Teleporter: TeleportComponent,
+  Wall: OtherComponent,
+  DiamondButtonGameObject: OtherComponent,
+  DiamondGameObject: DiamondComponent,
+  BotGameObject: BotComponent,
+  DummyBotGameObject: BotComponent,
+  BaseGameObject: BaseComponent,
+
+  // GameObject combinations
+  BotGameObjectBaseGameObject: BaseComponent,
+  DummyBotGameObjectBaseGameObject: BaseComponent,
+  BaseGameObjectBotGameObject: BaseComponent,
+  BaseGameObjectDummyBotGameObject: BaseComponent,
+  DiamondGameObjectDiamondGameObject: DiamondComponent,
+  DiamondGameObjectBotGameObject: BotComponent,
+  DiamondGameObjectDummyBotGameObject: BotComponent,
+  BotGameObjectDiamondGameObject: BotComponent,
+  DummyBotGameObjectDiamondGameObject: BotComponent,
+
+  // Teleport-related GameObjects
+  TeleportGameObject: TeleportComponent,
+  BotGameObjectTeleportGameObject: TeleportComponent,
+  DummyBotGameObjectTeleportGameObject: TeleportComponent,
+  TeleportGameObjectBotGameObject: TeleportComponent,
+  TeleportGameObjectDummyBotGameObject: TeleportComponent,
+};
 
 type CellProps = {
   gameObject: GameObject;
   id: string;
 };
 
-type GameObjectMap = {
-  [key in GameObjectType]: string;
+export type GameObjectProps = {
+  gameObject: GameObject;
 };
 
-const getGameCharacter = (gameObject: GameObject) => {
-  const goImgMap: GameObjectMap = {
-    Teleporter: teleporter,
-    Wall: wall,
-    DiamondButtonGameObject: redButton,
-    DiamondGameObject: diamond,
-    DiamondGameObjectDiamondGameObject: diamond,
-    BotGameObject: robot,
-    DummyBotGameObject: robot,
-    BaseGameObject: base,
-    BotGameObjectBaseGameObject: botBase,
-    DummyBotGameObjectBaseGameObject: botBase,
-    BaseGameObjectBotGameObject: botBase,
-    BaseGameObjectDummyBotGameObject: botBase,
-    DiamondGameObjectBotGameObject: botDiamond,
-    DiamondGameObjectDummyBotGameObject: botDiamond,
-    BotGameObjectDiamondGameObject: botDiamond,
-    DummyBotGameObjectDiamondGameObject: botDiamond,
-    TeleportGameObject: teleporter,
-    BotGameObjectTeleportGameObject: teleporter,
-    DummyBotGameObjectTeleportGameObject: teleporter,
-    TeleportGameObjectBotGameObject: teleporter,
-    TeleportGameObjectDummyBotGameObject: teleporter,
-  };
+const renderGameCharacterComponent = (gameObject: GameObject) => {
+  const componentType = gameObject.type;
 
-  if (
-    gameObject.type === 'DiamondGameObject' &&
-    (gameObject.properties as IDiamond)
-  ) {
-    const diamond = gameObject.properties as IDiamond;
-    if (diamond.points === 2) {
-      return diamondRed;
-    }
-  }
+  const Component = componentMap[componentType] || OtherComponent;
 
-  return goImgMap[gameObject.type as GameObjectType];
+  return <Component gameObject={gameObject} />;
 };
 
-const getCharacterName = (gameObject: GameObject) => {
-  const name = gameObject.properties?.name || '';
-
-  return name;
-};
-
-// TODO: Fix types in this component
 export const Cell: FC<CellProps> = memo((props) => {
   const { gameObject, id } = props;
 
@@ -79,15 +67,7 @@ export const Cell: FC<CellProps> = memo((props) => {
       }`}
     >
       {gameObject && gameObject.type && (
-        <div className="flex flex-col w-full">
-          <p className="text-[6px] text-black dark:text-white max-w-[98%] self-center sm:text-[10px] overflow-hidden whitespace-nowrap truncate">
-            {getCharacterName(gameObject)}
-          </p>
-          <img
-            src={getGameCharacter(gameObject)}
-            className="w-[70%] h-[70%] self-center"
-          />
-        </div>
+        <>{renderGameCharacterComponent(gameObject)}</>
       )}
     </div>
   );
