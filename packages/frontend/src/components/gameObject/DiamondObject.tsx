@@ -1,26 +1,28 @@
+import { DiamondGameObjectProperties } from '@etimo/diamonds2-types';
 import { FC, memo } from 'react';
-import { GameObject } from '../../hooks/useBoard';
-import { GameObjectProps } from '../Board/Cell';
 import { diamond, diamondRed } from '../images';
 import { CommonGameObject } from './CommonGameObject';
 import { SparklesComponent } from './SparklesComponent';
 
-const getCharacterImg = (gameObject: GameObject): string => {
-  const diamondType =
-    gameObject.properties?.points === 2 ? diamondRed : diamond;
-  return diamondType;
+const getCharacterImg = (points: number): string => {
+  if (points === 2) {
+    return diamondRed;
+  }
+  return diamond;
 };
 
-export const DiamondComponent: FC<GameObjectProps> = memo(({ gameObject }) => {
-  const characterImg = getCharacterImg(gameObject);
-  const imageClassName = 'diamond';
-  return (
-    <>
-      <CommonGameObject
-        characterImg={characterImg}
-        imageClassName={imageClassName}
-      />
-      <SparklesComponent />
-    </>
-  );
-});
+export const DiamondComponent: FC<DiamondGameObjectProperties> = memo(
+  ({ points }) => {
+    const characterImg = getCharacterImg(points);
+    const imageClassName = 'diamond';
+    return (
+      <>
+        <CommonGameObject
+          characterImg={characterImg}
+          imageClassName={imageClassName}
+        />
+        <SparklesComponent />
+      </>
+    );
+  },
+);

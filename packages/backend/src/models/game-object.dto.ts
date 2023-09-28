@@ -1,4 +1,5 @@
 import {
+  BaseGameObjectProperties,
   BotGameObjectProperties,
   DiamondGameObjectProperties,
   TeleportProperties,
@@ -20,7 +21,8 @@ export class GameObjectDto {
   })
   properties!:
     | BotGameObjectProperties
-    | TeleportProperties
     | DiamondGameObjectProperties
+    | BaseGameObjectProperties
+    | TeleportProperties
     | {};
 }
