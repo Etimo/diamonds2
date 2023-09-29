@@ -36,10 +36,6 @@ export interface ITeleportGameObjectDto {
   properties: TeleportProperties;
 }
 
-export type Cell = IGameObjectDto[];
-export type Row = Cell[];
-export type Grid = Row[];
-
 export type IGameObjectDto =
   | IBotGameObjectDto
   | IDiamondGameObjectDto
