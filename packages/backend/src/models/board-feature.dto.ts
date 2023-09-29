@@ -17,5 +17,6 @@ export default class BoardFeatureDto {
     | BotProviderConfig
     | TeleportProviderConfig
     | TeleportRelocationProviderConfig
+    | {}
     | null;
 }
