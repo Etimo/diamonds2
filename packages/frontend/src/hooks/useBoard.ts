@@ -15,25 +15,28 @@ export const useBoard = (boardId: number, delay: number) => {
   const [board, setBoard] = useState<GameBoard>({
     width: 0,
     height: 0,
-    rows: [],
+    grid: [],
   });
   const [bots, setBots] = useState<BotGameObjectProperties[]>([]);
 
   useEffect(() => {
     if (!fetchedBoard.gameObjects) return;
 
-    // Create an empty grid
-    const mappedRows: IGameObjectDto[][] = [];
-    const botObjects: BotGameObjectProperties[] = [];
+    const grid: IGameObjectDto[][][] = [];
 
     for (let i = 0; i < fetchedBoard.height; i++) {
-      mappedRows.push(Array(fetchedBoard.width).fill(null));
+      const row: IGameObjectDto[][] = [];
+      for (let j = 0; j < fetchedBoard.width; j++) {
+        row.push([]);
+      }
+      grid.push(row);
     }
+
+    const botObjects: BotGameObjectProperties[] = [];
 
     fetchedBoard.gameObjects.forEach((gameObject) => {
       const { position } = gameObject;
 
-      // Only update the grid if the position is valid
       if (
         position &&
         position.y >= 0 &&
@@ -41,14 +44,10 @@ export const useBoard = (boardId: number, delay: number) => {
         position.x >= 0 &&
         position.x < fetchedBoard.width
       ) {
-        mappedRows[position.y][position.x] = gameObject;
+        grid[position.y][position.x].push(gameObject);
 
-        // Check if it's a bot object and add it to the botObjects array
-        if (
-          gameObject.type === 'DummyBotGameObject' ||
-          gameObject.type === 'BotGameObject'
-        ) {
-          botObjects.push(gameObject.properties);
+        if (['DummyBotGameObject', 'BotGameObject'].includes(gameObject.type)) {
+          botObjects.push(gameObject.properties as BotGameObjectProperties);
         }
       }
     });
@@ -56,7 +55,7 @@ export const useBoard = (boardId: number, delay: number) => {
     const mappedBoard: GameBoard = {
       width: fetchedBoard.width,
       height: fetchedBoard.height,
-      rows: mappedRows,
+      grid: grid,
     };
 
     setBoard(mappedBoard);
@@ -69,5 +68,5 @@ export const useBoard = (boardId: number, delay: number) => {
 export interface GameBoard {
   width: number;
   height: number;
-  rows: IGameObjectDto[][];
+  grid: IGameObjectDto[][][];
 }

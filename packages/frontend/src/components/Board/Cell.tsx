@@ -9,7 +9,7 @@ import {
 } from '../gameObject';
 
 type CellProps = {
-  gameObject: IGameObjectDto;
+  gameObjects: IGameObjectDto[];
   id: string;
 };
 
@@ -32,20 +32,21 @@ const renderGameCharacterComponent = (gameObject: IGameObjectDto) => {
 };
 
 export const Cell: FC<CellProps> = memo((props) => {
-  const { gameObject, id } = props;
+  const { gameObjects, id } = props;
+
+  const lastGameObject =
+    gameObjects.length > 0 ? gameObjects[gameObjects.length - 1] : null;
 
   return (
     <div
       key={id}
       className={`border-l w-full aspect-square relative overflow-hidden ${
-        gameObject && gameObject.type
+        gameObjects && gameObjects.length > 0
           ? 'flex items-center justify-center'
           : 'justify-center'
       }`}
     >
-      {gameObject &&
-        gameObject.type &&
-        renderGameCharacterComponent(gameObject)}
+      {lastGameObject && renderGameCharacterComponent(lastGameObject)}
     </div>
   );
 });

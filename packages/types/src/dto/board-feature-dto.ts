@@ -7,7 +7,7 @@ import {
 
 export type IBaseFeatureDto = {
   name: "BaseProvider";
-  config: {};
+  config: null;
 };
 
 export type ITeleportFeatureDto = {
@@ -27,7 +27,7 @@ export type IDiamondFeatureDto = {
 
 export type IDiamondButtonFeatureDto = {
   name: "DiamondButtonProvider";
-  config: {};
+  config: null;
 };
 
 export type IBotFeatureDto = {

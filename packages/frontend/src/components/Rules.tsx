@@ -1,7 +1,7 @@
-import { IBoardConfigDto } from '@etimo/diamonds2-types';
 import { FC, memo } from 'react';
 import { useBoardConfig } from '../hooks/useBoardConfig';
 import Modal from './Modal';
+import { Spinner } from './Spinner';
 
 type RulesProps = {
   onClose: () => void;
@@ -9,12 +9,13 @@ type RulesProps = {
   seasonId: string;
 };
 
+const setOnOff = (state: boolean | number): string => (state ? 'On' : 'Off');
+
 export const Rules: FC<RulesProps> = memo((props) => {
   const { visible, seasonId, onClose } = props;
-  const seasonRules: IBoardConfigDto | null = useBoardConfig(seasonId);
-  const gridSize = seasonRules
-    ? `${seasonRules.width} x ${seasonRules.height}`
-    : '';
+  const seasonRules = useBoardConfig(seasonId);
+  if (!seasonRules) return <Spinner />;
+  const gridSize = `${seasonRules.width} x ${seasonRules.height}`;
 
   return visible ? (
     <Modal onClose={onClose}>
@@ -32,11 +33,9 @@ export const Rules: FC<RulesProps> = memo((props) => {
             <label className="text-label mb-0">Inventory size</label>
             <p className="mt-0 mb-2">{seasonRules.inventorySize}</p>
             <label className="text-label mb-0">Tackling</label>
-            <p className="mt-0 mb-2">{seasonRules.canTackle ? 'On' : 'Off'}</p>
+            <p className="mt-0 mb-2">{setOnOff(seasonRules.canTackle)}</p>
             <label className="text-label mb-0">Teleporters</label>
-            <p className="mt-0 mb-2">
-              {seasonRules.teleporters ? 'On' : 'Off'}
-            </p>
+            <p className="mt-0 mb-2">{setOnOff(seasonRules.teleporters)}</p>
             <label className="text-label mb-0">Number of teleporters</label>
             <p className="mt-0 mb-2">{seasonRules.teleporters}</p>
             <label className="text-label mb-0">
