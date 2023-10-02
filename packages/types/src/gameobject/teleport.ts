@@ -8,3 +8,10 @@ export type TeleportProviderConfig = {
    */
   pairs: number;
 };
+
+export type TeleportRelocationProviderConfig = {
+  /**
+   * The number of pairs of teleporters that will be generated.
+   */
+  seconds: number;
+};

@@ -1,74 +1,52 @@
+import { IGameObjectDto } from '@etimo/diamonds2-types';
 import { FC, memo } from 'react';
-import { GameObject } from '../../hooks/useBoard';
 import {
   BaseComponent,
   BotComponent,
+  DiamondButtonComponent,
   DiamondComponent,
-  OtherComponent,
   TeleportComponent,
 } from '../gameObject';
 
-const componentMap: Record<string, FC<GameObjectProps>> = {
-  // GameObject types
-  Teleporter: TeleportComponent,
-  Wall: OtherComponent,
-  DiamondButtonGameObject: OtherComponent,
-  DiamondGameObject: DiamondComponent,
-  BotGameObject: BotComponent,
-  DummyBotGameObject: BotComponent,
-  BaseGameObject: BaseComponent,
-
-  // GameObject combinations
-  BotGameObjectBaseGameObject: BaseComponent,
-  DummyBotGameObjectBaseGameObject: BaseComponent,
-  BaseGameObjectBotGameObject: BaseComponent,
-  BaseGameObjectDummyBotGameObject: BaseComponent,
-  DiamondGameObjectDiamondGameObject: DiamondComponent,
-  DiamondGameObjectBotGameObject: BotComponent,
-  DiamondGameObjectDummyBotGameObject: BotComponent,
-  BotGameObjectDiamondGameObject: BotComponent,
-  DummyBotGameObjectDiamondGameObject: BotComponent,
-
-  // Teleport-related GameObjects
-  TeleportGameObject: TeleportComponent,
-  BotGameObjectTeleportGameObject: TeleportComponent,
-  DummyBotGameObjectTeleportGameObject: TeleportComponent,
-  TeleportGameObjectBotGameObject: TeleportComponent,
-  TeleportGameObjectDummyBotGameObject: TeleportComponent,
-};
-
 type CellProps = {
-  gameObject: GameObject;
+  gameObjects: IGameObjectDto[];
   id: string;
 };
 
-export type GameObjectProps = {
-  gameObject: GameObject;
-};
-
-const renderGameCharacterComponent = (gameObject: GameObject) => {
-  const componentType = gameObject.type;
-
-  const Component = componentMap[componentType] || OtherComponent;
-
-  return <Component gameObject={gameObject} />;
+const renderGameCharacterComponent = (gameObject: IGameObjectDto) => {
+  switch (gameObject.type) {
+    case 'BotGameObject':
+    case 'DummyBotGameObject':
+      return <BotComponent {...gameObject.properties} />;
+    case 'DiamondGameObject':
+      return <DiamondComponent {...gameObject.properties} />;
+    case 'BaseGameObject':
+      return <BaseComponent {...gameObject.properties} />;
+    case 'TeleportGameObject':
+      return <TeleportComponent />;
+    case 'DiamondButtonGameObject':
+      return <DiamondButtonComponent />;
+    default:
+      return null;
+  }
 };
 
 export const Cell: FC<CellProps> = memo((props) => {
-  const { gameObject, id } = props;
+  const { gameObjects, id } = props;
+
+  const lastGameObject =
+    gameObjects.length > 0 ? gameObjects[gameObjects.length - 1] : null;
 
   return (
     <div
       key={id}
       className={`border-l w-full aspect-square relative overflow-hidden ${
-        gameObject && gameObject.type
+        gameObjects && gameObjects.length > 0
           ? 'flex items-center justify-center'
           : 'justify-center'
       }`}
     >
-      {gameObject && gameObject.type && (
-        <>{renderGameCharacterComponent(gameObject)}</>
-      )}
+      {lastGameObject && renderGameCharacterComponent(lastGameObject)}
     </div>
   );
 });

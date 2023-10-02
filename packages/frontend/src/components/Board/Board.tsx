@@ -23,7 +23,7 @@ export const Board: FC<BoardProps> = memo((props) => {
       ref={containerRef}
       style={{ maxWidth: maxWidth.maxWidth }}
     >
-      {board.rows.map((row, rowIndex) => {
+      {board.grid.map((row, rowIndex) => {
         return (
           <div
             key={rowIndex}
@@ -33,7 +33,7 @@ export const Board: FC<BoardProps> = memo((props) => {
               <Cell
                 id={`row ${rowIndex} column ${columnIndex}`}
                 key={`row ${rowIndex} column ${columnIndex}`}
-                gameObject={cell}
+                gameObjects={cell}
               />
             ))}
           </div>
@@ -42,5 +42,3 @@ export const Board: FC<BoardProps> = memo((props) => {
     </div>
   );
 });
-
-export interface IBoardCell {}
