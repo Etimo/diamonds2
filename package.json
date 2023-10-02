@@ -6,6 +6,7 @@
   "scripts": {
     "build": "(cd packages/backend && npx prisma generate) && npx tsc --build packages/backend packages/frontend --verbose",
     "env": "./scripts/copy-env.sh",
+    "init-db": "npm run support && ./scripts/setup-db-prisma.sh",
     "nodemon": "npx nodemon",
     "start:backend": "cd packages/backend && npm run start:dev",
     "start:frontend": "cd packages/frontend && npm run dev",

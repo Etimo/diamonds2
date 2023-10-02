@@ -13,31 +13,46 @@ If you find a bug or has a suggestion for improvement you are more than welcome 
 
 ## Development 💻
 
-Install dependencies:
+1. Install dependencies
 
-```
+```sh
 yarn
 ```
 
-Setup default environment variables:
+2. Setup default environment variables
 
-```
+```sh
 npm run env
 ```
 
-Setup local database:
+3. Setup local database
 
+Either
+
+```sh
+npm run init-db
 ```
+
+or
+
+```sh
 npm run support
-# wait for db to start
-(cd packages/backend && npx prisma db push)
+# Wait for db to start and navigate to packages/backend
+cd packages/backend
+# Install prisma
+yarn install
+# Update db schema
+npx prisma db push
+# Seed the database
+npx prisma db seed
 ```
 
-Start everything:
+4. Start everything
 
-```
+```sh
 npm run start
 ```
 
 Frontend: http://localhost:8082
+
 Swagger: http://localhost:3000/docs
