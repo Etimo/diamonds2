@@ -88,11 +88,6 @@
   animation-timing-function: linear;
 }
 
-/* .sparkles {
-  transform: translate(-50%, -50%);
-  width: 70%;
-} */
-
 img.diamond {
   max-width: 100%; /* Ensure the image fits within its container */
   height: auto;
@@ -108,11 +103,6 @@ img.diamond {
   height: 100%; /* Set the height to 100% to match the image height */
   pointer-events: none; /* Allow mouse events to pass through the sparkles */
   z-index: 1; /* Ensure the sparkles appear above the image */
-}
-
-.star {
-  text-shadow: 0 0 white, -115px -75px white;
-  animation: shine 1.8s alternate linear infinite;
 }
 
 svg#one {
