@@ -44,7 +44,6 @@ export const Rules: FC<RulesProps> = memo((props) => {
               Teleporter relocation time
             </label>
             <p className="mt-0 mb-2">{seasonRules.teleportRelocation}</p>
-            <label className="text-label mb-0">Season Ends</label>
             {seasonInfo ? (
               <>
                 <label className="text-label mb-0">Season Ends</label>
