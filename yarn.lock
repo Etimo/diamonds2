@@ -957,7 +957,7 @@ __metadata:
     axios: ^1.3.3
     bcrypt: ^5.1.0
     chalk: ^2.4.2
-    class-transformer: ^0.2.3
+    class-transformer: ^0.3.1
     class-validator: ^0.14.0
     compression: ^1.7.4
     coveralls: ^3.0.8
@@ -4101,10 +4101,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"class-transformer@npm:^0.2.3":
-  version: 0.2.3
-  resolution: "class-transformer@npm:0.2.3"
-  checksum: 7a18fda30b037ebcc3ae805f17cc94b64c8be06bb0907399d143c9cff8e857545420e65fb752f42b90696a894547f6c7202c753086ecb309d73e7e293a94e83c
+"class-transformer@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "class-transformer@npm:0.3.1"
+  checksum: 3a3f7a92cbfd6e7fb5904f9a350bbca8b1e04954dc1f75b39eba949775ecb8bcdf96223e2ca563ec67155e38bdf6d6616ad6b989f8b1ffe377cda3300f5b719a
   languageName: node
   linkType: hard
 
