@@ -1,80 +1,65 @@
-import { BotGameObjectProperties, Position } from '@etimo/diamonds2-types';
+import {
+  BotGameObjectProperties,
+  IBoardDto,
+  IGameObjectDto,
+} from '@etimo/diamonds2-types';
 import { useEffect, useState } from 'react';
 import { useFetchRepeatedly } from './useFetchRepeatedly';
 
 export const useBoard = (boardId: number, delay: number) => {
-  const fetchedBoard: BoardResponse = useFetchRepeatedly(
+  const fetchedBoard: IBoardDto = useFetchRepeatedly(
     `/api/boards/${boardId}`,
     delay,
     [],
   );
-  const [bots, setBots] = useState<BotGameObjectProperties[]>([]);
   const [board, setBoard] = useState<GameBoard>({
     width: 0,
     height: 0,
-    rows: [],
+    grid: [],
   });
+  const [bots, setBots] = useState<BotGameObjectProperties[]>([]);
 
   useEffect(() => {
-    const mappedRows: GameObject[][] = [];
-    const bots: BotGameObjectProperties[] = [];
+    if (!fetchedBoard.gameObjects) return;
+
+    const grid: IGameObjectDto[][][] = [];
 
     for (let i = 0; i < fetchedBoard.height; i++) {
-      mappedRows.push(Array(fetchedBoard.width).fill(undefined));
+      const row: IGameObjectDto[][] = [];
+      for (let j = 0; j < fetchedBoard.width; j++) {
+        row.push([]);
+      }
+      grid.push(row);
     }
 
-    if (fetchedBoard.gameObjects && fetchedBoard.gameObjects.length > 0) {
-      fetchedBoard.gameObjects.forEach((gameObject) => {
-        let properties: Partial<Properties> | null = null;
+    const botObjects: BotGameObjectProperties[] = [];
 
-        if (gameObject.properties !== null) {
-          if (gameObject.type === 'DiamondGameObject') {
-            properties = {
-              points: gameObject?.properties.points,
-            };
-          } else if (gameObject.type === 'BaseGameObject') {
-            properties = {
-              name: gameObject.properties.name,
-            };
-          } else if (
-            gameObject.type === 'DummyBotGameObject' ||
-            gameObject.type === 'BotGameObject'
-          ) {
-            properties = {
-              name: gameObject.properties.name,
-              diamonds: gameObject.properties.diamonds,
-              score: gameObject.properties.score,
-              millisecondsLeft:
-                gameObject.properties.millisecondsLeft &&
-                Math.round(gameObject.properties.millisecondsLeft / 1000),
-            };
-            bots.push(properties as BotGameObjectProperties);
-          }
+    fetchedBoard.gameObjects.forEach((gameObject) => {
+      const { position } = gameObject;
+
+      if (
+        position &&
+        position.y >= 0 &&
+        position.y < fetchedBoard.height &&
+        position.x >= 0 &&
+        position.x < fetchedBoard.width
+      ) {
+        grid[position.y][position.x].push(gameObject);
+
+        if (['DummyBotGameObject', 'BotGameObject'].includes(gameObject.type)) {
+          botObjects.push(gameObject.properties as BotGameObjectProperties);
         }
-
-        let type: GameObjectType = gameObject.type;
-
-        if (mappedRows[gameObject.position.y][gameObject.position.x]) {
-          type = (mappedRows[gameObject.position.y][gameObject.position.x]
-            .type + type) as GameObjectType;
-        }
-
-        mappedRows[gameObject.position.y][gameObject.position.x] = {
-          type: type,
-          properties,
-          position: gameObject.position,
-        };
-      });
-    }
+      }
+    });
 
     const mappedBoard: GameBoard = {
       width: fetchedBoard.width,
       height: fetchedBoard.height,
-      rows: mappedRows,
+      grid: grid,
     };
 
     setBoard(mappedBoard);
-    setBots(bots);
+    setBots(botObjects);
   }, [fetchedBoard]);
 
   return { board, bots };
@@ -83,64 +68,5 @@ export const useBoard = (boardId: number, delay: number) => {
 export interface GameBoard {
   width: number;
   height: number;
-  rows: GameObject[][];
-}
-
-export type GameObject = {
-  type: GameObjectType;
-  position: Position;
-  properties: Partial<Properties> | null;
-};
-
-type Properties = {
-  diamonds: number;
-  score: number;
-  name: string;
-  inventorySize: number;
-  canTackle: boolean;
-  millisecondsLeft: number;
-  timeJoined: Date;
-  points: number;
-  base: Position;
-} | null;
-
-type BoardResponse = {
-  id: number;
-  width: number;
-  height: number;
-  minimumDelayBetweenMoves: number;
-  gameObjects: GameObject[];
-  // this response includes features according to swagger at 20230915, but frontend does not use it
-  /* features: x */
-};
-
-export type GameObjectType =
-  | 'Teleporter'
-  | 'Wall'
-  | 'DiamondButtonGameObject'
-  | 'DiamondGameObject'
-  | 'DiamondGameObjectDiamondGameObject'
-  | 'BotGameObject'
-  | 'DummyBotGameObject'
-  | 'BaseGameObject'
-  | 'BotGameObjectBaseGameObject'
-  | 'DummyBotGameObjectBaseGameObject'
-  | 'BaseGameObjectBotGameObject'
-  | 'BaseGameObjectDummyBotGameObject'
-  | 'DiamondGameObjectBotGameObject'
-  | 'DiamondGameObjectDummyBotGameObject'
-  | 'BotGameObjectDiamondGameObject'
-  | 'DummyBotGameObjectDiamondGameObject'
-  | 'TeleportGameObject'
-  | 'TeleportGameObjectBotGameObject'
-  | 'TeleportGameObjectDummyBotGameObject'
-  | 'DummyBotGameObjectTeleportGameObject'
-  | 'BotGameObjectTeleportGameObject';
-
-export interface IDiamond {
-  points: number;
-}
-
-export interface IBase {
-  name: string;
+  grid: IGameObjectDto[][][];
 }

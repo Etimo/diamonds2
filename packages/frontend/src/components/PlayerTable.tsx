@@ -30,7 +30,7 @@ export const PlayerTable: FC<PlayerTableProps> = memo((props) => {
           </div>
         ),
         Score: score,
-        Time: `${millisecondsLeft}s`,
+        Time: `${Math.round(millisecondsLeft / 1000)}s`,
       }))}
     />
   );

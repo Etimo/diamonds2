@@ -1,7 +1,8 @@
 import {
   BotProviderConfig,
   DiamondProviderConfig,
-  TeleportFeatureDto,
+  TeleportProviderConfig,
+  TeleportRelocationProviderConfig,
 } from "@etimo/diamonds2-types";
 import { ApiProperty } from "@nestjs/swagger";
 
@@ -14,7 +15,8 @@ export default class BoardFeatureDto {
   config!:
     | DiamondProviderConfig
     | BotProviderConfig
-    | TeleportFeatureDto
+    | TeleportProviderConfig
+    | TeleportRelocationProviderConfig
     | {}
     | null;
 }
