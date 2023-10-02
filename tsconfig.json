@@ -1,4 +1,8 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Node 20",
+  "_version": "20.1.0",
+
   "compilerOptions": {
     "declaration": true,
     "declarationMap": true,
@@ -15,7 +19,9 @@
       "@etimo/diamonds2-backend/*": ["backend/src/*"],
       "@etimo/diamonds2-frontend/*": ["frontend/src/*"],
       "@etimo/diamonds2-types/*": ["types/src/*"]
-    }
-  },
-  "extends": "@tsconfig/node20/tsconfig.json"
+    },
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "strict": true
+  }
 }
