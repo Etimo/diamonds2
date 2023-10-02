@@ -30,7 +30,7 @@ npm run env
 Either
 
 ```sh
-./scripts/setup-db-prisma.sh
+npm run init-db
 ```
 
 or
