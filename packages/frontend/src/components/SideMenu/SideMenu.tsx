@@ -16,9 +16,9 @@ type SideMenuProps = {
 export const SideMenu: FC<SideMenuProps> = memo((props) => {
   const { boardId, onBoardChange, bots } = props;
   const { response: currentSeason } = useFetch('api/seasons/current', '0');
-  const defaultSeasonId = '00000000-0000-0000-0000-000000000000';
+  const offSeasonId = '00000000-0000-0000-0000-000000000000';
 
-  const [seasonId, setSeasonId] = useState<string>(defaultSeasonId);
+  const [seasonId, setSeasonId] = useState<string>(offSeasonId);
   const [rulesVisible, setRulesVisible] = useState<boolean>(false);
 
   const onSeasonChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
