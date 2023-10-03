@@ -1,9 +1,8 @@
-import { Board } from "../../board";
 import { AbstractGameObject } from "../abstract-game-object";
-import { BotGameObject } from "../bot/bot";
+import { BotGameObject, IBotGameObject } from "../bot/bot";
 
 export class BaseGameObject extends AbstractGameObject {
-  constructor(private bot: BotGameObject) {
+  constructor(private bot: IBotGameObject) {
     super(bot.base);
   }
   public get properties() {
@@ -11,7 +10,7 @@ export class BaseGameObject extends AbstractGameObject {
       name: this.bot.name,
     };
   }
-  onGameObjectEntered(gameObject: AbstractGameObject, board: Board) {
+  onGameObjectEntered(gameObject: AbstractGameObject) {
     if (gameObject instanceof BotGameObject) {
       const bot = gameObject as BotGameObject;
       if (bot.base === this.bot.base) {
