@@ -1,3 +1,4 @@
+import { Position } from "@etimo/diamonds2-types";
 import { Inject, Injectable, Scope } from "@nestjs/common";
 import { MoveDirection } from "../enums";
 import {
@@ -21,13 +22,11 @@ import {
 import { CustomLogger } from "../logger";
 import { BoardDto, BoardMetadataDto, GameObjectDto } from "../models";
 import { IBoardConfig, IBot } from "../types";
-import { IPosition } from "../types/position";
 import { BoardConfigService } from "./board-config.service";
 import { BotsService } from "./bots.service";
 import { HighscoresService } from "./highscores.service";
 import { RecordingsService } from "./recordings.service";
 import { SeasonsService } from "./seasons.service";
-
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
   private static nextBoardId = 1;
@@ -244,10 +243,10 @@ export class BoardsService {
   }
 
   /**
-   * Convert a MoveDirection enum to a delta IPosition.
+   * Convert a MoveDirection enum to a delta Position.
    * @param direction
    */
-  private directionToDelta(direction: MoveDirection): IPosition {
+  private directionToDelta(direction: MoveDirection): Position {
     switch (direction) {
       case MoveDirection.NORTH:
         return { x: 0, y: -1 };

@@ -1,9 +1,7 @@
-import { BotGameObjectProperties } from "@etimo/diamonds2-types";
-import { IPosition } from "../../../types/position";
+import { BotGameObjectProperties, Position } from "@etimo/diamonds2-types";
 import { AbstractGameObject } from "../abstract-game-object";
-
 export type IBotGameObject = {
-  base: IPosition;
+  base: Position;
   diamonds: number;
   timeJoined: Date;
   expiresAt: Date;
@@ -16,7 +14,7 @@ export type IBotGameObject = {
 };
 
 export class BotGameObject extends AbstractGameObject {
-  base: IPosition;
+  base: Position;
   diamonds: number;
   timeJoined: Date;
   expiresAt: Date;

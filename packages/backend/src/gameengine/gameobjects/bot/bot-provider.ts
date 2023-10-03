@@ -1,10 +1,8 @@
-import { BotProviderConfig } from "@etimo/diamonds2-types";
+import { BotProviderConfig, Position } from "@etimo/diamonds2-types";
 import { IBot } from "../../../types";
-import { IPosition } from "../../../types/position";
 import { Board } from "../../board";
 import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
 import { BotGameObject } from "./bot";
-
 export class BotProvider extends AbstractGameObjectProvider<BotProviderConfig> {
   constructor(config: BotProviderConfig) {
     super(config);
@@ -19,7 +17,7 @@ export class BotProvider extends AbstractGameObjectProvider<BotProviderConfig> {
 
   protected getInitializedBot(
     data: Partial<IBot>,
-    base: IPosition,
+    base: Position,
     board: Board,
   ) {
     const timeJoined = new Date();

@@ -1,11 +1,9 @@
-import { DiamondGameObjectProperties } from "@etimo/diamonds2-types";
-import { IPosition } from "../../../types/position";
+import { DiamondGameObjectProperties, Position } from "@etimo/diamonds2-types";
 import { Board } from "../../board";
 import { AbstractGameObject } from "../abstract-game-object";
 import { BotGameObject } from "../bot/bot";
-
 export class DiamondGameObject extends AbstractGameObject {
-  constructor(position: IPosition, public points: number) {
+  constructor(position: Position, public points: number) {
     super(position);
   }
 

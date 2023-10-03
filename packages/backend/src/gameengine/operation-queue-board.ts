@@ -1,9 +1,8 @@
+import { Position } from "@etimo/diamonds2-types";
 import * as async from "async";
 import { IBoardConfig, IBot } from "../types";
-import { IPosition } from "../types/position";
 import { Board } from "./board";
 import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
-
 /**
  * A class that wraps a board with an operation queue. This class will abstract the handling of operations
  * on the board to prevent multiple simultaneous operations at the same time.
@@ -70,7 +69,7 @@ export class OperationQueueBoard extends Board {
    * Queue a move on a board. Will prevent multiple simultaneous calls to collide.
    * @param bot
    */
-  public async enqueueMove(bot: IBot, delta: IPosition): Promise<boolean> {
+  public async enqueueMove(bot: IBot, delta: Position): Promise<boolean> {
     const event = new OperationQueueMoveEvent(bot, this, delta);
     return new Promise((resolve, reject) => {
       this.opQueue.push(event, (res) => {
@@ -98,7 +97,7 @@ export class OperationQueueMoveEvent extends OperationQueueEvent {
   constructor(
     protected bot: IBot,
     protected board: Board,
-    protected delta: IPosition,
+    protected delta: Position,
   ) {
     super(bot, board);
   }

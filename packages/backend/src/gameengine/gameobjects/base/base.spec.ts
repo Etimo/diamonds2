@@ -1,8 +1,7 @@
-import { IPosition } from "../../../types/position";
+import { Position } from "@etimo/diamonds2-types";
 import { createTestBot } from "../../util";
 import { BotGameObject } from "../bot/bot";
 import { BaseGameObject } from "./base";
-
 let bot: BotGameObject;
 let baseLessBot: BotGameObject;
 let base: BaseGameObject;
@@ -27,7 +26,7 @@ test("Increases score for bot when entering with diamonds", () => {
 
 test("Removes diamonds from bot inventory when entering with diamonds", () => {
   // Arrange
-  let basePosition: IPosition = { x: 0, y: 0 };
+  let basePosition: Position = { x: 0, y: 0 };
   bot.base = basePosition;
   base.position = basePosition;
   bot.diamonds = 3;
@@ -42,7 +41,7 @@ test("Removes diamonds from bot inventory when entering with diamonds", () => {
 
 test("Add score when entering with diamonds", () => {
   // Arrange
-  let basePosition: IPosition = { x: 0, y: 0 };
+  let basePosition: Position = { x: 0, y: 0 };
   bot.base = basePosition;
   base.position = basePosition;
   bot.diamonds = 3;
@@ -57,7 +56,7 @@ test("Add score when entering with diamonds", () => {
 
 test("Only allow the bot belonging to base to drop of diamonds", () => {
   // Arrange
-  let basePosition: IPosition = { x: 0, y: 0 };
+  let basePosition: Position = { x: 0, y: 0 };
   base.position = basePosition;
   baseLessBot.base = basePosition;
   baseLessBot.score = 0;
