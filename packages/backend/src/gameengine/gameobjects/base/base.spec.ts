@@ -1,39 +1,83 @@
-import { BaseGameObject } from "./base";
+import { IPosition } from "../../../types/position";
+import { createTestBot } from "../../util";
 import { BotGameObject } from "../bot/bot";
+import { BaseGameObject } from "./base";
+
+let bot: BotGameObject;
+let baseLessBot: BotGameObject;
+let base: BaseGameObject;
+
+beforeEach(() => {
+  bot = createTestBot();
+  baseLessBot = createTestBot();
+  base = new BaseGameObject(bot);
+});
 
 test("Increases score for bot when entering with diamonds", () => {
-  const bot = new BotGameObject({ x: 0, y: 0 });
-  const base = new BaseGameObject(bot);
+  // Arrange
   bot.diamonds = 3;
   bot.score = 0;
-  base.onGameObjectEntered(bot, null);
+
+  // Act
+  base.onGameObjectEntered(bot);
+
+  // Assert
   expect(bot.score).toBe(3);
 });
 
 test("Removes diamonds from bot inventory when entering with diamonds", () => {
-  const bot = new BotGameObject({ x: 0, y: 0 });
-  const base = new BaseGameObject(bot);
+  // Arrange
+  let basePosition: IPosition = { x: 0, y: 0 };
+  bot.base = basePosition;
+  base.position = basePosition;
   bot.diamonds = 3;
   bot.score = 0;
-  base.onGameObjectEntered(bot, null);
+
+  // Act
+  base.onGameObjectEntered(bot);
+
+  // Assert
   expect(bot.diamonds).toBe(0);
 });
 
-test("Only allow correct bot to drop off diamonds", () => {
-  const bot = new BotGameObject({ x: 0, y: 0 });
-  const bot2 = new BotGameObject({ x: 1, y: 0 });
-  const base = new BaseGameObject(bot);
-  bot.base = { x: 0, y: 1 };
-  bot2.base = { x: 1, y: 1 };
+test("Add score when entering with diamonds", () => {
+  // Arrange
+  let basePosition: IPosition = { x: 0, y: 0 };
+  bot.base = basePosition;
+  base.position = basePosition;
   bot.diamonds = 3;
   bot.score = 0;
-  bot2.diamonds = 4;
-  bot2.score = 0;
 
-  // Enter base
-  base.onGameObjectEntered(bot2, null);
+  // Act
+  base.onGameObjectEntered(bot);
 
-  // Diamonds should still be in inventory
-  expect(bot2.diamonds).toBe(4);
-  expect(bot2.score).toBe(0);
+  // Assert
+  expect(bot.score).toBe(3);
+});
+
+test("Only allow the bot belonging to base to drop of diamonds", () => {
+  // Arrange
+  let basePosition: IPosition = { x: 0, y: 0 };
+  base.position = basePosition;
+  baseLessBot.base = basePosition;
+  baseLessBot.score = 0;
+  baseLessBot.diamonds = 3;
+
+  // Act
+  base.onGameObjectEntered(baseLessBot);
+
+  // Assert
+  expect(baseLessBot.diamonds).toBe(3);
+});
+
+test("Only allow bases bot to get score", () => {
+  // Arrange
+  baseLessBot.score = 0;
+  baseLessBot.diamonds = 3;
+
+  // Act
+  base.onGameObjectEntered(baseLessBot);
+
+  // Assert
+  expect(baseLessBot.score).toBe(0);
 });
