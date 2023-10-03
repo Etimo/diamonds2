@@ -1,6 +1,6 @@
 import { BotGameObjectProperties } from '@etimo/diamonds2-types';
 import React, { FC, memo, useState } from 'react';
-import { useCurrentSeason } from '../../hooks/useCurrentSeason';
+import useFetch from '../../hooks/useFetch';
 import { BoardPicker } from '../BoardPicker';
 import { HighScoreTable } from '../HighScoreTable';
 import { PlayerTable } from '../PlayerTable';
@@ -15,11 +15,10 @@ type SideMenuProps = {
 
 export const SideMenu: FC<SideMenuProps> = memo((props) => {
   const { boardId, onBoardChange, bots } = props;
-  const currentSeason = useCurrentSeason();
+  const { response: currentSeason } = useFetch('api/seasons/current', '0');
+  const offSeasonId = '00000000-0000-0000-0000-000000000000';
 
-  const [seasonId, setSeasonId] = useState<string>(
-    '00000000-0000-0000-0000-000000000000',
-  );
+  const [seasonId, setSeasonId] = useState<string>(offSeasonId);
   const [rulesVisible, setRulesVisible] = useState<boolean>(false);
 
   const onSeasonChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -29,6 +28,8 @@ export const SideMenu: FC<SideMenuProps> = memo((props) => {
   const closeRules = () => {
     setRulesVisible(false);
   };
+
+  const selectedSeasonId = seasonId !== '0' ? seasonId : currentSeason.id;
 
   return (
     <div className="border border-gray-200 dark:border-slate-400 rounded-lg overflow-y-auto flex flex-col p-4">
@@ -41,10 +42,7 @@ export const SideMenu: FC<SideMenuProps> = memo((props) => {
       </div>
 
       <div className="my-6">
-        <SeasonPicker
-          seasonId={seasonId != '0' ? seasonId : currentSeason.id}
-          onChange={onSeasonChange}
-        />
+        <SeasonPicker seasonId={selectedSeasonId} onChange={onSeasonChange} />
 
         <div className="mt-2">
           <button
@@ -57,15 +55,13 @@ export const SideMenu: FC<SideMenuProps> = memo((props) => {
       </div>
 
       <div>
-        <HighScoreTable
-          seasonId={seasonId != '0' ? seasonId : currentSeason.id}
-        />
+        <HighScoreTable seasonId={selectedSeasonId} />
       </div>
 
       <Rules
         onClose={closeRules}
         visible={rulesVisible}
-        seasonId={seasonId != '0' ? seasonId : currentSeason.id}
+        seasonId={selectedSeasonId}
       />
     </div>
   );
