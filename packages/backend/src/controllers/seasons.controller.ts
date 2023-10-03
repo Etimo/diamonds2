@@ -36,14 +36,23 @@ export class SeasonsController {
 
   @ApiResponse({
     status: 200,
+    description: "Returns season by id",
+    type: SeasonDto,
+  })
+  @Get("/:id")
+  async getSeasonById(@Param("id") id: string): Promise<SeasonDto> {
+    const season = await this.seasonsService.getSeason(id);
+    return SeasonDto.fromEntity(season!);
+  }
+
+  @ApiResponse({
+    status: 200,
     description: "Returns rules for season",
     type: BoardConfigDto,
   })
-  @Get("/rules/:id")
-  async getCurrentSeasonRules(
-    @Param("id") id: string,
-  ): Promise<BoardConfigDto> {
-    const season = await this.seasonsService.getCurrentSeason();
+  @Get("/:id/rules")
+  async getSeasonRules(@Param("id") id: string): Promise<BoardConfigDto> {
+    const season = await this.seasonsService.getSeason(id);
     return BoardConfigDto.fromSeasonWithBoardConfig(season!);
   }
 }

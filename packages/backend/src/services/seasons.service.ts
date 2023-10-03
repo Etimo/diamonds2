@@ -16,8 +16,12 @@ export class SeasonsService {
     return season;
   }
 
-  public async getSeason(seasonId: string) {
-    return await this.repo.getById(seasonId, true);
+  public async getSeason(seasonId: string): Promise<ISeason> {
+    const season = await this.repo.getById(seasonId, true);
+    if (!season) {
+      throw new Error("Season does not exist");
+    }
+    return season;
   }
 
   public async getCurrentSeason(): Promise<ISeason> {

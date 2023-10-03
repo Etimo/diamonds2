@@ -1,3 +1,4 @@
+import { ISeasonDto } from '@etimo/diamonds2-types';
 import useFetch from '../hooks/useFetch';
 import useTeams from '../hooks/useTeams';
 import { HighScoreTable } from './HighScoreTable';
@@ -6,7 +7,9 @@ import { Table } from './Table';
 
 export const Teams = () => {
   const teams = useTeams();
-  const { response: currentSeason } = useFetch('api/seasons/current', '0');
+  const { response: currentSeason } = useFetch('api/seasons/current', '0') as {
+    response: ISeasonDto;
+  };
 
   return (
     <>
