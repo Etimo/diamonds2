@@ -1,7 +1,6 @@
-import { IPosition } from "../../../types/position";
+import { Position } from "@etimo/diamonds2-types";
 import { createTestBot } from "../../util/test-bot";
 import { BotGameObject } from "../bot/bot";
-
 let bot1: BotGameObject;
 let bot2: BotGameObject;
 
@@ -73,8 +72,8 @@ test("Only steals max possible if inventory full when tackling", () => {
 test("Can't tackle bots, not in base", () => {
   // Arrange
   let noTackleBot = bot2;
-  let base: IPosition = { x: 5, y: 5 };
-  let position: IPosition = { x: 1, y: 1 };
+  let base: Position = { x: 5, y: 5 };
+  let position: Position = { x: 1, y: 1 };
 
   bot1.base = base;
   bot1.position = position;
@@ -93,8 +92,8 @@ test("Can't tackle bots, not in base", () => {
 test("Can't tackle bot, not in base", () => {
   // Arrange
   let noTackleBot = bot2;
-  let base: IPosition = { x: 5, y: 5 };
-  let position: IPosition = { x: 1, y: 1 };
+  let base: Position = { x: 5, y: 5 };
+  let position: Position = { x: 1, y: 1 };
   bot1.base = base;
   bot1.position = position;
   bot1.canTackle = false;
@@ -124,7 +123,7 @@ test("Should tackle bot, entering bot canTackle true", () => {
 test("Bot tries to enter bas when base is occupied", () => {
   // Arrange
   let noTackleBot = bot2;
-  let basePosition: IPosition = { x: 10, y: 10 };
+  let basePosition: Position = { x: 10, y: 10 };
 
   bot1.position = basePosition;
   noTackleBot.base = basePosition;

@@ -1,12 +1,12 @@
-import { IPosition } from "../../types/position";
+import { Position } from "@etimo/diamonds2-types";
 import { Board } from "../board";
 
 export abstract class AbstractGameObject {
-  private positions: IPosition[] = [];
+  private positions: Position[] = [];
   private static nextId = 1;
   private readonly _id = AbstractGameObject.nextId++;
 
-  constructor(startPosition: IPosition) {
+  constructor(startPosition: Position) {
     this.position = startPosition;
   }
 
@@ -21,10 +21,10 @@ export abstract class AbstractGameObject {
   get id(): number {
     return this._id;
   }
-  get position(): IPosition {
+  get position(): Position {
     return { ...this.positions[this.positions.length - 1] };
   }
-  set position(newPosition: IPosition) {
+  set position(newPosition: Position) {
     this.positions.push(newPosition);
   }
 
