@@ -34,8 +34,11 @@ const renderGameCharacterComponent = (gameObject: IGameObjectDto) => {
 export const Cell: FC<CellProps> = memo((props) => {
   const { gameObjects, id } = props;
 
-  const lastGameObject =
-    gameObjects.length > 0 ? gameObjects[gameObjects.length - 1] : null;
+  const renderGameObject = (gameObject: IGameObjectDto, index: number) => (
+    <div key={index} className="absolute w-[100%]">
+      {renderGameCharacterComponent(gameObject)}
+    </div>
+  );
 
   return (
     <div
@@ -46,7 +49,9 @@ export const Cell: FC<CellProps> = memo((props) => {
           : 'justify-center'
       }`}
     >
-      {lastGameObject && renderGameCharacterComponent(lastGameObject)}
+      {gameObjects.map((gameObject, index) =>
+        renderGameObject(gameObject, index),
+      )}
     </div>
   );
 });
