@@ -1,138 +1,149 @@
+import { IPosition } from "../../../types/position";
 import { BotGameObject } from "../bot/bot";
 
-let bot: BotGameObject;
+let bot1: BotGameObject;
+let bot2: BotGameObject;
 
 beforeEach(() => {
-  bot = new BotGameObject({ x: 0, y: 0 });
+  bot1 = new BotGameObject({
+    base: { x: 0, y: 0 },
+    diamonds: 0,
+    timeJoined: new Date(),
+    expiresAt: new Date(),
+    inventorySize: 5,
+    canTackle: true,
+    score: 0,
+    name: "test",
+    nextMoveAvailableAt: new Date(),
+    botId: "1",
+  });
+  bot2 = new BotGameObject({
+    base: { x: 0, y: 0 },
+    diamonds: 0,
+    timeJoined: new Date(),
+    expiresAt: new Date(),
+    inventorySize: 5,
+    canTackle: true,
+    score: 0,
+    name: "test",
+    nextMoveAvailableAt: new Date(),
+    botId: "1",
+  });
 });
 
 test("Has properties", () => {
-  const bot = new BotGameObject({ x: 0, y: 0 });
-  bot.expiresAt = new Date();
-  expect(bot.properties).not.toBe(null);
+  bot1.expiresAt = new Date();
+  expect(bot1.properties).not.toBe(null);
 });
 
 test("Can enter if bot is standing there", () => {
-  const bot = new BotGameObject({ x: 0, y: 0 });
-  bot.base = { x: 1, y: 1 };
-  const other = new BotGameObject({ x: 0, y: 0 });
-  other.base = { x: 1, y: 1 };
-  other.canTackle = true;
-  expect(bot.canGameObjectEnter(other, null)).toBeTruthy();
+  const tackleBot = bot2;
+
+  // Set parameters
+  tackleBot.canTackle = true;
+
+  expect(bot1.canGameObjectEnter(tackleBot)).toBeTruthy();
 });
 
 test("Tackles other bot back to base if entering", () => {
-  const bot = new BotGameObject({ x: 0, y: 0 });
-  bot.base = { x: 10, y: 5 };
-  bot.diamonds = 0;
-  bot.inventorySize = 5;
-  bot.canTackle = true;
-  const other = new BotGameObject({ x: 0, y: 0 });
-  other.diamonds = 0;
-  other.canTackle = true;
-  other.inventorySize = 5;
+  const tackleBot = bot2;
 
-  bot.onGameObjectEntered(other, null);
+  // Set parameters
+  tackleBot.canTackle = true;
 
-  expect(bot.position).toEqual(bot.base);
+  bot1.onGameObjectEntered(tackleBot);
+
+  expect(bot1.position).toEqual(bot1.base);
 });
 
 test("Steals diamonds when tackling", () => {
-  const bot = new BotGameObject({ x: 0, y: 0 });
-  bot.base = { x: 10, y: 5 };
-  bot.diamonds = 2;
-  bot.inventorySize = 5;
-  bot.canTackle = true;
-  const other = new BotGameObject({ x: 0, y: 0 });
-  other.diamonds = 0;
-  other.canTackle = true;
-  other.inventorySize = 5;
+  const tackleBot = bot2;
 
-  bot.onGameObjectEntered(other, null);
+  // Set parameters
+  tackleBot.diamonds = 0;
+  bot1.diamonds = 2;
+  tackleBot.canTackle = true;
 
-  expect(other.diamonds).toEqual(2);
+  bot1.onGameObjectEntered(tackleBot);
+
+  expect(tackleBot.diamonds).toEqual(2);
 });
 
 test("Only steals max possible if inventory full when tackling", () => {
-  const bot = new BotGameObject({ x: 0, y: 0 });
-  bot.base = { x: 10, y: 5 };
-  bot.diamonds = 5;
-  bot.inventorySize = 5;
-  bot.canTackle = true;
-  const other = new BotGameObject({ x: 0, y: 0 });
-  other.diamonds = 3;
-  other.canTackle = true;
-  other.inventorySize = 5;
+  const tackleBot = bot2;
 
-  bot.onGameObjectEntered(other, null);
+  // Max diamonds
+  bot1.diamonds = 5;
+  bot1.inventorySize = 5;
+  // Only room for two diamonds
+  tackleBot.diamonds = 3;
+  tackleBot.inventorySize = 5;
+  tackleBot.canTackle = true;
 
-  expect(other.diamonds).toEqual(5);
-  expect(bot.diamonds).toEqual(3);
+  bot1.onGameObjectEntered(tackleBot);
+
+  expect(tackleBot.diamonds).toEqual(5);
+  expect(bot1.diamonds).toEqual(3);
 });
 
-test("Can't tackle bot, both canTackle false", () => {
-  const bot = new BotGameObject({ x: 0, y: 0 });
-  bot.base = { x: 10, y: 5 };
-  bot.diamonds = 5;
-  bot.inventorySize = 5;
-  bot.canTackle = false;
-  const other = new BotGameObject({ x: 0, y: 1 });
-  other.base = { x: 9, y: 5 };
-  other.diamonds = 3;
-  other.canTackle = false;
-  other.inventorySize = 5;
+test("Can't tackle bots, not in base", () => {
+  const noTackleBot = bot2;
+  let base: IPosition = { x: 5, y: 5 };
+  let position: IPosition = { x: 1, y: 1 };
 
-  const canEnter = bot.canGameObjectEnter(other, null);
+  // Set parameters
+  bot1.base = base;
+  bot1.position = position;
+  bot1.canTackle = false;
+  noTackleBot.base = base;
+  noTackleBot.position = position;
+  noTackleBot.canTackle = false;
+
+  const canEnter = bot1.canGameObjectEnter(noTackleBot);
 
   expect(canEnter).toBeFalsy();
 });
 
-test("Can't tackle bot, entering bot canTackle false", () => {
-  const bot = new BotGameObject({ x: 0, y: 0 });
-  bot.base = { x: 10, y: 5 };
-  bot.diamonds = 5;
-  bot.inventorySize = 5;
-  bot.canTackle = true;
-  const other = new BotGameObject({ x: 0, y: 1 });
-  other.base = { x: 9, y: 5 };
-  other.diamonds = 3;
-  other.canTackle = false;
-  other.inventorySize = 5;
+test("Can't tackle bot, not in base", () => {
+  const noTackleBot = bot2;
+  let base: IPosition = { x: 5, y: 5 };
+  let position: IPosition = { x: 1, y: 1 };
 
-  const canEnter = bot.canGameObjectEnter(other, null);
+  // Set parameters
+  bot1.base = base;
+  bot1.position = position;
+  bot1.canTackle = false;
+  noTackleBot.base = base;
+  noTackleBot.position = position;
+  noTackleBot.canTackle = false;
+
+  const canEnter = bot1.canGameObjectEnter(noTackleBot);
 
   expect(canEnter).toBeFalsy();
 });
 
 test("Should tackle bot, entering bot canTackle true", () => {
-  const bot = new BotGameObject({ x: 0, y: 0 });
-  bot.base = { x: 10, y: 5 };
-  bot.diamonds = 5;
-  bot.inventorySize = 5;
-  bot.canTackle = false;
-  const other = new BotGameObject({ x: 0, y: 1 });
-  other.diamonds = 3;
-  other.canTackle = true;
-  other.inventorySize = 5;
+  const tackleBot = bot2;
 
-  const canEnter = bot.canGameObjectEnter(other, null);
+  // Set parameters
+  tackleBot.canTackle = true;
+
+  const canEnter = bot1.canGameObjectEnter(tackleBot);
 
   expect(canEnter).toBeTruthy();
 });
 
 test("Bot tries to enter bas when base is occupied", () => {
-  const bot = new BotGameObject({ x: 9, y: 5 });
-  bot.base = { x: 10, y: 5 };
-  bot.canTackle = false;
-  const other = new BotGameObject({ x: 9, y: 4 });
-  other.base = { x: 9, y: 5 };
-  other.canTackle = false;
-  other.inventorySize = 5;
+  const noTackleBot = bot2;
+  let basePosition: IPosition = { x: 10, y: 10 };
 
-  const canEnter = bot.canGameObjectEnter(other, null);
+  // Set parameters
+  bot1.position = basePosition;
+  noTackleBot.base = basePosition;
+  noTackleBot.canTackle = false;
+
+  const canEnter = bot1.canGameObjectEnter(noTackleBot);
 
   expect(canEnter).toBeTruthy();
-  expect(bot.position).toEqual(bot.base);
+  expect(bot1.position).toEqual(bot1.base);
 });
-
-// TODO Test when tackle is set to false

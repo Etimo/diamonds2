@@ -1,3 +1,4 @@
+import { IBot, ITeam } from "../../../types";
 import { Board } from "../../board";
 import { createTestBoard } from "../../util";
 import { BotGameObject } from "../bot/bot";
@@ -5,7 +6,8 @@ import { BotProvider } from "./bot-provider";
 
 let provider: BotProvider;
 let board: Board;
-let data = {};
+let ibot: IBot;
+let team: ITeam;
 
 beforeEach(() => {
   provider = new BotProvider({
@@ -13,19 +15,34 @@ beforeEach(() => {
     canTackle: true,
   });
   board = createTestBoard();
-  data = {
+  team = {
+    id: "1",
     name: "name",
+    abbreviation: "name",
+    logotypeUrl: "name",
+    createTimeStamp: new Date(),
+    updateTimeStamp: new Date(),
+  };
+  ibot = {
+    id: "1",
+    name: "name",
+    email: "test@etimo.se",
+    password: "password",
+    createTimeStamp: new Date(),
+    updateTimeStamp: new Date(),
+    team,
+    teamId: team.id,
   };
 });
 
 test("Creates bot when someone joins a board", () => {
-  provider.onBotJoined(data, board);
+  provider.onBotJoined(ibot, board);
 
   expect(board.getGameObjectsByType(BotGameObject).length).toBe(1);
 });
 
 test("Initilizes score when creating bot", () => {
-  provider.onBotJoined(data, board);
+  provider.onBotJoined(ibot, board);
 
   const bot = board.getGameObjectsByType(BotGameObject)[0];
 
@@ -33,7 +50,7 @@ test("Initilizes score when creating bot", () => {
 });
 
 test("Initilizes diamonds when creating bot", () => {
-  provider.onBotJoined(data, board);
+  provider.onBotJoined(ibot, board);
 
   const bot = board.getGameObjectsByType(BotGameObject)[0];
 
@@ -41,7 +58,7 @@ test("Initilizes diamonds when creating bot", () => {
 });
 
 test("Initilizes timeJoined when creating bot", () => {
-  provider.onBotJoined(data, board);
+  provider.onBotJoined(ibot, board);
 
   const bot = board.getGameObjectsByType(BotGameObject)[0];
 
@@ -49,7 +66,7 @@ test("Initilizes timeJoined when creating bot", () => {
 });
 
 test("Initilizes inventorySize when creating bot", () => {
-  provider.onBotJoined(data, board);
+  provider.onBotJoined(ibot, board);
 
   const bot = board.getGameObjectsByType(BotGameObject)[0];
 
@@ -57,7 +74,7 @@ test("Initilizes inventorySize when creating bot", () => {
 });
 
 test("Initilizes tackle when creating bot", () => {
-  provider.onBotJoined(data, board);
+  provider.onBotJoined(ibot, board);
 
   const bot = board.getGameObjectsByType(BotGameObject)[0];
 
@@ -65,7 +82,7 @@ test("Initilizes tackle when creating bot", () => {
 });
 
 test("Initilizes name when creating bot", () => {
-  provider.onBotJoined(data, board);
+  provider.onBotJoined(ibot, board);
 
   const bot = board.getGameObjectsByType(BotGameObject)[0];
 

@@ -1,6 +1,5 @@
 import { BotGameObjectProperties } from "@etimo/diamonds2-types";
 import { IPosition } from "../../../types/position";
-import { Board } from "../../board";
 import { AbstractGameObject } from "../abstract-game-object";
 
 export type IBotGameObject = {
@@ -56,7 +55,7 @@ export class BotGameObject extends AbstractGameObject {
     };
   }
 
-  onGameObjectEntered(gameObject: AbstractGameObject, board: Board) {
+  onGameObjectEntered(gameObject: AbstractGameObject) {
     if (gameObject instanceof BotGameObject) {
       const otherBot = gameObject as BotGameObject;
 
@@ -77,7 +76,7 @@ export class BotGameObject extends AbstractGameObject {
       otherBot.diamonds += canSteal;
     }
   }
-  canGameObjectEnter(gameObject: AbstractGameObject, board: Board): boolean {
+  canGameObjectEnter(gameObject: AbstractGameObject): boolean {
     if (gameObject instanceof BotGameObject) {
       const otherBot = gameObject as BotGameObject;
 
