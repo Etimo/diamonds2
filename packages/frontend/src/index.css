@@ -102,7 +102,7 @@ img.diamond {
   width: 100%; /* Set the width to 100% to match the image width */
   height: 100%; /* Set the height to 100% to match the image height */
   pointer-events: none; /* Allow mouse events to pass through the sparkles */
-  z-index: 1; /* Ensure the sparkles appear above the image */
+  z-index: 2; /* Ensure the sparkles appear above the image */
 }
 
 svg#one {
