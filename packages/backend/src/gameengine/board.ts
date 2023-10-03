@@ -1,9 +1,8 @@
+import { Position } from "@etimo/diamonds2-types";
 import { IBoardConfig, IBot } from "../types";
-import { IPosition } from "../types/position";
 import { AbstractGameObject } from "./gameobjects/abstract-game-object";
 import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
 import { BotGameObject } from "./gameobjects/bot/bot";
-
 export type SessionFinishedCallbackFunction = (bot: BotGameObject) => void;
 
 export class Board {
@@ -115,7 +114,7 @@ export class Board {
    * @param delta The change in position to perform.
    * @returns True if the move succeeds, false otherwise.
    */
-  public async move(bot: IBot, delta: IPosition) {
+  public async move(bot: IBot, delta: Position) {
     const botGameObject = this.getGameObjectsByType(BotGameObject).find(
       (b) => b.name === bot.name,
     );
@@ -208,9 +207,9 @@ export class Board {
    * Returns a random position on the board that is considered empty. By empty, it means that there are
    * no game objects on the cell.
    *
-   * @returns IPosition
+   * @returns Position
    */
-  getEmptyPosition(): IPosition {
+  getEmptyPosition(): Position {
     // Try random positions for some time
     for (var i = 0; i < this.config.width * this.config.height; i++) {
       const { x, y } = this.getRandomPosition();
@@ -234,7 +233,7 @@ export class Board {
   /**
    * Returns a random position on the board.
    */
-  getRandomPosition(): IPosition {
+  getRandomPosition(): Position {
     return {
       x: Math.floor(Math.random() * this.config.width),
       y: Math.floor(Math.random() * this.config.height),
@@ -281,13 +280,13 @@ export class Board {
    *
    * @param p The position
    */
-  getGameObjectsOnPosition(p: IPosition): AbstractGameObject[] {
+  getGameObjectsOnPosition(p: Position): AbstractGameObject[] {
     return this.gameObjects.filter((g) => g.x === p.x && g.y === p.y);
   }
 
   trySetGameObjectPosition(
     gameObject: AbstractGameObject,
-    dest: IPosition,
+    dest: Position,
     skipLeaveCheck = false,
     skipEnterCheck = false,
   ): boolean {
@@ -319,12 +318,12 @@ export class Board {
     return true;
   }
 
-  canGameObjectEnter(gameObject: AbstractGameObject, dest: IPosition): boolean {
+  canGameObjectEnter(gameObject: AbstractGameObject, dest: Position): boolean {
     const gameObjects = this.getGameObjectsOnPosition(dest);
     return !gameObjects.some((g) => !g.canGameObjectEnter(gameObject, this));
   }
 
-  canGameObjectLeave(gameObject: AbstractGameObject, dest: IPosition): boolean {
+  canGameObjectLeave(gameObject: AbstractGameObject, dest: Position): boolean {
     const gameObjects = this.getGameObjectsOnPosition(dest);
     return !gameObjects.some((g) => !g.canGameObjectLeave(gameObject, this));
   }
@@ -387,7 +386,7 @@ export class Board {
     this.gameObjectProviders.forEach((p) => p.onBotJoined(bot, this));
   }
 
-  private destinationIsOutOfBounds(destination: IPosition): boolean {
+  private destinationIsOutOfBounds(destination: Position): boolean {
     const outOfX = destination.x < 0 || destination.x >= this.width;
     const outOfY = destination.y < 0 || destination.y >= this.height;
     return outOfX || outOfY;

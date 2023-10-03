@@ -1,12 +1,10 @@
-import { TeleportProperties } from "@etimo/diamonds2-types";
-import { IPosition } from "../../../types/position";
+import { Position, TeleportProperties } from "@etimo/diamonds2-types";
 import { Board } from "../../board";
 import { AbstractGameObject } from "../abstract-game-object";
 import { BotGameObject } from "../bot/bot";
-
 export class TeleportGameObject extends AbstractGameObject {
   constructor(
-    position: IPosition,
+    position: Position,
     private readonly _properties: TeleportProperties,
   ) {
     super(position);

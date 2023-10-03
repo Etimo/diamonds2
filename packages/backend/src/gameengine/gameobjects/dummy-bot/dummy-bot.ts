@@ -1,16 +1,15 @@
 /** istanbul ignore file */
-import { IPosition } from "../../../types/position";
+import { Position } from "@etimo/diamonds2-types";
 import { Board } from "../../board";
 import { BotGameObject } from "../bot/bot";
 import { DiamondGameObject } from "../diamond/diamond";
-
 export class DummyBotGameObject extends BotGameObject {
   onGameObjectCallbackNotified(board: Board, intervalMs: number) {
     if (intervalMs === 1000) {
       // Perform a move
       const diamonds = board.getGameObjectsByType(DiamondGameObject);
 
-      let goal: IPosition | null = null;
+      let goal: Position | null = null;
       if (diamonds.length > 0 && this.diamonds < this.inventorySize) {
         // Try to walk towards the first diamond if there is room in inventory
         goal = diamonds[0].position;
@@ -39,7 +38,7 @@ export class DummyBotGameObject extends BotGameObject {
     }
   }
 
-  private getDirectionTowardsGoal(goal: IPosition) {
+  private getDirectionTowardsGoal(goal: Position) {
     let dx = goal.x - this.position.x;
     let dy = goal.y - this.position.y;
     if (dx != 0) {
