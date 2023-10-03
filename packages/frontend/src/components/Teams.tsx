@@ -1,4 +1,4 @@
-import { ISeasonDto } from '@etimo/diamonds2-types';
+import { ITeamDto } from '@etimo/diamonds2-types';
 import useFetch from '../hooks/useFetch';
 import useTeams from '../hooks/useTeams';
 import { HighScoreTable } from './HighScoreTable';
@@ -6,10 +6,9 @@ import { MovingBot } from './MovingBot';
 import { Table } from './Table';
 
 export const Teams = () => {
-  const teams = useTeams();
-  const { response: currentSeason } = useFetch('api/seasons/current', '0') as {
-    response: ISeasonDto;
-  };
+  const teams: ITeamDto[] = useTeams();
+  const { response: currentSeason } = useFetch('api/seasons/current', '0');
+  const offSeasonId = '00000000-0000-0000-0000-000000000000';
 
   return (
     <>
@@ -28,7 +27,7 @@ export const Teams = () => {
               })}
             />
           </div>
-          <HighScoreTable seasonId={currentSeason.id} />
+          <HighScoreTable seasonId={currentSeason.id ?? offSeasonId} />
         </div>
       </div>
       <div className="mt-20">
