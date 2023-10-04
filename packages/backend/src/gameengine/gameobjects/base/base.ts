@@ -1,8 +1,8 @@
 import { AbstractGameObject } from "../abstract-game-object";
-import { BotGameObject, IBotGameObject } from "../bot/bot";
+import { BotGameObject } from "../bot/bot";
 
 export class BaseGameObject extends AbstractGameObject {
-  constructor(private bot: IBotGameObject) {
+  constructor(private bot: BotGameObject) {
     super(bot.base);
   }
   public get properties() {

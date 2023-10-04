@@ -1,7 +1,7 @@
 import { BotGameObjectProperties, Position } from "@etimo/diamonds2-types";
 import { AbstractGameObject } from "../abstract-game-object";
 export type IBotGameObject = {
-  base: Position;
+  base: Position | null;
   diamonds: number;
   timeJoined: Date;
   expiresAt: Date;
@@ -14,7 +14,7 @@ export type IBotGameObject = {
 };
 
 export class BotGameObject extends AbstractGameObject {
-  base: Position;
+  base: Position | null;
   diamonds: number;
   timeJoined: Date;
   expiresAt: Date;
@@ -63,7 +63,9 @@ export class BotGameObject extends AbstractGameObject {
       }
 
       // I am sent back to base
-      this.position = this.base;
+      if (this.base) {
+        this.position = this.base;
+      }
 
       // Also they steal some diamonds from me
       const canSteal = Math.min(
@@ -78,16 +80,19 @@ export class BotGameObject extends AbstractGameObject {
     if (gameObject instanceof BotGameObject) {
       const otherBot = gameObject as BotGameObject;
 
-      if (otherBot.canTackle) {
+      if (otherBot.canTackle || this.position === null) {
         return true;
       }
 
       if (
+        otherBot.base &&
         otherBot.base.x === this.position.x &&
         otherBot.base.y === this.position.y
       ) {
-        this.position = this.base;
-        return true;
+        if (this.base) {
+          this.position = this.base;
+          return true;
+        }
       }
     }
     return false;

@@ -28,10 +28,13 @@ export class BaseProvider extends AbstractGameObjectProvider {
         .getGameObjectsByType(BaseGameObject)
         .find(
           (base) =>
+            base.position &&
+            gameObject.base &&
             base.position.x === gameObject.base.x &&
             base.position.y === gameObject.base.y,
         );
       if (base) {
+        gameObject.base = null;
         board.removeGameObject(base);
       }
     });

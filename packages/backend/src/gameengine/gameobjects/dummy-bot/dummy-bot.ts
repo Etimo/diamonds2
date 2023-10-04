@@ -23,8 +23,8 @@ export class DummyBotGameObject extends BotGameObject {
 
         // Try updating position
         board.trySetGameObjectPosition(this, {
-          x: this.position.x + dx,
-          y: this.position.y + dy,
+          x: this.position ? this.position.x : 0 + dx,
+          y: this.position ? this.position.y : 0 + dy,
         });
       }
     } else if (intervalMs === board.getConfig().sessionLength * 1000) {
@@ -39,8 +39,8 @@ export class DummyBotGameObject extends BotGameObject {
   }
 
   private getDirectionTowardsGoal(goal: Position) {
-    let dx = goal.x - this.position.x;
-    let dy = goal.y - this.position.y;
+    let dx = goal.x - (this.position ? this.position.x : 0);
+    let dy = goal.y - (this.position ? this.position.y : 0);
     if (dx != 0) {
       dy = 0;
     }

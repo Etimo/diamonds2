@@ -121,9 +121,11 @@ export class Board {
 
     if (botGameObject) {
       const position = botGameObject.position;
-      position.x = position.x + delta.x;
-      position.y = position.y + delta.y;
-      return this.trySetGameObjectPosition(botGameObject, position);
+      if (position) {
+        position.x = position.x + delta.x;
+        position.y = position.y + delta.y;
+        return this.trySetGameObjectPosition(botGameObject, position);
+      }
     }
     return false;
   }
@@ -304,8 +306,12 @@ export class Board {
     }
 
     // Notfy game objects in current position that we are leaving to the new position
-    const gameObjectsPrev = this.getGameObjectsOnPosition(gameObject.position);
-    gameObjectsPrev.forEach((g) => g.onGameObjectLeft(gameObject, this));
+    if (gameObject.position) {
+      const gameObjectsPrev = this.getGameObjectsOnPosition(
+        gameObject.position,
+      );
+      gameObjectsPrev.forEach((g) => g.onGameObjectLeft(gameObject, this));
+    }
 
     // Notify game objects in new position that we are entering the new position
     const gameObjectsDest = this.getGameObjectsOnPosition(dest);
