@@ -1,29 +1,31 @@
 import { Board } from "../../board";
-import { createTestBoard } from "../../util";
+import { createTestBoard, createTestBot } from "../../util";
 import { BotGameObject } from "../bot/bot";
 import { BaseProvider } from "./base-provider";
 
 let provider: BaseProvider;
 let board: Board;
+let bot: BotGameObject;
 
 beforeEach(() => {
   provider = new BaseProvider();
   board = createTestBoard();
+  bot = createTestBot();
 });
 
 test("Creates base when bot joins", () => {
-  const bot = new BotGameObject({ x: 0, y: 0 });
-
+  // Act
   provider.onGameObjectsAdded(board, [bot]);
 
+  // Assert
   expect(bot.base).toBeDefined();
 });
 
 test("Removes base property when bot is removed", () => {
-  const bot = new BotGameObject({ x: 0, y: 0 });
+  // Act
   provider.onGameObjectsAdded(board, [bot]);
-
   provider.onGameObjectsRemoved(board, [bot]);
 
+  // Assert
   expect(bot.base).toEqual(null);
 });

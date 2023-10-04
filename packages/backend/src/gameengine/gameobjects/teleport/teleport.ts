@@ -21,12 +21,15 @@ export class TeleportGameObject extends AbstractGameObject {
       (t) => t.properties.pairId === this.properties.pairId && t !== this,
     )!;
     if (
-      bot.previousPosition?.x === otherTeleport.position.x &&
-      bot.previousPosition?.y === otherTeleport.position.y
+      bot.previousPosition?.x === otherTeleport.position?.x &&
+      bot.previousPosition?.y === otherTeleport.position?.y
     ) {
       return;
     }
-    if (board.trySetGameObjectPosition(bot, otherTeleport.position)) {
+    if (
+      otherTeleport.position &&
+      board.trySetGameObjectPosition(bot, otherTeleport.position)
+    ) {
       board.notifyGameObjectEvent(this, "TELEPORTED");
     }
   }

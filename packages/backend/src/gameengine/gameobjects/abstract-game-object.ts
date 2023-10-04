@@ -6,26 +6,37 @@ export abstract class AbstractGameObject {
   private static nextId = 1;
   private readonly _id = AbstractGameObject.nextId++;
 
-  constructor(startPosition: Position) {
-    this.position = startPosition;
+  constructor(startPosition: Position | null) {
+    if (startPosition) {
+      this.positions.push(startPosition);
+    }
   }
 
-  get x(): number {
-    return this.position.x;
+  get x(): number | null {
+    return this.position ? this.position.x : null;
   }
 
-  get y(): number {
-    return this.position.y;
+  get y(): number | null {
+    return this.position ? this.position.y : null;
   }
 
   get id(): number {
     return this._id;
   }
-  get position(): Position {
-    return { ...this.positions[this.positions.length - 1] };
+
+  get position(): Position | null {
+    if (this.positions.length > 0) {
+      return { ...this.positions[this.positions.length - 1] };
+    }
+    return null;
   }
-  set position(newPosition: Position) {
-    this.positions.push(newPosition);
+  set position(newPosition: Position | null) {
+    if (newPosition) {
+      this.positions.push(newPosition);
+    } else {
+      // Is this reasonable? Every getter needs a setter.
+      this.clearPositions();
+    }
   }
 
   get previousPosition() {
@@ -39,7 +50,7 @@ export abstract class AbstractGameObject {
   }
 
   public clearPositions(): void {
-    this.positions = [this.position];
+    this.positions = this.position === null ? [] : [this.position];
   }
 
   canGameObjectEnter(gameObject: AbstractGameObject, board: Board): boolean {
@@ -64,6 +75,9 @@ export abstract class AbstractGameObject {
   ) {}
 
   toLogString(): string {
-    return `${this.constructor.name}(${this.position.x},${this.position.y})`;
+    if (this.position) {
+      return `${this.constructor.name}(${this.position.x},${this.position.y})`;
+    }
+    return `${this.constructor.name}(N/A,N/A)`;
   }
 }

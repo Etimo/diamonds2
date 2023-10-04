@@ -1,7 +1,7 @@
 import { Position } from "../position";
 
 export type BotGameObjectProperties = {
-  base: Position;
+  base: Position | null;
   diamonds: number;
   timeJoined: Date;
   inventorySize: number;
