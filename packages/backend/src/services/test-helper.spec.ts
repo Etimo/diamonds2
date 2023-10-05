@@ -15,6 +15,7 @@ import { BoardConfigService } from "./board-config.service";
 import { BoardsService } from "./board.service";
 import { BotsService } from "./bots.service";
 import { HighscoresService } from "./highscores.service";
+import { PrismaService } from "./prisma.service";
 import { RecordingsService } from "./recordings.service";
 import { SeasonsService } from "./seasons.service";
 import { SlackService } from "./slack.service";
@@ -108,63 +109,68 @@ export async function createTestModule() {
       SlackService,
       {
         provide: SeasonsService,
-        useValue: seasonsService,
+        // useValue: seasonsService,
+        useClass: SeasonsService,
       },
       {
         provide: TeamsService,
-        useValue: teamsService,
+        useClass: TeamsService,
       },
       {
         provide: HighscoresService,
-        useValue: highScoresService,
+        useClass: HighscoresService,
       },
       {
         provide: BoardConfigService,
-        useValue: boardConfigService,
+        useClass: BoardConfigService,
       },
       BoardsService,
       {
         provide: BotsService,
-        useValue: botsService,
+        useClass: BotsService,
       },
       {
         provide: SeasonsService,
-        useValue: seasonsService,
+        useClass: SeasonsService,
       },
       {
         provide: BoardConfigService,
-        useValue: boardConfigService,
+        useClass: BoardConfigService,
       },
       {
         provide: RecordingsService,
-        useValue: recordingsService,
+        useClass: RecordingsService,
       },
       {
         provide: CustomLogger,
         useValue: new SilentLogger() as CustomLogger,
       },
       {
-        useValue: numberOfBoards,
         provide: "NUMBER_OF_BOARDS",
+        useValue: numberOfBoards,
       },
       {
-        useValue: maxNumberOfBoards,
         provide: "MAX_EPHEMERAL_BOARDS",
+        useValue: maxNumberOfBoards,
       },
       BotsService,
       {
         provide: TeamsService,
-        useValue: teamsService,
+        useClass: TeamsService,
       },
       {
         provide: BotRegistrationsRepository,
-        useValue: botRepositryMock,
+        useClass: BotRegistrationsRepository,
+      },
+      {
+        provide: PrismaService,
+        useClass: PrismaService,
       },
 
       RecordingsService,
       {
         provide: RecordingsRepository,
-        useValue: recordingsRepositoryMock,
+        useClass: RecordingsRepository,
       },
       {
         provide: CustomLogger,
@@ -173,7 +179,7 @@ export async function createTestModule() {
       HighscoresService,
       {
         provide: SeasonsService,
-        useValue: seasonsService,
+        useClass: SeasonsService,
       },
       {
         provide: HighscoresRepository,
@@ -187,7 +193,7 @@ export async function createTestModule() {
       BoardConfigService,
       {
         provide: SeasonsService,
-        useValue: seasonsService,
+        useClass: SeasonsService,
       },
       {
         provide: BoardConfigRepository,
