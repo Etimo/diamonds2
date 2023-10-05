@@ -1,43 +1,58 @@
+import { Position } from "@etimo/diamonds2-types";
 import { beforeEach, expect, it } from "@jest/globals";
-import { createTestBoard } from "../../util";
+import { Board } from "../../board";
+import { createTestBoard, createTestBot } from "../../util";
 import { BotGameObject } from "../bot/bot";
 import { DiamondGameObject } from "./diamond";
 
 let gameObject: DiamondGameObject;
+let board: Board;
+let bot: BotGameObject;
+let diamondPosition: Position;
 
 beforeEach(() => {
-  gameObject = new DiamondGameObject({ x: 0, y: 0 }, 1);
+  diamondPosition = { x: 0, y: 0 };
+  gameObject = new DiamondGameObject(diamondPosition, 1);
+  board = createTestBoard();
+  bot = createTestBot();
 });
 
 it("Stepping on a diamond increases score for bot if there is space in inventory", () => {
-  const bot = new BotGameObject({ x: 0, y: 0 });
+  // Arrange
+  bot.position = diamondPosition;
   bot.diamonds = 0;
   bot.inventorySize = 5;
 
-  gameObject.onGameObjectEntered(bot, createTestBoard());
+  // Act
+  gameObject.onGameObjectEntered(bot, board);
 
+  // Assert
   expect(bot.diamonds).toBe(1);
 });
 
 it("Stepping on a diamond does not change score if there is no space in inventory", () => {
-  const bot = new BotGameObject({ x: 0, y: 0 });
+  bot.position = diamondPosition;
   bot.diamonds = 5;
   bot.inventorySize = 5;
 
+  // Act
   gameObject.onGameObjectEntered(bot, createTestBoard());
 
+  // Assert
   expect(bot.diamonds).toBe(5);
 });
 
 it("Stepping on a diamond does not remove diamond if there is no space in inventory", () => {
-  const bot = new BotGameObject({ x: 0, y: 0 });
+  // Arrange
+  bot.position = diamondPosition;
   bot.diamonds = 5;
   bot.inventorySize = 5;
-  const board = createTestBoard();
   board.addGameObjects([gameObject]);
 
+  // Act
   gameObject.onGameObjectEntered(bot, board);
 
+  // Assert
   expect(board.getGameObjectsByType(DiamondGameObject).length).toBe(1);
 });
 
