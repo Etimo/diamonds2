@@ -91,14 +91,6 @@ export async function createTestModule() {
   const numberOfBoards = 1;
   const maxNumberOfBoards = 10;
 
-  let slackService: SlackService;
-  let botsService: BotsService;
-  let seasonsService: SeasonsService;
-  let teamsService: TeamsService;
-  let highScoresService: HighscoresService;
-  let boardConfigService: BoardConfigService;
-  let recordingsService: RecordingsService;
-
   seasonsRepositoryMock.getCurrentSeason.mockReturnValueOnce(offSeasonTest);
   boardConfigRepositoryMock.getBoardConfigById.mockReturnValueOnce(
     boardConfigTest,
@@ -109,7 +101,6 @@ export async function createTestModule() {
       SlackService,
       {
         provide: SeasonsService,
-        // useValue: seasonsService,
         useClass: SeasonsService,
       },
       {
@@ -160,7 +151,7 @@ export async function createTestModule() {
       },
       {
         provide: BotRegistrationsRepository,
-        useClass: BotRegistrationsRepository,
+        useValue: botRepositryMock,
       },
       {
         provide: PrismaService,
