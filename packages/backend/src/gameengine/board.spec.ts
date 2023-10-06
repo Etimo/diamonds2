@@ -1,3 +1,4 @@
+import { Position } from "@etimo/diamonds2-types";
 import { IBot } from "../types";
 import { Board } from "./board";
 import { AbstractGameObject } from "./gameobjects/abstract-game-object";
@@ -5,12 +6,16 @@ import { BaseGameObject } from "./gameobjects/base/base";
 import { BotGameObject } from "./gameobjects/bot/bot";
 import { BotProvider } from "./gameobjects/bot/bot-provider";
 import { DiamondProvider } from "./gameobjects/diamond/diamond-provider";
-import { createTestBoard } from "./util";
+import { createTestBoard, createTestBot } from "./util";
 
+let opponentPosition: Position;
 let board: Board;
 let opponent: BotGameObject;
+let blockingGameObject: BotGameObject;
+let allowingGameObject: BotGameObject;
 let provider: DiamondProvider;
-const botExampleData: IBot = {
+
+let botExampleData: IBot = {
   id: "1",
   email: "email",
   name: "name",
@@ -22,8 +27,12 @@ beforeEach(() => {
     minRatioForGeneration: 0.01,
     redRatio: 0,
   });
+  opponentPosition = { x: 1, y: 0 };
   board = createTestBoard();
-  opponent = new BotGameObject({ x: 1, y: 0 });
+  opponent = createTestBot();
+  opponent.position = opponentPosition;
+  blockingGameObject = createTestBot();
+  allowingGameObject = createTestBot();
   board.addGameObjects([opponent]);
   jest.useFakeTimers();
 });
@@ -41,108 +50,145 @@ describe("sessionFinishedCallbacks and join", () => {
     });
     board = createTestBoard([provider]);
   });
+
   test("join creates expiration timer and callbacks are invoked when sessions are finished", async () => {
+    // Arrange
     let result = false;
     board.registerSessionFinishedCallback(() => {
       result = true;
     });
-    await board.join(botExampleData);
 
+    // Act
+    await board.join(botExampleData);
     jest.runAllTimers();
 
+    // Assert
     expect(result).toBeTruthy();
   });
 
   test("bot is removed from board when session finishes", async () => {
+    // Act
     await board.join(botExampleData);
-
     jest.runAllTimers();
 
+    // Assert
     expect(board.getBotById(botExampleData.id)).toBeFalsy();
   });
 
   test("join notifies providers", async () => {
+    // Arrange
     jest.spyOn(provider, "onBotJoined");
 
+    // Act
     await board.join(botExampleData);
 
+    // Assert
     expect(provider.onBotJoined).toHaveBeenCalled();
   });
 
   test("possible to get bot when joined", async () => {
+    // Act
     await board.join(botExampleData);
 
+    // Assert
     expect(board.getBotById(botExampleData.id)).toEqual(botExampleData);
   });
 });
 
 describe("trySetGameObjectPosition", () => {
+  let bot: BotGameObject;
+  beforeEach(() => {
+    bot = createTestBot();
+  });
+
   test("going out of bounds returns false to the west", () => {
-    const initialPosition = { x: 0, y: 0 };
-    const bot = new BotGameObject(initialPosition);
+    // Arrange
+    let initialPosition: Position = { x: 0, y: 0 };
+    bot.position = initialPosition;
 
-    const result = board.trySetGameObjectPosition(bot, { x: -1, y: 0 });
+    // Act
+    let result = board.trySetGameObjectPosition(bot, { x: -1, y: 0 });
 
+    // Assert
     expect(result).toBeFalsy();
     expect(bot.position).toStrictEqual(initialPosition);
   });
+
   test("going out of bounds returns false to the east", () => {
-    const initialPosition = { x: 9, y: 0 };
-    const bot = new BotGameObject(initialPosition);
+    // Arrange
+    let initialPosition: Position = { x: 9, y: 0 };
+    bot.position = initialPosition;
 
-    const result = board.trySetGameObjectPosition(bot, { x: 10, y: 0 });
+    // Act
+    let result = board.trySetGameObjectPosition(bot, { x: 10, y: 0 });
 
+    // Assert
     expect(result).toBeFalsy();
     expect(bot.position).toStrictEqual(initialPosition);
   });
   test("going out of bounds returns false to the north", () => {
-    const initialPosition = { x: 0, y: 0 };
-    const bot = new BotGameObject(initialPosition);
+    // Arrange
+    let initialPosition: Position = { x: 0, y: 0 };
+    bot.position = initialPosition;
 
-    const result = board.trySetGameObjectPosition(bot, { x: 0, y: -1 });
+    // Act
+    let result = board.trySetGameObjectPosition(bot, { x: 0, y: -1 });
 
+    // Assert
     expect(result).toBeFalsy();
     expect(bot.position).toStrictEqual(initialPosition);
   });
   test("going out of bounds returns false to the south", () => {
-    const initialPosition = { x: 0, y: 9 };
-    const bot = new BotGameObject(initialPosition);
+    // Arrange
+    let initialPosition = { x: 0, y: 9 };
+    bot.position = initialPosition;
 
-    const result = board.trySetGameObjectPosition(bot, { x: 0, y: 10 });
+    // Act
+    let result = board.trySetGameObjectPosition(bot, { x: 0, y: 10 });
 
+    // Assert
     expect(result).toBeFalsy();
     expect(bot.position).toStrictEqual(initialPosition);
   });
 
   test("updates bot position", () => {
-    const initialPosition = { x: 0, y: 0 };
-    const bot = new BotGameObject(initialPosition);
+    // Arrange
+    let initialPosition = { x: 0, y: 0 };
+    bot.position = initialPosition;
 
-    const result = board.trySetGameObjectPosition(bot, { x: 0, y: 1 });
+    // Act
+    let result = board.trySetGameObjectPosition(bot, { x: 0, y: 1 });
 
+    // Assert
     expect(result).toBeTruthy();
     expect(bot.position).toStrictEqual({ x: 0, y: 1 });
   });
 
   test("when gameobject not allowed to move bot stays", () => {
-    const initialPosition = { x: 0, y: 0 };
-    const bot = new BotGameObject(initialPosition);
+    // Arrange
+    let initialPosition = { x: 0, y: 0 };
+    bot.position = initialPosition;
     jest.spyOn(opponent, "canGameObjectEnter").mockReturnValue(false);
 
-    const result = board.trySetGameObjectPosition(bot, { x: 1, y: 0 });
+    // Act
+    let result = board.trySetGameObjectPosition(bot, { x: 1, y: 0 });
 
+    // Assert
     expect(result).toBeFalsy();
     expect(bot.position).toStrictEqual(initialPosition);
   });
 
   test("when bot move gameObjectEntered is triggered on gameobjects on destination", () => {
-    const initialPosition = { x: 0, y: 0 };
-    const bot = new BotGameObject(initialPosition);
+    // Arrange
+    let initialPosition = { x: 0, y: 0 };
+    bot.position = initialPosition;
     jest.spyOn(opponent, "canGameObjectEnter").mockReturnValue(true);
     jest.spyOn(opponent, "onGameObjectEntered");
 
-    const result = board.trySetGameObjectPosition(bot, { x: 1, y: 0 });
+    // Act
+    let result = board.trySetGameObjectPosition(bot, { x: 1, y: 0 });
 
+    // Assert
     expect(result).toBeTruthy();
     expect(bot.position).toStrictEqual({ x: 1, y: 0 });
     expect(opponent.onGameObjectEntered).toHaveBeenCalledTimes(1);
@@ -151,12 +197,14 @@ describe("trySetGameObjectPosition", () => {
 
 describe("isCellEmpty", () => {
   test("returns false if at least one game object is located", () => {
+    // Act -> Assert
     expect(
       board.isCellEmpty(opponent.position.x, opponent.position.y),
     ).toBeFalsy();
   });
 
   test("returns true if no game objects", () => {
+    // Act -> Assert
     expect(
       board.isCellEmpty(opponent.position.x + 1, opponent.position.y),
     ).toBeTruthy();
@@ -165,41 +213,64 @@ describe("isCellEmpty", () => {
 
 describe("getEmptyPosition", () => {
   test("returns an empty position", () => {
-    const empty = board.getEmptyPosition();
+    // Act
+    let empty = board.getEmptyPosition();
+
+    // Assert
     expect(empty).not.toEqual(opponent.position);
   });
 
   test("returns an empty position even though random checks fail", () => {
+    // Arrange
     jest.spyOn(board, "getRandomPosition").mockReturnValue(opponent.position);
-    const empty = board.getEmptyPosition();
+
+    // Act
+    let empty = board.getEmptyPosition();
+
+    // Assert
     expect(empty).not.toEqual(opponent.position);
   });
 
   test("returns null if no empty positions are found", () => {
+    // Arrange
     jest.spyOn(board, "getRandomPosition").mockReturnValue(opponent.position);
     jest.spyOn(board, "isCellEmpty").mockReturnValue(false);
-    const empty = board.getEmptyPosition();
+
+    // Act
+    let empty = board.getEmptyPosition();
+
+    // Assert
     expect(empty).toBeNull();
   });
 });
 
 test("getAllGameObjects returns a list of existing game objects", () => {
+  // Act -> Assert
   expect(board.getAllGameObjects().length).toBe(1);
 });
 
 describe("getGameObjectsOnPosition", () => {
   test("returns all game objects on position", () => {
+    // Act -> Assert
     expect(board.getGameObjectsOnPosition(opponent.position)).toEqual([
       opponent,
     ]);
   });
+
   test("returns empty list if no game objects on position", () => {
+    // Act -> Assert
     expect(board.getGameObjectsOnPosition({ x: 0, y: 0 })).toEqual([]);
   });
+
   test("returns multiple game objects on same position", () => {
-    const dummyObject: BotGameObject = new BotGameObject(opponent.position);
+    // Arrage
+    let dummyObject: BotGameObject = createTestBot();
+    dummyObject.position = opponentPosition;
+
+    // Act
     board.addGameObjects([dummyObject]);
 
+    // Assert
     expect(board.getGameObjectsOnPosition(opponent.position)).toEqual([
       opponent,
       dummyObject,
@@ -208,32 +279,29 @@ describe("getGameObjectsOnPosition", () => {
 });
 
 describe("canGameObjectEnter", () => {
-  let blockingGameObject: AbstractGameObject;
-  let allowingGameObject: AbstractGameObject;
+  let blockingGameObject: AbstractGameObject = createTestBot();
+  let allowingGameObject: AbstractGameObject = createTestBot();
 
   beforeEach(() => {
-    blockingGameObject = new BotGameObject({
-      x: opponent.x + 1,
-      y: opponent.y,
-    });
+    // Arrange
+    blockingGameObject.position.x += 1;
     jest.spyOn(blockingGameObject, "canGameObjectEnter").mockReturnValue(false);
 
-    allowingGameObject = new BotGameObject({
-      x: opponent.x,
-      y: opponent.y + 1,
-    });
+    allowingGameObject.position.y += 1;
     jest.spyOn(allowingGameObject, "canGameObjectEnter").mockReturnValue(true);
 
     board.addGameObjects([blockingGameObject, allowingGameObject]);
   });
 
   test("returns false if trying to move to a blocking game object", () => {
+    // Act -> Assert
     expect(
       board.canGameObjectEnter(opponent, blockingGameObject.position),
     ).toBeFalsy();
   });
 
   test("returns true if trying to move to an allowing game object", () => {
+    // Act -> Assert
     expect(
       board.canGameObjectEnter(opponent, allowingGameObject.position),
     ).toBeTruthy();
@@ -241,32 +309,34 @@ describe("canGameObjectEnter", () => {
 });
 
 describe("canGameObjectLeave", () => {
-  let blockingGameObject: AbstractGameObject;
-  let allowingGameObject: AbstractGameObject;
+  let blockingGameObject: BotGameObject = createTestBot();
+  let allowingGameObject: BotGameObject = createTestBot();
 
   beforeEach(() => {
-    blockingGameObject = new BotGameObject({
-      x: opponent.x + 1,
-      y: opponent.y,
-    });
+    // Arrange
+    let pos = { x: 1, y: 1 };
+    opponent.position = pos;
+
+    blockingGameObject.position.x = pos.x + 1;
+    blockingGameObject.position.y = pos.y;
     jest.spyOn(blockingGameObject, "canGameObjectLeave").mockReturnValue(false);
 
-    allowingGameObject = new BotGameObject({
-      x: opponent.x,
-      y: opponent.y + 1,
-    });
+    allowingGameObject.position.x = pos.x;
+    allowingGameObject.position.y = pos.y + 1;
     jest.spyOn(allowingGameObject, "canGameObjectLeave").mockReturnValue(true);
 
     board.addGameObjects([blockingGameObject, allowingGameObject]);
   });
 
   test("returns false if trying to move to a blocking game object", () => {
+    // Act -> Assert
     expect(
       board.canGameObjectLeave(opponent, blockingGameObject.position),
     ).toBeFalsy();
   });
 
   test("returns true if trying to move to an allowing game object", () => {
+    // Act -> Assert
     expect(
       board.canGameObjectLeave(opponent, allowingGameObject.position),
     ).toBeTruthy();
