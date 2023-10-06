@@ -35,11 +35,13 @@ describe("TeamsService", () => {
 
   it("add, should throw Forbidden error", async () => {
     //arrange
-    const team = {
+    const team: ITeam = {
       id: "123",
       abbreviation: "etimo",
       name: "Etimo",
-      logotypeUrl: null,
+      logotypeUrl: "",
+      createTimeStamp: new Date(),
+      updateTimeStamp: new Date(),
     };
 
     //act
