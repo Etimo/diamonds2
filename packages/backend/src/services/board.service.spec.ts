@@ -14,6 +14,8 @@ import {
   seasonsRepositoryMock,
 } from "./test-helper.spec";
 
+let botTest: IBot;
+
 describe("BoardsService", () => {
   let botsService: BotsService;
   let highscoresService: HighscoresService;
@@ -38,6 +40,18 @@ describe("BoardsService", () => {
 
   let numberOfBoards = 1;
   let numberOfEphemeralBoards = 1;
+  let botId = "65d70ce4-ae31-47f5-a72f-16c45180881d";
+  let dummyBotId = "11111111-1111-1111-1111-111111111111";
+
+  botTest = {
+    id: botId,
+    name: "bot1",
+    email: "email",
+    password: "password",
+    createTimeStamp: new Date(),
+    updateTimeStamp: new Date(),
+    teamId: "Team",
+  };
 
   beforeEach(async () => {
     seasonsRepositoryMock.getCurrentSeason.mockReturnValue(offSeasonTest);
@@ -62,8 +76,9 @@ describe("BoardsService", () => {
   });
 
   it("Should throw UnauthorizedError when bot not exists", async () => {
+    botRepositryMock.get.mockReturnValue(null);
     await expect(
-      boardsService.join(dummyBoardId, dummyBoardToken),
+      boardsService.join(dummyBotId, dummyBoardId),
     ).rejects.toThrowError(UnauthorizedError);
   });
 
@@ -76,24 +91,14 @@ describe("BoardsService", () => {
   });
 
   it("join, should be possible to join board", async () => {
-    const botId = "1";
     boardConfigRepositoryMock.getBoardConfigById.mockReturnValue(boardConfig);
-    const botTest: IBot = {
-      email: "email",
-      password: "password",
-      name: "bot2",
-      id: botId,
-      createTimeStamp: new Date(),
-      updateTimeStamp: new Date(),
-      teamId: "Team",
-    };
     botRepositryMock.get.mockReturnValueOnce(botTest);
 
-    const boards = boardsService.getAll();
+    let boards = boardsService.getAll();
 
-    const lenBefore = boards[0].gameObjects.length;
+    let lenBefore = boards[0].gameObjects.length;
 
-    let board = await boardsService.join(boards[0].id, botId);
+    let board = await boardsService.join(botId, boards[0].id);
 
     expect(board).toBeDefined();
     expect(board.gameObjects.length).toBe(lenBefore + 2);
@@ -104,30 +109,23 @@ describe("BoardsService", () => {
 
     const boards = boardsService.getAll();
 
-    const board = boardsService.join(boards[0].id, "hejhej");
+    const board = boardsService.join(dummyBotId, boards[0].id);
 
     expect(board).rejects.toThrow(UnauthorizedError);
   });
 
   it("Should throw ConflictError when bot is already present on other board", async () => {
-    const boards = boardsService.getAll();
-    botRepositryMock.get.mockReturnValue({
-      createTimeStamp: new Date(),
-      updateTimeStamp: new Date(),
-      password: "password",
-      teamId: "team",
-      id: dummyBoardToken,
-      name: "name",
-      email: "email",
-    } as IBot);
+    let boards = boardsService.getAll();
+    botRepositryMock.get.mockReturnValue(botTest);
 
-    await boardsService.join(boards[0].id, dummyBoardToken);
-    const act = boardsService.join(boards[1].id, dummyBoardToken);
+    await boardsService.join(botId, boards[0].id);
+    let act = boardsService.join(botId, boards[1].id);
     expect(act).rejects.toThrowError(ConflictError);
+    expect(act).rejects.toThrowError("Already playing");
   });
 
   it("Should throw ConflictError when bot is already present on same board", async () => {
-    const boards = boardsService.getAll();
+    let boards = boardsService.getAll();
     botRepositryMock.get.mockReturnValue({
       createTimeStamp: new Date(),
       updateTimeStamp: new Date(),
@@ -137,14 +135,16 @@ describe("BoardsService", () => {
       name: "name",
       email: "email",
     } as IBot);
-    await boardsService.join(boards[0].id, dummyBoardToken);
-    await expect(
-      boardsService.join(boards[0].id, dummyBoardToken),
-    ).rejects.toThrowError(ConflictError);
+    await boardsService.join(botId, boards[0].id);
+    await expect(boardsService.join(botId, boards[0].id)).rejects.toThrowError(
+      ConflictError,
+    );
   });
+
   it("Should throw ConflictError when board not exists", async () => {
-    await expect(
-      boardsService.join(dummyBoardId, dummyBoardToken),
-    ).rejects.toThrowError(ConflictError);
+    botRepositryMock.get.mockReturnValue(botTest);
+    await expect(boardsService.join(botId, dummyBoardId)).rejects.toThrowError(
+      ConflictError,
+    );
   });
 });

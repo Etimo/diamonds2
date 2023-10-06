@@ -4,7 +4,7 @@ import * as bcrypt from "bcrypt";
 import { BotRegistrationsRepository, TeamsRepository } from "../db";
 import { ConflictError, NotFoundError } from "../errors";
 import { BotRecoveryDto, BotRegistrationDto } from "../models";
-import { IBot } from "../types";
+import { IBot, ITeam } from "../types";
 import { BotsService } from "./bots.service";
 import { TeamsService } from "./teams.service";
 
@@ -60,7 +60,7 @@ describe("BotsService", () => {
       email: "hello@world.se",
       password: "123456",
       name: "bot1",
-      team: null,
+      team: "team1",
     };
 
     const dataRepoReturn: IBot = {
@@ -89,7 +89,7 @@ describe("BotsService", () => {
       email: "hello@world.se",
       password: "123456",
       name: "bot1",
-      team: null,
+      team: "team1",
     };
 
     const dataRepoReturn: IBot = {
@@ -99,7 +99,7 @@ describe("BotsService", () => {
       id: "1",
       createTimeStamp: new Date(),
       updateTimeStamp: new Date(),
-      teamId: null,
+      teamId: "team1",
     };
 
     repositoryMock.getByEmail.mockReturnValue(dataRepoReturn);
@@ -114,11 +114,12 @@ describe("BotsService", () => {
 
   it("add, should add", async () => {
     //arrange
+    let team = "team1";
     const data: BotRegistrationDto = {
       email: "hello@world.se",
       password: "123456",
       name: "bot1",
-      team: null,
+      team: team,
     };
     const dataRepoReturn: IBot = {
       email: "hello@world2.se",
@@ -133,6 +134,15 @@ describe("BotsService", () => {
     repositoryMock.getByEmail.mockReturnValue(undefined);
     repositoryMock.getByName.mockReturnValue(undefined);
     repositoryMock.create.mockReturnValue(dataRepoReturn);
+    let iteam: ITeam = {
+      id: "id",
+      name: team,
+      abbreviation: "t",
+      logotypeUrl: "",
+      createTimeStamp: new Date(),
+      updateTimeStamp: new Date(),
+    };
+    teamsRepositoryMock.getByAbbreviation.mockReturnValue(iteam);
 
     //act
     let response = await botsService.add(data);
@@ -150,7 +160,7 @@ describe("BotsService", () => {
       email: "hel22lo@world.se",
       name: "bot122",
       password: hashedPassword,
-      team: null,
+      team: undefined,
       id: "1",
       createTimeStamp: new Date(),
       updateTimeStamp: new Date(),
@@ -180,7 +190,7 @@ describe("BotsService", () => {
       email: "hel22lo@world.se",
       name: "bot122",
       password: hashedPassword,
-      team: null,
+      team: undefined,
       id: "1",
       createTimeStamp: new Date(),
       updateTimeStamp: new Date(),

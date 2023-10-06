@@ -1,31 +1,42 @@
 import { Board } from "../../board";
-import { createTestBoard } from "../../util";
+import { createTestBoard, createTestBot } from "../../util";
 import { BotGameObject } from "../bot/bot";
 import { DiamondGameObject } from "../diamond/diamond";
 import { DiamondButtonGameObject } from "./diamond-button";
 
 let button: DiamondButtonGameObject;
 let board: Board;
+let bot: BotGameObject;
 
 beforeEach(() => {
-  button = new DiamondButtonGameObject({ x: 0, y: 0 });
   board = createTestBoard();
+  bot = createTestBot();
 });
 
 test("Removes button when bot enters", () => {
-  const bot = new BotGameObject({ x: 0, y: 0 });
+  // Arrange
+  let position = { x: 0, y: 0 };
+  button = new DiamondButtonGameObject(position);
+  bot.position = position;
   board.addGameObjects([button]);
 
+  // Act
   button.onGameObjectEntered(bot, board);
 
+  // Assert
   expect(board.getGameObjectsByType(DiamondButtonGameObject).length).toBe(0);
 });
 
 test("Removes diamonds when bot enters", () => {
-  const bot = new BotGameObject({ x: 0, y: 0 });
-  board.addGameObjects([new DiamondGameObject({ x: 0, y: 0 }, 1)]);
+  // Arrange
+  let position = { x: 0, y: 0 };
+  button = new DiamondButtonGameObject(position);
+  bot.position = position;
+  board.addGameObjects([button]);
 
+  // Act
   button.onGameObjectEntered(bot, board);
 
+  // Assert
   expect(board.getGameObjectsByType(DiamondGameObject).length).toBe(0);
 });
