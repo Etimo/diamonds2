@@ -21,7 +21,7 @@ export interface IDiamondGameObjectDto {
 export interface IDiamondButtonGameObjectDto {
   type: "DiamondButtonGameObject";
   position: Position;
-  properties: {};
+  properties: null;
 }
 
 export interface IBaseGameObjectDto {

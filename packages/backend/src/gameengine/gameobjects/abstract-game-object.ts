@@ -34,8 +34,8 @@ export abstract class AbstractGameObject {
       : null;
   }
 
-  get properties(): object {
-    return {};
+  get properties(): object | null {
+    return null;
   }
 
   public clearPositions(): void {
