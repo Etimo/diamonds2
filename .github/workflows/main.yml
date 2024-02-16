@@ -49,7 +49,7 @@ jobs:
 
       - name: Build docker image
         run: |
-          docker build -t diamonds2_base:latest -f ../../.docker/dockerfiles/base ..
+          docker build -t diamonds2_base:latest -f .docker/dockerfiles/base ..
           docker-compose -f docker-compose.yml build
 
   # Build and push production images
@@ -63,7 +63,7 @@ jobs:
       - uses: actions/checkout@v1
       - name: Build docker image
         run: |
-          docker build -t diamonds2_base:latest -f ../.docker/dockerfiles/base ..
+          docker build -t diamonds2_base:latest -f .docker/dockerfiles/base ..
           docker-compose -f docker-compose.prod-build.yml build
       - name: Extract branch name
         shell: bash
