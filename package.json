@@ -4,7 +4,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "cross-env MY_ENV_VAR=postgresql://diamonds:password@database:5433/diamonds?schema=public (cd packages/backend && npx prisma generate) && npx tsc --build packages/backend packages/frontend --verbose",
+    "build": "cross-env DATABASE_URL=postgresql://diamonds:password@database:5433/diamonds?schema=public && (cd packages/backend && npx prisma generate) && npx tsc --build packages/backend packages/frontend --verbose",
     "env": "./scripts/copy-env.sh",
     "init-db": "npm run support && ./scripts/setup-db-prisma.sh",
     "nodemon": "npx nodemon",
