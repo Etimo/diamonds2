@@ -86,7 +86,7 @@ export class RecordingsService {
           recording: e.recording,
           score: e.score,
           seasonId: e.seasonId,
-        } as RecordingPublicDto),
+        }) as RecordingPublicDto,
     )[0];
   }
 

@@ -1,51 +1,45 @@
 version: "3.7"
 
+networks:
+  diamonds2:
+
 services:
   frontend:
     build:
-      context: ./packages/frontend
-      target: "develop"
-    command: /bin/sh -c "VITE_API_BASE_URL=http://backend:3000/api yarn run start"
+      context: .
+      dockerfile: .docker/dockerfiles/frontend
+      target: develop
+    environment:
+      - VITE_API_BASE_URL=http://backend:3000/api
     volumes:
-      - ./frontend/src:/app/src
-      # - /app/node_modules
+      - ./packages:/app/packages
     ports:
-      - 8080:8082
+      - 8082:8082
+    networks:
+      - diamonds2
 
   backend:
-    platform: linux/x86_64
     build:
-      context: ./packages/backend
-      target: "develop"
-    command: /bin/sh -c "npx prisma db push --accept-data-loss && npx prisma db seed && yarn start:dev"
+      context: .
+      dockerfile: .docker/dockerfiles/backend
+      target: develop
     volumes:
-      - ./backend/src:/app/src
-      - ./backend/prisma:/app/prisma
-      # - /app/node_modules
+      - ./packages:/app/packages
+      - ./packages/prisma:/app/prisma
     depends_on:
       - database
     environment:
       ENVIRONMENT: development
       DATABASE_URL: postgresql://diamonds:password@database:5433/diamonds?schema=public
     ports:
-      - 8081:3000
+      - 3000:3000
     logging:
       driver: "json-file"
       options:
         max-size: "100m"
         max-file: "1"
-
-  # bots:
-  #   build:
-  #     context: ./example-bots/python
-  #   restart: always
-  #   volumes:
-  #     - bot-data:/bot-data
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "100m"
-  #       max-file: "1"
+    networks:
+      - diamonds2
 
   database:
     image: postgres:14
@@ -60,6 +54,8 @@ services:
       - db-data:/var/lib/postgresql/data
     ports:
       - 5433:5433
+    networks:
+      - diamonds2
 
 volumes:
   db-data:

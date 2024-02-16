@@ -6,7 +6,10 @@ import { INewRecording, IRecording } from "../../types";
 export class RecordingsRepository {
   constructor(private prisma: PrismaService) {}
 
-  public async allBySeasonIdRaw(seasonId: string, limit: number = 0) {
+  public async allBySeasonIdRaw(
+    seasonId: string,
+    limit: number = 0,
+  ): Promise<IRecording[]> {
     return this.prisma.recording.findMany({
       where: {
         seasonId,
@@ -21,7 +24,8 @@ export class RecordingsRepository {
     });
   }
 
-  public async getById(id: string) {
+  // TODO: Change this to return a single recording
+  public async getById(id: string): Promise<IRecording[]> {
     return this.prisma.recording.findMany({
       where: {
         id,

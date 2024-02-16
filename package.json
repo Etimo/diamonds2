@@ -4,7 +4,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "(cd packages/backend && npx prisma generate) && npx tsc --build packages/backend packages/frontend --verbose",
+    "build": "npx tsc --build packages/backend packages/frontend --verbose",
     "env": "./scripts/copy-env.sh",
     "init-db": "npm run support && ./scripts/setup-db-prisma.sh",
     "nodemon": "npx nodemon",
@@ -17,9 +17,10 @@
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
-    "concurrently": "^8.2.1",
-    "husky": "^8.0.0",
-    "nodemon": "^3.0.1",
-    "typescript": "^5.2.2"
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "husky": "^9.0.11",
+    "nodemon": "^3.0.3",
+    "typescript": "^5.3.3"
   }
 }
