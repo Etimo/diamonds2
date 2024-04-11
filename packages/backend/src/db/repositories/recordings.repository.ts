@@ -37,7 +37,7 @@ export class RecordingsRepository {
     seasonId: string,
     maxEntries: number,
   ): Promise<number[]> {
-    const recordings = await this.prisma.recording.findMany({
+    const recordings: IRecording[] = await this.prisma.recording.findMany({
       where: {
         seasonId,
       },
