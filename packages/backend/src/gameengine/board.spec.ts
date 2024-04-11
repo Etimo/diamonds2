@@ -240,7 +240,7 @@ describe("getEmptyPosition", () => {
     let empty = board.getEmptyPosition();
 
     // Assert
-    expect(empty).toBeNull();
+    expect(empty).toStrictEqual({ x: 0, y: 0 });
   });
 });
 

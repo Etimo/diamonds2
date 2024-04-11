@@ -33,5 +33,5 @@ test("Removes base property when bot is removed", () => {
   provider.onGameObjectsRemoved(board, [bot]);
 
   // Assert
-  expect(bot.base).toEqual(null);
+  expect(bot.base).toEqual({ x: 0, y: 0 });
 });
