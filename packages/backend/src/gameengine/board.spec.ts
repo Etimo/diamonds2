@@ -1,7 +1,6 @@
 import { Position } from "@etimo/diamonds2-types";
 import { IBot } from "../types";
 import { Board } from "./board";
-import { AbstractGameObject } from "./gameobjects/abstract-game-object";
 import { BaseGameObject } from "./gameobjects/base/base";
 import { BotGameObject } from "./gameobjects/bot/bot";
 import { BotProvider } from "./gameobjects/bot/bot-provider";
@@ -279,17 +278,14 @@ describe("getGameObjectsOnPosition", () => {
 });
 
 describe("canGameObjectEnter", () => {
-  let blockingGameObject: AbstractGameObject = createTestBot();
-  let allowingGameObject: AbstractGameObject = createTestBot();
-
   beforeEach(() => {
+    let pos = { x: 1, y: 1 };
+    opponent.position = pos;
     // Arrange
-    blockingGameObject.position.x = opponent.x + 2;
-    blockingGameObject.position.y = opponent.y;
+    blockingGameObject.position = { x: pos.x + 1, y: pos.y };
     jest.spyOn(blockingGameObject, "canGameObjectEnter").mockReturnValue(false);
 
-    allowingGameObject.position.x = opponent.x;
-    allowingGameObject.position.y = opponent.y + 2;
+    allowingGameObject.position = { x: pos.x, y: pos.y + 1 };
     jest.spyOn(allowingGameObject, "canGameObjectEnter").mockReturnValue(true);
 
     board.addGameObjects([blockingGameObject, allowingGameObject]);
@@ -311,23 +307,18 @@ describe("canGameObjectEnter", () => {
 });
 
 describe("canGameObjectLeave", () => {
-  let blockingGameObject: BotGameObject = createTestBot();
-  let allowingGameObject: BotGameObject = createTestBot();
-
   beforeEach(() => {
     // Arrange
     let pos = { x: 1, y: 1 };
     opponent.position = pos;
 
-    blockingGameObject.position.x = pos.x + 1;
-    blockingGameObject.position.y = pos.y;
+    blockingGameObject.position = { x: pos.x + 1, y: pos.y };
     jest.spyOn(blockingGameObject, "canGameObjectLeave").mockReturnValue(false);
 
-    allowingGameObject.position.x = pos.x;
-    allowingGameObject.position.y = pos.y + 1;
+    allowingGameObject.position = { x: pos.x, y: pos.y + 1 };
     jest.spyOn(allowingGameObject, "canGameObjectLeave").mockReturnValue(true);
 
-    board.addGameObjects([blockingGameObject, allowingGameObject]);
+    board.addGameObjects([blockingGameObject, allowingGameObject, opponent]);
   });
 
   test("returns false if trying to move to a blocking game object", () => {

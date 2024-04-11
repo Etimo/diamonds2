@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { TestingModule } from "@nestjs/testing";
 import { ConflictError, UnauthorizedError } from "../errors";
-import { IBot } from "../types";
+import { IBoardConfig, IBot } from "../types";
 import { BoardsService } from "./board.service";
 import { BotsService } from "./bots.service";
 import { HighscoresService } from "./highscores.service";
@@ -14,8 +14,6 @@ import {
   seasonsRepositoryMock,
 } from "./test-helper.spec";
 
-let botTest: IBot;
-
 describe("BoardsService", () => {
   let botsService: BotsService;
   let highscoresService: HighscoresService;
@@ -24,14 +22,18 @@ describe("BoardsService", () => {
 
   const dummyBoardId = 1111111;
   const dummyBoardToken = "dummy";
+  const boardId = "ef8461d6-7d53-4015-8829-d14d8cc880ef";
 
-  const boardConfig = {
-    id: "test",
-    seasonId: "321",
+  const boardConfig: IBoardConfig = {
+    id: boardId,
     inventorySize: 5,
     canTackle: false,
     teleporters: 1,
     teleportRelocation: 10,
+    separateBoards: false,
+    dummyBots: 0,
+    createTimeStamp: new Date(),
+    updateTimeStamp: new Date(),
     height: 15,
     width: 15,
     minimumDelayBetweenMoves: 100,
@@ -43,7 +45,7 @@ describe("BoardsService", () => {
   let botId = "65d70ce4-ae31-47f5-a72f-16c45180881d";
   let dummyBotId = "11111111-1111-1111-1111-111111111111";
 
-  botTest = {
+  const botTest: IBot = {
     id: botId,
     name: "bot1",
     email: "email",
@@ -94,11 +96,11 @@ describe("BoardsService", () => {
     boardConfigRepositoryMock.getBoardConfigById.mockReturnValue(boardConfig);
     botRepositryMock.get.mockReturnValueOnce(botTest);
 
-    let boards = boardsService.getAll();
+    const boards = boardsService.getAll();
 
-    let lenBefore = boards[0].gameObjects.length;
+    const lenBefore = boards[0].gameObjects.length;
 
-    let board = await boardsService.join(botId, boards[0].id);
+    const board = await boardsService.join(botId, boards[0].id);
 
     expect(board).toBeDefined();
     expect(board.gameObjects.length).toBe(lenBefore + 2);
