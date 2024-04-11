@@ -11,6 +11,7 @@ CMD ["yarn", "start:dev"]
 
 FROM develop AS build
 RUN npm run compile
+RUN npx prisma generate
 RUN yarn workspaces focus --all --production
 
 FROM node:20-alpine AS production
