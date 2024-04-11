@@ -65,5 +65,5 @@ describe("multiple positions", () => {
 });
 
 test("has null properties by default", () => {
-  expect(go.properties).toBeNull();
+  expect(go.properties).toBe({});
 });

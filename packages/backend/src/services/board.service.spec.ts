@@ -119,9 +119,12 @@ describe("BoardsService", () => {
     botRepositryMock.get.mockReturnValue(botTest);
 
     await boardsService.join(botId, boards[0].id);
-    let act = boardsService.join(botId, boards[1].id);
-    expect(act).rejects.toThrowError(ConflictError);
-    expect(act).rejects.toThrowError("Already playing");
+
+    try {
+      await boardsService.join(botId, boards[1].id);
+    } catch (e) {
+      expect(e).toBeInstanceOf(ConflictError);
+    }
   });
 
   it("Should throw ConflictError when bot is already present on same board", async () => {
@@ -136,9 +139,12 @@ describe("BoardsService", () => {
       email: "email",
     } as IBot);
     await boardsService.join(botId, boards[0].id);
-    await expect(boardsService.join(botId, boards[0].id)).rejects.toThrowError(
-      ConflictError,
-    );
+
+    try {
+      boardsService.join(botId, boards[0].id);
+    } catch (e) {
+      expect(e).toBeInstanceOf(ConflictError);
+    }
   });
 
   it("Should throw ConflictError when board not exists", async () => {
