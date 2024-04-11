@@ -9,6 +9,7 @@
     "build": "nest build --tsc",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nodemon",
+    "postinstall": "npx prisma generate",
     "start:dev": "npx prisma generate && nodemon",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
