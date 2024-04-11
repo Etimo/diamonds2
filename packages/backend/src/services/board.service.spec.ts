@@ -141,7 +141,7 @@ describe("BoardsService", () => {
     await boardsService.join(botId, boards[0].id);
 
     try {
-      boardsService.join(botId, boards[0].id);
+      await boardsService.join(botId, boards[0].id);
     } catch (e) {
       expect(e).toBeInstanceOf(ConflictError);
     }

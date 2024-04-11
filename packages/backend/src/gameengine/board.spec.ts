@@ -284,10 +284,12 @@ describe("canGameObjectEnter", () => {
 
   beforeEach(() => {
     // Arrange
-    blockingGameObject.position.x += 1;
+    blockingGameObject.position.x = opponent.x + 2;
+    blockingGameObject.position.y = opponent.y;
     jest.spyOn(blockingGameObject, "canGameObjectEnter").mockReturnValue(false);
 
-    allowingGameObject.position.y += 1;
+    allowingGameObject.position.x = opponent.x;
+    allowingGameObject.position.y = opponent.y + 2;
     jest.spyOn(allowingGameObject, "canGameObjectEnter").mockReturnValue(true);
 
     board.addGameObjects([blockingGameObject, allowingGameObject]);
