@@ -3,26 +3,25 @@ version: "3.7"
 services:
   frontend:
     build:
-      context: ./frontend
+      context: .
+      dockerfile: .docker/dockerfiles/frontend
       target: "prod"
     ports:
       - 8080:8082
 
   backend:
     build:
-      context: ./backend
+      context: .
+      dockerfile: .docker/dockerfiles/backend
       target: "prod"
     environment:
       - DATABASE_URL
       - SLACK_ACCESS_TOKEN
       - SLACK_SIGNING_SECRET
     ports:
-      - 8081:3000
+      - 3000:3000
     logging:
       driver: "json-file"
       options:
         max-size: "100m"
         max-file: "1"
-
-volumes:
-  bot-data:
