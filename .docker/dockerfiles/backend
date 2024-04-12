@@ -10,7 +10,7 @@ CMD ["yarn", "start:dev"]
 
 FROM develop AS build
 RUN npm run compile
-RUN yarn workspaces focus --all --production
+RUN SKIP_POSTINSTALL=true yarn workspaces focus --all --production
 
 FROM node:20-alpine AS prod
 ENV PORT=3000
