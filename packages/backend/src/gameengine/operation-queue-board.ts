@@ -12,7 +12,7 @@ import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-p
  * * join
  */
 export class OperationQueueBoard extends Board {
-  private opQueue!: ReturnType<typeof async.queue>;
+  private opQueue!: ReturnType<typeof async.queue<OperationQueueEvent>>;
 
   constructor(
     id: number,
@@ -32,19 +32,9 @@ export class OperationQueueBoard extends Board {
   private setupOperationQueue() {
     // Move queue
     const sleep = (m: number) => new Promise((r) => setTimeout(r, m));
-    this.opQueue = async.queue(
-      async (
-        t: OperationQueueEvent,
-        cb: (v: boolean | null, e: Error | null) => void,
-      ) => {
-        try {
-          const res = await t.run();
-          cb(res, null);
-        } catch (e: any) {
-          cb(null, e as Error);
-        }
-      },
-    );
+    this.opQueue = async.queue(async (t: OperationQueueEvent) => {
+      return await t.run();
+    });
   }
 
   /**
@@ -55,7 +45,8 @@ export class OperationQueueBoard extends Board {
     // Queue join
     const event = new OperationQueueJoinEvent(bot, this);
     return new Promise((resolve, reject) => {
-      this.opQueue.push(event, (err) => {
+      this.opQueue.push<boolean>(event, (err, result) => {
+        if (result !== undefined) return resolve(result);
         if (err) {
           resolve(false);
         } else {
@@ -72,8 +63,9 @@ export class OperationQueueBoard extends Board {
   public async enqueueMove(bot: IBot, delta: Position): Promise<boolean> {
     const event = new OperationQueueMoveEvent(bot, this, delta);
     return new Promise((resolve, reject) => {
-      this.opQueue.push(event, (res) => {
-        if (res) {
+      this.opQueue.push<boolean>(event, (err, result) => {
+        if (result !== undefined) return resolve(result);
+        if (err) {
           resolve(false);
         } else {
           resolve(true);
@@ -86,7 +78,10 @@ export class OperationQueueBoard extends Board {
 export class OperationQueueEvent {
   queuedAt = new Date();
 
-  constructor(protected bot: IBot, protected board: Board) {}
+  constructor(
+    protected bot: IBot,
+    protected board: Board,
+  ) {}
 
   run(): Promise<boolean> {
     throw Error("Not implemented");

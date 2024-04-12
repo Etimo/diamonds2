@@ -1,0 +1,30 @@
+FROM node:20-alpine as base
+WORKDIR /app
+RUN chown 1000:1000 .
+
+# Set yarn version
+RUN yarn set version 3.6.3
+
+# Copy root files
+COPY --chown=1000:1000 package.json  yarn.lock .yarnrc.yml ./
+
+# Copy yarn files
+COPY --chown=1000:1000 .yarn/cache .yarn/cache
+COPY --chown=1000:1000 .yarn/releases .yarn/releases
+COPY --chown=1000:1000 .yarn/plugins .yarn/plugins
+
+# Copy package.jsons from packages
+COPY --chown=1000:1000 packages/backend/package.json packages/backend/package.json
+COPY --chown=1000:1000 packages/frontend/package.json packages/frontend/package.json
+COPY --chown=1000:1000 packages/types/package.json packages/types/package.json
+
+# Install node_modules
+RUN yarn install || { cat /tmp/**/build.log; exit 1; }
+
+# Copy package sources
+COPY --chown=1000:1000 tsconfig.json ./
+COPY --chown=1000:1000 packages packages
+COPY --chown=1000:1000 scripts scripts
+
+# Build packages
+RUN npm run build

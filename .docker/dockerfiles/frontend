@@ -1,0 +1,20 @@
+FROM diamonds2_base:latest as base
+WORKDIR /app/packages/frontend
+COPY --chown=1000:1000 packages/frontend .
+
+FROM base AS develop
+ENV PORT=8080
+EXPOSE $PORT
+CMD ["yarn", "dev"]
+
+FROM develop AS build
+RUN npm run build
+RUN yarn workspaces focus --all --production
+
+FROM nginx:1.18 AS production
+WORKDIR /usr/share/nginx/html/
+COPY --chown=1000:1000 .docker/resources/nginx.conf /etc/nginx/nginx.conf
+COPY --chown=1000:1000 .docker/resources/entrypoint.sh /entrypoint.sh
+COPY --chown=1000:1000 packages/frontend/.env.defaults /.env
+COPY --chown=1000:1000 --from=build /app/packages/frontend/dist ./admin2
+CMD [ "/entrypoint.sh"]
