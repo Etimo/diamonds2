@@ -20,10 +20,7 @@ jobs:
         run: yarn --cwd=packages/backend run test:coverage --forceExit
 
       - name: List coverage directory
-        run: ls -la
-
-      - name: pwd coverage directory
-        run: pwd
+        run: ls -la ./packages/backend
 
       - name: Coveralls
         uses: coverallsapp/github-action@master
