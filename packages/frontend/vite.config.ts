@@ -10,12 +10,6 @@ export default ({ mode }: any) => {
   console.log('test____');
   console.log(process.env.VITE_API_BASE_URL);
   return defineConfig({
-    build: {
-      watch: {
-        exclude: 'node_modules/**',
-        include: 'src/**',
-      },
-    },
     plugins: [react()],
     server: {
       host: '0.0.0.0',
