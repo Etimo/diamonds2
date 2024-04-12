@@ -11,7 +11,7 @@ FROM develop AS build
 RUN npm run build
 RUN yarn workspaces focus --all --production
 
-FROM nginx:1.18 AS production
+FROM nginx:1.18 AS prod
 WORKDIR /usr/share/nginx/html/
 COPY --chown=1000:1000 .docker/resources/nginx.conf /etc/nginx/nginx.conf
 COPY --chown=1000:1000 .docker/resources/entrypoint.sh /entrypoint.sh

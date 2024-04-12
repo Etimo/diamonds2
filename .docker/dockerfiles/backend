@@ -12,7 +12,7 @@ FROM develop AS build
 RUN npm run compile
 RUN yarn workspaces focus --all --production
 
-FROM node:20-alpine AS production
+FROM node:20-alpine AS prod
 ENV PORT=3000
 WORKDIR /app
 COPY --chown=1000:1000 --from=build /app/packages/backend/dist .
