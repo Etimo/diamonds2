@@ -13,12 +13,14 @@ export class TeleportProvider extends AbstractGameObjectProvider<TeleportProvide
   }
 
   private generateTeleports(board: Board) {
-    for (let i = 0; i < this.config.pairs; i++) {
-      const pairId = `${i + 1}`;
-      board.addGameObjects([
-        new TeleportGameObject(board.getEmptyPosition(), { pairId }),
-        new TeleportGameObject(board.getEmptyPosition(), { pairId }),
-      ]);
+    if (this.config) {
+      for (let i = 0; i < this.config.pairs; i++) {
+        const pairId = `${i + 1}`;
+        board.addGameObjects([
+          new TeleportGameObject(board.getEmptyPosition(), { pairId }),
+          new TeleportGameObject(board.getEmptyPosition(), { pairId }),
+        ]);
+      }
     }
   }
 }

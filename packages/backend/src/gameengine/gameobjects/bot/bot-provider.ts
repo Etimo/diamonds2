@@ -21,6 +21,11 @@ export class BotProvider extends AbstractGameObjectProvider<BotProviderConfig> {
     board: Board,
   ) {
     const timeJoined = new Date();
+    const defaultConfig = {
+      inventorySize: 0,
+      canTackle: false,
+    };
+    const config = this.config || defaultConfig;
     const botGameObject = new BotGameObject({
       base: { x: base.x, y: base.y },
       botId: data.id ?? "",
@@ -28,8 +33,8 @@ export class BotProvider extends AbstractGameObjectProvider<BotProviderConfig> {
         timeJoined.getTime() + board.getConfig().sessionLength * 1000,
       ),
       nextMoveAvailableAt: new Date(),
-      inventorySize: this.config.inventorySize,
-      canTackle: this.config.canTackle,
+      inventorySize: config.inventorySize || 0,
+      canTackle: config.canTackle || false,
       diamonds: 0,
       score: 0,
       name: data.name ?? "",
