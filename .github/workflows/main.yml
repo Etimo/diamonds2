@@ -81,10 +81,10 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
       - name: Tag docker images
         run: |
-          docker tag diamonds2_frontend etimodanielwinther/diamonds2_frontend:latest-${BRANCH_NAME}
-          docker tag diamonds2_frontend etimodanielwinther/diamonds2_frontend:${BRANCH_NAME}-${{ github.sha }}
-          docker tag diamonds2_backend etimodanielwinther/diamonds2_backend:latest-${BRANCH_NAME}
-          docker tag diamonds2_backend etimodanielwinther/diamonds2_backend:${BRANCH_NAME}-${{ github.sha }}
+          docker tag diamonds2-frontend etimodanielwinther/diamonds2_frontend:latest-${BRANCH_NAME}
+          docker tag diamonds2-frontend etimodanielwinther/diamonds2_frontend:${BRANCH_NAME}-${{ github.sha }}
+          docker tag diamonds2-backend etimodanielwinther/diamonds2_backend:latest-${BRANCH_NAME}
+          docker tag diamonds2-backend etimodanielwinther/diamonds2_backend:${BRANCH_NAME}-${{ github.sha }}
       - name: Push docker images
         run: |
           docker push etimodanielwinther/diamonds2_frontend:latest-${BRANCH_NAME}
