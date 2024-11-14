@@ -54,15 +54,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Install Docker Compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
-
       - name: Build docker image
         run: |
           docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
-          docker-compose -f docker-compose.yml build
+          docker compose -f docker-compose.yml build
 
   # Build and push production images
   build-prod:
@@ -78,15 +73,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Install Docker Compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
-
       - name: Build docker image
         run: |
           docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
-          docker-compose -f docker-compose.prod-build.yml build
+          docker compose -f docker-compose.prod-build.yml build
       - name: Extract branch name
         shell: bash
         run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')" >> $GITHUB_ENV
