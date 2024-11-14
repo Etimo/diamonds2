@@ -4,12 +4,6 @@ networks:
   diamonds2:
 
 services:
-  base:
-    image: diamonds2_base:latest
-    build:
-      context: .
-      dockerfile: .docker/dockerfiles/base
-
   frontend:
     build:
       context: .

@@ -54,11 +54,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      #- name: Build base image
-      #  run: docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
+      - name: Build base image
+        run: docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
 
       - name: Build docker image
-        run: docker compose -f docker-compose.yml build
+        run: docker compose -f docker-compose.yml --build
 
   # Build and push production images
   build-prod:
@@ -74,11 +74,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      #- name: Build base image
-      #  run: docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
+      - name: Build base image
+        run: docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
 
       - name: Build docker image
-        run: docker compose -f docker-compose.prod-build.yml build
+        run: docker compose -f docker-compose.prod-build.yml --build
 
       - name: Extract branch name
         shell: bash
