@@ -67,14 +67,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build base image
-        run: docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
-
       - name: Build docker image
-        run: docker compose -f docker-compose.prod-build.yml build
+        run: |
+          docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
+          docker compose -f docker-compose.prod-build.yml build
 
       - name: Extract branch name
         shell: bash
