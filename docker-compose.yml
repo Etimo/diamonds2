@@ -9,6 +9,7 @@ services:
       context: .
       dockerfile: .docker/dockerfiles/frontend
       target: develop
+    image: diamonds2_base:latest
     environment:
       - VITE_API_BASE_URL=http://backend:3000/api
     volumes:
@@ -28,6 +29,7 @@ services:
       - ./packages/prisma:/app/prisma
     depends_on:
       - database
+    image: diamonds2_base:latest
     environment:
       ENVIRONMENT: development
       DATABASE_URL: postgresql://diamonds:password@database:5433/diamonds?schema=public
