@@ -69,9 +69,9 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Run docker-compose
-          uses: hoverkraft-tech/compose-action@v2.0.1
-          with:
-            compose-file: "./docker-compose.prod-build.yml"
+        uses: hoverkraft-tech/compose-action@v2.0.1
+        with:
+          compose-file: "./docker-compose.prod-build.yml"
       - name: Build docker image
         run: |
           docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
