@@ -6,6 +6,8 @@ services:
     restart: always
     environment:
       - VITE_API_BASE_URL=http://backend:3000/api
+      - PORT=8082
+      - APP=frontend
     ports:
       - 80:8082
       - 443:443
