@@ -19,4 +19,4 @@ COPY --chown=1000:1000 --from=build /app/packages/backend/dist .
 COPY --chown=1000:1000 --from=build /app/node_modules ./node_modules
 COPY --chown=1000:1000 --from=build /app/packages ./packages
 EXPOSE $PORT
-CMD ["node", "index.js"]
+CMD ["node", "main.js"]
