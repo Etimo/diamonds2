@@ -3,7 +3,7 @@ WORKDIR /app/packages/frontend
 COPY --chown=1000:1000 packages/frontend .
 
 FROM base AS develop
-ENV PORT=8080
+ENV PORT=8082
 EXPOSE $PORT
 CMD ["yarn", "dev"]
 
