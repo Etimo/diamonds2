@@ -18,6 +18,6 @@ WORKDIR /app
 COPY --chown=1000:1000 --from=build /app/packages/backend/dist .
 COPY --chown=1000:1000 --from=build /app/node_modules ./node_modules
 COPY --chown=1000:1000 --from=build /app/packages ./packages
-COPY --chown=1000:1000 --from=build /app/prisma ./prisma
+COPY --chown=1000:1000 --from=build /app/packages/backend/prisma ./prisma
 EXPOSE $PORT
 CMD ["npm", "run", "start:prod"]
