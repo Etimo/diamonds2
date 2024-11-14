@@ -9,8 +9,8 @@ EXPOSE $PORT
 CMD ["yarn", "start:dev"]
 
 FROM develop AS build
+RUN yarn workspaces focus --all --production
 RUN npm run build
-RUN SKIP_POSTINSTALL=true yarn workspaces focus --all --production
 
 FROM node:20-alpine AS prod
 ENV PORT=3000
