@@ -45,37 +45,40 @@ jobs:
   test-build:
     name: Build for dev env
     runs-on: ubuntu-latest
+    services:
+      docker:
+        image: docker:20.10.9
+        options: --privileged
     steps:
       - run: echo "Ref ${{ github.ref }}"
 
-      - uses: actions/checkout@v4
-
-      - name: Build base image
-        run: docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Build docker image
-        uses: hoverkraft-tech/compose-action@v2.0.1
-        with:
-          compose-file: "./docker-compose.yml"
-        run: docker-compose build
+        run: |
+          docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
+          docker-compose -f docker-compose.yml build
 
   # Build and push production images
   build-prod:
     name: Build for prod env
     runs-on: ubuntu-latest
+    services:
+      docker:
+        image: docker:20.10.9
+        options: --privileged
     if: github.ref == 'refs/heads/main'
     needs:
       - test-backend
     steps:
-      - uses: actions/checkout@v1
-      - name: Build base image
-        run: docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Build docker image
-        uses: hoverkraft-tech/compose-action@v2.0.1
-        with:
-          compose-file: "./docker-compose.prod-build.yml"
-        run: docker-compose build
+        run: |
+          docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
+          docker-compose -f docker-compose.prod-build.yml build
       - name: Extract branch name
         shell: bash
         run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')" >> $GITHUB_ENV
