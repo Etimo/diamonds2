@@ -53,12 +53,10 @@ jobs:
       - name: Build base image
         run: docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
 
-      - name: Run docker-compose
+      - name: Build docker image
         uses: hoverkraft-tech/compose-action@v2.0.1
         with:
           compose-file: "./docker-compose.yml"
-
-      - name: Build docker image
         run: docker-compose build
 
   # Build and push production images
@@ -73,11 +71,10 @@ jobs:
       - name: Build base image
         run: docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
 
-      - name: Run docker-compose
+      - name: Build docker image
         uses: hoverkraft-tech/compose-action@v2.0.1
         with:
           compose-file: "./docker-compose.prod-build.yml"
-      - name: Build docker image
         run: docker-compose build
       - name: Extract branch name
         shell: bash
