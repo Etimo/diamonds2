@@ -8,7 +8,7 @@ EXPOSE $PORT
 CMD ["yarn", "dev"]
 
 FROM develop AS build
-RUN yarn workspaces focus --all --production
+RUN yarn
 RUN npm run build
 
 FROM nginx:1.18 AS prod
