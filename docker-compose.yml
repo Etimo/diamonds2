@@ -17,8 +17,6 @@ services:
       - 8082:8082
     networks:
       - diamonds2
-    depends_on:
-      - base
 
   backend:
     build:
@@ -30,7 +28,6 @@ services:
       - ./packages/prisma:/app/prisma
     depends_on:
       - database
-      - base
     environment:
       ENVIRONMENT: development
       DATABASE_URL: postgresql://diamonds:password@database:5433/diamonds?schema=public
