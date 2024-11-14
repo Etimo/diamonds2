@@ -45,15 +45,19 @@ jobs:
   test-build:
     name: Build for dev env
     runs-on: ubuntu-latest
-    services:
-      docker:
-        image: docker:20.10.9
-        options: --privileged
     steps:
       - run: echo "Ref ${{ github.ref }}"
 
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
 
       - name: Build docker image
         run: |
@@ -64,16 +68,20 @@ jobs:
   build-prod:
     name: Build for prod env
     runs-on: ubuntu-latest
-    services:
-      docker:
-        image: docker:20.10.9
-        options: --privileged
     if: github.ref == 'refs/heads/main'
     needs:
       - test-backend
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
 
       - name: Build docker image
         run: |
