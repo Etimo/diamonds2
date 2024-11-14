@@ -117,7 +117,7 @@ jobs:
             cd diamonds2
             git fetch
             git checkout --progress --force ${{ github.sha }}
-            docker-compose down
+            docker-compose down --remove-orphans
             docker system prune -af
             source ~/.bash_profile
             DIAMONDS_DOCKER_TAG=main-${{ github.sha }} docker-compose -f docker-compose.prod-run.yml up -d
