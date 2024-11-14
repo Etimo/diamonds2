@@ -49,15 +49,17 @@ jobs:
       - run: echo "Ref ${{ github.ref }}"
 
       - uses: actions/checkout@v4
+
+      - name: Build base image
+        run: docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
+
       - name: Run docker-compose
         uses: hoverkraft-tech/compose-action@v2.0.1
         with:
           compose-file: "./docker-compose.yml"
 
       - name: Build docker image
-        run: |
-          docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
-          docker-compose build
+        run: docker-compose build
 
   # Build and push production images
   build-prod:
@@ -68,14 +70,15 @@ jobs:
       - test-backend
     steps:
       - uses: actions/checkout@v1
+      - name: Build base image
+        run: docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
+
       - name: Run docker-compose
         uses: hoverkraft-tech/compose-action@v2.0.1
         with:
           compose-file: "./docker-compose.prod-build.yml"
       - name: Build docker image
-        run: |
-          docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
-          docker-compose build
+        run: docker-compose build
       - name: Extract branch name
         shell: bash
         run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')" >> $GITHUB_ENV
@@ -100,7 +103,7 @@ jobs:
     name: Deploy to new account
     needs: build-prod
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: chrnorm/deployment-action@releases/v1
         name: Create GitHub deployment
