@@ -88,59 +88,59 @@ jobs:
           docker push etimodanielwinther/diamonds2_backend:latest-${BRANCH_NAME}
           docker push etimodanielwinther/diamonds2_backend:${BRANCH_NAME}-${{ github.sha }}
   # When pushing code to master we want to deploy latest master images to test environment
-  # deploy-prod:
-  #   name: Deploy to new account
-  #   needs: build-prod
-  #   runs-on: ubuntu-latest
-  #   if: github.ref == 'refs/heads/master'
-  #   steps:
-  #     - uses: chrnorm/deployment-action@releases/v1
-  #       name: Create GitHub deployment
-  #       id: deployment
-  #       with:
-  #         token: "${{ github.token }}"
-  #         target_url: https://diamonds.etimo.se
-  #         environment: prod
-  #         initial_status: "in_progress"
-  #     - name: Update apps
-  #       uses: appleboy/ssh-action@master
-  #       with:
-  #         host: ${{ secrets.DEPLOY_ETIMO_AWS_HOST }}
-  #         USERNAME: ${{ secrets.DEPLOY_ETIMO_AWS_USERNAME }}
-  #         PORT: 22
-  #         KEY: ${{ secrets.DEPLOY_ETIMO_AWS_KEY }}
-  #         script: |
-  #           cd diamonds2
-  #           git fetch
-  #           git checkout --progress --force ${{ github.sha }}
-  #           docker-compose down
-  #           docker system prune -af
-  #           source ~/.bash_profile
-  #           DIAMONDS_DOCKER_TAG=master-${{ github.sha }} docker-compose -f docker-compose.prod-run.yml up -d
-  #     - name: Update autoscaler
-  #       uses: appleboy/ssh-action@master
-  #       with:
-  #         host: ${{ secrets.DEPLOY_ETIMO_AWS_AUTOSCALER_HOST }}
-  #         USERNAME: ${{ secrets.DEPLOY_ETIMO_AWS_USERNAME }}
-  #         PORT: 22
-  #         KEY: ${{ secrets.DEPLOY_ETIMO_AWS_KEY }}
-  #         script: |
-  #           cd diamonds2
-  #           git fetch
-  #           git checkout --progress --force ${{ github.sha }}
-  #     - name: Update deployment status (success)
-  #       if: success()
-  #       uses: chrnorm/deployment-status@releases/v1
-  #       with:
-  #         token: "${{ github.token }}"
-  #         target_url: https://diamonds.etimo.se
-  #         state: "success"
-  #         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-  #     - name: Update deployment status (failure)
-  #       if: failure()
-  #       uses: chrnorm/deployment-status@releases/v1
-  #       with:
-  #         token: "${{ github.token }}"
-  #         target_url: https://diamonds.etimo.se
-  #         state: "failure"
-  #         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+  deploy-prod:
+    name: Deploy to new account
+    needs: build-prod
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - uses: chrnorm/deployment-action@releases/v1
+        name: Create GitHub deployment
+        id: deployment
+        with:
+          token: "${{ github.token }}"
+          target_url: https://diamonds.etimo.se
+          environment: prod
+          initial_status: "in_progress"
+      - name: Update apps
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_ETIMO_AWS_HOST }}
+          USERNAME: ${{ secrets.DEPLOY_ETIMO_AWS_USERNAME }}
+          PORT: 22
+          KEY: ${{ secrets.DEPLOY_ETIMO_AWS_KEY }}
+          script: |
+            cd diamonds2
+            git fetch
+            git checkout --progress --force ${{ github.sha }}
+            docker-compose down
+            docker system prune -af
+            source ~/.bash_profile
+            DIAMONDS_DOCKER_TAG=master-${{ github.sha }} docker-compose -f docker-compose.prod-run.yml up -d
+      - name: Update autoscaler
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_ETIMO_AWS_AUTOSCALER_HOST }}
+          USERNAME: ${{ secrets.DEPLOY_ETIMO_AWS_USERNAME }}
+          PORT: 22
+          KEY: ${{ secrets.DEPLOY_ETIMO_AWS_KEY }}
+          script: |
+            cd diamonds2
+            git fetch
+            git checkout --progress --force ${{ github.sha }}
+      - name: Update deployment status (success)
+        if: success()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target_url: https://diamonds.etimo.se
+          state: "success"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+      - name: Update deployment status (failure)
+        if: failure()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target_url: https://diamonds.etimo.se
+          state: "failure"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
