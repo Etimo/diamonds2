@@ -14,21 +14,29 @@ export class DiamondProvider extends AbstractGameObjectProvider<DiamondProviderC
 
   onGameObjectsRemoved(board: Board, other: any) {
     const diamonds = board.getGameObjectsByType(DiamondGameObject);
-    const minLimit =
-      board.width * board.height * this.config.minRatioForGeneration;
+    const defaultConfig = {
+      minRatioForGeneration: 0,
+    };
+    const config = this.config || defaultConfig;
+    const minLimit = board.width * board.height * config.minRatioForGeneration;
     if (diamonds.length == 0) {
       this.generateDiamonds(board);
     }
   }
 
   private generateDiamonds(board: Board) {
+    const defaultConfig = {
+      generationRatio: 0,
+      redRatio: 0,
+    };
+    const config = this.config || defaultConfig;
     const count = Math.floor(
-      board.width * board.height * this.config.generationRatio,
+      board.width * board.height * config.generationRatio,
     );
     const diamonds = new Array(count)
       .fill(null)
       .map((_) => new DiamondGameObject(board.getEmptyPosition(), 1));
-    const redDiamonds = Math.floor(diamonds.length * this.config.redRatio);
+    const redDiamonds = Math.floor(diamonds.length * config.redRatio);
     for (let i = 0; i < redDiamonds; i++) {
       diamonds[i].points = 2;
     }
