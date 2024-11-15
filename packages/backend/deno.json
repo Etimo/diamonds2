@@ -6,6 +6,8 @@
     "postinstall": "deno run -A npm:prisma generate",
     "start:dev": "deno run postinstall && deno run start",
     "start:debug": "nest start --debug --watch",
+    "db:push": "deno run -A npm:prisma db push",
+    "db:seed": "deno run -A npm:prisma db seed",
     "start:prod": "node dist/main",
     "env": "cp .env.defaults .env",
     "lint": "deno lint \"{src,apps,libs,test}/**/*.ts\" --fix",

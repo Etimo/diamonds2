@@ -39,7 +39,7 @@ export class BotGameObject extends AbstractGameObject {
     this.botId = options.botId;
   }
 
-  get properties(): BotGameObjectProperties {
+  override get properties(): BotGameObjectProperties {
     return {
       diamonds: this.diamonds,
       score: this.score,
@@ -53,7 +53,7 @@ export class BotGameObject extends AbstractGameObject {
     };
   }
 
-  onGameObjectEntered(gameObject: AbstractGameObject) {
+  override onGameObjectEntered(gameObject: AbstractGameObject) {
     if (gameObject instanceof BotGameObject) {
       const otherBot = gameObject as BotGameObject;
 
@@ -74,7 +74,7 @@ export class BotGameObject extends AbstractGameObject {
       otherBot.diamonds += canSteal;
     }
   }
-  canGameObjectEnter(gameObject: AbstractGameObject): boolean {
+  override canGameObjectEnter(gameObject: AbstractGameObject): boolean {
     if (gameObject instanceof BotGameObject) {
       const otherBot = gameObject as BotGameObject;
 

@@ -8,7 +8,7 @@ echo "Navigating to directory: packages/backend"
 cd packages/backend || exit 1
 
 echo "Install dependencies"
-yarn install
+deno install --allow-scripts
 
 echo "Waiting database server to launch on $PORT..."
 
@@ -23,7 +23,7 @@ while ! nc -z localhost $PORT ; do
 done
 
 echo "Update the database schema"
-npx prisma db push
+deno run db:push
 
 echo "Seed the database"
-npx prisma db seed
+deno run db:seed

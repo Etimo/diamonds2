@@ -3,20 +3,19 @@ import { Board } from "../../board.ts";
 import { AbstractGameObjectProvider } from "../abstract-game-object-providers.ts";
 import { DiamondGameObject } from "./diamond.ts";
 
-export class DiamondProvider
-  extends AbstractGameObjectProvider<DiamondProviderConfig> {
+export class DiamondProvider extends AbstractGameObjectProvider<DiamondProviderConfig> {
   constructor(config: DiamondProviderConfig) {
     super(config);
   }
 
-  onBoardInitialized(board: Board) {
+  override onBoardInitialized(board: Board) {
     this.generateDiamonds(board);
   }
 
-  onGameObjectsRemoved(board: Board, other: any) {
+  override onGameObjectsRemoved(board: Board, other: any) {
     const diamonds = board.getGameObjectsByType(DiamondGameObject);
-    const minLimit = board.width * board.height *
-      this.config.minRatioForGeneration;
+    const minLimit =
+      board.width * board.height * this.config.minRatioForGeneration;
     if (diamonds.length == 0) {
       this.generateDiamonds(board);
     }

@@ -21,7 +21,7 @@ export interface IDiamondGameObjectDto {
 export interface IDiamondButtonGameObjectDto {
   type: "DiamondButtonGameObject";
   position: Position;
-  properties: {};
+  properties: Record<string | number | symbol, never>;
 }
 
 export interface IBaseGameObjectDto {

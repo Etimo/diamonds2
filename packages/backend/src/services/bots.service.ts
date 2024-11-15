@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import * as bcrypt from "bcrypt";
+import * as bcrypt from "https://deno.land/x/bcrypt@v0.3.0/mod.ts";
 import { BotRegistrationsRepository } from "../db/index.ts";
 import { ConflictError, NotFoundError } from "../errors/index.ts";
 import { BotRecoveryDto, BotRegistrationDto } from "../models/index.ts";
@@ -72,6 +72,6 @@ export class BotsService {
   }
 
   private async hashPassword(password: string): Promise<string> {
-    return await bcrypt.hash(password, 10);
+    return await bcrypt.hash(password, "10");
   }
 }

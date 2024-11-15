@@ -48,7 +48,7 @@ export const moveBotOnBoard = async (id, token, direction) => {
       direction: direction,
     });
     return Board.dataToBoard(data);
-  } catch (error) {
+  } catch {
     // Fetch board if move fails
     return await getBoard(id);
   }

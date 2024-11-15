@@ -1,22 +1,14 @@
-FROM diamonds2_base:latest as base
+FROM diamonds2_base:latest AS base
 WORKDIR /app/packages/backend
-RUN apk update && apk add --no-cache openssl libc6-compat
+RUN apt-get update -y && apt-get install -y openssl
 COPY --chown=1000:1000 packages/backend .
 
 FROM base AS develop
 ENV PORT=3000
 EXPOSE $PORT
-CMD ["yarn", "start:dev"]
+CMD ["deno", "run", "start:dev"]
 
-FROM develop AS build
-RUN npm run build
-RUN SKIP_POSTINSTALL=true yarn workspaces focus --all --production
-
-FROM node:20-alpine AS prod
+FROM base AS prod
 ENV PORT=3000
-WORKDIR /app
-COPY --chown=1000:1000 --from=build /app/packages/backend/dist .
-COPY --chown=1000:1000 --from=build /app/node_modules ./node_modules
-COPY --chown=1000:1000 --from=build /app/packages ./packages
 EXPOSE $PORT
-CMD ["node", "index.js"]
+CMD ["run", "start:prod"]

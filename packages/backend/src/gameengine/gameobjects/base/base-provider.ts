@@ -1,11 +1,11 @@
 import { Board } from "../../board.ts";
-import { AbstractGameObject } from "../abstract-game-object.ts";
 import { AbstractGameObjectProvider } from "../abstract-game-object-providers.ts";
+import { AbstractGameObject } from "../abstract-game-object.ts";
 import { BotGameObject } from "../bot/bot.ts";
 import { BaseGameObject } from "./base.ts";
 
 export class BaseProvider extends AbstractGameObjectProvider {
-  onGameObjectsAdded(board: Board, gameObjects: AbstractGameObject[]) {
+  override onGameObjectsAdded(board: Board, gameObjects: AbstractGameObject[]) {
     gameObjects.forEach((gameObject) => {
       if (!(gameObject instanceof BotGameObject)) {
         return;
@@ -18,7 +18,10 @@ export class BaseProvider extends AbstractGameObjectProvider {
     });
   }
 
-  onGameObjectsRemoved(board: Board, gameObjects: AbstractGameObject[]) {
+  override onGameObjectsRemoved(
+    board: Board,
+    gameObjects: AbstractGameObject[],
+  ) {
     gameObjects.forEach((gameObject) => {
       if (!(gameObject instanceof BotGameObject)) {
         return;

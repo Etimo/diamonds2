@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "deno run -A prisma/seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.7",
@@ -16,7 +16,6 @@
     "@types/node": "^10.17.26",
     "async": "^3.2.5",
     "axios": "^1.6.7",
-    "bcrypt": "^5.1.1",
     "chalk": "^5.3.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
@@ -36,7 +35,6 @@
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
     "@types/async": "^3.2.20",
-    "@types/bcrypt": "^5.0.0",
     "@types/chalk": "^2.2.0",
     "@types/compression": "^1.7.3",
     "@types/express": "^4.17.13",

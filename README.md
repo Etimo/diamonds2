@@ -15,18 +15,22 @@ If you find a bug or has a suggestion for improvement you are more than welcome
 to [submit an issue](https://github.com/Etimo/diamonds2/issues/new) or
 [pull request](https://github.com/Etimo/diamonds2/compare)!
 
+## Requirements
+
+Deno
+
 ## Development 💻
 
 1. Install dependencies
 
 ```sh
-yarn
+deno install --allow-scripts
 ```
 
 2. Setup default environment variables
 
 ```sh
-npm run env
+deno run env
 ```
 
 3. Setup local database
@@ -34,27 +38,26 @@ npm run env
 Either
 
 ```sh
-npm run init-db
+deno run init-db
+deno run support
 ```
 
 or
 
 ```sh
-npm run support
+deno run support
 # Wait for db to start and navigate to packages/backend
 cd packages/backend
-# Install prisma
-yarn install
 # Update db schema
-npx prisma db push
+deno run db:push
 # Seed the database
-npx prisma db seed
+deno run db:seed
 ```
 
 4. Start everything
 
 ```sh
-npm run start
+deno run start
 ```
 
 Frontend: http://localhost:8082

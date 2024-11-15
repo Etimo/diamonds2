@@ -18,7 +18,7 @@ export class OperationQueueBoard extends Board {
     id: number,
     config: IBoardConfig,
     gameObjectProviders: AbstractGameObjectProvider[],
-    protected logger: any,
+    protected override logger: any,
   ) {
     super(id, config, gameObjectProviders, logger);
     this.setupOperationQueue();
@@ -90,20 +90,20 @@ export class OperationQueueEvent {
 
 export class OperationQueueMoveEvent extends OperationQueueEvent {
   constructor(
-    protected bot: IBot,
-    protected board: Board,
+    protected override bot: IBot,
+    protected override board: Board,
     protected delta: Position,
   ) {
     super(bot, board);
   }
 
-  run() {
-    return this.board.move(this.bot, this.delta);
+  override run() {
+    return Promise.resolve(this.board.move(this.bot, this.delta));
   }
 }
 
 export class OperationQueueJoinEvent extends OperationQueueEvent {
-  run() {
-    return this.board.join(this.bot);
+  override run() {
+    return Promise.resolve(this.board.join(this.bot));
   }
 }
