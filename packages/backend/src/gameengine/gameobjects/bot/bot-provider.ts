@@ -8,8 +8,7 @@ export class BotProvider extends AbstractGameObjectProvider<BotProviderConfig> {
     super(config);
   }
 
-  override onBotJoined(bot: IBot, board: Board) {
-    // Add game object to board
+  onBotJoined(bot: IBot, board: Board) {
     const base = board.getEmptyPosition();
     const botGameObject = this.getInitializedBot(bot, base, board);
     board.addGameObjects([botGameObject]);

@@ -3,7 +3,10 @@ import { Board } from "../../board.ts";
 import { AbstractGameObject } from "../abstract-game-object.ts";
 import { BotGameObject } from "../bot/bot.ts";
 export class DiamondGameObject extends AbstractGameObject {
-  constructor(position: Position, public points: number) {
+  constructor(
+    position: Position,
+    public points: number,
+  ) {
     super(position);
   }
 
@@ -12,15 +15,15 @@ export class DiamondGameObject extends AbstractGameObject {
       points: this.points,
     };
   }
+
   /**
    * Remove the diamond when a bot enters and put it in the bot's inventory.
    */
   onGameObjectEntered(gameObject: AbstractGameObject, board: Board) {
     /* istanbul ignore else */
     if (gameObject instanceof BotGameObject) {
-      const bot = gameObject as BotGameObject;
-      if (bot.diamonds + this.points <= bot.inventorySize) {
-        bot.diamonds += this.points;
+      if (gameObject.diamonds + this.points <= gameObject.inventorySize) {
+        gameObject.diamonds += this.points;
         board.removeGameObject(this);
       }
     }

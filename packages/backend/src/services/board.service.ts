@@ -91,8 +91,8 @@ export class BoardsService {
       const sessionLength = boardConfig.sessionLength;
       const minimumDelayBetweenMoves = boardConfig.minimumDelayBetweenMoves;
       const extraFactor = 1.5;
-      const maxMoves = (1000 / minimumDelayBetweenMoves) * sessionLength *
-        extraFactor;
+      const maxMoves =
+        (1000 / minimumDelayBetweenMoves) * sessionLength * extraFactor;
       this.recordingsService.setup(
         numberOfBoards + numEphemeralBoards,
         maxMoves,
