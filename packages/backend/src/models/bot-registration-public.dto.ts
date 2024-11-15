@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IBot } from "../types";
+import { IBot } from "../types/index.ts";
 
 export class BotRegistrationPublicDto {
   @ApiProperty({

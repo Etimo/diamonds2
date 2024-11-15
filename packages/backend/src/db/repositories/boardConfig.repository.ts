@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../../services/prisma.service";
-import { IBoardConfig, INewBoardConfig } from "../../types";
+import { PrismaService } from "../../services/prisma.service.ts";
+import { IBoardConfig, INewBoardConfig } from "../../types/index.ts";
 
 @Injectable()
 export class BoardConfigRepository {

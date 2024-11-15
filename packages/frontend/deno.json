@@ -1,0 +1,12 @@
+{
+  "name": "@etimo/diamonds-typescript",
+  "exports": "./mod.ts",
+  "tasks": {
+    "dev": "deno run -A npm:vite",
+    "build": "deno run -A npm:vite build",
+    "preview": "deno run -A npm:vite preview"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1"
+  }
+}

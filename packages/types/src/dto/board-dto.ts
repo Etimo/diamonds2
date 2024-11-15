@@ -1,5 +1,5 @@
-import { IBoardFeatureDto } from "./board-feature-dto";
-import { IGameObjectDto } from "./game-object-dto";
+import type { IBoardFeatureDto } from "./board-feature-dto.ts";
+import type { IGameObjectDto } from "./game-object-dto.ts";
 
 export interface IBoardDto {
   id: number;

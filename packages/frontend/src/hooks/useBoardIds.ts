@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useFetchRepeatedly } from './useFetchRepeatedly';
+import { useEffect, useState } from "react";
+import { useFetchRepeatedly } from "./useFetchRepeatedly.ts";
 
 export function useBoardIds() {
   const delay = 10000; // 10s

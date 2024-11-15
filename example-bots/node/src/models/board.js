@@ -1,4 +1,4 @@
-import { GameObject } from "./gameObject";
+import { GameObject } from "./gameObject.js";
 
 export class Board {
   constructor(id, minimumDelayBetweenMoves, height, width, gameObjects) {
@@ -21,7 +21,7 @@ export class Board {
       minimumDelayBetweenMoves,
       height,
       width,
-      GameObject.dataToListOfGameObjects(gameObjects)
+      GameObject.dataToListOfGameObjects(gameObjects),
     );
   }
 }

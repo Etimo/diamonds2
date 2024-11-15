@@ -1,5 +1,5 @@
-import { IBot } from "./bot";
-import { ISeason } from "./season";
+import { IBot } from "./bot.ts";
+import { ISeason } from "./season.ts";
 
 export interface IRecording {
   id: string;

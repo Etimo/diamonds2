@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { useBoard } from '../hooks/useBoard';
-import { Board } from './Board';
-import { SideMenu } from './SideMenu';
+import { useState } from "react";
+import { useBoard } from "../hooks/useBoard.ts";
+import { Board } from "./Board/index.ts";
+import { SideMenu } from "./SideMenu/index.ts";
 
 export const Home = () => {
   const [boardId, setBoardId] = useState(1);

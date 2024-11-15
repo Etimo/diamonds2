@@ -1,7 +1,7 @@
 import { Controller, Get, Param } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
-import { HighscorePublicDto } from "../models";
-import { HighscoresService } from "../services";
+import { HighscorePublicDto } from "../models/index.ts";
+import { HighscoresService } from "../services/index.ts";
 
 @ApiTags("Highscores")
 @Controller("api/highscores")
@@ -27,7 +27,7 @@ export class HighscoresController {
       seasonId,
     );
     return highscores.map((highscore) =>
-      HighscorePublicDto.fromEntity(highscore),
+      HighscorePublicDto.fromEntity(highscore)
     );
   }
 }

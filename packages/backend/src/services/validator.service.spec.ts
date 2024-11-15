@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "@jest/globals";
-import { ValidatorService } from "./validator.service";
+import { ValidatorService } from "./validator.service.ts";
 
 let service: ValidatorService;
 

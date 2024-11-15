@@ -1,8 +1,8 @@
-import { Board } from "../../board";
-import { createTestBoard, createTestBot } from "../../util";
-import { BotGameObject } from "../bot/bot";
-import { DiamondGameObject } from "../diamond/diamond";
-import { DiamondButtonGameObject } from "./diamond-button";
+import { Board } from "../../board.ts";
+import { createTestBoard, createTestBot } from "../../util/index.ts";
+import { BotGameObject } from "../bot/bot.ts";
+import { DiamondGameObject } from "../diamond/diamond.ts";
+import { DiamondButtonGameObject } from "./diamond-button.ts";
 
 let button: DiamondButtonGameObject;
 let board: Board;

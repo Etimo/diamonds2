@@ -1,8 +1,8 @@
 import { Position } from "@etimo/diamonds2-types";
-import { IBoardConfig, IBot } from "../types";
-import { AbstractGameObject } from "./gameobjects/abstract-game-object";
-import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
-import { BotGameObject } from "./gameobjects/bot/bot";
+import { IBoardConfig, IBot } from "../types/index.ts";
+import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers.ts";
+import { AbstractGameObject } from "./gameobjects/abstract-game-object.ts";
+import { BotGameObject } from "./gameobjects/bot/bot.ts";
 export type SessionFinishedCallbackFunction = (bot: BotGameObject) => void;
 
 export class Board {
@@ -14,7 +14,7 @@ export class Board {
   private gameObjects: AbstractGameObject[] = [];
   /** Set of registered timer callbacks. */
   private callbackLoopsRegistered: Record<string, any[]> = {};
-  private callbackLoopsId: Record<string, NodeJS.Timeout> = {};
+  private callbackLoopsId: Record<string, number> = {};
   /** List of callbacks that are triggerred whenever a session is finished. */
   private sessionFinishedCallbacks: Function[] = [];
   private botMoves: Record<string, any> = {};
@@ -62,7 +62,7 @@ export class Board {
    *
    * @param bot The bot to add to the board.
    */
-  async join(bot: IBot) {
+  join(bot: IBot) {
     // Add bot to board
     this.bots[bot.id] = bot;
 
@@ -81,7 +81,7 @@ export class Board {
    * @param bot The bot to remove to the board.
    * @param time Remove bot after time.
    */
-  async removeBot(bot: IBot, time: number) {
+  removeBot(bot: IBot, time: number) {
     // Remove bot after X time
     this.createNewExpirationTimer(bot, time);
   }
@@ -114,7 +114,7 @@ export class Board {
    * @param delta The change in position to perform.
    * @returns True if the move succeeds, false otherwise.
    */
-  public async move(bot: IBot, delta: Position) {
+  public move(bot: IBot, delta: Position) {
     const botGameObject = this.getGameObjectsByType(BotGameObject).find(
       (b) => b.name === bot.name,
     );
@@ -198,8 +198,8 @@ export class Board {
       ].filter((g) => g != gameObject);
 
       // TODO: Stop interval timer if empty?
-      if (this.callbackLoopsRegistered[interval].length === 0) {
-      }
+      // if (this.callbackLoopsRegistered[interval].length === 0) {
+      // }
     }
   }
 
@@ -211,7 +211,7 @@ export class Board {
    */
   getEmptyPosition(): Position {
     // Try random positions for some time
-    for (var i = 0; i < this.config.width * this.config.height; i++) {
+    for (let i = 0; i < this.config.width * this.config.height; i++) {
       const { x, y } = this.getRandomPosition();
       if (this.isCellEmpty(x, y)) {
         return { x, y };
@@ -219,7 +219,7 @@ export class Board {
     }
 
     // If not found, try more systematic so we dont get stuck in an endless loop
-    for (var i = 0; i < this.config.width * this.config.height; i++) {
+    for (let i = 0; i < this.config.width * this.config.height; i++) {
       const x = i % this.config.width;
       const y = Math.floor(i / this.config.height);
       if (this.isCellEmpty(x, y)) {
@@ -364,7 +364,7 @@ export class Board {
 
   private notifyProvidersGameObjectsRemoved(gameObjects: AbstractGameObject[]) {
     this.gameObjectProviders.forEach((p) =>
-      p.onGameObjectsRemoved(this, gameObjects),
+      p.onGameObjectsRemoved(this, gameObjects)
     );
   }
 
@@ -374,7 +374,7 @@ export class Board {
 
   private notifyProvidersGameObjectsAdded(gameObjects: AbstractGameObject[]) {
     this.gameObjectProviders.forEach((p) =>
-      p.onGameObjectsAdded(this, gameObjects),
+      p.onGameObjectsAdded(this, gameObjects)
     );
   }
 
@@ -417,7 +417,7 @@ export class Board {
   notifyGameObjectEvent(
     sender: AbstractGameObject,
     message: string,
-    payload?: Object,
+    payload?: any,
   ) {
     this.gameObjects.forEach((g) => g.onEvent(this, sender, message, payload));
   }

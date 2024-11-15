@@ -1,2 +1,2 @@
-export * from "./diamond";
-export * from "./diamond-provider";
+export * from "./diamond.ts";
+export * from "./diamond-provider.ts";

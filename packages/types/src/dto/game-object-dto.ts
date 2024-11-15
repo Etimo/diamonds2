@@ -1,10 +1,10 @@
-import {
+import type {
   BaseGameObjectProperties,
   BotGameObjectProperties,
   DiamondGameObjectProperties,
   TeleportProperties,
-} from "../gameobject";
-import { Position } from "../position";
+} from "../gameobject/index.ts";
+import type { Position } from "../position.ts";
 
 export interface IBotGameObjectDto {
   type: "BotGameObject" | "DummyBotGameObject";
@@ -21,7 +21,7 @@ export interface IDiamondGameObjectDto {
 export interface IDiamondButtonGameObjectDto {
   type: "DiamondButtonGameObject";
   position: Position;
-  properties: {};
+  properties: Record<string | number | symbol, never>;
 }
 
 export interface IBaseGameObjectDto {

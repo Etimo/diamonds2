@@ -1,4 +1,4 @@
-import { ISeason } from "./season";
+import { ISeason } from "./season.ts";
 
 export interface IBoardConfig {
   id: string;

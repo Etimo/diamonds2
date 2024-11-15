@@ -2,14 +2,22 @@
 
 # 💎 Etimo Diamonds 2
 
-Diamonds is a programming challenge. Program a bot and compete to get the highest score.
+Diamonds is a programming challenge. Program a bot and compete to get the
+highest score.
 
 ## Want to play? 🕹
 
 - Read the [game rules and how to get started](RULES.md)
-- Try the api using Swagger either [locally](http://localhost:3000/docs) or [live](http://diamonds.etimo.se/docs/)
+- Try the api using Swagger either [locally](http://localhost:3000/docs) or
+  [live](http://diamonds.etimo.se/docs/)
 
-If you find a bug or has a suggestion for improvement you are more than welcome to [submit an issue](https://github.com/Etimo/diamonds2/issues/new) or [pull request](https://github.com/Etimo/diamonds2/compare)!
+If you find a bug or has a suggestion for improvement you are more than welcome
+to [submit an issue](https://github.com/Etimo/diamonds2/issues/new) or
+[pull request](https://github.com/Etimo/diamonds2/compare)!
+
+## Requirements
+
+Deno
 
 ## Development 💻
 
@@ -18,13 +26,14 @@ Diamonds 2 requires Node 20.
 Run initial setup
 
 ```sh
-npm run setup
+deno run setup
 ```
 
-After initial setup has been successfully run you can start the project by running:
+After initial setup has been successfully run you can start the project by
+running:
 
 ```sh
-npm run start
+deno run start
 ```
 
 The project will autoreload on code change.

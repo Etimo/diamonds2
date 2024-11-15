@@ -1,6 +1,6 @@
 import { Position } from "@etimo/diamonds2-types";
-import { createTestBot } from "../../util/test-bot";
-import { BotGameObject } from "../bot/bot";
+import { createTestBot } from "../../util/test-bot.ts";
+import { BotGameObject } from "./bot.ts";
 let bot1: BotGameObject;
 let bot2: BotGameObject;
 

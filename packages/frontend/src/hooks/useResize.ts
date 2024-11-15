@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
 type Options = {
   [key: string]: any;
@@ -15,7 +15,7 @@ type UseResponsiveContainer = (
 const useResize: UseResponsiveContainer = (options = {}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [maxWidth, setMaxWidth] = useState<MaxWidth>({
-    maxWidth: '100%',
+    maxWidth: "100%",
   });
 
   const callbackFunction: ResizeObserverCallback = (entries) => {

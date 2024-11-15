@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../../services/prisma.service";
-import { INewRecording, IRecording } from "../../types";
+import { PrismaService } from "../../services/prisma.service.ts";
+import { INewRecording, IRecording } from "../../types/index.ts";
 
 @Injectable()
 export class RecordingsRepository {

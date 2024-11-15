@@ -1,8 +1,8 @@
-import { IBot, ITeam } from "../../../types";
-import { Board } from "../../board";
-import { createTestBoard } from "../../util";
-import { BotGameObject } from "../bot/bot";
-import { BotProvider } from "./bot-provider";
+import { IBot, ITeam } from "../../../types/index.ts";
+import { Board } from "../../board.ts";
+import { createTestBoard } from "../../util/index.ts";
+import { BotGameObject } from "./bot.ts";
+import { BotProvider } from "./bot-provider.ts";
 
 let provider: BotProvider;
 let board: Board;

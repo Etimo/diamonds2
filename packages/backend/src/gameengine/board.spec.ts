@@ -1,11 +1,11 @@
 import { Position } from "@etimo/diamonds2-types";
-import { IBot } from "../types";
-import { Board } from "./board";
-import { BaseGameObject } from "./gameobjects/base/base";
-import { BotGameObject } from "./gameobjects/bot/bot";
-import { BotProvider } from "./gameobjects/bot/bot-provider";
-import { DiamondProvider } from "./gameobjects/diamond/diamond-provider";
-import { createTestBoard, createTestBot } from "./util";
+import { IBot } from "../types/index.ts";
+import { Board } from "./board.ts";
+import { BaseGameObject } from "./gameobjects/base/base.ts";
+import { BotGameObject } from "./gameobjects/bot/bot.ts";
+import { BotProvider } from "./gameobjects/bot/bot-provider.ts";
+import { DiamondProvider } from "./gameobjects/diamond/diamond-provider.ts";
+import { createTestBoard, createTestBot } from "./util/index.ts";
 
 let opponentPosition: Position;
 let board: Board;

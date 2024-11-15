@@ -1,4 +1,4 @@
-import { diamond } from './images';
+import { diamond } from "./images/index.ts";
 
 export const Spinner = () => {
   const numberOfDiamonds = 4;
@@ -7,7 +7,7 @@ export const Spinner = () => {
     { length: numberOfDiamonds },
     (_, index) => (
       <div key={index}>
-        <img src={diamond} alt={'diamond'} />
+        <img src={diamond} alt={"diamond"} />
       </div>
     ),
   );

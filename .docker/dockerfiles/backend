@@ -1,32 +1,18 @@
-FROM diamonds2_base:latest as base
+FROM diamonds2_base:latest AS base
 WORKDIR /app/packages/backend
-RUN apk update && apk add --no-cache openssl libc6-compat
+RUN apt-get update -y && apt-get install -y openssl
 COPY --chown=1000:1000 packages/backend .
 
 FROM base AS develop
 ENV PORT=3000
-RUN npm install -g ts-node typescript
 # Add Prisma generate here
-RUN npx prisma generate
+RUN deno -A npm:prisma generate
 EXPOSE $PORT
-CMD ["yarn", "start:dev"]
+CMD ["deno", "run", "start:dev"]
 
-FROM develop AS build
-RUN yarn
-# Make sure Prisma is generated before build
-RUN npx prisma generate
-RUN npm run build
-
-FROM node:20-alpine AS prod
+FROM base AS prod
 ENV PORT=3000
-WORKDIR /app
-COPY --chown=1000:1000 --from=build /app/packages/backend/dist ./dist
-COPY --chown=1000:1000 --from=build /app/node_modules ./node_modules
-COPY --chown=1000:1000 --from=build /app/packages ./packages
-COPY --chown=1000:1000 --from=build /app/packages/backend/package.json ./package.json
-COPY --chown=1000:1000 --from=build /app/packages/backend/prisma ./prisma
-RUN npm install -g ts-node typescript
-# Generate Prisma client in prod stage
-RUN npx prisma generate
+# Add Prisma generate here
+RUN deno -A npm:prisma generate
 EXPOSE $PORT
-CMD ["npm", "run", "start:prod"]
+CMD ["deno", "run", "start:prod"]

@@ -1,6 +1,6 @@
-import { IBoardConfig } from "./board-config";
-import { IHighscore } from "./highscore";
-import { IRecording } from "./recording";
+import { IBoardConfig } from "./board-config.ts";
+import { IHighscore } from "./highscore.ts";
+import { IRecording } from "./recording.ts";
 
 export interface ISeason {
   id: string;

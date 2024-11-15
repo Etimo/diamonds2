@@ -1,9 +1,9 @@
-import { FC, useState } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Header } from './components';
-import { Footer } from './components/Footer';
-import { Home } from './components/Home';
-import { Teams } from './components/Teams';
+import { type FC, useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Footer } from "./components/Footer.tsx";
+import { Home } from "./components/Home.tsx";
+import { Header } from "./components/index.ts";
+import { Teams } from "./components/Teams.tsx";
 
 const App: FC = () => {
   const [darkMode, setDarkMode] = useState(true);
@@ -15,7 +15,7 @@ const App: FC = () => {
   return (
     <div
       className={`w-screen min-h-screen flex flex-col ${
-        darkMode ? 'dark' : ''
+        darkMode ? "dark" : ""
       }`}
     >
       <BrowserRouter>

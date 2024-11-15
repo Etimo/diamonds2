@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../../services/prisma.service";
-import { IBot, INewBot } from "../../types";
+import { PrismaService } from "../../services/prisma.service.ts";
+import { IBot, INewBot } from "../../types/index.ts";
 
 @Injectable()
 export class BotRegistrationsRepository {

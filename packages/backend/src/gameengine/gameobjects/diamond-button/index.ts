@@ -1,2 +1,2 @@
-export * from "./diamond-button";
-export * from "./diamond-button-provider";
+export * from "./diamond-button.ts";
+export * from "./diamond-button-provider.ts";

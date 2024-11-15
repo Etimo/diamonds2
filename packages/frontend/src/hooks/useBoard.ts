@@ -1,10 +1,10 @@
-import {
+import type {
   BotGameObjectProperties,
   IBoardDto,
   IGameObjectDto,
-} from '@etimo/diamonds2-types';
-import { useEffect, useState } from 'react';
-import { useFetchRepeatedly } from './useFetchRepeatedly';
+} from "@etimo/diamonds2-types";
+import { useEffect, useState } from "react";
+import { useFetchRepeatedly } from "./useFetchRepeatedly.ts";
 
 export const useBoard = (boardId: number, delay: number) => {
   const fetchedBoard: IBoardDto = useFetchRepeatedly(
@@ -46,7 +46,7 @@ export const useBoard = (boardId: number, delay: number) => {
       ) {
         grid[position.y][position.x].push(gameObject);
 
-        if (['DummyBotGameObject', 'BotGameObject'].includes(gameObject.type)) {
+        if (["DummyBotGameObject", "BotGameObject"].includes(gameObject.type)) {
           botObjects.push(gameObject.properties as BotGameObjectProperties);
         }
       }

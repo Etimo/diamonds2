@@ -1,6 +1,6 @@
-import { Board } from "../board";
-import { AbstractGameObjectProvider } from "../gameobjects/abstract-game-object-providers";
-import { SilentLogger } from "./silent-logger";
+import { Board } from "../board.ts";
+import { AbstractGameObjectProvider } from "../gameobjects/abstract-game-object-providers.ts";
+import { SilentLogger } from "./silent-logger.ts";
 
 export function createTestBoard(
   providers: AbstractGameObjectProvider[] = [],

@@ -1,8 +1,8 @@
 import { beforeEach, expect, it } from "@jest/globals";
-import { Board } from "../../board";
-import { createTestBoard } from "../../util";
-import { DiamondGameObject } from "./diamond";
-import { DiamondProvider } from "./diamond-provider";
+import { Board } from "../../board.ts";
+import { createTestBoard } from "../../util/index.ts";
+import { DiamondGameObject } from "./diamond.ts";
+import { DiamondProvider } from "./diamond-provider.ts";
 
 let provider: DiamondProvider;
 let board: Board;

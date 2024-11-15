@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { TestingModule } from "@nestjs/testing";
-import { ForbiddenError } from "../errors";
-import { BoardConfigService } from "./board-config.service";
-import { HighscoresService } from "./highscores.service";
-import { SeasonsService } from "./seasons.service";
-import { SlackService } from "./slack.service";
-import { TeamsService } from "./teams.service";
-import { createTestModule } from "./test-helper.spec";
+import { ForbiddenError } from "../errors/index.ts";
+import { BoardConfigService } from "./board-config.service.ts";
+import { HighscoresService } from "./highscores.service.ts";
+import { SeasonsService } from "./seasons.service.ts";
+import { SlackService } from "./slack.service.ts";
+import { TeamsService } from "./teams.service.ts";
+import { createTestModule } from "./test-helper.spec.ts";
 
 describe("SlackService", () => {
   let slackService: SlackService;

@@ -7,19 +7,19 @@ import {
   RecordingsRepository,
   SeasonsRepository,
   TeamsRepository,
-} from "../db";
-import { SilentLogger } from "../gameengine";
-import { CustomLogger } from "../logger";
-import { offSeasonId } from "../utils";
-import { BoardConfigService } from "./board-config.service";
-import { BoardsService } from "./board.service";
-import { BotsService } from "./bots.service";
-import { HighscoresService } from "./highscores.service";
-import { PrismaService } from "./prisma.service";
-import { RecordingsService } from "./recordings.service";
-import { SeasonsService } from "./seasons.service";
-import { SlackService } from "./slack.service";
-import { TeamsService } from "./teams.service";
+} from "../db/index.ts";
+import { SilentLogger } from "../gameengine/index.ts";
+import { CustomLogger } from "../logger.ts";
+import { offSeasonId } from "../utils/index.ts";
+import { BoardConfigService } from "./board-config.service.ts";
+import { BoardsService } from "./board.service.ts";
+import { BotsService } from "./bots.service.ts";
+import { HighscoresService } from "./highscores.service.ts";
+import { PrismaService } from "./prisma.service.ts";
+import { RecordingsService } from "./recordings.service.ts";
+import { SeasonsService } from "./seasons.service.ts";
+import { SlackService } from "./slack.service.ts";
+import { TeamsService } from "./teams.service.ts";
 
 // Mocked data
 export const boardConfigTest = {

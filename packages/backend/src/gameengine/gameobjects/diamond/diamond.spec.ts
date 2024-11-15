@@ -1,9 +1,9 @@
 import { Position } from "@etimo/diamonds2-types";
 import { beforeEach, expect, it } from "@jest/globals";
-import { Board } from "../../board";
-import { createTestBoard, createTestBot } from "../../util";
-import { BotGameObject } from "../bot/bot";
-import { DiamondGameObject } from "./diamond";
+import { Board } from "../../board.ts";
+import { createTestBoard, createTestBot } from "../../util/index.ts";
+import { BotGameObject } from "../bot/bot.ts";
+import { DiamondGameObject } from "./diamond.ts";
 
 let gameObject: DiamondGameObject;
 let board: Board;

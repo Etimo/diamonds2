@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { Test, TestingModule } from "@nestjs/testing";
-import * as bcrypt from "bcrypt";
-import { BotRegistrationsRepository, TeamsRepository } from "../db";
-import { ConflictError, NotFoundError } from "../errors";
-import { BotRecoveryDto, BotRegistrationDto } from "../models";
-import { IBot, ITeam } from "../types";
-import { BotsService } from "./bots.service";
-import { TeamsService } from "./teams.service";
+import * as bcrypt from "https://deno.land/x/bcrypt@v0.3.0/mod.ts";
+import { BotRegistrationsRepository, TeamsRepository } from "../db/index.ts";
+import { ConflictError, NotFoundError } from "../errors/index.ts";
+import { BotRecoveryDto, BotRegistrationDto } from "../models/index.ts";
+import { IBot, ITeam } from "../types/index.ts";
+import { BotsService } from "./bots.service.ts";
+import { TeamsService } from "./teams.service.ts";
 
 describe("BotsService", () => {
   let botsService: BotsService;

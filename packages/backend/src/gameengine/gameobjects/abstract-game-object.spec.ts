@@ -1,4 +1,4 @@
-import { AbstractGameObject } from "./abstract-game-object";
+import { AbstractGameObject } from "./abstract-game-object.ts";
 
 let go: AbstractGameObject;
 

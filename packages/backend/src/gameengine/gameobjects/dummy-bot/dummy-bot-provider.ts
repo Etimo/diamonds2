@@ -1,9 +1,9 @@
 import { DummyBotProviderConfig } from "@etimo/diamonds2-types";
-import { IBot } from "../../../types";
-import { Board } from "../../board";
-import { AbstractGameObject } from "../abstract-game-object";
-import { BotProvider } from "../bot/bot-provider";
-import { DummyBotGameObject } from "./dummy-bot";
+import { IBot } from "../../../types/index.ts";
+import { Board } from "../../board.ts";
+import { AbstractGameObject } from "../abstract-game-object.ts";
+import { BotProvider } from "../bot/bot-provider.ts";
+import { DummyBotGameObject } from "./dummy-bot.ts";
 
 export class DummyBotProvider extends BotProvider {
   constructor(config: DummyBotProviderConfig) {

@@ -1,8 +1,8 @@
-import { IHighscoreDto } from '@etimo/diamonds2-types';
-import { FC, memo } from 'react';
-import { useHighScore } from '../hooks/useHighScore';
-import { Spinner } from './Spinner';
-import { Table } from './Table';
+import { IHighscoreDto } from "@etimo/diamonds2-types";
+import { FC, memo } from "react";
+import { useHighScore } from "../hooks/useHighScore.ts";
+import { Spinner } from "./Spinner.tsx";
+import { Table } from "./Table/index.ts";
 
 type HighScoreProps = {
   seasonId: string;
@@ -17,7 +17,7 @@ export const HighScoreTable: FC<HighScoreProps> = memo((props) => {
     if (item.team) {
       return item.team;
     }
-    return '';
+    return "";
   };
 
   if (!seasonId) {
@@ -27,7 +27,7 @@ export const HighScoreTable: FC<HighScoreProps> = memo((props) => {
   return (
     <Table
       label="Highscore"
-      cols={['Name', 'Team', 'Score']}
+      cols={["Name", "Team", "Score"]}
       data={highscore.map((item) => {
         return {
           name: item.botName,

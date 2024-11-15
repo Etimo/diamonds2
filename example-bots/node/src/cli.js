@@ -1,12 +1,12 @@
 import arg from "arg";
-import { register, play } from "./main";
+import { play, register } from "./main.js";
 import {
-  registerInvalidParameters,
+  invalidAction,
   playInvalidParameters,
-  invalidAction
-} from "./messages";
+  registerInvalidParameters,
+} from "./messages.js";
 
-const parseArgumentsIntoOptions = rawArgs => {
+const parseArgumentsIntoOptions = (rawArgs) => {
   const args = arg(
     {
       "--name": String,
@@ -22,11 +22,11 @@ const parseArgumentsIntoOptions = rawArgs => {
       "-b": "--board",
       "-l": "--logic",
       "-p": "--password",
-      "-T": "--team"
+      "-T": "--team",
     },
     {
-      argv: rawArgs.slice(2)
-    }
+      argv: rawArgs.slice(2),
+    },
   );
   return {
     name: args["--name"] || "",
@@ -36,11 +36,11 @@ const parseArgumentsIntoOptions = rawArgs => {
     board: args["--board"] || 1,
     password: args["--password"] || "",
     team: args["--team"] || null,
-    action: args._[0]
+    action: args._[0],
   };
 };
 
-export const cli = args => {
+export const cli = (args) => {
   const options = parseArgumentsIntoOptions(args);
   validateArgs(options);
   const { name, email, token, logic, board, password, team, action } = options;
@@ -64,7 +64,7 @@ const registerBot = (name, email, password, team) => {
   register(name, email, password, team);
 };
 
-const validateArgs = options => {
+const validateArgs = (options) => {
   const { name, email, token, logic, board, password, action } = options;
   if (action === "play" && (token === "" || logic == "")) {
     playInvalidParameters();

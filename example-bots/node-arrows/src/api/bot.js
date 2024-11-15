@@ -1,7 +1,7 @@
-import { Board } from "../models/board";
-import { Bot } from "../models/bot";
-import { client } from "./client";
-import { logResponseError } from "./utils";
+import { Board } from "../models/board.js";
+import { Bot } from "../models/bot.js";
+import { client } from "./client.js";
+import { logResponseError } from "./utils.js";
 
 export const registerBot = async (inputName, inputEmail, password, team) => {
   try {
@@ -48,7 +48,7 @@ export const moveBotOnBoard = async (id, token, direction) => {
       direction: direction,
     });
     return Board.dataToBoard(data);
-  } catch (error) {
+  } catch {
     // Fetch board if move fails
     return await getBoard(id);
   }

@@ -1,7 +1,7 @@
-import { FC, memo } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { MoonIcon } from './MoonIcon';
-import { SunIcon } from './SunIcon';
+import { type FC, memo } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { MoonIcon } from "./MoonIcon.tsx";
+import { SunIcon } from "./SunIcon.tsx";
 
 type HeaderProps = {
   darkMode: boolean;
@@ -13,7 +13,7 @@ export const Header: FC<HeaderProps> = memo((props) => {
   const { darkMode, toggleDarkMode } = props;
 
   const toggleLink = (location: string) => {
-    if (location.includes('teams')) {
+    if (location.includes("teams")) {
       return <Link to="/">Game</Link>;
     }
     return <Link to="/teams">Teams</Link>;
@@ -40,4 +40,4 @@ export const Header: FC<HeaderProps> = memo((props) => {
     </div>
   );
 });
-Header.displayName = 'Header';
+Header.displayName = "Header";

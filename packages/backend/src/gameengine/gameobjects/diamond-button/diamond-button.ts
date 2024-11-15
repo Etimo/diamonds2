@@ -1,13 +1,13 @@
-import { AbstractGameObject } from "../abstract-game-object";
-import { Board } from "../../board";
-import { DiamondGameObject } from "../diamond/diamond";
-import { BotGameObject } from "../bot/bot";
+import { Board } from "../../board.ts";
+import { AbstractGameObject } from "../abstract-game-object.ts";
+import { BotGameObject } from "../bot/bot.ts";
+import { DiamondGameObject } from "../diamond/diamond.ts";
 
 export class DiamondButtonGameObject extends AbstractGameObject {
   /**
    * Clear all diamonds when a bot enters the cell of this button.
    */
-  onGameObjectEntered(gameObject: AbstractGameObject, board: Board) {
+  override onGameObjectEntered(gameObject: AbstractGameObject, board: Board) {
     /* istanbul ignore else */
     if (gameObject instanceof BotGameObject) {
       board.removeGameObjectsByType(DiamondButtonGameObject);

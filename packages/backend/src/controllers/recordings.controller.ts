@@ -1,7 +1,7 @@
 import { Controller, Get, Param } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
-import { RecordingListDto, RecordingPublicDto } from "../models";
-import { RecordingsService } from "../services";
+import { RecordingListDto, RecordingPublicDto } from "../models/index.ts";
+import { RecordingsService } from "../services/index.ts";
 
 @ApiTags("Recordings")
 @Controller("api/recordings")

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { PositionDto } from "./position.dto";
+import { PositionDto } from "./position.dto.ts";
 export class BotDto {
   @ApiProperty({
     description: "The name of the bot.",

@@ -1,12 +1,12 @@
-import { IGameObjectDto } from '@etimo/diamonds2-types';
-import { FC, memo } from 'react';
+import type { IGameObjectDto } from "@etimo/diamonds2-types";
+import { type FC, memo } from "react";
 import {
   BaseComponent,
   BotComponent,
   DiamondButtonComponent,
   DiamondComponent,
   TeleportComponent,
-} from '../gameObject';
+} from "../gameObject/index.ts";
 
 type CellProps = {
   gameObjects: IGameObjectDto[];
@@ -15,16 +15,16 @@ type CellProps = {
 
 const renderGameCharacterComponent = (gameObject: IGameObjectDto) => {
   switch (gameObject.type) {
-    case 'BotGameObject':
-    case 'DummyBotGameObject':
+    case "BotGameObject":
+    case "DummyBotGameObject":
       return <BotComponent {...gameObject.properties} />;
-    case 'DiamondGameObject':
+    case "DiamondGameObject":
       return <DiamondComponent {...gameObject.properties} />;
-    case 'BaseGameObject':
+    case "BaseGameObject":
       return <BaseComponent {...gameObject.properties} />;
-    case 'TeleportGameObject':
+    case "TeleportGameObject":
       return <TeleportComponent />;
-    case 'DiamondButtonGameObject':
+    case "DiamondButtonGameObject":
       return <DiamondButtonComponent />;
     default:
       return null;
@@ -45,12 +45,12 @@ export const Cell: FC<CellProps> = memo((props) => {
       key={id}
       className={`border-l w-full aspect-square relative overflow-hidden ${
         gameObjects && gameObjects.length > 0
-          ? 'flex items-center justify-center'
-          : 'justify-center'
+          ? "flex items-center justify-center"
+          : "justify-center"
       }`}
     >
       {gameObjects.map((gameObject, index) =>
-        renderGameObject(gameObject, index),
+        renderGameObject(gameObject, index)
       )}
     </div>
   );

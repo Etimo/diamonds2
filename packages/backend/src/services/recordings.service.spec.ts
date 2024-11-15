@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { Test, TestingModule } from "@nestjs/testing";
-import { RecordingsRepository } from "../db";
-import { NotFoundError } from "../errors";
-import { SilentLogger } from "../gameengine";
-import { CustomLogger } from "../logger";
-import { RecordingListDto, RecordingPublicDto } from "../models";
-import { INewRecording, IRecording, ISaveRecording } from "../types";
-import { RecordingsService } from "./recordings.service";
-import { recordingsRepositoryMock } from "./test-helper.spec";
+import { RecordingsRepository } from "../db/index.ts";
+import { NotFoundError } from "../errors/index.ts";
+import { SilentLogger } from "../gameengine/index.ts";
+import { CustomLogger } from "../logger.ts";
+import { RecordingListDto, RecordingPublicDto } from "../models/index.ts";
+import { INewRecording, IRecording, ISaveRecording } from "../types/index.ts";
+import { RecordingsService } from "./recordings.service.ts";
+import { recordingsRepositoryMock } from "./test-helper.spec.ts";
 
 describe("RecordingsService", () => {
   let recordingsService: RecordingsService;
@@ -170,10 +170,21 @@ describe("RecordingsService", () => {
       recording: "[4]",
     };
     recordingsService.record(0, 4);
-    var mockCreate =
-      recordingsRepositoryMock.create.mockReturnValue(dataFromRepo);
+    var mockCreate = recordingsRepositoryMock.create.mockReturnValue(
+      dataFromRepo,
+    );
     recordingsRepositoryMock.getScores.mockReturnValue([
-      11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1,
+      11,
+      10,
+      9,
+      8,
+      7,
+      6,
+      5,
+      4,
+      3,
+      2,
+      1,
     ]);
 
     //act
@@ -205,7 +216,17 @@ describe("RecordingsService", () => {
     };
     recordingsRepositoryMock.create.mockReturnValue(dataFromRepo);
     recordingsRepositoryMock.getScores.mockReturnValue([
-      11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1,
+      11,
+      10,
+      9,
+      8,
+      7,
+      6,
+      5,
+      4,
+      3,
+      2,
+      1,
     ]);
 
     //act

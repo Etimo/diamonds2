@@ -5,7 +5,7 @@ import {
   TeleportProperties,
 } from "@etimo/diamonds2-types";
 import { ApiProperty } from "@nestjs/swagger";
-import { PositionDto } from "./position.dto";
+import { PositionDto } from "./position.dto.ts";
 
 export class GameObjectDto {
   @ApiProperty({

@@ -1,6 +1,6 @@
-import { FC, memo } from 'react';
-import { BoardId, useBoardIds } from '../hooks/useBoardIds';
-import { Select } from './Inputs';
+import { type FC, memo } from "react";
+import { type BoardId, useBoardIds } from "../hooks/useBoardIds.ts";
+import { Select } from "./Inputs/index.ts";
 
 type BoardPickerProps = {
   boardId: number;

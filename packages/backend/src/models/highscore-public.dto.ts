@@ -1,7 +1,7 @@
 import { IHighscoreDto } from "@etimo/diamonds2-types";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsOptional } from "class-validator";
-import { IHighscore } from "../types";
+import { IHighscore } from "../types/index.ts";
 
 export class HighscorePublicDto implements IHighscoreDto {
   @ApiProperty()

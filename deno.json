@@ -1,0 +1,30 @@
+{
+  "tasks": {
+    "env": "./scripts/copy-env.sh",
+    "init-db": "deno run support && ./scripts/setup-db-prisma.sh",
+    "start:backend": "cd packages/backend && deno run start:dev",
+    "start:frontend": "cd packages/frontend && deno run dev",
+    "start": "deno run support && concurrently \"deno run start:backend\" \"deno run start:frontend\"",
+    "support": "docker compose up -d database",
+    "setup": "deno install --allow-scripts && deno run env && deno run init-db"
+  },
+
+  "workspace": [
+    "./packages/backend",
+    "./packages/types",
+    "./packages/frontend"
+  ],
+  "lint": {
+    "exclude": ["**/*.spec.ts", "**/dist"],
+    "rules": {
+      "exclude": ["verbatim-module-syntax"]
+    }
+  },
+  "nodeModulesDir": "auto",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "npm:react",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}

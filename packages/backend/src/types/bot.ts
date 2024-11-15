@@ -1,6 +1,6 @@
-import { IHighscore } from "./highscore";
-import { IRecording } from "./recording";
-import { ITeam } from "./team";
+import { IHighscore } from "./highscore.ts";
+import { IRecording } from "./recording.ts";
+import { ITeam } from "./team.ts";
 
 export interface IBot {
   id: string;

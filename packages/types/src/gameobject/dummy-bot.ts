@@ -1,4 +1,4 @@
-import { BotProviderConfig } from "./bot";
+import type { BotProviderConfig } from "./bot.ts";
 
 export type DummyBotProviderConfig = {
   /**

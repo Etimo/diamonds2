@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../../services/prisma.service";
-import { IHighscore, INewHighscore } from "../../types";
+import { PrismaService } from "../../services/prisma.service.ts";
+import { IHighscore, INewHighscore } from "../../types/index.ts";
 
 @Injectable()
 export class HighscoresRepository {

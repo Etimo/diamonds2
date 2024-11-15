@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { RecordingsRepository } from "../db";
-import { NotFoundError } from "../errors";
-import { CustomLogger } from "../logger";
-import { RecordingListDto, RecordingPublicDto } from "../models";
-import { ISaveRecording } from "../types";
+import { RecordingsRepository } from "../db/index.ts";
+import { NotFoundError } from "../errors/index.ts";
+import { CustomLogger } from "../logger.ts";
+import { RecordingListDto, RecordingPublicDto } from "../models/index.ts";
+import { ISaveRecording } from "../types/index.ts";
 
 @Injectable()
 export class RecordingsService {
@@ -30,8 +30,8 @@ export class RecordingsService {
   record(boardIndex: number, state: Object) {
     const arr = this.states[boardIndex];
     arr[this.stateIndex[boardIndex]] = state;
-    this.stateIndex[boardIndex] =
-      (this.stateIndex[boardIndex] + 1) % this.states[boardIndex].length;
+    this.stateIndex[boardIndex] = (this.stateIndex[boardIndex] + 1) %
+      this.states[boardIndex].length;
   }
 
   public getRecording(boardIndex: number): Array<Object> {

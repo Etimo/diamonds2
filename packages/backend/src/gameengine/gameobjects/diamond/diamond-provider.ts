@@ -1,18 +1,18 @@
 import { DiamondProviderConfig } from "@etimo/diamonds2-types";
-import { Board } from "../../board";
-import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
-import { DiamondGameObject } from "./diamond";
+import { Board } from "../../board.ts";
+import { AbstractGameObjectProvider } from "../abstract-game-object-providers.ts";
+import { DiamondGameObject } from "./diamond.ts";
 
 export class DiamondProvider extends AbstractGameObjectProvider<DiamondProviderConfig> {
   constructor(config: DiamondProviderConfig) {
     super(config);
   }
 
-  onBoardInitialized(board: Board) {
+  override onBoardInitialized(board: Board) {
     this.generateDiamonds(board);
   }
 
-  onGameObjectsRemoved(board: Board, other: any) {
+  override onGameObjectsRemoved(board: Board, other: any) {
     const diamonds = board.getGameObjectsByType(DiamondGameObject);
     if (diamonds.length == 0) {
       this.generateDiamonds(board);

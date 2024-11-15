@@ -1,6 +1,6 @@
-import { IBot } from "./bot";
-import { ISeason } from "./season";
-import { ITeam } from "./team";
+import { IBot } from "./bot.ts";
+import { ISeason } from "./season.ts";
+import { ITeam } from "./team.ts";
 
 export interface IHighscore {
   id: string;

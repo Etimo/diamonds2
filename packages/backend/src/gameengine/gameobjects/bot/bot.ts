@@ -1,5 +1,5 @@
 import { BotGameObjectProperties, Position } from "@etimo/diamonds2-types";
-import { AbstractGameObject } from "../abstract-game-object";
+import { AbstractGameObject } from "../abstract-game-object.ts";
 export type IBotGameObject = {
   base: Position;
   diamonds: number;
@@ -39,7 +39,7 @@ export class BotGameObject extends AbstractGameObject {
     this.botId = options.botId;
   }
 
-  get properties(): BotGameObjectProperties {
+  override get properties(): BotGameObjectProperties {
     return {
       diamonds: this.diamonds,
       score: this.score,
@@ -53,7 +53,7 @@ export class BotGameObject extends AbstractGameObject {
     };
   }
 
-  onGameObjectEntered(gameObject: AbstractGameObject) {
+  override onGameObjectEntered(gameObject: AbstractGameObject) {
     if (gameObject instanceof BotGameObject) {
       // Return if the entering bot is not allowed to tackle (should not happen)
       if (!gameObject.canTackle) {

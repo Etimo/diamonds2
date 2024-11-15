@@ -1,16 +1,16 @@
-import { AbstractGameObject } from "../abstract-game-object";
-import { BotGameObject, IBotGameObject } from "../bot/bot";
+import { AbstractGameObject } from "../abstract-game-object.ts";
+import { BotGameObject, IBotGameObject } from "../bot/bot.ts";
 
 export class BaseGameObject extends AbstractGameObject {
   constructor(private bot: IBotGameObject) {
     super(bot.base);
   }
-  public get properties() {
+  public override get properties() {
     return {
       name: this.bot.name,
     };
   }
-  onGameObjectEntered(gameObject: AbstractGameObject) {
+  override onGameObjectEntered(gameObject: AbstractGameObject) {
     if (gameObject instanceof BotGameObject) {
       const bot = gameObject as BotGameObject;
       if (bot.base === this.bot.base) {

@@ -1,7 +1,7 @@
-import { Board } from "../../board";
-import { createTestBoard } from "../../util";
-import { DiamondButtonGameObject } from "./diamond-button";
-import { DiamondButtonProvider } from "./diamond-button-provider";
+import { Board } from "../../board.ts";
+import { createTestBoard } from "../../util/index.ts";
+import { DiamondButtonGameObject } from "./diamond-button.ts";
+import { DiamondButtonProvider } from "./diamond-button-provider.ts";
 
 let provider: DiamondButtonProvider;
 let board: Board;

@@ -1,7 +1,7 @@
 import { Controller, Get, Param } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
-import { BoardConfigDto, SeasonDto } from "../models";
-import { BoardConfigService, SeasonsService } from "../services";
+import { BoardConfigDto, SeasonDto } from "../models/index.ts";
+import { BoardConfigService, SeasonsService } from "../services/index.ts";
 
 @ApiTags("Seasons")
 @Controller("api/seasons")

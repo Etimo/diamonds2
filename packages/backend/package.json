@@ -5,32 +5,10 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
-  "scripts": {
-    "build": "nest build --tsc",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nodemon",
-    "postinstall": "npx prisma generate",
-    "start:dev": "npx prisma generate && nodemon",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "prisma migrate deploy && node dist/main",
-    "env": "cp .env.defaults .env",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest --passWithNoTests --detectOpenHandles --forceExit",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
-  },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "deno -A prisma/seed.ts"
   },
   "dependencies": {
-    "@etimo/diamonds2-types": "1.0.0",
-    "@nestjs/common": "^9.0.0",
-    "@nestjs/core": "^9.0.0",
-    "@nestjs/platform-express": "^9.0.0",
-    "@nestjs/swagger": "^6.2.1",
-    "@nestjs/typeorm": "^9.0.1",
     "@prisma/client": "^5.9.1",
     "@types/node": "^10.17.26",
     "async": "^3.2.5",
