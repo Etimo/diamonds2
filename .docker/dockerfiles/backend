@@ -5,6 +5,8 @@ COPY --chown=1000:1000 packages/backend .
 
 FROM base AS develop
 ENV PORT=3000
+# Add ts-node and typescript installation here
+RUN npm install -g ts-node typescript
 EXPOSE $PORT
 CMD ["yarn", "start:dev"]
 
@@ -15,10 +17,12 @@ RUN npm run build
 FROM node:20-alpine AS prod
 ENV PORT=3000
 WORKDIR /app
-COPY --chown=1000:1000 --from=build /app/packages/backend/dist .
+COPY --chown=1000:1000 --from=build /app/packages/backend/dist ./dist
 COPY --chown=1000:1000 --from=build /app/node_modules ./node_modules
 COPY --chown=1000:1000 --from=build /app/packages ./packages
 COPY --chown=1000:1000 --from=build /app/packages/backend/package.json ./package.json
 COPY --chown=1000:1000 --from=build /app/packages/backend/prisma ./prisma
+# Add ts-node and typescript to production stage as well since you'll need it for prisma seeds
+RUN npm install -g ts-node typescript
 EXPOSE $PORT
 CMD ["npm", "run", "start:prod"]
