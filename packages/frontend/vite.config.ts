@@ -7,8 +7,6 @@ export default ({ mode }: any) => {
   // Load app-level env vars to node-level env vars.
   process.env = { ...loadEnv(mode, process.cwd()) };
 
-  console.log('test____');
-  console.log(process.env.VITE_API_BASE_URL);
   return defineConfig({
     plugins: [react()],
     server: {
@@ -16,9 +14,8 @@ export default ({ mode }: any) => {
       port: 8082,
       proxy: {
         '/api': {
-          target: process.env.VITE_API_BASE_URL,
+          target: 'http://localhost:3000',
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ''),
         },
       },
     },

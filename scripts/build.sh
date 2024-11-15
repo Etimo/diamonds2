@@ -9,7 +9,7 @@ echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-
 
 docker build -t diamonds2_base:latest -f ../.docker/dockerfiles/base ..
 
-docker-compose -f docker-compose.prod-build.yml build --parallel
+docker compose -f docker-compose.prod-build.yml build --parallel
 
 echo "Tagging images..."
 docker tag diamonds2_backend:latest etimodanielwinther/diamonds2_base:latest
