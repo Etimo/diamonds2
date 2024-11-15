@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   frontend:
-    image: ghcr.io/etimo/diamonds2/rontend:${DIAMONDS_DOCKER_TAG}
+    image: ghcr.io/etimo/diamonds2/frontend:${DIAMONDS_DOCKER_TAG}
     restart: always
     environment:
       - VITE_API_BASE_URL=http://backend:3000/api
