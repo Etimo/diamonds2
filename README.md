@@ -13,7 +13,7 @@ If you find a bug or has a suggestion for improvement you are more than welcome 
 
 ## Development 💻
 
-1. Install dependencies
+1. Install dependencies.
 
 ```sh
 yarn
