@@ -12,8 +12,7 @@
     "start:backend": "cd packages/backend && npm run start:dev",
     "start:frontend": "cd packages/frontend && npm run dev",
     "start": "npm run support && concurrently \"npm run start:backend\" \"npm run start:frontend\" \"npm run nodemon\"",
-    "support": "docker compose up -d database",
-    "postinstall": "test \"$SKIP_POSTINSTALL\" = \"true\" || husky install"
+    "support": "docker compose up -d database"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
