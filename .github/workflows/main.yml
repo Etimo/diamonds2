@@ -114,7 +114,7 @@ jobs:
           initial_status: "in_progress"
 
       - name: Update apps
-        uses: appleboy/ssh-action@v1
+        uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.DEPLOY_ETIMO_AWS_HOST }}
           USERNAME: ${{ secrets.DEPLOY_ETIMO_AWS_USERNAME }}
@@ -131,7 +131,7 @@ jobs:
             DIAMONDS_DOCKER_TAG=main-${{ github.sha }} docker-compose -f docker-compose.prod-run.yml up -d
 
       - name: Update autoscaler
-        uses: appleboy/ssh-action@v1
+        uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.DEPLOY_ETIMO_AWS_AUTOSCALER_HOST }}
           USERNAME: ${{ secrets.DEPLOY_ETIMO_AWS_USERNAME }}
