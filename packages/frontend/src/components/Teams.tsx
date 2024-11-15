@@ -1,14 +1,14 @@
-import { ITeamDto } from '@etimo/diamonds2-types';
-import useFetch from '../hooks/useFetch';
-import useTeams from '../hooks/useTeams';
-import { HighScoreTable } from './HighScoreTable';
-import { MovingBot } from './MovingBot';
-import { Table } from './Table';
+import type { ITeamDto } from "@etimo/diamonds2-types";
+import useFetch from "../hooks/useFetch.ts";
+import useTeams from "../hooks/useTeams.ts";
+import { HighScoreTable } from "./HighScoreTable.tsx";
+import { MovingBot } from "./MovingBot.tsx";
+import { Table } from "./Table/index.ts";
 
 export const Teams = () => {
   const teams: ITeamDto[] = useTeams();
-  const { response: currentSeason } = useFetch('api/seasons/current', '0');
-  const offSeasonId = '00000000-0000-0000-0000-000000000000';
+  const { response: currentSeason } = useFetch("api/seasons/current", "0");
+  const offSeasonId = "00000000-0000-0000-0000-000000000000";
 
   return (
     <>
@@ -17,7 +17,7 @@ export const Teams = () => {
           <div className="mb-10">
             <Table
               label="Teams"
-              cols={['Name', 'Abbreviation', 'Icon']}
+              cols={["Name", "Abbreviation", "Icon"]}
               data={teams.map((team) => {
                 return {
                   name: team.name,

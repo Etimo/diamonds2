@@ -1,4 +1,4 @@
-import { Position } from "../position";
+import type { Position } from "../position.ts";
 
 export type BotGameObjectProperties = {
   base: Position;

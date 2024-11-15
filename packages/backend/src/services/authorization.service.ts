@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import * as crypto from "crypto";
 import { Request } from "express";
-import * as qs from "qs";
+import * as crypto from "node:crypto";
+import * as qs from "npm:qs";
 import { UnauthorizedError } from "../errors";
 
 @Injectable()

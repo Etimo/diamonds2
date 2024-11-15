@@ -1,6 +1,6 @@
-import { IBoardConfigDto } from '@etimo/diamonds2-types';
-import { useEffect, useState } from 'react';
-import useFetch from './useFetch';
+import type { IBoardConfigDto } from "@etimo/diamonds2-types";
+import { useEffect, useState } from "react";
+import useFetch from "./useFetch.ts";
 
 export function useBoardConfig(seasonId: string): IBoardConfigDto | null {
   const delay = 60000; // 1 min

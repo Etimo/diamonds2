@@ -3,14 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "start": "vite",
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
-  },
   "dependencies": {
-    "@etimo/diamonds2-types": "1.0.0",
     "@types/node": "^20.6.0",
     "axios": "^1.6.7",
     "lodash": "^4.17.21",

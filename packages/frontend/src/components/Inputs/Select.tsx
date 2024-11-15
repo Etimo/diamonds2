@@ -1,4 +1,4 @@
-import { FC, memo } from 'react';
+import { type FC, memo } from "react";
 
 type SelectProps = {
   label: string;
@@ -27,4 +27,4 @@ export const Select: FC<SelectProps> = memo((props) => {
     </div>
   );
 });
-Select.displayName = 'Select';
+Select.displayName = "Select";

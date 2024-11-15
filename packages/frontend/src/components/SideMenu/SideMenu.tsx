@@ -1,11 +1,11 @@
-import { BotGameObjectProperties } from '@etimo/diamonds2-types';
-import React, { FC, memo, useState } from 'react';
-import useFetch from '../../hooks/useFetch';
-import { BoardPicker } from '../BoardPicker';
-import { HighScoreTable } from '../HighScoreTable';
-import { PlayerTable } from '../PlayerTable';
-import { Rules } from '../Rules';
-import { SeasonPicker } from '../SeasonPicker';
+import type { BotGameObjectProperties } from "@etimo/diamonds2-types";
+import type React, { FC, memo, useState } from "react";
+import useFetch from "../../hooks/useFetch.ts";
+import { BoardPicker } from "../BoardPicker.tsx";
+import { HighScoreTable } from "../HighScoreTable.tsx";
+import { PlayerTable } from "../PlayerTable.tsx";
+import { Rules } from "../Rules.tsx";
+import { SeasonPicker } from "../SeasonPicker.tsx";
 
 type SideMenuProps = {
   boardId: number;
@@ -15,8 +15,8 @@ type SideMenuProps = {
 
 export const SideMenu: FC<SideMenuProps> = memo((props) => {
   const { boardId, onBoardChange, bots } = props;
-  const { response: currentSeason } = useFetch('api/seasons/current', '0');
-  const offSeasonId = '00000000-0000-0000-0000-000000000000';
+  const { response: currentSeason } = useFetch("api/seasons/current", "0");
+  const offSeasonId = "00000000-0000-0000-0000-000000000000";
 
   const [seasonId, setSeasonId] = useState<string>(offSeasonId);
   const [rulesVisible, setRulesVisible] = useState<boolean>(false);
@@ -29,7 +29,7 @@ export const SideMenu: FC<SideMenuProps> = memo((props) => {
     setRulesVisible(false);
   };
 
-  const selectedSeasonId = seasonId !== '0' ? seasonId : currentSeason.id;
+  const selectedSeasonId = seasonId !== "0" ? seasonId : currentSeason.id;
 
   return (
     <div className="border border-gray-200 dark:border-slate-400 rounded-lg overflow-y-auto flex flex-col p-4">
@@ -66,4 +66,4 @@ export const SideMenu: FC<SideMenuProps> = memo((props) => {
     </div>
   );
 });
-SideMenu.displayName = 'SideMenu';
+SideMenu.displayName = "SideMenu";

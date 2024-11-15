@@ -1,4 +1,4 @@
-import { gameEnded } from "../messages";
+import { gameEnded } from "../messages.js";
 
 export class Bot {
   constructor(name, email, token) {
@@ -21,7 +21,7 @@ export class Bot {
 
   updateBotInfo(board) {
     const bot = board.gameObjects.find(
-      (go) => go.type === "BotGameObject" && go.properties.name === this.name
+      (go) => go.type === "BotGameObject" && go.properties.name === this.name,
     );
 
     if (!bot) {

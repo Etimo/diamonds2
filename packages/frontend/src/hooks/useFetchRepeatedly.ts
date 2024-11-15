@@ -1,6 +1,6 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { useInterval } from './useInterval';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useInterval } from "./useInterval.ts";
 
 export function useFetchRepeatedly(
   url: string,

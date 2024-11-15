@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default (url: string, baseResponse: any) => {
   const [response, setResponse] = useState(baseResponse);

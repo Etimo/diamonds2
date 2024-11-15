@@ -1,10 +1,10 @@
 import arg from "arg";
-import { play, register } from "./main";
+import { play, register } from "./main.js";
 import {
   invalidAction,
   playInvalidParameters,
   registerInvalidParameters,
-} from "./messages";
+} from "./messages.js";
 
 const parseArgumentsIntoOptions = (rawArgs) => {
   const args = arg(
@@ -24,7 +24,7 @@ const parseArgumentsIntoOptions = (rawArgs) => {
     },
     {
       argv: rawArgs.slice(2),
-    }
+    },
   );
   return {
     name: args["--name"] || "",

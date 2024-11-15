@@ -1,9 +1,9 @@
-import {
+import type {
   BotProviderConfig,
   DiamondProviderConfig,
   TeleportProviderConfig,
   TeleportRelocationProviderConfig,
-} from "../gameobject";
+} from "../gameobject/index.ts";
 
 export type IBaseFeatureDto = {
   name: "BaseProvider";

@@ -1,0 +1,26 @@
+{
+  "tasks": {
+    "env": "./scripts/copy-env.sh",
+    "init-db": "deno run support && ./scripts/setup-db-prisma.sh",
+    "start:backend": "cd packages/backend && deno run start:dev",
+    "start:frontend": "cd packages/frontend && deno run dev",
+    "start": "deno run support && concurrently \"deno run start:backend\" \"deno run start:frontend\"",
+    "support": "docker-compose up -d database"
+  },
+
+  "workspace": [
+    "./packages/backend",
+    "./packages/types",
+    "./packages/frontend"
+  ],
+  "lint": {
+    "rules": {
+      "exclude": ["no-unused-vars"]
+    }
+  },
+  "nodeModulesDir": "auto",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}

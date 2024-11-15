@@ -1,14 +1,14 @@
-import { getBot, joinBoard, moveBotOnBoard, registerBot } from "./api/bot";
-import { getFirstDiamond } from "./logic/firstDiamondLogic";
-import { getDirection } from "./logic/utils";
+import { getBot, joinBoard, moveBotOnBoard, registerBot } from "./api/bot.js";
+import { getFirstDiamond } from "./logic/firstDiamondLogic.js";
+import { getDirection } from "./logic/utils.js";
 import {
   couldNotJoinBoard,
   gameStarted,
   invalidLogic,
   registrationFailed,
   registrationSuccessful,
-} from "./messages";
-import { positionIsSame, sleep } from "./utils";
+} from "./messages.js";
+import { positionIsSame, sleep } from "./utils.js";
 
 const logics = { firstDiamondLogic: getFirstDiamond };
 

@@ -1,10 +1,10 @@
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import bodyParser from "npm:body-parser";
 import { AppModule } from "./app.module";
 import { AllExceptionsFilter } from "./exception-filter";
 import { isLocal } from "./hooks/environment";
-import bodyParser = require("body-parser");
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

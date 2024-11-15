@@ -1,11 +1,12 @@
-import { getBot, joinBoard, moveBotOnBoard, registerBot } from "./api/bot";
+import { getBot, joinBoard, moveBotOnBoard, registerBot } from "./api/bot.js";
 import {
   couldNotJoinBoard,
   gameStarted,
   registrationFailed,
   registrationSuccessful,
-} from "./messages";
-import { sleep } from "./utils";
+} from "./messages.js";
+import { sleep } from "./utils.js";
+import process from "node:process";
 
 export const register = async (name, email, password, team) => {
   const bot = await registerBot(name, email, password, team);

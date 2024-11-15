@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import type React, { FC } from "react";
 
 type ModalProps = {
   onClose: () => void;
@@ -14,7 +14,8 @@ const Modal: FC<ModalProps> = ({ onClose, children }) => {
       aria-modal="true"
       onClick={onClose}
     >
-      <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+      <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity">
+      </div>
 
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
         <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">

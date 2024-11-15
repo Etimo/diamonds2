@@ -1,5 +1,5 @@
-import { Board } from "../models/board";
-import { client } from "./client";
+import { Board } from "../models/board.js";
+import { client } from "./client.js";
 
 export const getBoard = async (boardId) => {
   try {

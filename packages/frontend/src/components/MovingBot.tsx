@@ -1,4 +1,4 @@
-import { robot } from './images';
+import { robot } from "./images/index.ts";
 
 export const MovingBot = () => {
   return (

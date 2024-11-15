@@ -7,7 +7,7 @@ import {
   SeasonsController,
   SlackController,
   TeamsController,
-} from "./controllers";
+} from "./controllers/index.ts";
 import {
   BoardConfigRepository,
   BotRegistrationsRepository,
@@ -15,8 +15,8 @@ import {
   RecordingsRepository,
   SeasonsRepository,
   TeamsRepository,
-} from "./db";
-import { CustomLogger } from "./logger";
+} from "./db/index.ts";
+import { CustomLogger } from "./logger.ts";
 import {
   AuthorizationService,
   BoardConfigService,
@@ -28,7 +28,7 @@ import {
   SeasonsService,
   SlackService,
   TeamsService,
-} from "./services";
+} from "./services/index.ts";
 
 @Module({
   controllers: [

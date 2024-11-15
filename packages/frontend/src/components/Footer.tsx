@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import etimoLogo from '../assets/etimoLogo.png';
+import { Link } from "react-router-dom";
+import etimoLogo from "../assets/etimoLogo.png";
 
 export const Footer = () => {
   return (

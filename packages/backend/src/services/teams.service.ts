@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { URL } from "url";
+import { URL } from "node:url";
 import { TeamsRepository } from "../db";
 import { ConflictError, ForbiddenError, NotFoundError } from "../errors";
 import { INewTeam, ITeam } from "../types";

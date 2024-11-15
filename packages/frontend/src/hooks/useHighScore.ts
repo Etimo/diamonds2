@@ -1,6 +1,6 @@
-import { IHighscoreDto } from '@etimo/diamonds2-types';
-import { useEffect } from 'react';
-import { useFetchRepeatedly } from './useFetchRepeatedly';
+import type { IHighscoreDto } from "@etimo/diamonds2-types";
+import { useEffect } from "react";
+import { useFetchRepeatedly } from "./useFetchRepeatedly.ts";
 
 export function useHighScore(seasonId: string): IHighscoreDto[] {
   const fetchedHighScore = useFetchRepeatedly(

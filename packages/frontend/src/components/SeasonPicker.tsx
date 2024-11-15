@@ -1,6 +1,6 @@
-import { FC, memo } from 'react';
-import useSeasons from '../hooks/useSeasons';
-import { Select } from './Inputs';
+import { type FC, memo } from "react";
+import useSeasons from "../hooks/useSeasons.ts";
+import { Select } from "./Inputs/index.ts";
 
 type SeasonPickerProps = {
   seasonId: string;

@@ -1,7 +1,5 @@
 import { LoggerService } from "@nestjs/common";
 
-import * as log from "loglevel";
-
 // const colors = {
 //   // @ts-ignore
 //   TRACE: chalk["magenta"],
@@ -53,25 +51,25 @@ import * as log from "loglevel";
 
 export class CustomLogger implements LoggerService {
   log(message: string) {
-    log.debug(message);
+    console.debug(message);
   }
   error(message: string, trace: string) {
-    log.error(message);
+    console.error(message);
   }
   trace(message: string) {
-    log.debug(message);
+    console.debug(message);
   }
   warn(message: string) {
-    log.warn(message);
+    console.warn(message);
   }
   debug(message: string) {
-    log.debug(message);
+    console.debug(message);
   }
   info(message: string) {
-    log.info(message);
+    console.info(message);
   }
   verbose(message: string) {
-    log.debug(message);
+    console.debug(message);
   }
 }
 

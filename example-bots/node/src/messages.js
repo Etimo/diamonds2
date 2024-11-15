@@ -1,4 +1,5 @@
 import chalk from "chalk";
+import process from "node:process";
 
 export function registrationSuccessful(bot) {
   console.log(chalk.green("Registration successful"));

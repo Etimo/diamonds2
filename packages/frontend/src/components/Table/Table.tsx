@@ -1,4 +1,4 @@
-import { FC, memo } from 'react';
+import { type FC, memo } from "react";
 
 type TableProps = {
   label?: string;
@@ -7,7 +7,7 @@ type TableProps = {
 };
 
 export const Table: FC<TableProps> = memo((props) => {
-  const { cols, data, label = '' } = props;
+  const { cols, data, label = "" } = props;
   return (
     <>
       <label className="text-label mb-2.5">{label}</label>
@@ -16,7 +16,7 @@ export const Table: FC<TableProps> = memo((props) => {
           <tr className="">
             {cols.map((col, index) => (
               <th
-                key={'th-' + index}
+                key={"th-" + index}
                 className="font-sans text-xs text-etimo font-bold text-left p-2.5 first:rounded-tl-md last:rounded-tr-md"
               >
                 {col}
@@ -27,13 +27,13 @@ export const Table: FC<TableProps> = memo((props) => {
         <tbody>
           {data.map((item, index) => (
             <tr
-              key={'tr-' + index}
+              key={"tr-" + index}
               className="font-sans text-etimo text-xs font-normal border-b border-b-gray-500 last:border-none"
             >
               {Object.values(item).map((value: any, index2) => (
                 <td
                   className="p-2.5 whitespace-nowrap min-w-[80px] first:w-[99%]"
-                  key={'td' + index + index2}
+                  key={"td" + index + index2}
                 >
                   {value}
                 </td>
@@ -45,4 +45,4 @@ export const Table: FC<TableProps> = memo((props) => {
     </>
   );
 });
-Table.displayName = 'Table';
+Table.displayName = "Table";
