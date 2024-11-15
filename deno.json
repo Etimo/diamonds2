@@ -5,8 +5,8 @@
     "start:backend": "cd packages/backend && deno run start:dev",
     "start:frontend": "cd packages/frontend && deno run dev",
     "start": "deno run support && concurrently \"deno run start:backend\" \"deno run start:frontend\"",
-    "support": "docker-compose up -d database",
-    "setup": "deno install --allow-scripts && deno run env && deno run init-db && deno run build"
+    "support": "docker compose up -d database",
+    "setup": "deno install --allow-scripts && deno run env && deno run init-db"
   },
 
   "workspace": [
@@ -15,7 +15,7 @@
     "./packages/frontend"
   ],
   "lint": {
-    "exclude": ["**/*.spec.ts"],
+    "exclude": ["**/*.spec.ts", "**/dist"],
     "rules": {
       "exclude": ["verbatim-module-syntax"]
     }
