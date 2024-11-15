@@ -1,1 +1,1 @@
-export * from "./slack";
+export * from "./slack/index.ts";

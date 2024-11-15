@@ -1,8 +1,8 @@
 import { beforeEach, expect, it } from "@jest/globals";
-import { Board } from "../../board";
-import { createTestBoard, createTestBot } from "../../util";
-import { BotGameObject } from "../bot/bot";
-import { TeleportGameObject } from "./teleport";
+import { Board } from "../../board.ts";
+import { createTestBoard, createTestBot } from "../../util/index.ts";
+import { BotGameObject } from "../bot/bot.ts";
+import { TeleportGameObject } from "./teleport.ts";
 
 let teleporterToEnter: TeleportGameObject;
 let teleporterPaired: TeleportGameObject;

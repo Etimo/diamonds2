@@ -1,6 +1,6 @@
 import { IBoardConfigDto } from "@etimo/diamonds2-types";
 import { ApiProperty } from "@nestjs/swagger";
-import { ISeason } from "../types";
+import { ISeason } from "../types/index.ts";
 
 export class BoardConfigDto implements IBoardConfigDto {
   @ApiProperty()

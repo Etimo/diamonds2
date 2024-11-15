@@ -89,6 +89,7 @@
     "npm:react-dom@^18.2.0": "18.3.1_react@18.3.1",
     "npm:react-is@^18.2.0": "18.3.1",
     "npm:react-router-dom@^6.22.0": "6.28.0_react@18.3.1_react-dom@18.3.1__react@18.3.1",
+    "npm:react@*": "18.3.1",
     "npm:react@^18.2.0": "18.3.1",
     "npm:reflect-metadata@~0.1.13": "0.1.14",
     "npm:rxjs@^7.8.1": "7.8.1",

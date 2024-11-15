@@ -1,7 +1,7 @@
 import { Position, TeleportProperties } from "@etimo/diamonds2-types";
-import { Board } from "../../board";
-import { AbstractGameObject } from "../abstract-game-object";
-import { BotGameObject } from "../bot/bot";
+import { Board } from "../../board.ts";
+import { AbstractGameObject } from "../abstract-game-object.ts";
+import { BotGameObject } from "../bot/bot.ts";
 export class TeleportGameObject extends AbstractGameObject {
   constructor(
     position: Position,

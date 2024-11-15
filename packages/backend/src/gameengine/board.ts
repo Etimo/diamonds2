@@ -1,8 +1,8 @@
 import { Position } from "@etimo/diamonds2-types";
-import { IBoardConfig, IBot } from "../types";
-import { AbstractGameObject } from "./gameobjects/abstract-game-object";
-import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
-import { BotGameObject } from "./gameobjects/bot/bot";
+import { IBoardConfig, IBot } from "../types/index.ts";
+import { AbstractGameObject } from "./gameobjects/abstract-game-object.ts";
+import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers.ts";
+import { BotGameObject } from "./gameobjects/bot/bot.ts";
 export type SessionFinishedCallbackFunction = (bot: BotGameObject) => void;
 
 export class Board {
@@ -364,7 +364,7 @@ export class Board {
 
   private notifyProvidersGameObjectsRemoved(gameObjects: AbstractGameObject[]) {
     this.gameObjectProviders.forEach((p) =>
-      p.onGameObjectsRemoved(this, gameObjects),
+      p.onGameObjectsRemoved(this, gameObjects)
     );
   }
 
@@ -374,7 +374,7 @@ export class Board {
 
   private notifyProvidersGameObjectsAdded(gameObjects: AbstractGameObject[]) {
     this.gameObjectProviders.forEach((p) =>
-      p.onGameObjectsAdded(this, gameObjects),
+      p.onGameObjectsAdded(this, gameObjects)
     );
   }
 

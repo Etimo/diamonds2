@@ -1,7 +1,7 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
-import { TeamDto } from "../models";
-import { TeamsService } from "../services";
+import { TeamDto } from "../models/index.ts";
+import { TeamsService } from "../services/index.ts";
 
 @ApiTags("Teams")
 @Controller("api/teams")

@@ -1,8 +1,8 @@
 /** istanbul ignore file */
 import { Position } from "@etimo/diamonds2-types";
-import { Board } from "../../board";
-import { BotGameObject } from "../bot/bot";
-import { DiamondGameObject } from "../diamond/diamond";
+import { Board } from "../../board.ts";
+import { BotGameObject } from "../bot/bot.ts";
+import { DiamondGameObject } from "../diamond/diamond.ts";
 export class DummyBotGameObject extends BotGameObject {
   onGameObjectCallbackNotified(board: Board, intervalMs: number) {
     if (intervalMs === 1000) {

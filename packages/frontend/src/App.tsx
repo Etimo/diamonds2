@@ -1,8 +1,8 @@
 import { type FC, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Header } from "./components/index.ts";
 import { Footer } from "./components/Footer.tsx";
 import { Home } from "./components/Home.tsx";
+import { Header } from "./components/index.ts";
 import { Teams } from "./components/Teams.tsx";
 
 const App: FC = () => {

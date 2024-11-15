@@ -1,4 +1,4 @@
-import { BotGameObject } from "../gameobjects";
+import { BotGameObject } from "../gameobjects/index.ts";
 
 // TODO: It could be nice to add memoization here to avoid same ID for bots.
 export function createTestBot(): BotGameObject {

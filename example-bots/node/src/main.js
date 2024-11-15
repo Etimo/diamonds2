@@ -28,7 +28,7 @@ export const play = async (token, logic, boardId) => {
   if (!logicFunction) {
     invalidLogic();
   }
-  let bot = await getBot(token);
+  const bot = await getBot(token);
 
   // Join board
   let board = await joinBoard(token, boardId);

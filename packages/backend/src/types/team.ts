@@ -1,4 +1,4 @@
-import { IBot } from "./bot";
+import { IBot } from "./bot.ts";
 
 export interface ITeam {
   id: string;

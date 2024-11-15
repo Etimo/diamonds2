@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { HighscoresRepository } from "../db";
-import { HighscorePrivateDto } from "../models";
-import { IHighscore, INewHighscore } from "../types";
-import { SeasonsService } from "./seasons.service";
+import { HighscoresRepository } from "../db/index.ts";
+import { HighscorePrivateDto } from "../models/index.ts";
+import { IHighscore, INewHighscore } from "../types/index.ts";
+import { SeasonsService } from "./seasons.service.ts";
 
 @Injectable()
 export class HighscoresService {

@@ -1,4 +1,5 @@
-import type React, { FC } from "react";
+import type { FC } from "react";
+import type React from "react";
 
 type ModalProps = {
   onClose: () => void;

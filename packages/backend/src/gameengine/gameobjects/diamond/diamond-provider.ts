@@ -1,9 +1,10 @@
 import { DiamondProviderConfig } from "@etimo/diamonds2-types";
-import { Board } from "../../board";
-import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
-import { DiamondGameObject } from "./diamond";
+import { Board } from "../../board.ts";
+import { AbstractGameObjectProvider } from "../abstract-game-object-providers.ts";
+import { DiamondGameObject } from "./diamond.ts";
 
-export class DiamondProvider extends AbstractGameObjectProvider<DiamondProviderConfig> {
+export class DiamondProvider
+  extends AbstractGameObjectProvider<DiamondProviderConfig> {
   constructor(config: DiamondProviderConfig) {
     super(config);
   }
@@ -14,8 +15,8 @@ export class DiamondProvider extends AbstractGameObjectProvider<DiamondProviderC
 
   onGameObjectsRemoved(board: Board, other: any) {
     const diamonds = board.getGameObjectsByType(DiamondGameObject);
-    const minLimit =
-      board.width * board.height * this.config.minRatioForGeneration;
+    const minLimit = board.width * board.height *
+      this.config.minRatioForGeneration;
     if (diamonds.length == 0) {
       this.generateDiamonds(board);
     }

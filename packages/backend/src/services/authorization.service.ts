@@ -2,7 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { Request } from "express";
 import * as crypto from "node:crypto";
 import * as qs from "npm:qs";
-import { UnauthorizedError } from "../errors";
+import { UnauthorizedError } from "../errors/index.ts";
+import process from "node:process";
+import { Buffer } from "node:buffer";
 
 @Injectable()
 export class AuthorizationService {
@@ -25,8 +27,7 @@ export class AuthorizationService {
 
     // Create my signature with request data and slackSigningSecret
     const sigBasestring = "v0:" + timestamp + ":" + requestBody;
-    const mySignature =
-      "v0=" +
+    const mySignature = "v0=" +
       crypto
         .createHmac("sha256", slackSigningSecret)
         .update(sigBasestring, "utf8")

@@ -1,6 +1,6 @@
 import { Body, Controller, HttpCode, Post, Req } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
-import { AuthorizationService, SlackService } from "../services";
+import { AuthorizationService, SlackService } from "../services/index.ts";
 
 @ApiTags("Slack")
 @Controller("api/slack")

@@ -1,5 +1,6 @@
 import type { BotGameObjectProperties } from "@etimo/diamonds2-types";
-import type React, { FC, memo, useState } from "react";
+import type React from "react";
+import { type FC, memo, useState } from "react";
 import useFetch from "../../hooks/useFetch.ts";
 import { BoardPicker } from "../BoardPicker.tsx";
 import { HighScoreTable } from "../HighScoreTable.tsx";

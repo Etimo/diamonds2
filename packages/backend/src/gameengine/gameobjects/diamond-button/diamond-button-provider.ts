@@ -1,8 +1,8 @@
-import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
-import { AbstractGameObject } from "../abstract-game-object";
-import { DiamondButtonGameObject } from "./diamond-button";
-import { DiamondGameObject } from "../diamond/diamond";
-import { Board } from "../../board";
+import { AbstractGameObjectProvider } from "../abstract-game-object-providers.ts";
+import { AbstractGameObject } from "../abstract-game-object.ts";
+import { DiamondButtonGameObject } from "./diamond-button.ts";
+import { DiamondGameObject } from "../diamond/diamond.ts";
+import { Board } from "../../board.ts";
 
 export class DiamondButtonProvider extends AbstractGameObjectProvider {
   /**

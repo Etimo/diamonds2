@@ -1,8 +1,8 @@
-import { Board } from "../../board";
-import { AbstractGameObject } from "../abstract-game-object";
-import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
-import { BotGameObject } from "../bot/bot";
-import { BaseGameObject } from "./base";
+import { Board } from "../../board.ts";
+import { AbstractGameObject } from "../abstract-game-object.ts";
+import { AbstractGameObjectProvider } from "../abstract-game-object-providers.ts";
+import { BotGameObject } from "../bot/bot.ts";
+import { BaseGameObject } from "./base.ts";
 
 export class BaseProvider extends AbstractGameObjectProvider {
   onGameObjectsAdded(board: Board, gameObjects: AbstractGameObject[]) {

@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { Test, TestingModule } from "@nestjs/testing";
-import { TeamsRepository } from "../db/repositories/teams.repository";
-import { ConflictError, ForbiddenError } from "../errors";
-import { ITeam } from "../types";
-import { TeamsService } from "./teams.service";
+import { TeamsRepository } from "../db/repositories/teams.repository.ts";
+import { ConflictError, ForbiddenError } from "../errors/index.ts";
+import { ITeam } from "../types/index.ts";
+import { TeamsService } from "./teams.service.ts";
 
 describe("TeamsService", () => {
   let teamsService: TeamsService;

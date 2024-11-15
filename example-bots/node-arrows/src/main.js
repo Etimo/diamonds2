@@ -1,3 +1,4 @@
+import process from "node:process";
 import { getBot, joinBoard, moveBotOnBoard, registerBot } from "./api/bot.js";
 import {
   couldNotJoinBoard,
@@ -6,7 +7,6 @@ import {
   registrationSuccessful,
 } from "./messages.js";
 import { sleep } from "./utils.js";
-import process from "node:process";
 
 export const register = async (name, email, password, team) => {
   const bot = await registerBot(name, email, password, team);
@@ -17,7 +17,7 @@ export const register = async (name, email, password, team) => {
   }
 };
 
-const keypress = async () => {
+const keypress = () => {
   process.stdin.setRawMode(true);
   return new Promise((resolve) =>
     process.stdin.once("data", (data) => {
@@ -50,7 +50,7 @@ const keypress = async () => {
 export const play = async (token, boardId) => {
   gameStarted();
   // Gets the provided logic
-  let bot = await getBot(token);
+  const bot = await getBot(token);
 
   // Join board
   let board = await joinBoard(token, boardId);

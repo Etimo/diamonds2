@@ -1,9 +1,9 @@
 import { v4 as uuid } from "uuid";
 
 import { Injectable } from "@nestjs/common";
-import { ForbiddenError } from "../errors";
-import { BotDto, SeasonDto, TeamDto } from "../models";
-import { INewBoardConfig, INewSeason } from "../types";
+import { ForbiddenError } from "../errors/index.ts";
+import { BotDto, SeasonDto, TeamDto } from "../models/index.ts";
+import { INewBoardConfig, INewSeason } from "../types/index.ts";
 import {
   getAddSeasonBody,
   getAddTeamBody,
@@ -12,11 +12,11 @@ import {
   getWinnerListBody,
   showModal,
   slackError,
-} from "../utils";
-import { BoardConfigService } from "./board-config.service";
-import { HighscoresService } from "./highscores.service";
-import { SeasonsService } from "./seasons.service";
-import { TeamsService } from "./teams.service";
+} from "../utils/index.ts";
+import { BoardConfigService } from "./board-config.service.ts";
+import { HighscoresService } from "./highscores.service.ts";
+import { SeasonsService } from "./seasons.service.ts";
+import { TeamsService } from "./teams.service.ts";
 
 @Injectable()
 export class SlackService {

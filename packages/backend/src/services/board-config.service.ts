@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { BoardConfigRepository } from "../db";
-import { INewBoardConfig } from "../types";
-import { SeasonsService } from "./seasons.service";
+import { BoardConfigRepository } from "../db/index.ts";
+import { INewBoardConfig } from "../types/index.ts";
+import { SeasonsService } from "./seasons.service.ts";
 
 @Injectable()
 export class BoardConfigService {

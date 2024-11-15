@@ -1,6 +1,6 @@
-import { IBot } from "../../types";
-import { Board } from "../board";
-import { AbstractGameObject } from "./abstract-game-object";
+import { IBot } from "../../types/index.ts";
+import { Board } from "../board.ts";
+import { AbstractGameObject } from "./abstract-game-object.ts";
 
 export abstract class AbstractGameObjectProvider<T = {}> {
   public config: Readonly<T>;

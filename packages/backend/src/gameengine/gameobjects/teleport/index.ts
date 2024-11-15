@@ -1,2 +1,2 @@
-export * from "./teleport";
-export * from "./teleport-provider";
+export * from "./teleport.ts";
+export * from "./teleport-provider.ts";

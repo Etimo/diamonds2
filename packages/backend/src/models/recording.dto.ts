@@ -1,4 +1,4 @@
-import { IRecording } from "../types";
+import { IRecording } from "../types/index.ts";
 
 export class RecordingDto {
   botName!: string;

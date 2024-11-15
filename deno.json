@@ -14,12 +14,15 @@
     "./packages/frontend"
   ],
   "lint": {
+    "exclude": ["**/*.spec.ts"],
     "rules": {
-      "exclude": ["no-unused-vars"]
+      "exclude": ["verbatim-module-syntax"]
     }
   },
   "nodeModulesDir": "auto",
   "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "npm:react",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   }

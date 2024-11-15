@@ -1,9 +1,10 @@
 import { TeleportProviderConfig } from "@etimo/diamonds2-types";
-import { Board } from "../../board";
-import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
-import { TeleportGameObject } from "./teleport";
+import { Board } from "../../board.ts";
+import { AbstractGameObjectProvider } from "../abstract-game-object-providers.ts";
+import { TeleportGameObject } from "./teleport.ts";
 
-export class TeleportProvider extends AbstractGameObjectProvider<TeleportProviderConfig> {
+export class TeleportProvider
+  extends AbstractGameObjectProvider<TeleportProviderConfig> {
   constructor(config: TeleportProviderConfig) {
     super(config);
   }

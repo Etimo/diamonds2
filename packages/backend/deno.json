@@ -1,6 +1,6 @@
 {
-  // "name": "@etimo/diamonds2-backend",
-  // "exports": "./mod.ts",
+  "name": "@etimo/diamonds2-backend",
+  "exports": "./mod.ts",
   "tasks": {
     "start": "deno run --watch -A src/main.ts",
     "postinstall": "deno run -A npm:prisma generate",

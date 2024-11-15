@@ -1,12 +1,12 @@
 import { Position } from "@etimo/diamonds2-types";
 import { Inject, Injectable, Scope } from "@nestjs/common";
-import { MoveDirection } from "../enums";
+import { MoveDirection } from "../enums/index.ts";
 import {
   ConflictError,
   ForbiddenError,
   NotFoundError,
   UnauthorizedError,
-} from "../errors";
+} from "../errors/index.ts";
 import {
   BaseProvider,
   Board,
@@ -18,15 +18,16 @@ import {
   OperationQueueBoard,
   TeleportProvider,
   TeleportRelocationProvider,
-} from "../gameengine";
-import { CustomLogger } from "../logger";
-import { BoardDto, BoardMetadataDto, GameObjectDto } from "../models";
-import { IBoardConfig, IBot } from "../types";
-import { BoardConfigService } from "./board-config.service";
-import { BotsService } from "./bots.service";
-import { HighscoresService } from "./highscores.service";
-import { RecordingsService } from "./recordings.service";
-import { SeasonsService } from "./seasons.service";
+} from "../gameengine/index.ts";
+import { CustomLogger } from "../logger.ts";
+import { BoardDto, BoardMetadataDto, GameObjectDto } from "../models/index.ts";
+import { IBoardConfig, IBot } from "../types/index.ts";
+import { BoardConfigService } from "./board-config.service.ts";
+import { BotsService } from "./bots.service.ts";
+import { HighscoresService } from "./highscores.service.ts";
+import { RecordingsService } from "./recordings.service.ts";
+import { SeasonsService } from "./seasons.service.ts";
+
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
   private static nextBoardId = 1;
@@ -90,8 +91,8 @@ export class BoardsService {
       const sessionLength = boardConfig.sessionLength;
       const minimumDelayBetweenMoves = boardConfig.minimumDelayBetweenMoves;
       const extraFactor = 1.5;
-      const maxMoves =
-        (1000 / minimumDelayBetweenMoves) * sessionLength * extraFactor;
+      const maxMoves = (1000 / minimumDelayBetweenMoves) * sessionLength *
+        extraFactor;
       this.recordingsService.setup(
         numberOfBoards + numEphemeralBoards,
         maxMoves,
@@ -127,7 +128,6 @@ export class BoardsService {
   }
 
   /**
-   *
    * @param preferredBoardId
    * @param bot
    */

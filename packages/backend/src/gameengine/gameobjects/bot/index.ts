@@ -1,2 +1,2 @@
-export * from "./bot";
-export * from "./bot-provider";
+export * from "./bot.ts";
+export * from "./bot-provider.ts";

@@ -1,5 +1,5 @@
 import { BotGameObjectProperties, Position } from "@etimo/diamonds2-types";
-import { AbstractGameObject } from "../abstract-game-object";
+import { AbstractGameObject } from "../abstract-game-object.ts";
 export type IBotGameObject = {
   base: Position;
   diamonds: number;

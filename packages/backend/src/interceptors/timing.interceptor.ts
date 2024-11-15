@@ -1,9 +1,9 @@
 import {
-  Injectable,
-  NestInterceptor,
-  ExecutionContext,
   CallHandler,
+  ExecutionContext,
+  Injectable,
   Logger,
+  NestInterceptor,
 } from "@nestjs/common";
 import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
@@ -23,7 +23,7 @@ export class TimingInterceptor implements NestInterceptor {
         tap(() =>
           this.logger.debug(
             `Request timing for ${req.url}: ${Date.now() - now}ms`,
-          ),
+          )
         ),
       );
   }

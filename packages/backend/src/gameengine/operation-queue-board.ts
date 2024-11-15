@@ -1,8 +1,8 @@
 import { Position } from "@etimo/diamonds2-types";
 import * as async from "async";
-import { IBoardConfig, IBot } from "../types";
-import { Board } from "./board";
-import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers";
+import { IBoardConfig, IBot } from "../types/index.ts";
+import { Board } from "./board.ts";
+import { AbstractGameObjectProvider } from "./gameobjects/abstract-game-object-providers.ts";
 /**
  * A class that wraps a board with an operation queue. This class will abstract the handling of operations
  * on the board to prevent multiple simultaneous operations at the same time.

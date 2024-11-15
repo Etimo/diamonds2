@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import BoardFeatureDto from "./board-feature.dto";
+import BoardFeatureDto from "./board-feature.dto.ts";
 
 export class BoardMetadataDto {
   @ApiProperty({

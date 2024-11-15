@@ -7,9 +7,9 @@ import {
   BotRegistrationPublicDto,
   JoinInputDto,
   MoveInputDto,
-} from "../models";
-import { BoardsService, BotsService } from "../services";
-import { NotFoundError } from "../errors";
+} from "../models/index.ts";
+import { BoardsService, BotsService } from "../services/index.ts";
+import { NotFoundError } from "../errors/index.ts";
 
 @ApiTags("Bots")
 @Controller("api/bots")

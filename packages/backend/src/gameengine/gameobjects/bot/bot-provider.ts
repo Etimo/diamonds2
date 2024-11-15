@@ -1,8 +1,8 @@
 import { BotProviderConfig, Position } from "@etimo/diamonds2-types";
-import { IBot } from "../../../types";
-import { Board } from "../../board";
-import { AbstractGameObjectProvider } from "../abstract-game-object-providers";
-import { BotGameObject } from "./bot";
+import { IBot } from "../../../types/index.ts";
+import { Board } from "../../board.ts";
+import { AbstractGameObjectProvider } from "../abstract-game-object-providers.ts";
+import { BotGameObject } from "./bot.ts";
 export class BotProvider extends AbstractGameObjectProvider<BotProviderConfig> {
   constructor(config: BotProviderConfig) {
     super(config);

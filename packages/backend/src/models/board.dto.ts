@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import BoardFeatureDto from "./board-feature.dto";
-import { GameObjectDto } from "./game-object.dto";
+import BoardFeatureDto from "./board-feature.dto.ts";
+import { GameObjectDto } from "./game-object.dto.ts";
 
 export class BoardDto {
   @ApiProperty({

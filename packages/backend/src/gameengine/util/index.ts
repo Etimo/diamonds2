@@ -1,3 +1,3 @@
-export * from "./silent-logger";
-export * from "./test-board";
-export * from "./test-bot";
+export * from "./silent-logger.ts";
+export * from "./test-board.ts";
+export * from "./test-bot.ts";

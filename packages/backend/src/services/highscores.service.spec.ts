@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { TestingModule } from "@nestjs/testing";
-import { IHighscore, INewHighscore } from "../types";
-import { offSeasonId } from "../utils";
-import { HighscoresService } from "./highscores.service";
-import { SeasonsService } from "./seasons.service";
+import { IHighscore, INewHighscore } from "../types/index.ts";
+import { offSeasonId } from "../utils/index.ts";
+import { HighscoresService } from "./highscores.service.ts";
+import { SeasonsService } from "./seasons.service.ts";
 import {
   createTestModule,
   highscoresRepositoryMock,
   seasonsRepositoryMock,
-} from "./test-helper.spec";
+} from "./test-helper.spec.ts";
 
 describe("HighScoresService", () => {
   let highScoresService: HighscoresService;

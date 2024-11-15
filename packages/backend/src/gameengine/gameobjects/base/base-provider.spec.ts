@@ -1,7 +1,7 @@
-import { Board } from "../../board";
-import { createTestBoard, createTestBot } from "../../util";
-import { BotGameObject } from "../bot/bot";
-import { BaseProvider } from "./base-provider";
+import { Board } from "../../board.ts";
+import { createTestBoard, createTestBot } from "../../util/index.ts";
+import { BotGameObject } from "../bot/bot.ts";
+import { BaseProvider } from "./base-provider.ts";
 
 let provider: BaseProvider;
 let board: Board;

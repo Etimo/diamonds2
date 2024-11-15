@@ -5,7 +5,7 @@
     "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
   },
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.defaultFormatter": "denoland.vscode-deno",
   "editor.formatOnSave": true,
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
@@ -21,5 +21,6 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.updateImportsOnFileMove.enabled": "always",
   "deno.enable": true,
+  "deno.lint": true,
   "eslint.enable": false
 }

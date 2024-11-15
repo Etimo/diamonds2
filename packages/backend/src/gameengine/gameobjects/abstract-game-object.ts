@@ -1,5 +1,5 @@
 import { Position } from "@etimo/diamonds2-types";
-import { Board } from "../board";
+import { Board } from "../board.ts";
 
 export abstract class AbstractGameObject {
   private positions: Position[] = [];

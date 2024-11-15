@@ -1,4 +1,4 @@
-import { BotsErrors } from "./enums";
+import { BotsErrors } from "./enums/index.ts";
 
 export class ValidationException extends Error {
   constructor(botErrors: BotsErrors) {

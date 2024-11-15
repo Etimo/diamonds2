@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { SeasonsRepository } from "../db";
-import { ConflictError, ForbiddenError } from "../errors";
-import { INewSeason, ISeason } from "../types";
-import { offSeasonId } from "../utils";
+import { SeasonsRepository } from "../db/index.ts";
+import { ConflictError, ForbiddenError } from "../errors/index.ts";
+import { INewSeason, ISeason } from "../types/index.ts";
+import { offSeasonId } from "../utils/index.ts";
 
 @Injectable()
 export class SeasonsService {

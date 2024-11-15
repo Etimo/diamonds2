@@ -1,5 +1,5 @@
-import { AbstractGameObject } from "../abstract-game-object";
-import { BotGameObject, IBotGameObject } from "../bot/bot";
+import { AbstractGameObject } from "../abstract-game-object.ts";
+import { BotGameObject, IBotGameObject } from "../bot/bot.ts";
 
 export class BaseGameObject extends AbstractGameObject {
   constructor(private bot: IBotGameObject) {

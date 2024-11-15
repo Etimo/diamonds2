@@ -1,8 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { URL } from "node:url";
-import { TeamsRepository } from "../db";
-import { ConflictError, ForbiddenError, NotFoundError } from "../errors";
-import { INewTeam, ITeam } from "../types";
+import { TeamsRepository } from "../db/index.ts";
+import {
+  ConflictError,
+  ForbiddenError,
+  NotFoundError,
+} from "../errors/index.ts";
+import { INewTeam, ITeam } from "../types/index.ts";
 
 @Injectable()
 export class TeamsService {

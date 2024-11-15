@@ -1,8 +1,8 @@
 import { beforeEach, expect, it, jest } from "@jest/globals";
-import { Board } from "../../board";
-import { createTestBoard } from "../../util";
-import { DummyBotGameObject } from "./dummy-bot";
-import { DummyBotProvider } from "./dummy-bot-provider";
+import { Board } from "../../board.ts";
+import { createTestBoard } from "../../util/index.ts";
+import { DummyBotGameObject } from "./dummy-bot.ts";
+import { DummyBotProvider } from "./dummy-bot-provider.ts";
 
 let provider: DummyBotProvider;
 let board: Board;
