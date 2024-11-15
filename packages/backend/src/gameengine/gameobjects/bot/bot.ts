@@ -55,10 +55,8 @@ export class BotGameObject extends AbstractGameObject {
 
   onGameObjectEntered(gameObject: AbstractGameObject) {
     if (gameObject instanceof BotGameObject) {
-      const otherBot = gameObject as BotGameObject;
-
       // Return if the entering bot is not allowed to tackle (should not happen)
-      if (!otherBot.canTackle) {
+      if (!gameObject.canTackle) {
         return;
       }
 
@@ -68,23 +66,22 @@ export class BotGameObject extends AbstractGameObject {
       // Also they steal some diamonds from me
       const canSteal = Math.min(
         this.diamonds,
-        otherBot.inventorySize - otherBot.diamonds,
+        gameObject.inventorySize - gameObject.diamonds,
       );
       this.diamonds = Math.max(this.diamonds - canSteal, 0);
-      otherBot.diamonds += canSteal;
+      gameObject.diamonds += canSteal;
     }
   }
+
   canGameObjectEnter(gameObject: AbstractGameObject): boolean {
     if (gameObject instanceof BotGameObject) {
-      const otherBot = gameObject as BotGameObject;
-
-      if (otherBot.canTackle) {
+      if (gameObject.canTackle) {
         return true;
       }
 
       if (
-        otherBot.base.x === this.position.x &&
-        otherBot.base.y === this.position.y
+        gameObject.base.x === this.position.x &&
+        gameObject.base.y === this.position.y
       ) {
         this.position = this.base;
         return true;

@@ -7,12 +7,11 @@ import { SparklesComponent } from './SparklesComponent';
 export const DiamondComponent: FC<DiamondGameObjectProperties> = memo(
   ({ points }) => {
     const characterImg = points === 2 ? diamondRed : diamond;
-    const imageClassName = 'diamond';
     return (
       <>
         <CommonGameObject
           characterImg={characterImg}
-          imageClassName={imageClassName}
+          imageClassName="diamond"
         />
         <SparklesComponent />
       </>

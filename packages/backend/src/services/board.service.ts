@@ -27,6 +27,7 @@ import { BotsService } from "./bots.service";
 import { HighscoresService } from "./highscores.service";
 import { RecordingsService } from "./recordings.service";
 import { SeasonsService } from "./seasons.service";
+
 @Injectable({ scope: Scope.DEFAULT })
 export class BoardsService {
   private static nextBoardId = 1;
