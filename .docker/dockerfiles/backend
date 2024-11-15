@@ -5,10 +5,14 @@ COPY --chown=1000:1000 packages/backend .
 
 FROM base AS develop
 ENV PORT=3000
+# Add Prisma generate here
+RUN deno -A npm:prisma generate
 EXPOSE $PORT
 CMD ["deno", "run", "start:dev"]
 
 FROM base AS prod
 ENV PORT=3000
+# Add Prisma generate here
+RUN deno -A npm:prisma generate
 EXPOSE $PORT
-CMD ["run", "start:prod"]
+CMD ["deno", "run", "start:prod"]

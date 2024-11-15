@@ -2,10 +2,12 @@ version: "3.7"
 
 services:
   frontend:
-    image: etimodanielwinther/diamonds2_frontend:${DIAMONDS_DOCKER_TAG}
+    image: ghcr.io/etimo/diamonds2/frontend:${DIAMONDS_DOCKER_TAG}
     restart: always
     environment:
       - VITE_API_BASE_URL=http://backend:3000/api
+      - PORT=8082
+      - APP=frontend
     ports:
       - 80:8082
       - 443:443
@@ -25,7 +27,7 @@ services:
       - ./data/certbot/www:/var/www/certbot
 
   backend:
-    image: etimodanielwinther/diamonds2_backend:${DIAMONDS_DOCKER_TAG}
+    image: ghcr.io/etimo/diamonds2/backend:${DIAMONDS_DOCKER_TAG}
     restart: always
     environment:
       - DATABASE_URL

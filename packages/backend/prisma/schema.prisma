@@ -32,7 +32,7 @@ model Bot {
   createTimeStamp DateTime    @default(now()) @db.Timestamptz(6)
   updateTimeStamp DateTime    @default(now()) @db.Timestamptz(6)
   password        String?     @db.VarChar(300)
-  teamId          String      @db.Uuid
+  teamId          String?      @db.Uuid
   team            Team?        @relation(fields: [teamId], references: [id], onDelete: Cascade)
   highscores      Highscore[]
   recordings      Recording[]

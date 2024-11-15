@@ -1,0 +1,111 @@
+name: CD
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    branches: [main]
+    types:
+      - completed
+
+jobs:
+  build-prod:
+    name: Build for prod env
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to GitHub registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build docker image
+        run: |
+          docker build -t diamonds2_base:latest -f .docker/dockerfiles/base .
+          docker compose -f docker-compose.prod-build.yml build
+
+      - name: Extract branch name
+        shell: bash
+        run: |
+          echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')" >> $GITHUB_ENV
+          echo "${BRANCH_NAME}"
+
+      - name: Tag docker images
+        run: |
+          docker tag diamonds2-frontend ghcr.io/etimo/diamonds2/frontend:latest-${BRANCH_NAME}
+          docker tag diamonds2-frontend ghcr.io/etimo/diamonds2/frontend:${BRANCH_NAME}-${{ github.sha }}
+          docker tag diamonds2-backend ghcr.io/etimo/diamonds2/backend:latest-${BRANCH_NAME}
+          docker tag diamonds2-backend ghcr.io/etimo/diamonds2/backend:${BRANCH_NAME}-${{ github.sha }}
+      - name: Push docker images
+        run: |
+          docker push ghcr.io/etimo/diamonds2/frontend:latest-${BRANCH_NAME}
+          docker push ghcr.io/etimo/diamonds2/frontend:${BRANCH_NAME}-${{ github.sha }}
+          docker push ghcr.io/etimo/diamonds2/backend:latest-${BRANCH_NAME}
+          docker push ghcr.io/etimo/diamonds2/backend:${BRANCH_NAME}-${{ github.sha }}
+
+  deploy-prod:
+    name: Deploy to production
+    needs: build-prod
+    runs-on: ubuntu-latest
+    steps:
+      - uses: chrnorm/deployment-action@releases/v1
+        name: Create GitHub deployment
+        id: deployment
+        with:
+          token: "${{ github.token }}"
+          target_url: https://diamonds.etimo.se
+          environment: prod
+          initial_status: "in_progress"
+
+      - name: Update apps
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.DEPLOY_ETIMO_AWS_HOST }}
+          USERNAME: ${{ secrets.DEPLOY_ETIMO_AWS_USERNAME }}
+          PORT: 22
+          KEY: ${{ secrets.DEPLOY_ETIMO_AWS_KEY }}
+          script: |
+            cd diamonds2
+            git fetch
+            git checkout --progress --force ${{ github.sha }}
+            docker-compose down --remove-orphans
+            docker system prune -af
+            source ~/.bash_profile
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            DIAMONDS_DOCKER_TAG=main-${{ github.sha }} docker-compose -f docker-compose.prod-run.yml up -d
+
+      - name: Update autoscaler
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.DEPLOY_ETIMO_AWS_AUTOSCALER_HOST }}
+          USERNAME: ${{ secrets.DEPLOY_ETIMO_AWS_USERNAME }}
+          PORT: 22
+          KEY: ${{ secrets.DEPLOY_ETIMO_AWS_KEY }}
+          script: |
+            cd diamonds2
+            git fetch
+            git checkout --progress --force ${{ github.sha }}
+
+      - name: Update deployment status (success)
+        if: success()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target_url: https://diamonds.etimo.se
+          state: "success"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+
+      - name: Update deployment status (failure)
+        if: failure()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target_url: https://diamonds.etimo.se
+          state: "failure"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}

@@ -1,5 +1,6 @@
 import { IHighscoreDto } from "@etimo/diamonds2-types";
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { IsOptional } from "class-validator";
 import { IHighscore } from "../types/index.ts";
 
 export class HighscorePublicDto implements IHighscoreDto {
@@ -12,19 +13,21 @@ export class HighscorePublicDto implements IHighscoreDto {
   @ApiProperty()
   seasonId!: string;
 
-  @ApiProperty()
-  team!: string;
+  @ApiPropertyOptional({ nullable: true })
+  @IsOptional()
+  team: string | null = null;
 
-  @ApiProperty()
-  teamLogotype!: string;
+  @ApiPropertyOptional({ nullable: true })
+  @IsOptional()
+  teamLogotype: string | null = null;
 
   public static fromEntity(entity: IHighscore): HighscorePublicDto {
     return {
       botName: entity.bot!.name,
       score: entity.score,
       seasonId: entity.seasonId,
-      team: entity.bot!.team!.name,
-      teamLogotype: entity.bot!.team!.logotypeUrl,
+      team: entity.bot!.team?.name ?? null,
+      teamLogotype: entity.bot!.team?.logotypeUrl ?? null,
     };
   }
 }

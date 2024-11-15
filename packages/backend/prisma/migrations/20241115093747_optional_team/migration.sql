@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Bot" ALTER COLUMN "teamId" DROP NOT NULL;

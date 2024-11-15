@@ -3,13 +3,12 @@ WORKDIR /app/packages/frontend
 COPY --chown=1000:1000 packages/frontend .
 
 FROM base AS develop
-ENV PORT=8080
+ENV PORT=8082
 EXPOSE $PORT
 CMD ["deno", "run", "dev"]
 
 FROM develop AS build
 RUN deno run build
-RUN SKIP_POSTINSTALL=true yarn workspaces focus --all --production
 
 FROM nginx:1.18 AS prod
 WORKDIR /usr/share/nginx/html/

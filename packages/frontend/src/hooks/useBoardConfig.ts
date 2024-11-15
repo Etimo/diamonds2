@@ -1,6 +1,6 @@
-import type { IBoardConfigDto } from '@etimo/diamonds2-types';
-import { useEffect, useState } from 'react';
-import useFetch from './useFetch.ts';
+import type { IBoardConfigDto } from "@etimo/diamonds2-types";
+import { useEffect, useState } from "react";
+import useFetch from "./useFetch.ts";
 
 export function useBoardConfig(seasonId: string): IBoardConfigDto | null {
   const { response } = useFetch(`api/seasons/${seasonId}/rules/`, []);

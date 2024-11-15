@@ -21,44 +21,22 @@ Deno
 
 ## Development 💻
 
-1. Install dependencies
+Diamonds 2 requires Node 20.
+
+Run initial setup
 
 ```sh
-deno install --allow-scripts
+deno run setup
 ```
 
-2. Setup default environment variables
-
-```sh
-deno run env
-```
-
-3. Setup local database
-
-Either
-
-```sh
-deno run init-db
-deno run support
-```
-
-or
-
-```sh
-deno run support
-# Wait for db to start and navigate to packages/backend
-cd packages/backend
-# Update db schema
-deno run db:push
-# Seed the database
-deno run db:seed
-```
-
-4. Start everything
+After initial setup has been successfully run you can start the project by
+running:
 
 ```sh
 deno run start
 ```
+
+The project will autoreload on code change.
 
 Frontend: http://localhost:8082
 

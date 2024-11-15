@@ -2,6 +2,6 @@ export interface IHighscoreDto {
   botName: string;
   score: number;
   seasonId: string;
-  team: string;
-  teamLogotype: string;
+  team: string | null;
+  teamLogotype: string | null;
 }

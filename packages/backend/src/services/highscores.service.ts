@@ -60,7 +60,7 @@ export class HighscoresService {
 
   private async allBySeasonId(seasonId: string, limit: number = 0) {
     const currentSeason = await this.seasonsService.getCurrentSeason();
-    return this.repo.allBySeasonIdRaw(seasonId, currentSeason.id);
+    return this.repo.allBySeasonIdRaw(seasonId, currentSeason.id, limit);
   }
 
   public async allBySeasonIdPrivate(
@@ -76,7 +76,7 @@ export class HighscoresService {
   }
 
   public async allBySeasonIdPublic(seasonId: string) {
-    return this.allBySeasonId(seasonId);
+    return this.allBySeasonId(seasonId, 10);
   }
 
   public async create(data: INewHighscore) {
