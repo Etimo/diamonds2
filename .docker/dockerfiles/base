@@ -9,9 +9,7 @@ RUN yarn set version 3.6.3
 COPY --chown=1000:1000 package.json  yarn.lock .yarnrc.yml ./
 
 # Copy yarn files
-COPY --chown=1000:1000 .yarn/cache .yarn/cache
-COPY --chown=1000:1000 .yarn/releases .yarn/releases
-COPY --chown=1000:1000 .yarn/plugins .yarn/plugins
+COPY --chown=1000:1000 .yarn .yarn
 
 # Copy package.jsons from packages
 COPY --chown=1000:1000 packages/backend/package.json packages/backend/package.json
