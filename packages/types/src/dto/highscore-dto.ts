@@ -3,5 +3,5 @@ export interface IHighscoreDto {
   score: number;
   seasonId: string;
   team: string | null;
-  teamLogotype: string;
+  teamLogotype: string | null;
 }

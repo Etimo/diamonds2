@@ -17,8 +17,9 @@ export class HighscorePublicDto implements IHighscoreDto {
   @IsOptional()
   team: string | null = null;
 
-  @ApiProperty()
-  teamLogotype!: string;
+  @ApiPropertyOptional({ nullable: true })
+  @IsOptional()
+  teamLogotype: string | null = null;
 
   public static fromEntity(entity: IHighscore): HighscorePublicDto {
     return {
@@ -26,7 +27,7 @@ export class HighscorePublicDto implements IHighscoreDto {
       score: entity.score,
       seasonId: entity.seasonId,
       team: entity.bot!.team?.name ?? null,
-      teamLogotype: entity.bot!.team!.logotypeUrl,
+      teamLogotype: entity.bot!.team?.logotypeUrl ?? null,
     };
   }
 }
