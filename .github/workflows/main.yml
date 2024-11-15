@@ -124,7 +124,7 @@ jobs:
             cd diamonds2
             git fetch
             git checkout --progress --force ${{ github.sha }}
-            docker-compose down --remove-orphans
+            docker compose down --remove-orphans
             docker system prune -af
             source ~/.bash_profile
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
