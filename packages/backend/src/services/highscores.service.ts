@@ -76,7 +76,7 @@ export class HighscoresService {
   }
 
   public async allBySeasonIdPublic(seasonId: string) {
-    return this.allBySeasonId(seasonId);
+    return this.allBySeasonId(seasonId, 10);
   }
 
   public async create(data: INewHighscore) {
