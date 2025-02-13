@@ -26,6 +26,7 @@ export class BoardConfigRepository {
         width: newBoardConfig.width,
         sessionLength: newBoardConfig.sessionLength,
         separateBoards: newBoardConfig.separateBoards,
+        fire: newBoardConfig.fire,
       },
     });
   }

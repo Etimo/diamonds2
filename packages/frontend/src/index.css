@@ -95,6 +95,17 @@ img.diamond {
   margin: 0 auto; /* Center the image horizontally */
 }
 
+.fire {
+  width: 100%; /* Ensure the image fits within its container */
+  display: block; /* Remove any potential inline layout issues */
+}
+
+.bot {
+  width: 60%; /* Ensure the image fits within its container */
+  height: 60%; /* Maintain the aspect ratio */
+  display: block; /* Remove any potential inline layout issues */
+}
+
 .sparkles {
   position: absolute;
   top: 0;

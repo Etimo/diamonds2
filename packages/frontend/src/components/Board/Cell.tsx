@@ -5,6 +5,7 @@ import {
   BotComponent,
   DiamondButtonComponent,
   DiamondComponent,
+  FireComponent,
   TeleportComponent,
 } from '../gameObject';
 
@@ -26,6 +27,9 @@ const renderGameCharacterComponent = (gameObject: IGameObjectDto) => {
       return <TeleportComponent />;
     case 'DiamondButtonGameObject':
       return <DiamondButtonComponent />;
+    case 'FireGameObject':
+      return <FireComponent {...gameObject.properties} />;
+
     default:
       return null;
   }

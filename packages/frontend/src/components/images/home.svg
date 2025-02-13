@@ -1,14 +1,100 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="512px" height="432px" viewBox="0 0 512 432" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
-    <title>home</title>
-    <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group" fill-rule="nonzero" fill="#575757">
-            <g id="home">
-                <polygon id="Shape" points="512 256 416 160 416 16 352 16 352 96 256 0 0 256 0 272 64 272 64 432 224 432 224 336 288 336 288 432 448 432 448 272 512 272"></polygon>
-            </g>
-        </g>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Antenna -->
+  <rect x="95" y="10" width="10" height="20" fill="#4CAF50" />
+  <circle cx="100" cy="5" r="5" fill="#4CAF50">
+    <animate
+      attributeName="r"
+      values="5;6;5"
+      dur="1s"
+      repeatCount="indefinite"
+    />
+  </circle>
+
+  <!-- Roof -->
+  <path d="M20 80 L100 20 L180 80"
+        fill="#4CAF50"
+        stroke="#388E3C"
+        stroke-width="2"/>
+
+  <!-- House Body -->
+  <rect x="30" y="80" width="140" height="100"
+        fill="#4CAF50"
+        stroke="#388E3C"
+        stroke-width="2"/>
+
+  <!-- Robot Eyes/Windows -->
+  <circle cx="70" cy="100" r="15" fill="white" stroke="#388E3C" stroke-width="2">
+    <animate
+      attributeName="opacity"
+      values="1;0.7;1"
+      dur="2s"
+      repeatCount="indefinite"
+    />
+  </circle>
+  <circle cx="130" cy="100" r="15" fill="white" stroke="#388E3C" stroke-width="2">
+    <animate
+      attributeName="opacity"
+      values="1;0.7;1"
+      dur="2s"
+      repeatCount="indefinite"
+    />
+  </circle>
+
+  <!-- Robot Mouth/Door -->
+  <rect x="75" y="140" width="50" height="40"
+        fill="#388E3C"
+        stroke="#2E7D32"
+        stroke-width="2"/>
+  <rect x="80" y="145" width="40" height="30"
+        fill="#2E7D32"/>
+
+  <!-- Control Panel -->
+  <rect x="60" y="110" width="80" height="20"
+        fill="#388E3C"
+        stroke="#2E7D32"
+        stroke-width="1"/>
+
+  <!-- Button Lights -->
+  <circle cx="75" cy="120" r="3" fill="#FF4444">
+    <animate
+      attributeName="fill"
+      values="#FF4444;#FF0000;#FF4444"
+      dur="1s"
+      repeatCount="indefinite"
+    />
+  </circle>
+  <circle cx="90" cy="120" r="3" fill="#44FF44">
+    <animate
+      attributeName="fill"
+      values="#44FF44;#00FF00;#44FF44"
+      dur="1.5s"
+      repeatCount="indefinite"
+    />
+  </circle>
+  <circle cx="105" cy="120" r="3" fill="#4444FF">
+    <animate
+      attributeName="fill"
+      values="#4444FF;#0000FF;#4444FF"
+      dur="2s"
+      repeatCount="indefinite"
+    />
+  </circle>
+  <circle cx="120" cy="120" r="3" fill="#FFFF44">
+    <animate
+      attributeName="fill"
+      values="#FFFF44;#FFFF00;#FFFF44"
+      dur="1.2s"
+      repeatCount="indefinite"
+    />
+  </circle>
+
+  <!-- Circuit Board Lines -->
+  <path d="M40 90 L50 90 L50 100 L60 100"
+        fill="none"
+        stroke="#388E3C"
+        stroke-width="1"/>
+  <path d="M140 90 L150 90 L150 100 L160 100"
+        fill="none"
+        stroke="#388E3C"
+        stroke-width="1"/>
 </svg>
