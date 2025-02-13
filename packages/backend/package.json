@@ -13,7 +13,7 @@
     "start:dev": "npx prisma generate && nodemon",
     "start:debug": "nest start --debug --watch",
     "start:prod": "npm run migrate:prod && npm run serve:prod",
-    "migrate:prod": "echo '🚀 Running migrations...' && prisma migrate deploy --verbose",
+    "migrate:prod": "echo '🚀 Running migrations...' && prisma migrate deploy",
     "serve:prod": "echo '📡 Starting server...' && node dist/main",
     "env": "cp .env.defaults .env",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
