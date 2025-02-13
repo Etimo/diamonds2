@@ -15,7 +15,7 @@ If you find a bug or has a suggestion for improvement you are more than welcome 
 
 Diamonds 2 requires Node 20.
 
-Run initial setup
+Run initial setup:
 
 ```sh
 npm run setup
