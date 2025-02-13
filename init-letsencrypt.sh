@@ -77,4 +77,4 @@ docker compose -f docker-compose.prod-run.yml run --rm --entrypoint "\
 echo
 
 echo "### Reloading nginx ..."
-docker  exec diamonds2_frontend_1 nginx -s reload
+docker  exec diamonds2-frontend-1 nginx -s reload
