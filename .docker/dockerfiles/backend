@@ -1,6 +1,9 @@
 FROM diamonds2_base:latest as base
 WORKDIR /app/packages/backend
-RUN apk update && apk add --no-cache openssl libc6-compat
+RUN apk update && \
+    apk add --no-cache openssl libc6-compat && \
+    cp /usr/lib/libssl.so.3 /lib/libssl.so.3
+
 COPY --chown=1000:1000 packages/backend .
 
 FROM base AS develop
