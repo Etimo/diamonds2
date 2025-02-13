@@ -19,6 +19,7 @@ import {
   TeleportProvider,
   TeleportRelocationProvider,
 } from "../gameengine";
+import { FireProvider } from "../gameengine/gameobjects/fire";
 import { CustomLogger } from "../logger";
 import { BoardDto, BoardMetadataDto, GameObjectDto } from "../models";
 import { IBoardConfig, IBot } from "../types";
@@ -328,6 +329,9 @@ export class BoardsService {
       }),
       new TeleportRelocationProvider({
         seconds: boardConfig.teleportRelocation,
+      }),
+      new FireProvider({
+        fireCells: boardConfig.fireCells,
       }),
     ];
     if (boardConfig.dummyBots) {

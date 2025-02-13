@@ -22,7 +22,9 @@ export class BoardsController {
   })
   @Get()
   public findAll(): BoardMetadataDto[] {
-    return this.boardsService.getAllMetadata();
+    const test = this.boardsService.getAllMetadata();
+    console.log(test[0].features);
+    return test;
   }
 
   /**

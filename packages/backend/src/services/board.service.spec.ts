@@ -38,6 +38,7 @@ describe("BoardsService", () => {
     width: 15,
     minimumDelayBetweenMoves: 100,
     sessionLength: 60,
+    fireCells: 25,
   };
 
   let numberOfBoards = 1;

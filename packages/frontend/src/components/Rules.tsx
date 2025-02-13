@@ -52,6 +52,10 @@ export const Rules: FC<RulesProps> = memo((props) => {
               label="Teleporter relocation time"
               value={seasonRules.teleportRelocation}
             />
+            <RuleItem
+              label="Number of fire cells"
+              value={seasonRules.fireCells}
+            />
             {seasonInfo && (
               <RuleItem
                 label="Season Ends"

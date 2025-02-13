@@ -17,6 +17,7 @@ export function createTestBoard(
       teleportRelocation: 30,
       teleporters: 2,
       dummyBots: 2,
+      fireCells: 25,
       updateTimeStamp: new Date(),
       createTimeStamp: new Date(),
       separateBoards: false,

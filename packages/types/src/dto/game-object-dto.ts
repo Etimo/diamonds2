@@ -2,6 +2,7 @@ import {
   BaseGameObjectProperties,
   BotGameObjectProperties,
   DiamondGameObjectProperties,
+  FireGameObjectProperties,
   TeleportProperties,
 } from "../gameobject";
 import { Position } from "../position";
@@ -16,6 +17,12 @@ export interface IDiamondGameObjectDto {
   type: "DiamondGameObject";
   position: Position;
   properties: DiamondGameObjectProperties;
+}
+
+export interface IFireGameObjectDto {
+  type: "FireGameObject";
+  position: Position;
+  properties: FireGameObjectProperties;
 }
 
 export interface IDiamondButtonGameObjectDto {
@@ -41,4 +48,5 @@ export type IGameObjectDto =
   | IDiamondGameObjectDto
   | IDiamondButtonGameObjectDto
   | IBaseGameObjectDto
-  | ITeleportGameObjectDto;
+  | ITeleportGameObjectDto
+  | IFireGameObjectDto;
