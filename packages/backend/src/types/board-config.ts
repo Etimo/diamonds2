@@ -6,7 +6,7 @@ export interface IBoardConfig {
   canTackle: boolean;
   teleporters: number;
   teleportRelocation: number;
-  fire: number;
+  fireCells: number;
   height: number;
   width: number;
   minimumDelayBetweenMoves: number;

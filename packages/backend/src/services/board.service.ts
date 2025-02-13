@@ -331,7 +331,7 @@ export class BoardsService {
         seconds: boardConfig.teleportRelocation,
       }),
       new FireProvider({
-        fire: boardConfig.fire,
+        fireCells: boardConfig.fireCells,
       }),
     ];
     if (boardConfig.dummyBots) {

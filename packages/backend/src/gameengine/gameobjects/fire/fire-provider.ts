@@ -14,7 +14,7 @@ export class FireProvider extends AbstractGameObjectProvider<FireProviderConfig>
 
   private generateFires(board: Board) {
     const gameObjectsToAdd = [];
-    for (let i = 0; i < this.config.fire; i++) {
+    for (let i = 0; i < this.config.fireCells; i++) {
       gameObjectsToAdd.push(
         new FireGameObject(board.getEmptyPosition(), { takeDiamonds: true }),
       );

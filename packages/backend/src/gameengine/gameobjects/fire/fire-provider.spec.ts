@@ -8,7 +8,7 @@ let provider: FireProvider;
 let board: Board;
 
 beforeEach(() => {
-  provider = new FireProvider({ fire: 2 });
+  provider = new FireProvider({ fireCells: 2 });
   board = createTestBoard();
 });
 

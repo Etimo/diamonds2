@@ -15,7 +15,7 @@ model BoardConfig {
   canTackle                Boolean  @default(false)
   teleporters              Int      @default(1)
   teleportRelocation       Int      @default(10)
-  fire                     Int      @default(0)
+  fireCells                Int      @default(0)
   height                   Int      @default(15)
   width                    Int      @default(15)
   minimumDelayBetweenMoves Int      @default(100)

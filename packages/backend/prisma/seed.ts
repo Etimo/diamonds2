@@ -55,7 +55,7 @@ const main = async () => {
           minimumDelayBetweenMoves: 100,
           teleportRelocation: 30,
           dummyBots: 2,
-          fire: 25,
+          fireCells: 25,
         },
       },
     },
