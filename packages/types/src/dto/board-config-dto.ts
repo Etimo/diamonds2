@@ -9,4 +9,5 @@ export interface IBoardConfigDto {
   width: number;
   minimumDelayBetweenMoves: number;
   sessionLength: number;
+  fireCells: number;
 }

@@ -51,6 +51,7 @@ These are the game objects currently sort of implemented (not fully tested yet t
 - [Diamond button](gameobjects/diamond-button/)
 - [Dummy bot](gameobjects/dummy-bot/)
 - [Teleport](gameobjects/teleport/)
+- [Fire](gameobjects/fire/)
 
 ## Boards
 

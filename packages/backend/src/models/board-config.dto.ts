@@ -33,6 +33,9 @@ export class BoardConfigDto implements IBoardConfigDto {
   @ApiProperty()
   sessionLength!: number;
 
+  @ApiProperty()
+  fireCells!: number;
+
   public static fromSeasonWithBoardConfig(entity: ISeason): BoardConfigDto {
     return {
       id: entity.boardConfig!.id,
@@ -45,6 +48,7 @@ export class BoardConfigDto implements IBoardConfigDto {
       width: entity.boardConfig!.width,
       minimumDelayBetweenMoves: entity.boardConfig!.minimumDelayBetweenMoves,
       sessionLength: entity.boardConfig!.sessionLength,
+      fireCells: entity.boardConfig!.fireCells,
     };
   }
 }
