@@ -28,11 +28,11 @@ export const Table: FC<TableProps> = memo((props) => {
           {data.map((item, index) => (
             <tr
               key={'tr-' + index}
-              className="font-sans text-etimo text-xs font-normal border-b border-b-gray-500 last:border-none h-12" // Fixed height
+              className="font-sans text-etimo text-xs font-normal border-b border-b-gray-500 last:border-none h-12"
             >
               {Object.values(item).map((value: any, index2) => (
                 <td
-                  className="p-2.5 whitespace-nowrap min-w-[80px] first:w-[99%]" // Removed fixed height from td
+                  className="p-2.5 whitespace-nowrap min-w-[80px] first:w-[99%]"
                   key={'td' + index + index2}
                 >
                   {value}

@@ -17,7 +17,7 @@ export const HighScoreTable: FC<HighScoreProps> = memo((props) => {
           <img
             src={item.teamLogotype}
             alt="school-logo"
-            className="h-8 w-auto object-contain"
+            className="h-18 w-auto object-contain"
           />
         </div>
       );
