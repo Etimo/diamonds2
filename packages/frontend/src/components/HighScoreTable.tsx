@@ -12,7 +12,13 @@ export const HighScoreTable: FC<HighScoreProps> = memo((props) => {
 
   const logotype = (item: IHighscoreDto) => {
     if (item.teamLogotype) {
-      return <img src={item.teamLogotype} alt="school-logo" className="h-50" />;
+      return (
+        <img
+          src={item.teamLogotype}
+          alt="school-logo"
+          className="h-[50px] max-h-[50px]"
+        />
+      );
     }
     if (item.team) {
       return item.team;
